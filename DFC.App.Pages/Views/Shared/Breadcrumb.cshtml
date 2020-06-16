@@ -1,0 +1,24 @@
+﻿@model BreadcrumbViewModel
+
+<div class="govuk-width-container">
+    <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+            @if (Model?.Paths?.Count() > 0)
+            {
+                @foreach (var path in Model.Paths)
+                {
+                    if (path.AddHyperlink)
+                    {
+                        <li class="govuk-breadcrumbs__list-item">
+                            <a name="BreadbrumbLink" class="govuk-breadcrumbs__link" href="@path.Route">@path.Title</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="govuk-breadcrumbs__list-item" aria-current="page">@path.Title</li>
+                    }
+                }
+            }
+        </ol>
+    </div>
+</div>

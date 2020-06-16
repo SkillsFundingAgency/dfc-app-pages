@@ -1,0 +1,8 @@
+[
+  {
+    "outputFileName": "wwwroot/js/compui-shell.min.js",
+    "inputFiles": [
+      "wwwroot/js/compui-shell.js"
+    ]
+  }
+]
