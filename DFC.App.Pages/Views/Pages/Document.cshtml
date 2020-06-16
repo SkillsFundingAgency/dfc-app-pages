@@ -1,0 +1,124 @@
+﻿@model DocumentViewModel
+
+@{
+    Layout = "_LocalLayout";
+
+    if (!string.IsNullOrWhiteSpace(Model.HtmlHead?.Title))
+    {
+        ViewData["Title"] = Model.HtmlHead.Title;
+    }
+}
+
+<partial name="Breadcrumb" model=@Model.Breadcrumb />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div>
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.DocumentId)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.DocumentId)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.CanonicalName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.CanonicalName)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.PartitionKey)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.PartitionKey)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Version)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Version)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.HtmlHead!.Description)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.HtmlHead!.Description)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.HtmlHead!.Keywords)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.HtmlHead!.Keywords)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.HtmlHead!.Title)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.HtmlHead!.Title)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.HtmlHead!.CanonicalUrl)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.HtmlHead!.CanonicalUrl)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.BreadcrumbTitle)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.BreadcrumbTitle)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.IncludeInSitemap)
+                </dt>
+
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.IncludeInSitemap)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Url)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Url)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.LastReviewed)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.LastReviewed)
+                </dd>
+
+                @if (Model.AlternativeNames?.Count() > 0)
+                {
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.AlternativeNames)
+                    </dt>
+                    <dd class="col-sm-10">
+                        <ol>
+                            @foreach (var alternativeName in Model.AlternativeNames)
+                            {
+                                <li><a href="/pages/@alternativeName">@alternativeName</a></li>
+                            }
+                        </ol>
+                    </dd>
+                }
+            </dl>
+        </div>
+
+        <hr />
+
+        <partial name="Body" model=@Model.BodyViewModel />
+    </div>
+</div>

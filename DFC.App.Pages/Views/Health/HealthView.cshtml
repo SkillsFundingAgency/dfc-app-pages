@@ -1,0 +1,15 @@
+﻿@model HealthViewModel
+
+@{
+    Layout = "_LocalLayout";
+
+    ViewData["Title"] = "Health";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <partial name="Health" model="@Model" />
+
+        <a asp-controller="Pages" asp-action="Index">Back to List</a>
+    </div>
+</div>
