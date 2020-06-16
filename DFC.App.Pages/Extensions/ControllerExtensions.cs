@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
 
 namespace DFC.App.Pages.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class ControllerExtensions
     {
         public static IActionResult NegotiateContentResult(this Controller controller, object? viewModel, object? dataModel = null)

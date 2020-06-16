@@ -3,11 +3,13 @@ using DFC.App.Pages.Data.Models;
 using DFC.Compui.Telemetry.HostedService;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DFC.App.Pages.HostedServices
 {
+    [ExcludeFromCodeCoverage]
     public class CacheReloadBackgroundService : BackgroundService
     {
         private readonly ILogger<CacheReloadBackgroundService> logger;

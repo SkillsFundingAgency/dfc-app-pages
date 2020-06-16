@@ -7,10 +7,12 @@ using Polly;
 using Polly.Extensions.Http;
 using Polly.Registry;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 
 namespace DFC.App.Pages.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddPolicies(

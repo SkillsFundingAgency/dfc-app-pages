@@ -1,5 +1,8 @@
-﻿namespace DFC.App.Pages.HttpClientPolicies
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DFC.App.Pages.HttpClientPolicies
 {
+    [ExcludeFromCodeCoverage]
     public class RetryPolicyOptions
     {
         public int Count { get; set; } = 3;

@@ -1,5 +1,8 @@
-﻿namespace DFC.App.Pages.HttpClientPolicies
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DFC.App.Pages.HttpClientPolicies
 {
+    [ExcludeFromCodeCoverage]
     public class PolicyOptions
     {
         public CircuitBreakerPolicyOptions HttpCircuitBreaker { get; set; } = new CircuitBreakerPolicyOptions();
