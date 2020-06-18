@@ -44,11 +44,11 @@
         "cosmosDbCollectionName": {
             "value": "__cosmosDbCollectionName__"
         },
-        "accountAppDatabaseNeedsCreation": {
+        "pagesAppDatabaseNeedsCreation": {
             "value": __CosmosDbDatabaseDoesntExist__
         },
-        "accountAppDatabaseThroughput": {
-            "value": __accountAppDatabaseThroughput__
+        "pagesAppDatabaseThroughput": {
+            "value": __pagesAppDatabaseThroughput__
         },
         "enableAlerts": {
             "value": __EnableAzureMonitorAlerting__

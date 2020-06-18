@@ -32,10 +32,10 @@
         "CosmosDbResourceGroup": {
             "value": "dfc-dev-app-sharedresources-rg"
         },
-        "accountAppDatabaseNeedsCreation": {
+        "pagesAppDatabaseNeedsCreation": {
             "value": true
         },
-        "accountAppDatabaseThroughput": {
+        "pagesAppDatabaseThroughput": {
             "value": 2
         },
         "enableAlerts": {

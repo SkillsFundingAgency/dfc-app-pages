@@ -57,10 +57,10 @@
                 "description": "The name of the collection to create"
             }
         },
-        "accountAppDatabaseNeedsCreation": {
+        "pagesAppDatabaseNeedsCreation": {
             "type": "bool"
         },
-        "accountAppDatabaseThroughput": {
+        "pagesAppDatabaseThroughput": {
             "type": "int"
         },
         "enableAlerts": {
@@ -239,10 +239,10 @@
                         "value": true
                     },
                     "offerThroughput": {
-                        "value": "[parameters('accountAppDatabaseThroughput')]"
+                        "value": "[parameters('pagesAppDatabaseThroughput')]"
                     },
                     "databaseNeedsCreation": {
-                        "value": "[parameters('accountAppDatabaseNeedsCreation')]"
+                        "value": "[parameters('pagesAppDatabaseNeedsCreation')]"
                     }
                 }
             }
