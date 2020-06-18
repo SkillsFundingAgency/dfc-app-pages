@@ -12,16 +12,34 @@ resources:
     ref: refs/tags/v1.11.1
     endpoint: 'GitHub (ESFA)'
 
+pool:
+  name: NCS - CI and CD
+  demands:
+  - msbuild
+  - visualstudio
+    
+
 stages:
 - stage: Build
   displayName: Build, Test and Analyze
   jobs:
+
   - job: BuildTestAndAnalyze
-    pool:
-      name: NCS - CI and CD
-      demands:
-      - msbuild
-      - visualstudio
+    displayName: "Test & package ARM template(s)"
+    steps:
+    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-arm-build.yml@dfc-devops
+      parameters:
+        ArmTemplateRoot: '${{ variables.ArmTemplateRoot }}'
+        SolutionBaseName: '${{ variables.SolutionBaseName }}'
+
+    - task: PublishPipelineArtifact@0
+      displayName: Publish Page Registration artifact
+      inputs:
+        targetPath: '$(Build.SourcesDirectory)/Resources/PageRegistration'
+        artifactName: ${{ variables.SolutionBaseName }}.PageRegistrations
+
+
+  - job: BuildTestAndAnalyze
     steps:
     - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
       parameters:

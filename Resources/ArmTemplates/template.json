@@ -1,0 +1,170 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environment": {
+            "type": "string"
+        },
+        "appSharedResourceGroup": {
+            "type": "string"
+        },
+        "appSharedStorageAccountName": {
+            "type": "string"
+        },
+        "apimDSSProxyAddress": {
+            "type": "string"
+        },
+        "apimDSSApiKey": {
+            "type": "securestring"
+        },
+        "cdnUrl": {
+            "type": "string"
+        },
+        "AuthSettingsIssuer": {
+            "type": "string"
+        },
+        "AuthSettingsClientSecret": {
+            "type": "string"
+        },
+        "AuthSettingsClientId": {
+            "type": "string"
+        },
+        "sharedResourceGroup": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "SharedAppServicePlanName": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "buildingBlocksDfcBaseUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
+        "resourcePrefix": "[tolower(concat('dfc-', parameters('Environment'), '-pers-actplans'))]",
+        "webAppName": "[concat(variables('ResourcePrefix'), '-as')]",
+        "webAppInsightsName": "[concat(variables('webAppName'), '-ai')]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[variables('webAppInsightsName')]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('buildingBlocksDfcBaseUrl'), 'application-insights.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appInsightsName": {
+                        "value": "[variables('webAppInsightsName')]"
+                    },
+                    "attachedService": {
+                        "value": ""
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[variables('WebAppName')]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('buildingBlocksDfcBaseUrl'), 'app-service.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServiceName": {
+                        "value": "[variables('webAppName')]"
+                    },
+                    "appServicePlanName": {
+                        "value": "[parameters('SharedAppServicePlanName')]"
+                    },
+                    "appServicePlanResourceGroup": {
+                        "value": "[parameters('sharedResourceGroup')]"
+                    },
+                    "appServiceType": {
+                        "value": "app"
+                    },
+                    "deployStagingSlot": {
+                        "value": true
+                    },
+                    "appServiceAppSettings": {
+                        "value": [
+                            {
+                                "name": "MSDEPLOY_RENAME_LOCKED_FILES",
+                                "value": "1"
+                            },
+                            {
+                                "name": "AzureWebJobsStorage",
+                                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('appSharedStorageAccountName'),';AccountKey=',listKeys(resourceId(parameters('appSharedResourceGroup'), 'Microsoft.Storage/storageAccounts', parameters('appSharedStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                            },
+                            {
+                                "name": "Logging__ApplicationInsights__LogLevel__Default",
+                                "value": "Warning"
+                            },
+                            {
+                                "name": "DssSettings__CustomerApiUrl",
+                                "value": "[concat(parameters('apimDSSProxyAddress'), '/customers/api/Customers/')]"
+                            },
+                            {
+                                "name": "DssSettings__CustomerApiVersion",
+                                "value": "v2"
+                            },
+                            {
+                                "name": "DssSettings__ApiKey",
+                                "value": "[parameters('apimDSSApiKey')]"
+                            },
+                            {
+                                "name": "DssSettings__TouchpointId",
+                                "value": "0000000997"
+                            },
+                            {
+                                "name": "CompositeSettings__Path",
+                                "value": "/action-plans"
+                            },
+                            {
+                                "name": "CompositeSettings__CDN",
+                                "value": "[parameters('cdnUrl')]"
+                            },
+                            {
+                                "name": "AuthSettings__Issuer",
+                                "value": "[parameters('AuthSettingsIssuer')]"
+                            },
+                            {
+                                "name": "AuthSettings__ClientSecret",
+                                "value": "[parameters('AuthSettingsClientSecret')]"
+                            },
+                            {
+                                "name": "AuthSettings__ClientId",
+                                "value": "[parameters('AuthSettingsClientId')]"
+                            },
+                            {
+                                "name": "AuthSettings__SignInUrl",
+                                "value": "[concat(parameters('AuthSettingsIssuer'), '/auth/SignIn')]"
+                            },
+                            {
+                                "name": "AuthSettings__SignOutUrl",
+                                "value": "[concat(parameters('AuthSettingsIssuer'), '/auth/signOut')]"
+                            },
+                            {
+                                "name": "AuthSettings__RegisterUrl",
+                                "value": "[concat(parameters('AuthSettingsIssuer'), '/auth/register')]"
+                            },
+                            {
+                                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                "value": "[reference(variables('webAppInsightsName')).outputs.InstrumentationKey.value]"
+                            }
+                        ]
+                    }
+                }
+            },
+            "dependsOn": [
+                "[variables('webAppInsightsName')]"
+            ]
+        }
+    ],
+    "outputs": {
+    }
+}

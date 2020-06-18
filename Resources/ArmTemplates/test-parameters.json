@@ -1,0 +1,39 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Environment": {
+            "value": "FOO"
+        },
+        "appSharedResourceGroup": {
+            "value": "dfc-dev-app-sharedresources-rg"
+        },
+        "appSharedStorageAccountName": {
+            "value": "dfcdevappsharedstr"
+        },
+        "apimDSSProxyAddress": {
+            "value": "https://foo.api.nationalcareersservice.org.uk"
+        },
+        "cdnUrl": {
+            "value": "https://foo.api.nationalcareersservice.org.uk"
+        },
+        "apimDSSApiKey": {
+            "value": "not-a-real-key"
+        },
+        "AuthSettingsIssuer": {
+            "value": "IAmAnIssuer"
+        },
+        "AuthSettingsClientSecret": {
+            "value": "ThisIsAClientSecret"
+        },
+        "AuthSettingsClientId": {
+            "value": "AuthSettingsClientId"
+        },
+        "SharedAppServicePlanName": {
+            "value": "dfc-dev-pers-shared-asp"
+        },
+        "sharedResourceGroup": {
+            "value": "dfc-test-template-rg"
+        }
+    }
+}
