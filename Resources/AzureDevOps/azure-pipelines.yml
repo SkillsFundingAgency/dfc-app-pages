@@ -39,7 +39,9 @@ stages:
         artifactName: ${{ variables.SolutionBaseName }}.PageRegistrations
 
 
-  - job: BuildTestAndAnalyze
+  - job: BuildDotNetCore
+    displayName: Build-DotNetCore
+
     steps:
     - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
       parameters:
