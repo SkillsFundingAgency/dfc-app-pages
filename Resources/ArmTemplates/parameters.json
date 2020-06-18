@@ -2,41 +2,53 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "environment": {
-            "value": "__ReleaseEnvironmentName__",
-            "metadata": {
-                "comment": "Bug in tokenisation task prevents referencing Release.EnvironmentName directly.  https://github.com/TotalALM/VSTS-Tasks/issues/29"
-            }
-        },
         "appSharedResourceGroup": {
             "value": "__appSharedResourceGroup__"
         },
         "appSharedStorageAccountName": {
             "value": "__appSharedStorageAccountName__"
         },
-        "apimDSSProxyAddress": {
-            "value": "__apimDSSProxyAddress__"
+        "aseHostingEnvironmentName": {
+            "value": "__aseHostingEnvironmentName__"
         },
-        "cdnUrl": {
-            "value": "__cdnUrl__"
+        "aseResourceGroup": {
+            "value": "__aseResourceGroup__"
         },
-        "apimDSSApiKey": {
-            "value": "__apimDSSApiKey__"
+        "aspTier": {
+            "value": "__aspTier__"
         },
-        "AuthSettingsIssuer": {
-            "value": "__AuthSettingsIssuer__"
+        "cosmosDBName": {
+            "value": "__appSharedCosmosDBName__"
         },
-        "AuthSettingsClientSecret": {
-            "value": "__AuthSettingsClientSecret__"
+        "cosmosDbKey": {
+            "value": "__appSharedCosmosPrimaryKey__"
         },
-        "AuthSettingsClientId": {
-            "value": "__AuthSettingsClientId__"
+        "CosmosDbResourceGroup": {
+            "value": "__appSharedResourceGroup__"
         },
-        "SharedAppServicePlanName": {
-            "value": "__SharedAppServicePlanName__"
+        "environment": {
+            "value": "__ReleaseEnvironmentName__",
+            "metadata": {
+                "comment": "Bug in tokenisation task prevents referencing Release.EnvironmentName directly.  https://github.com/TotalALM/VSTS-Tasks/issues/29"
+            }
         },
-        "sharedResourceGroup": {
-            "value": "__persSharedResourceGroup__"
+        "sharedAppServicePlanName": {
+            "value": "__sharedAppServicePlanName__"
+        },
+        "sharedAppServicePlanResourceGroup": {
+            "value": "__appSharedResourceGroup__"
+        },
+        "cosmosDbCollectionName": {
+            "value": "__cosmosDbCollectionName__"
+        },
+        "accountAppDatabaseNeedsCreation": {
+            "value": __CosmosDbDatabaseDoesntExist__
+        },
+        "accountAppDatabaseThroughput": {
+            "value": __accountAppDatabaseThroughput__
+        },
+        "enableAlerts": {
+            "value": __EnableAzureMonitorAlerting__
         }
     }
 }

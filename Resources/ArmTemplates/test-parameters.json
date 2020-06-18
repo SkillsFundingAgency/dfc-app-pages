@@ -2,38 +2,41 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "Environment": {
-            "value": "FOO"
-        },
         "appSharedResourceGroup": {
             "value": "dfc-dev-app-sharedresources-rg"
         },
-        "appSharedStorageAccountName": {
+         "appSharedStorageAccountName": {
             "value": "dfcdevappsharedstr"
         },
-        "apimDSSProxyAddress": {
-            "value": "https://foo.api.nationalcareersservice.org.uk"
+        "cosmosDBName": {
+            "value": "dfc-dev-app-sharedresources-cdb"
         },
-        "cdnUrl": {
-            "value": "https://foo.api.nationalcareersservice.org.uk"
-        },
-        "apimDSSApiKey": {
+        "cosmosDbKey": {
             "value": "not-a-real-key"
         },
-        "AuthSettingsIssuer": {
-            "value": "IAmAnIssuer"
+        "Environment": {
+            "value": "FOO"
         },
-        "AuthSettingsClientSecret": {
-            "value": "ThisIsAClientSecret"
+        "sharedAppServicePlanName": {
+            "value": "dfc-dev-app-shared-asp"
         },
-        "AuthSettingsClientId": {
-            "value": "AuthSettingsClientId"
+        "sharedAppServicePlanResourceGroup": {
+            "value": "dfc-dev-app-sharedresources-rg"
         },
-        "SharedAppServicePlanName": {
-            "value": "dfc-dev-pers-shared-asp"
+        "cosmosDbCollectionName": {
+            "value": "a-test-collection"
         },
-        "sharedResourceGroup": {
-            "value": "dfc-test-template-rg"
-        }
+        "CosmosDbResourceGroup": {
+            "value": "dfc-dev-app-sharedresources-rg"
+        },
+        "accountAppDatabaseNeedsCreation": {
+            "value": true
+        },
+        "accountAppDatabaseThroughput": {
+            "value": 2
+        },
+        "enableAlerts": {
+            "value": false
+        }             
     }
 }
