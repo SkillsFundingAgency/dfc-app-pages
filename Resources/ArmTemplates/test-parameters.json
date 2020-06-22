@@ -5,9 +5,6 @@
         "appSharedResourceGroup": {
             "value": "dfc-dev-app-sharedresources-rg"
         },
-        "cdnUrl": {
-            "value": "https://foo.api.nationalcareersservice.org.uk"
-        },
          "appSharedStorageAccountName": {
             "value": "dfcdevappsharedstr"
         },

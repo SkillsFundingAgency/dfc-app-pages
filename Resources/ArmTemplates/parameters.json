@@ -5,9 +5,6 @@
         "appSharedResourceGroup": {
             "value": "__appSharedResourceGroup__"
         },
-        "cdnUrl": {
-            "value": "__cdnUrl__"
-        },
         "appSharedStorageAccountName": {
             "value": "__appSharedStorageAccountName__"
         },
