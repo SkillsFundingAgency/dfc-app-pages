@@ -28,9 +28,6 @@
             "type": "string",
             "defaultValue": ""
         },
-        "cdnUrl": {
-            "type": "string"
-        },
         "CosmosDbResourceGroup": {
             "type": "string"
         },
@@ -196,10 +193,6 @@
                             {
                                 "name": "Configuration__CosmosDbConnections__ContentPages__PartitionKey",
                                 "value": "[variables('cosmosDbCollectionPartitionKey')]"
-                            },
-                            {
-                                "name": "CompositeSettings__CDN",
-                                "value": "[parameters('cdnUrl')]"
                             },
                             {
                                 "name": "Logging__ApplicationInsights__LogLevel__Default",
