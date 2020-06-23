@@ -2,6 +2,6 @@
 {
     public class CmsApiClientOptions : ClientOptionsModel
     {
-        public string SummaryEndpoint { get; set; } = "api/index";
+        public string SummaryEndpoint { get; set; } = "content/getcontent/api/execute/flowtype";
     }
 }
