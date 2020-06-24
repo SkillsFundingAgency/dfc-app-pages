@@ -11,8 +11,6 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
 {
     public class CmsApiServiceTests
     {
-        private const string ValidPostcode = "CV1 1CV";
-
         private readonly IApiDataProcessorService fakeApiDataProcessorService = A.Fake<IApiDataProcessorService>();
         private readonly HttpClient fakeHttpClient = A.Fake<HttpClient>();
 

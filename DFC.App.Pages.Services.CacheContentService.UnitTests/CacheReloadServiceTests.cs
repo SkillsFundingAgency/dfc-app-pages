@@ -21,6 +21,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
         private readonly IEventMessageService<ContentPageModel> fakeEventMessageService = A.Fake<IEventMessageService<ContentPageModel>>();
         private readonly ICmsApiService fakeCmsApiService = A.Fake<ICmsApiService>();
         private readonly IContentCacheService fakeContentCacheService = A.Fake<IContentCacheService>();
+        private readonly IEventGridSubscriptionService fakeEventGridSubscriptionService = A.Fake<IEventGridSubscriptionService>();
 
         public CacheReloadServiceTests()
         {
@@ -55,7 +56,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             A.CallTo(() => fakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored));
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, fakeEventGridSubscriptionService);
 
             // act
             await cacheReloadService.Reload(cancellationToken).ConfigureAwait(false);
@@ -92,7 +93,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             A.CallTo(() => fakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored));
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, fakeEventGridSubscriptionService);
 
             // act
             await cacheReloadService.Reload(cancellationToken).ConfigureAwait(false);
@@ -119,7 +120,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
 
             A.CallTo(() => fakeCmsApiService.GetSummaryAsync()).Returns(fakePagesSummaryItemModels);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, fakeEventGridSubscriptionService);
 
             // act
             await cacheReloadService.Reload(cancellationToken).ConfigureAwait(false);
@@ -149,8 +150,9 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             A.CallTo(() => fakeMapper.Map<ContentPageModel>(A<PagesApiDataModel>.Ignored)).Returns(expectedValidContentPageModel);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).Returns(HttpStatusCode.NotFound);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored));
+            A.CallTo(() => fakeEventGridSubscriptionService.CreateAsync(A<Guid>.Ignored));
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, fakeEventGridSubscriptionService);
 
             // act
             await cacheReloadService.GetAndSaveItemAsync(expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
@@ -161,6 +163,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeEventGridSubscriptionService.CreateAsync(A<Guid>.Ignored)).MustHaveHappened(expectedValidContentPageModel.ContentItems!.Count + 1, Times.Exactly);
         }
 
         [Fact]
@@ -176,8 +179,9 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             A.CallTo(() => fakeMapper.Map<ContentPageModel>(A<PagesApiDataModel>.Ignored)).Returns(expectedValidContentPageModel);
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).Returns(HttpStatusCode.OK);
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored));
+            A.CallTo(() => fakeEventGridSubscriptionService.CreateAsync(A<Guid>.Ignored));
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, fakeEventGridSubscriptionService);
 
             // act
             await cacheReloadService.GetAndSaveItemAsync(expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
@@ -188,6 +192,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeEventGridSubscriptionService.CreateAsync(A<Guid>.Ignored)).MustHaveHappened(expectedValidContentPageModel.ContentItems!.Count + 1, Times.Exactly);
         }
 
         [Fact]
@@ -200,7 +205,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
 
             A.CallTo(() => fakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).Returns(expectedValidPagesApiDataModel);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, fakeEventGridSubscriptionService);
 
             // act
             await cacheReloadService.GetAndSaveItemAsync(expectedValidPagesSummaryItemModel, cancellationToken).ConfigureAwait(false);
@@ -211,6 +216,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             A.CallTo(() => fakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeEventMessageService.CreateAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeContentCacheService.AddOrReplace(A<Guid>.Ignored, A<List<Guid>>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeEventGridSubscriptionService.CreateAsync(A<Guid>.Ignored)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -226,7 +232,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             A.CallTo(() => fakeEventMessageService.GetAllCachedCanonicalNamesAsync()).Returns(fakeCachedContentPageModels);
             A.CallTo(() => fakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, fakeEventGridSubscriptionService);
 
             // act
             await cacheReloadService.DeleteStaleCacheEntriesAsync(fakePagesSummaryItemModels, cancellationToken).ConfigureAwait(false);
@@ -234,6 +240,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             // assert
             A.CallTo(() => fakeEventMessageService.GetAllCachedCanonicalNamesAsync()).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappened(NumberOfDeletions, Times.Exactly);
+            A.CallTo(() => fakeEventGridSubscriptionService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappened(NumberOfDeletions, Times.Exactly);
         }
 
         [Fact]
@@ -248,7 +255,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
 
             A.CallTo(() => fakeEventMessageService.GetAllCachedCanonicalNamesAsync()).Returns(fakeCachedContentPageModels);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, fakeEventGridSubscriptionService);
 
             // act
             await cacheReloadService.DeleteStaleCacheEntriesAsync(fakePagesSummaryItemModels, cancellationToken).ConfigureAwait(false);
@@ -256,6 +263,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             // assert
             A.CallTo(() => fakeEventMessageService.GetAllCachedCanonicalNamesAsync()).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeEventGridSubscriptionService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -268,13 +276,14 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
 
             A.CallTo(() => fakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).Returns(HttpStatusCode.OK);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, fakeEventGridSubscriptionService);
 
             // act
             await cacheReloadService.DeleteStaleItemsAsync(fakeContentPageModels, cancellationToken).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappened(NumberOfDeletions, Times.Exactly);
+            A.CallTo(() => fakeEventGridSubscriptionService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappened(NumberOfDeletions, Times.Exactly);
         }
 
         [Fact]
@@ -287,13 +296,14 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
 
             A.CallTo(() => fakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).Returns(HttpStatusCode.NotFound);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, fakeEventGridSubscriptionService);
 
             // act
             await cacheReloadService.DeleteStaleItemsAsync(fakeContentPageModels, cancellationToken).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappened(NumberOfDeletions, Times.Exactly);
+            A.CallTo(() => fakeEventGridSubscriptionService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -304,13 +314,14 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             var cancellationToken = new CancellationToken(true);
             var fakeContentPageModels = BuldFakeContentPageModels(NumberOfDeletions);
 
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, fakeEventGridSubscriptionService);
 
             // act
             await cacheReloadService.DeleteStaleItemsAsync(fakeContentPageModels, cancellationToken).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeEventGridSubscriptionService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
         }
 
         [Theory]
@@ -318,7 +329,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
         public void CacheReloadServiceTryValidateModelForValidAndInvalid(ContentPageModel contentPageModel, bool expectedResult)
         {
             // arrange
-            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService, fakeEventGridSubscriptionService);
 
             // act
             var result = cacheReloadService.TryValidateModel(contentPageModel);
@@ -356,7 +367,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                 ContentItemUrls = new List<Uri> { new Uri("https://localhost/one"), new Uri("https://localhost/two"), new Uri("https://localhost/three"), },
                 ContentItems = new List<PagesApiContentItemModel>
                 {
-                    new PagesApiContentItemModel { Justify = 1, Ordinal = 1, Width = 50, Content = "<h1>A document</h1>", },
+                    new PagesApiContentItemModel { Alignment = "Left", Ordinal = 1, Size = 50, Content = "<h1>A document</h1>", },
                 },
                 Published = DateTime.UtcNow,
             };
@@ -377,7 +388,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                 Content = "<h1>A document</h1>",
                 ContentItems = new List<ContentItemModel>
                 {
-                    new ContentItemModel { Justify = 1, Ordinal = 1, Width = 50, Content = "<h1>A document</h1>", },
+                    new ContentItemModel { ItemId = Guid.NewGuid(), Alignment = "Left", Ordinal = 1, Size = 50, Content = "<h1>A document</h1>", },
                 },
                 LastReviewed = DateTime.UtcNow,
             };

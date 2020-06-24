@@ -45,7 +45,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.WebhooksControllerTests
         public async Task WebhooksControllerRouteTestsPublishCreatePostReturnsSuccess()
         {
             // Arrange
-            var eventGridEvents = BuildValidEventGridEvent(EventTypePublished, new EventGridEventData { ItemId = Guid.NewGuid().ToString(), Api = "https://somewhere.com", });
+            var eventGridEvents = BuildValidEventGridEvent(EventTypePublished, new EventGridEventData { ItemId = "edfc8852-9820-4f29-b006-9fbd46cab646", Api = "https://localhost:44354/home/item/contact-us/edfc8852-9820-4f29-b006-9fbd46cab646", });
             var uri = new Uri(WebhookApiUrl, UriKind.Relative);
             var client = factory.CreateClient();
             client.DefaultRequestHeaders.Accept.Clear();

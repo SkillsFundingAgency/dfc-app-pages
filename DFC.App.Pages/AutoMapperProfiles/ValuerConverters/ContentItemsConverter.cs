@@ -18,10 +18,12 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             { 75, "govuk-grid-column-three-quarters" },
         };
 
-        private readonly Dictionary<int, string> justifyClasses = new Dictionary<int, string>
+        private readonly Dictionary<string, string> alignmentClasses = new Dictionary<string, string>
         {
-            { 2, "govuk-grid-column-center" },
-            { 3, "govuk-grid-column-right" },
+            { "Left", "dfc-app-pages-alignment-left" },
+            { "Right", "dfc-app-pages-alignment-right" },
+            { "Centre", "dfc-app-pages-alignment-centre" },
+            { "Justify", "dfc-app-pages-alignment-justify" },
         };
 
         public HtmlString? Convert(IList<ContentItemModel>? sourceMember, ResolutionContext context)
@@ -34,20 +36,33 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             var result = new StringBuilder();
             foreach (var contentItemModel in sourceMember.OrderBy(o => o.Ordinal))
             {
-                var itemClass = "govuk-grid-column-full";
+                var sizeClass = "govuk-grid-column-full";
+                var alignmentClass = string.Empty;
 
-                if (columnWidthClasses.Keys.Contains(contentItemModel.Width))
+                if (columnWidthClasses.Keys.Contains(contentItemModel.Size))
                 {
-                    itemClass = columnWidthClasses[contentItemModel.Width];
+                    sizeClass = columnWidthClasses[contentItemModel.Size];
                 }
 
-                if (justifyClasses.Keys.Contains(contentItemModel.Justify))
+                if (!string.IsNullOrWhiteSpace(contentItemModel.Alignment) && alignmentClasses.Keys.Contains(contentItemModel.Alignment))
                 {
-                    itemClass += " " + justifyClasses[contentItemModel.Justify];
+                    alignmentClass = alignmentClasses[contentItemModel.Alignment];
                 }
 
-                result.Append($"<div class=\"{itemClass}\">");
+                result.Append($"<div class=\"{sizeClass}\">");
+
+                if (!string.IsNullOrWhiteSpace(alignmentClass))
+                {
+                    result.Append($"<div class=\"{alignmentClass}\">");
+                }
+
                 result.Append(contentItemModel.Content);
+
+                if (!string.IsNullOrWhiteSpace(alignmentClass))
+                {
+                    result.Append("</div>");
+                }
+
                 result.Append("</div>");
             }
 

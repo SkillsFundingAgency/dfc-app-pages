@@ -33,7 +33,6 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var result = service.TryValidateModel(expectedInvalidContentPageModel);
 
             // Assert
-
             Assert.Equal(expectedResponse, result);
         }
     }

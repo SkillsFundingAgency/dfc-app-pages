@@ -5,7 +5,7 @@ using Xunit;
 
 namespace DFC.App.Pages.IntegrationTests.AutoMapperTests
 {
-    [Trait("Category", "Integration - Automapper")]
+    [Trait("Category", "Integration - AutoMapper")]
     public class AutoMapperProfileTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private readonly CustomWebApplicationFactory<Startup> factory;
@@ -24,6 +24,20 @@ namespace DFC.App.Pages.IntegrationTests.AutoMapperTests
 
             // Act
             mapper.ConfigurationProvider.AssertConfigurationIsValid<ContentPageModelProfile>();
+
+            // Assert
+            Assert.True(true);
+        }
+
+        [Fact]
+        public void AutoMapperProfileConfigurationForEventGridSubscriptionProfileReturnSuccess()
+        {
+            // Arrange
+            factory.CreateClient();
+            var mapper = factory.Server.Host.Services.GetRequiredService<IMapper>();
+
+            // Act
+            mapper.ConfigurationProvider.AssertConfigurationIsValid<EventGridSubscriptionProfile>();
 
             // Assert
             Assert.True(true);

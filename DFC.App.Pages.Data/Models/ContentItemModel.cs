@@ -14,11 +14,11 @@ namespace DFC.App.Pages.Data.Models
 
         public string? Content { get; set; }
 
-        public int Justify { get; set; }
+        public string? Alignment { get; set; }
 
         public int Ordinal { get; set; }
 
-        public int Width { get; set; }
+        public int Size { get; set; }
 
         public DateTime? LastReviewed { get; set; }
     }

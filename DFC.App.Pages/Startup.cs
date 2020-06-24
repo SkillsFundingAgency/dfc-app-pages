@@ -75,6 +75,7 @@ namespace DFC.App.Pages
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddSingleton(configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
+            services.AddSingleton(configuration.GetSection(nameof(EventGridSubscriptionClientOptions)).Get<EventGridSubscriptionClientOptions>() ?? new EventGridSubscriptionClientOptions());
             services.AddHostedServiceTelemetryWrapper();
             services.AddHostedService<CacheReloadBackgroundService>();
 
@@ -85,6 +86,10 @@ namespace DFC.App.Pages
             services
                 .AddPolicies(policyRegistry, nameof(CmsApiClientOptions), policyOptions)
                 .AddHttpClient<ICmsApiService, CmsApiService, CmsApiClientOptions>(configuration, nameof(CmsApiClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
+
+            services
+                .AddPolicies(policyRegistry, nameof(EventGridSubscriptionClientOptions), policyOptions)
+                .AddHttpClient<IEventGridSubscriptionService, EventGridSubscriptionService, EventGridSubscriptionClientOptions>(configuration, nameof(EventGridSubscriptionClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
 
             services.AddMvc(config =>
                 {

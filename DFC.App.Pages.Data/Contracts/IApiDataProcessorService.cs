@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -8,5 +9,11 @@ namespace DFC.App.Pages.Data.Contracts
     {
         Task<TApiModel?> GetAsync<TApiModel>(HttpClient httpClient, Uri url)
             where TApiModel : class;
+
+        Task<HttpStatusCode> PostAsync<TModel>(HttpClient httpClient, Uri url, TModel model)
+            where TModel : class;
+
+        Task<HttpStatusCode> DeleteAsync<TModel>(HttpClient httpClient, Uri url, TModel model)
+            where TModel : class;
     }
 }

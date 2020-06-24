@@ -75,9 +75,9 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
         {
             var model = new PagesApiContentItemModel
             {
-                Justify = 1,
+                Alignment = "Left",
                 Ordinal = 1,
-                Width = 50,
+                Size = 50,
                 Content = "<h1>A document</h1>",
             };
 

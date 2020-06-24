@@ -18,14 +18,22 @@ namespace DFC.App.Pages.Services.CacheContentService
         private readonly IEventMessageService<ContentPageModel> eventMessageService;
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
+        private readonly IEventGridSubscriptionService eventGridSubscriptionService;
 
-        public CacheReloadService(ILogger<CacheReloadService> logger, AutoMapper.IMapper mapper, IEventMessageService<ContentPageModel> eventMessageService, ICmsApiService cmsApiService, IContentCacheService contentCacheService)
+        public CacheReloadService(
+            ILogger<CacheReloadService> logger,
+            AutoMapper.IMapper mapper,
+            IEventMessageService<ContentPageModel> eventMessageService,
+            ICmsApiService cmsApiService,
+            IContentCacheService contentCacheService,
+            IEventGridSubscriptionService eventGridSubscriptionService)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.eventMessageService = eventMessageService;
             this.cmsApiService = cmsApiService;
             this.contentCacheService = contentCacheService;
+            this.eventGridSubscriptionService = eventGridSubscriptionService;
         }
 
         public async Task Reload(CancellationToken stoppingToken)
@@ -59,7 +67,7 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 logger.LogInformation("Reload cache completed");
             }
-            catch (Exception ex)
+            catch (WebException ex)
             {
                 logger.LogError(ex, "Error in cache reload");
             }
@@ -156,8 +164,12 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 var contentItemIds = contentPageModel.ContentItems.Where(w => w.ItemId.HasValue).Select(s => s.ItemId!.Value).ToList();
                 contentCacheService.AddOrReplace(contentPageModel.Id, contentItemIds);
+
+                await eventGridSubscriptionService.CreateAsync(contentPageModel.Id).ConfigureAwait(false);
+
+                contentItemIds.ForEach(async f => await eventGridSubscriptionService.CreateAsync(f).ConfigureAwait(false));
             }
-            catch (Exception ex)
+            catch (WebException ex)
             {
                 logger.LogError(ex, $"Error in get and save for {item.CanonicalName} - {item.Url}");
             }
@@ -203,6 +215,8 @@ namespace DFC.App.Pages.Services.CacheContentService
                 if (deletionResult == HttpStatusCode.OK)
                 {
                     logger.LogInformation($"Deleted stale cache item {staleContentPage.CanonicalName} - {staleContentPage.Id}");
+
+                    await eventGridSubscriptionService.DeleteAsync(staleContentPage.Id).ConfigureAwait(false);
                 }
                 else
                 {
