@@ -17,7 +17,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService
             this.apiService = apiService;
         }
 
-        public async Task<TApiModel?> GetAsync<TApiModel>(HttpClient httpClient, Uri url)
+        public async Task<TApiModel?> GetAsync<TApiModel>(HttpClient? httpClient, Uri url)
             where TApiModel : class
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
@@ -32,7 +32,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService
             return default;
         }
 
-        public async Task<HttpStatusCode> PostAsync<TModel>(HttpClient httpClient, Uri url, TModel model)
+        public async Task<HttpStatusCode> PostAsync<TModel>(HttpClient? httpClient, Uri url, TModel model)
             where TModel : class
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
@@ -40,7 +40,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService
             return await apiService.PostAsync(httpClient, url, model).ConfigureAwait(false);
         }
 
-        public async Task<HttpStatusCode> DeleteAsync<TModel>(HttpClient httpClient, Uri url, TModel model)
+        public async Task<HttpStatusCode> DeleteAsync<TModel>(HttpClient? httpClient, Uri url, TModel model)
             where TModel : class
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));

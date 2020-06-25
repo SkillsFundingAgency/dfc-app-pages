@@ -402,7 +402,10 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
 
             foreach (var item in models)
             {
-                item.CanonicalName = Guid.NewGuid().ToString();
+                var id = Guid.NewGuid();
+
+                item.Url = new Uri($"http://somewhere.com/item/{id}", UriKind.Absolute);
+                item.CanonicalName = id.ToString();
             }
 
             return models.ToList();
@@ -414,7 +417,11 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
 
             foreach (var item in models)
             {
-                item.CanonicalName = Guid.NewGuid().ToString();
+                var id = Guid.NewGuid();
+
+                item.Id = id;
+                item.Url = new Uri($"http://somewhere.com/item/{id}", UriKind.Absolute);
+                item.CanonicalName = id.ToString();
             }
 
             return models.ToList();

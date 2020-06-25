@@ -67,7 +67,7 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 logger.LogInformation("Reload cache completed");
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex, "Error in cache reload");
             }
@@ -169,7 +169,7 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 contentItemIds.ForEach(async f => await eventGridSubscriptionService.CreateAsync(f).ConfigureAwait(false));
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex, $"Error in get and save for {item.CanonicalName} - {item.Url}");
             }
@@ -183,8 +183,8 @@ namespace DFC.App.Pages.Services.CacheContentService
 
             if (cachedContentPages != null && cachedContentPages.Any())
             {
-                var hashedSummaryList = new HashSet<string>(summaryList.Select(p => p.CanonicalName!));
-                var staleContentPages = cachedContentPages.Where(p => !hashedSummaryList.Contains(p.CanonicalName!)).ToList();
+                var hashedSummaryList = new HashSet<Uri>(summaryList.Select(p => p.Url!));
+                var staleContentPages = cachedContentPages.Where(p => !hashedSummaryList.Contains(p.Url!)).ToList();
 
                 if (staleContentPages != null && staleContentPages.Any())
                 {

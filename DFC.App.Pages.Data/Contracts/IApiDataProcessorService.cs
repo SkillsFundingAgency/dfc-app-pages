@@ -7,13 +7,13 @@ namespace DFC.App.Pages.Data.Contracts
 {
     public interface IApiDataProcessorService
     {
-        Task<TApiModel?> GetAsync<TApiModel>(HttpClient httpClient, Uri url)
+        Task<TApiModel?> GetAsync<TApiModel>(HttpClient? httpClient, Uri url)
             where TApiModel : class;
 
-        Task<HttpStatusCode> PostAsync<TModel>(HttpClient httpClient, Uri url, TModel model)
+        Task<HttpStatusCode> PostAsync<TModel>(HttpClient? httpClient, Uri url, TModel model)
             where TModel : class;
 
-        Task<HttpStatusCode> DeleteAsync<TModel>(HttpClient httpClient, Uri url, TModel model)
+        Task<HttpStatusCode> DeleteAsync<TModel>(HttpClient? httpClient, Uri url, TModel model)
             where TModel : class;
     }
 }

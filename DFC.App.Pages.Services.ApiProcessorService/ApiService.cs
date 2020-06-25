@@ -18,7 +18,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService
             this.logger = logger;
         }
 
-        public async Task<string?> GetAsync(HttpClient httpClient, Uri url, string acceptHeader)
+        public async Task<string?> GetAsync(HttpClient? httpClient, Uri url, string acceptHeader)
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
@@ -36,26 +36,26 @@ namespace DFC.App.Pages.Services.ApiProcessorService
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    logger.LogError($"Failed to get {acceptHeader} data from {url}, received error : '{responseString}', Returning empty content.");
+                    logger.LogError($"Failed to get {acceptHeader} data from {url}, received error : '{responseString}', returning empty content.");
                     responseString = null;
                 }
                 else if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    logger.LogInformation($"Status - {response.StatusCode} with response '{responseString}' received from {url}, Returning empty content.");
+                    logger.LogInformation($"Status - {response.StatusCode} with response '{responseString}' received from {url}, returning empty content.");
                     responseString = null;
                 }
 
                 return responseString;
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
-                logger.LogError(ex, $"Error received getting {acceptHeader} data '{ex.InnerException?.Message}'. Received from {url}, Returning empty content");
+                logger.LogError(ex, $"Error received getting {acceptHeader} data '{ex.InnerException?.Message}'. Received from {url}, returning empty content");
             }
 
             return default;
         }
 
-        public async Task<HttpStatusCode> PostAsync<TModel>(HttpClient httpClient, Uri url, TModel model)
+        public async Task<HttpStatusCode> PostAsync<TModel>(HttpClient? httpClient, Uri url, TModel model)
             where TModel : class
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
@@ -63,11 +63,16 @@ namespace DFC.App.Pages.Services.ApiProcessorService
             logger.LogInformation($"Posting data to {url}");
 
             HttpResponseMessage? response = null;
-            using var content = new ObjectContent(typeof(TModel), model, new JsonMediaTypeFormatter(), MediaTypeNames.Application.Json);
-
             try
             {
-                response = await httpClient.PostAsync(url, content).ConfigureAwait(false);
+                using var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Post,
+                    RequestUri = url,
+                    Content = new ObjectContent(typeof(TModel), model, new JsonMediaTypeFormatter(), MediaTypeNames.Application.Json),
+                };
+
+                response = await httpClient.SendAsync(request).ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -75,7 +80,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService
                     response.EnsureSuccessStatusCode();
                 }
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex, $"Error received posting data '{ex.InnerException?.Message}'. Received from {url}");
             }
@@ -83,7 +88,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService
             return response?.StatusCode ?? HttpStatusCode.BadRequest;
         }
 
-        public async Task<HttpStatusCode> DeleteAsync<TModel>(HttpClient httpClient, Uri url, TModel model)
+        public async Task<HttpStatusCode> DeleteAsync<TModel>(HttpClient? httpClient, Uri url, TModel model)
             where TModel : class
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
@@ -108,7 +113,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService
                     response.EnsureSuccessStatusCode();
                 }
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex, $"Error received deleting data '{ex.InnerException?.Message}'. Received from {url}");
             }

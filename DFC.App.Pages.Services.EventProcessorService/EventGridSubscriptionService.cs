@@ -31,8 +31,15 @@ namespace DFC.App.Pages.Services.EventProcessorService
             this.httpClient = httpClient;
         }
 
-        public async Task CreateAsync(Guid id)
+        public async Task<HttpStatusCode> CreateAsync(Guid id)
         {
+            if (string.IsNullOrWhiteSpace(eventGridSubscriptionClientOptions.BaseAddress?.ToString()))
+            {
+                logger.LogWarning($"{nameof(CreateAsync)} skipping Event Grid subscription create for: {id}, due to no BaseAddress");
+
+                return HttpStatusCode.Continue;
+            }
+
             var url = new Uri($"{eventGridSubscriptionClientOptions.BaseAddress}{eventGridSubscriptionClientOptions.Endpoint}", UriKind.Absolute);
             var eventGridSubscriptionModel = mapper.Map<EventGridSubscriptionModel>(eventGridSubscriptionClientOptions);
             eventGridSubscriptionModel.Id = id;
@@ -47,10 +54,19 @@ namespace DFC.App.Pages.Services.EventProcessorService
             {
                 logger.LogWarning($"{nameof(CreateAsync)} has not created an Event Grid subscription for: {id}: status code :{statusCode}");
             }
+
+            return statusCode;
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task<HttpStatusCode> DeleteAsync(Guid id)
         {
+            if (string.IsNullOrWhiteSpace(eventGridSubscriptionClientOptions.BaseAddress?.ToString()))
+            {
+                logger.LogWarning($"{nameof(DeleteAsync)} skipping Event Grid subscription delete for: {id}, due to no BaseAddress");
+
+                return HttpStatusCode.Continue;
+            }
+
             var url = new Uri($"{eventGridSubscriptionClientOptions.BaseAddress}{eventGridSubscriptionClientOptions.Endpoint}", UriKind.Absolute);
             var eventGridSubscriptionModel = mapper.Map<EventGridSubscriptionModel>(eventGridSubscriptionClientOptions);
             eventGridSubscriptionModel.Id = id;
@@ -65,6 +81,8 @@ namespace DFC.App.Pages.Services.EventProcessorService
             {
                 logger.LogWarning($"{nameof(DeleteAsync)} has not deleted an Event Grid subscription for: {id}: status code :{statusCode}");
             }
+
+            return statusCode;
         }
     }
 }
