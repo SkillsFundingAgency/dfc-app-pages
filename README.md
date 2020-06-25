@@ -47,8 +47,6 @@ By default, the appsettings include local Azure Cosmos Emulator configurations u
 
 This app using the FAM API for Postcode routing. To make use of it you will require an APIM API key for that service.
 
-This app also uses SendGrid to send email messages. The configuration section "SendGrid" contains settings used for SendGrid. As a minimum, add your SendGrid API key.
-
 ## Running locally
 
 To run this product locally, you will need to configure the list of dependencies, once configured and the configuration files updated, it should be F5 to run and debug locally. The application can be run using IIS Express or full IIS.
