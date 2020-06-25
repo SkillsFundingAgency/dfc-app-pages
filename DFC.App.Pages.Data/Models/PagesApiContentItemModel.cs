@@ -14,7 +14,7 @@ namespace DFC.App.Pages.Data.Models
 
         public string? Content { get; set; }
 
-        public string Alignment { get; set; }
+        public string? Alignment { get; set; }
 
         public int Ordinal { get; set; }
 
