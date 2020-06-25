@@ -2,6 +2,7 @@
 using Microsoft.Azure.EventGrid.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 
@@ -42,7 +43,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests
 
             foreach (var eventGridEventData in eventGridEventDataItems)
             {
-                eventGridEventData.Api = "https://localhost:44354/home/item/pages/" + eventGridEventData.ItemId;
+                eventGridEventData.Api = "https://localhost:44354/home/item/contact-us/" + eventGridEventData.ItemId;
                 var eventGridEvents = BuildValidEventGridEvent(EventTypePublished, eventGridEventData);
                 var uri = new Uri("/" + WebhookApiUrl, UriKind.Relative);
                 var result = client.PostAsync(uri, eventGridEvents, new JsonMediaTypeFormatter()).GetAwaiter().GetResult();

@@ -1,4 +1,5 @@
 ﻿using DFC.App.Pages.Data.Contracts;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -6,6 +7,7 @@ namespace DFC.App.Pages.Data.Models
 {
     public class PagesApiDataModel : IApiDataModel
     {
+        [JsonProperty(PropertyName = "id")]
         public Guid? ItemId { get; set; }
 
         public string? CanonicalName { get; set; }
@@ -16,6 +18,7 @@ namespace DFC.App.Pages.Data.Models
 
         public bool IncludeInSitemap { get; set; }
 
+        [JsonProperty(PropertyName = "uri")]
         public Uri? Url { get; set; }
 
         public IList<string>? AlternativeNames { get; set; }
