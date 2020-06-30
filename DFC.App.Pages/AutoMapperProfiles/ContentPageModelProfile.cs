@@ -51,6 +51,21 @@ namespace DFC.App.Pages.AutoMapperProfiles
 
             CreateMap<PagesApiContentItemModel, SharedContentItemModel>()
                 .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published));
+
+            CreateMap<LinkDetails, PagesApiContentItemModel>()
+                .ForMember(d => d.Url, s => s.Ignore())
+                .ForMember(d => d.ItemId, s => s.Ignore())
+                .ForMember(d => d.DisplayText, s => s.Ignore())
+                .ForMember(d => d.Version, s => s.Ignore())
+                .ForMember(d => d.Content, s => s.Ignore())
+                .ForMember(d => d.Justify, s => s.Ignore())
+                .ForMember(d => d.Width, s => s.Ignore())
+                .ForMember(d => d.Published, s => s.Ignore())
+                .ForMember(d => d.CreatedDate, s => s.Ignore())
+                .ForMember(d => d.HtmlBody, s => s.Ignore())
+                .ForMember(d => d.Links, s => s.Ignore())
+                .ForMember(d => d.ContentLinks, s => s.Ignore())
+                .ForMember(d => d.ContentItems, s => s.Ignore());
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿using DFC.App.Pages.Data.Contracts;
-using DFC.App.Pages.Data.Mappers;
 using DFC.App.Pages.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace DFC.App.Pages.Services.CmsApiProcessorService
 {
@@ -14,15 +14,17 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService
         private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly IApiDataProcessorService apiDataProcessorService;
         private readonly HttpClient httpClient;
+        private readonly AutoMapper.IMapper mapper;
 
         public CmsApiService(
             CmsApiClientOptions cmsApiClientOptions, 
             IApiDataProcessorService apiDataProcessorService,
-            HttpClient httpClient)
+            HttpClient httpClient, IMapper mapper)
         {
             this.cmsApiClientOptions = cmsApiClientOptions;
             this.apiDataProcessorService = apiDataProcessorService;
             this.httpClient = httpClient;
+            this.mapper = mapper;
         }
 
         public async Task<IList<PagesSummaryItemModel>?> GetSummaryAsync()
@@ -68,7 +70,7 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService
 
                     if (pagesApiContentItemModel != null)
                     {
-                        pagesApiContentItemModel.Map(linkDetail);
+                        mapper.Map(linkDetail, pagesApiContentItemModel);
                         await GetSharedChildContentItems(pagesApiContentItemModel.ContentLinks, pagesApiContentItemModel.ContentItems).ConfigureAwait(false);
                         contentItem.Add(pagesApiContentItemModel);
                     }

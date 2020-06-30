@@ -1,3 +1,4 @@
+using AutoMapper;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using FakeItEasy;
@@ -15,6 +16,7 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
     {
         private readonly IApiDataProcessorService fakeApiDataProcessorService = A.Fake<IApiDataProcessorService>();
         private readonly HttpClient fakeHttpClient = A.Fake<HttpClient>();
+        private readonly AutoMapper.Mapper mapper = A.Fake<Mapper>();
 
         private CmsApiClientOptions CmsApiClientOptions
         {
@@ -36,7 +38,7 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
 
             A.CallTo(() => fakeApiDataProcessorService.GetAsync<IList<PagesSummaryItemModel>>(A<HttpClient>.Ignored, A<Uri>.Ignored)).Returns(expectedResults);
 
-            var cmsApiService = new CmsApiService(CmsApiClientOptions, fakeApiDataProcessorService, fakeHttpClient);
+            var cmsApiService = new CmsApiService(CmsApiClientOptions, fakeApiDataProcessorService, fakeHttpClient, mapper);
 
             // act
             var result = await cmsApiService.GetSummaryAsync().ConfigureAwait(false);
@@ -91,7 +93,7 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
                 },
             };
 
-            var cmsApiService = new CmsApiService(CmsApiClientOptions, fakeApiDataProcessorService, fakeHttpClient);
+            var cmsApiService = new CmsApiService(CmsApiClientOptions, fakeApiDataProcessorService, fakeHttpClient, mapper);
 
             // act
             var result = await cmsApiService.GetItemAsync(url).ConfigureAwait(false);
@@ -116,7 +118,7 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
 
             A.CallTo(() => fakeApiDataProcessorService.GetAsync<PagesApiContentItemModel>(A<HttpClient>.Ignored, A<Uri>.Ignored)).Returns(expectedResult);
 
-            var cmsApiService = new CmsApiService(CmsApiClientOptions, fakeApiDataProcessorService, fakeHttpClient);
+            var cmsApiService = new CmsApiService(CmsApiClientOptions, fakeApiDataProcessorService, fakeHttpClient, mapper);
 
             // act
             var result = await cmsApiService.GetContentItemAsync(url).ConfigureAwait(false);
