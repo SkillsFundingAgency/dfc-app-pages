@@ -22,8 +22,9 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
             var expectedResult = new PagesSummaryItemModel
             {
                 Url = new Uri("https://somewhere.com"),
-                CanonicalName = "a-name",
+                Title = "a-name",
                 Published = DateTime.Now,
+                CreatedDate = DateTime.Now,
             };
             var jsonResponse = JsonConvert.SerializeObject(expectedResult);
 
