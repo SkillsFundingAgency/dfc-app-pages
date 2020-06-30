@@ -1,6 +1,7 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using Newtonsoft.Json;
 using System;
+using Newtonsoft.Json;
 
 namespace DFC.App.Pages.Data.Models
 {
@@ -15,7 +16,7 @@ namespace DFC.App.Pages.Data.Models
         [JsonProperty(PropertyName = "alias_alias")]
         public string? CanonicalName { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         [JsonProperty(PropertyName = "ModifiedDate")]
         public DateTime Published { get; set; }
