@@ -422,7 +422,19 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                         Title = "title",
                         ContentType = "content type",
                         HtmlBody = "body",
-
+                        DisplayText = "displaytext",
+                        ContentItems = new List<SharedContentItemModel>
+                        {
+                            new SharedContentItemModel
+                            {
+                                CreatedDate = DateTime.Now,
+                                Url = new Uri("http://www.test.com"),
+                                Content = "content",
+                                Version = Guid.NewGuid(),
+                                ItemId = Guid.NewGuid(),
+                                LastReviewed = DateTime.Now,
+                            },
+                        },
                     },
                 },
                 LastReviewed = DateTime.UtcNow,

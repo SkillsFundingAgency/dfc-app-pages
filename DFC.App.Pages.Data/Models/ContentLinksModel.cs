@@ -8,8 +8,6 @@ namespace DFC.App.Pages.Data.Models
 {
     public class ContentLinksModel
     {
-        private const string ContentLinkName = "cont";
-
         private readonly JObject jLinks;
 
         public ContentLinksModel(JObject jLinks)
@@ -37,7 +35,7 @@ namespace DFC.App.Pages.Data.Models
 
             var curiesList = JsonConvert.DeserializeObject<List<CuriesDetails>>(curies);
 
-            return curiesList.FirstOrDefault(x => x.Name == ContentLinkName);
+            return curiesList.FirstOrDefault();
         }
 
         private static KeyValuePair<string, List<LinkDetails>> GetLinkDetailsFromArray(JToken array, string relationshipKey, string baseHref)
@@ -78,7 +76,7 @@ namespace DFC.App.Pages.Data.Models
                 }
 
                 var relationShipKey = key.Replace(
-                    $"{ContentLinkName}:",
+                    $"{contentCuriesDetails.Name}:",
                     string.Empty,
                     StringComparison.CurrentCultureIgnoreCase);
 
