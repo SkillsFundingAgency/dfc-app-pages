@@ -2,6 +2,7 @@
 using DFC.App.Pages.Data.Models;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -342,9 +343,10 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
         {
             var model = new PagesSummaryItemModel()
             {
-                CanonicalName = "an-article",
+                Title = "an-article",
                 Url = new Uri("/aaa/bbb", UriKind.Relative),
-                Published = DateTime.UtcNow,
+                Published = DateTime.Now,
+                CreatedDate = DateTime.Now,
             };
 
             return model;
@@ -364,7 +366,29 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                 Title = "A title",
                 Description = "a description",
                 Keywords = "some keywords",
-                ContentItemUrls = new List<Uri> { new Uri("https://localhost/one"), new Uri("https://localhost/two"), new Uri("https://localhost/three"), },
+                ContentLinks = new ContentLinksModel(new JObject())
+                {
+                    ContentLinks = new List<KeyValuePair<string, List<LinkDetails>>>()
+                    {
+                        new KeyValuePair<string, List<LinkDetails>>(
+                            "test",
+                            new List<LinkDetails>
+                            {
+                                new LinkDetails
+                                {
+                                    Uri = new Uri("http://www.one.com"),
+                                },
+                                new LinkDetails
+                                {
+                                    Uri = new Uri("http://www.two.com"),
+                                },
+                                new LinkDetails
+                                {
+                                    Uri = new Uri("http://www.three.com"),
+                                },
+                            }),
+                    },
+                },
                 ContentItems = new List<PagesApiContentItemModel>
                 {
                     new PagesApiContentItemModel { Alignment = "Left", Ordinal = 1, Size = 50, Content = "<h1>A document</h1>", },
@@ -388,7 +412,18 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                 Content = "<h1>A document</h1>",
                 ContentItems = new List<ContentItemModel>
                 {
-                    new ContentItemModel { ItemId = Guid.NewGuid(), Alignment = "Left", Ordinal = 1, Size = 50, Content = "<h1>A document</h1>", },
+                    new ContentItemModel 
+                    {
+                        ItemId = Guid.NewGuid(),
+                        Alignment = "Left",
+                        Ordinal = 1, Size = 50,
+                        Content = "<h1>A document</h1>",
+                        CreatedDate = DateTime.Now,
+                        Title = "title",
+                        ContentType = "content type",
+                        HtmlBody = "body",
+
+                    },
                 },
                 LastReviewed = DateTime.UtcNow,
             };

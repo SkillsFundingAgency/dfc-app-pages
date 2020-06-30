@@ -40,13 +40,17 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.TraceId, s => s.Ignore())
                 .ForMember(d => d.ParentId, s => s.Ignore())
                 .ForMember(d => d.Content, s => s.Ignore())
+                .ForMember(d => d.RedirectLocations, s => s.MapFrom(a => a.Redirects()))
                 .ForPath(d => d.LastReviewed, s => s.MapFrom(a => a.Published))
                 .ForPath(d => d.MetaTags.Title, s => s.MapFrom(a => a.Title))
                 .ForPath(d => d.MetaTags.Description, s => s.MapFrom(a => a.Description))
                 .ForPath(d => d.MetaTags.Keywords, s => s.MapFrom(a => a.Keywords));
 
             CreateMap<PagesApiContentItemModel, ContentItemModel>()
-                .ForPath(d => d.LastReviewed, s => s.MapFrom(a => a.Published));
+                .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published));
+
+            CreateMap<PagesApiContentItemModel, SharedContentItemModel>()
+                .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published));
         }
     }
 }
