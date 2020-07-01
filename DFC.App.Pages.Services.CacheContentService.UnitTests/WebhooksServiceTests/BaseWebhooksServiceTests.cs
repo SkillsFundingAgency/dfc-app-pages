@@ -58,7 +58,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
                 ItemId = Guid.NewGuid(),
                 CanonicalName = "an-article",
                 BreadcrumbTitle = "An article",
-                IncludeInSitemap = true,
+                ExcludeFromSitemap = true,
                 Version = Guid.NewGuid(),
                 Url = new Uri("https://localhost"),
                 ContentLinks = new ContentLinksModel(new JObject())

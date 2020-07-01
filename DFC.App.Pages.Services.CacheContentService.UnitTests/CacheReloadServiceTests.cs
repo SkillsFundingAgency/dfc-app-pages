@@ -360,7 +360,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                 CanonicalName = "an-article",
                 Version = Guid.NewGuid(),
                 BreadcrumbTitle = "An article",
-                IncludeInSitemap = true,
+                ExcludeFromSitemap = true,
                 Url = new Uri("/aaa/bbb", UriKind.Relative),
                 AlternativeNames = new string[] { "alt-name-1", "alt-name-2" },
                 Title = "A title",
