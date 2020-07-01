@@ -79,5 +79,40 @@ namespace DFC.App.Pages.UnitTests
             // Assert
             Assert.Null(result);
         }
+
+        [Fact]
+        public void ContentItemsConverterTestsWithChildReturnsSuccess()
+        {
+            // Arrange
+            var expectedResult = "<div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">Test</div></div>";
+            var converter = new ContentItemsConverter();
+            IList<ContentItemModel> sourceMember = new List<ContentItemModel>
+            {
+                new ContentItemModel
+                {
+                    ItemId = Guid.NewGuid(),
+                    Url = new Uri("https://somewhere.com/some-item"),
+                    Ordinal = 1,
+                    Alignment = "Centre",
+                    Size = 50,
+                    Content = "",
+                    ContentItems = new List<SharedContentItemModel>
+                    {
+                        new SharedContentItemModel
+                        {
+                            Content = "Test",
+                        },
+                    },
+                },
+            };
+            var context = new ResolutionContext(null, null);
+
+            // Act
+            var result = converter.Convert(sourceMember, context);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(expectedResult, result!.Value);
+        }
     }
 }

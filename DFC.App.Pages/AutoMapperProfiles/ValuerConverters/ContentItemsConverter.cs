@@ -56,7 +56,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
                     result.Append($"<div class=\"{alignmentClass}\">");
                 }
 
-                result.Append(contentItemModel.Content);
+                result.Append(GetContentFromItem(contentItemModel));
 
                 if (!string.IsNullOrWhiteSpace(alignmentClass))
                 {
@@ -67,6 +67,22 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             }
 
             return new HtmlString(result.ToString());
+        }
+
+        private static string GetContentFromItem(ContentItemModel model)
+        {
+            var content = new StringBuilder();
+            content.Append(string.IsNullOrEmpty(model.Content) ? model.HtmlBody : model.Content);
+
+            if (model.ContentItems != null)
+            {
+                foreach (var item in model.ContentItems)
+                {
+                    content.Append(item.Content);
+                }
+            }
+
+            return content.ToString();
         }
     }
 }
