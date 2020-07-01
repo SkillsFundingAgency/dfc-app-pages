@@ -21,7 +21,10 @@ namespace DFC.App.Pages.Data.Models
         public string? BreadcrumbTitle { get; set; }
 
         [JsonProperty("sitemap_Exclude")]
-        public bool IncludeInSitemap { get; set; }
+        public bool ExcludeFromSitemap { get; set; }
+
+        [JsonIgnore]
+        public bool IncludeInSitemap => !ExcludeFromSitemap;
 
         [JsonProperty(PropertyName = "uri")]
         public Uri? Url { get; set; }
