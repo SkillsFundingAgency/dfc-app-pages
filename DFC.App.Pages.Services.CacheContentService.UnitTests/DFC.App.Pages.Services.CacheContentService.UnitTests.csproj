@@ -36,4 +36,10 @@
     <ProjectReference Include="..\DFC.App.Pages.Services.CacheContentService\DFC.App.Pages.Services.CacheContentService.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Model\LinksData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

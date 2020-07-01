@@ -5,6 +5,7 @@ using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTests
 {
@@ -57,10 +58,32 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
                 ItemId = Guid.NewGuid(),
                 CanonicalName = "an-article",
                 BreadcrumbTitle = "An article",
-                IncludeInSitemap = true,
+                ExcludeFromSitemap = true,
                 Version = Guid.NewGuid(),
                 Url = new Uri("https://localhost"),
-                ContentItemUrls = new List<Uri> { new Uri("https://localhost/one"), new Uri("https://localhost/two"), new Uri("https://localhost/three"), },
+                ContentLinks = new ContentLinksModel(new JObject())
+                {
+                    ContentLinks = new List<KeyValuePair<string, List<LinkDetails>>>()
+                    {
+                        new KeyValuePair<string, List<LinkDetails>>(
+                            "test",
+                            new List<LinkDetails>
+                            {
+                                new LinkDetails
+                                {
+                                    Uri = new Uri("http://www.one.com"),
+                                },
+                                new LinkDetails
+                                {
+                                    Uri = new Uri("http://www.two.com"),
+                                },
+                                new LinkDetails
+                                {
+                                    Uri = new Uri("http://www.three.com"),
+                                },
+                            }),
+                    },
+                },
                 ContentItems = new List<PagesApiContentItemModel>
                 {
                     BuildValidPagesApiContentItemDataModel(),

@@ -40,13 +40,32 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.TraceId, s => s.Ignore())
                 .ForMember(d => d.ParentId, s => s.Ignore())
                 .ForMember(d => d.Content, s => s.Ignore())
+                .ForMember(d => d.RedirectLocations, s => s.MapFrom(a => a.Redirects()))
                 .ForPath(d => d.LastReviewed, s => s.MapFrom(a => a.Published))
                 .ForPath(d => d.MetaTags.Title, s => s.MapFrom(a => a.Title))
                 .ForPath(d => d.MetaTags.Description, s => s.MapFrom(a => a.Description))
                 .ForPath(d => d.MetaTags.Keywords, s => s.MapFrom(a => a.Keywords));
 
             CreateMap<PagesApiContentItemModel, ContentItemModel>()
-                .ForPath(d => d.LastReviewed, s => s.MapFrom(a => a.Published));
+                .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published));
+
+            CreateMap<PagesApiContentItemModel, SharedContentItemModel>()
+                .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published));
+
+            CreateMap<LinkDetails, PagesApiContentItemModel>()
+                .ForMember(d => d.Url, s => s.Ignore())
+                .ForMember(d => d.ItemId, s => s.Ignore())
+                .ForMember(d => d.DisplayText, s => s.Ignore())
+                .ForMember(d => d.Version, s => s.Ignore())
+                .ForMember(d => d.Content, s => s.Ignore())
+                .ForMember(d => d.Justify, s => s.Ignore())
+                .ForMember(d => d.Width, s => s.Ignore())
+                .ForMember(d => d.Published, s => s.Ignore())
+                .ForMember(d => d.CreatedDate, s => s.Ignore())
+                .ForMember(d => d.HtmlBody, s => s.Ignore())
+                .ForMember(d => d.Links, s => s.Ignore())
+                .ForMember(d => d.ContentLinks, s => s.Ignore())
+                .ForMember(d => d.ContentItems, s => s.Ignore());
         }
     }
 }

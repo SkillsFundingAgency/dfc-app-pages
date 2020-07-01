@@ -111,13 +111,13 @@ namespace DFC.App.Pages.Services.CacheContentService
 
             try
             {
-                logger.LogInformation($"Get details for {item.CanonicalName} - {item.Url}");
+                logger.LogInformation($"Get details for {item.Title} - {item.Url}");
 
                 var apiDataModel = await cmsApiService.GetItemAsync(item.Url!).ConfigureAwait(false);
 
                 if (apiDataModel == null)
                 {
-                    logger.LogWarning($"No details returned from {item.CanonicalName} - {item.Url}");
+                    logger.LogWarning($"No details returned from {item.Title} - {item.Url}");
 
                     return;
                 }
@@ -133,33 +133,33 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 if (!TryValidateModel(contentPageModel))
                 {
-                    logger.LogError($"Validation failure for {item.CanonicalName} - {item.Url}");
+                    logger.LogError($"Validation failure for {item.Title} - {item.Url}");
 
                     return;
                 }
 
-                logger.LogInformation($"Updating cache with {item.CanonicalName} - {item.Url}");
+                logger.LogInformation($"Updating cache with {item.Title} - {item.Url}");
 
                 var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 
                 if (result == HttpStatusCode.NotFound)
                 {
-                    logger.LogInformation($"Does not exist, creating cache with {item.CanonicalName} - {item.Url}");
+                    logger.LogInformation($"Does not exist, creating cache with {item.Title} - {item.Url}");
 
                     result = await eventMessageService.CreateAsync(contentPageModel).ConfigureAwait(false);
 
                     if (result == HttpStatusCode.Created)
                     {
-                        logger.LogInformation($"Created cache with {item.CanonicalName} - {item.Url}");
+                        logger.LogInformation($"Created cache with {item.Title} - {item.Url}");
                     }
                     else
                     {
-                        logger.LogError($"Cache create error status {result} from {item.CanonicalName} - {item.Url}");
+                        logger.LogError($"Cache create error status {result} from {item.Title} - {item.Url}");
                     }
                 }
                 else
                 {
-                    logger.LogInformation($"Updated cache with {item.CanonicalName} - {item.Url}");
+                    logger.LogInformation($"Updated cache with {item.Title} - {item.Url}");
                 }
 
                 var contentItemIds = contentPageModel.ContentItems.Where(w => w.ItemId.HasValue).Select(s => s.ItemId!.Value).ToList();
@@ -171,7 +171,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"Error in get and save for {item.CanonicalName} - {item.Url}");
+                logger.LogError(ex, $"Error in get and save for {item.Title} - {item.Url}");
             }
         }
 
@@ -186,7 +186,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                 var hashedSummaryList = new HashSet<Uri>(summaryList.Select(p => p.Url!));
                 var staleContentPages = cachedContentPages.Where(p => !hashedSummaryList.Contains(p.Url!)).ToList();
 
-                if (staleContentPages != null && staleContentPages.Any())
+                if (staleContentPages.Any())
                 {
                     await DeleteStaleItemsAsync(staleContentPages, stoppingToken).ConfigureAwait(false);
                 }
