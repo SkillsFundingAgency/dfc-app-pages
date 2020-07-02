@@ -1,11 +1,11 @@
-﻿using DFC.App.Pages.Data.Contracts;
+﻿using AutoMapper;
+using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AutoMapper;
 
 namespace DFC.App.Pages.Services.CmsApiProcessorService
 {
@@ -17,9 +17,10 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService
         private readonly AutoMapper.IMapper mapper;
 
         public CmsApiService(
-            CmsApiClientOptions cmsApiClientOptions, 
+            CmsApiClientOptions cmsApiClientOptions,
             IApiDataProcessorService apiDataProcessorService,
-            HttpClient httpClient, IMapper mapper)
+            HttpClient httpClient,
+            IMapper mapper)
         {
             this.cmsApiClientOptions = cmsApiClientOptions;
             this.apiDataProcessorService = apiDataProcessorService;
@@ -59,7 +60,7 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService
                 .ConfigureAwait(false);
         }
 
-        private async Task GetSharedChildContentItems(ContentLinksModel model, IList<PagesApiContentItemModel> contentItem)
+        private async Task GetSharedChildContentItems(ContentLinksModel? model, IList<PagesApiContentItemModel> contentItem)
         {
             if (model != null && model.ContentLinks.Any())
             {

@@ -1,5 +1,4 @@
-﻿using DFC.App.Pages.Data.Enums;
-using DFC.Compui.Cosmos.Enums;
+﻿using DFC.Compui.Cosmos.Enums;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;

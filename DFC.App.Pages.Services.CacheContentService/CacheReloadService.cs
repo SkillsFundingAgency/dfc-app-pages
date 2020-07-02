@@ -131,12 +131,12 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 var contentPageModel = mapper.Map<ContentPageModel>(apiDataModel);
 
-                //if (!TryValidateModel(contentPageModel))
-                //{
-                //    logger.LogError($"Validation failure for {item.Title} - {item.Url}");
+                if (!TryValidateModel(contentPageModel))
+                {
+                    logger.LogError($"Validation failure for {item.Title} - {item.Url}");
 
-                //    return;
-                //}
+                    return;
+                }
 
                 logger.LogInformation($"Updating cache with {item.Title} - {item.Url}");
 
