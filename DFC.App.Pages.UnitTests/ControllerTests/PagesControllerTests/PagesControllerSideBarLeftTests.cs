@@ -18,7 +18,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var controller = BuildPagesController(mediaTypeName);
 
             // Act
-            var result = controller.SidebarLeft(location,article);
+            var result = controller.SidebarLeft(location, article);
 
             // Assert
             var statusResult = Assert.IsType<NoContentResult>(result);
@@ -38,7 +38,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var controller = BuildPagesController(mediaTypeName);
 
             // Act
-            var result = controller.SidebarLeft(location,article);
+            var result = controller.SidebarLeft(location, article);
 
             // Assert
             var statusResult = Assert.IsType<NoContentResult>(result);

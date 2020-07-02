@@ -1,4 +1,5 @@
 ﻿using DFC.App.Pages.Data.Enums;
+using DFC.Compui.Cosmos.Enums;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -11,7 +12,7 @@ namespace DFC.App.Pages.Models
         public string? Url { get; set; }
 
         [XmlElement("changefreq")]
-        public ChangeFrequency? ChangeFrequency { get; set; }
+        public SiteMapChangeFrequency? ChangeFrequency { get; set; }
 
         [XmlElement("lastmod")]
         public DateTime? LastModified { get; set; }

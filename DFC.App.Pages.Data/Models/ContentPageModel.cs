@@ -1,5 +1,4 @@
-﻿using DFC.App.Pages.Data.Enums;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,11 +22,5 @@ namespace DFC.App.Pages.Data.Models
 
         [JsonProperty(Order = -10)]
         public new Guid? Version { get; set; }
-
-        [Display(Name = "SiteMap Priority")]
-        public double SiteMapPriority { get; set; }
-
-        [Display(Name = "SiteMap Change Frequency")]
-        public ChangeFrequency SiteMapChangeFrequency { get; set; }
     }
 }
