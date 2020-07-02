@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using DFC.Compui.Cosmos.Enums;
+using Microsoft.AspNetCore.Html;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages.ViewModels
 {
+    [ExcludeFromCodeCoverage]
     public class DocumentViewModel
     {
         public HtmlHeadViewModel? HtmlHead { get; set; }
@@ -29,6 +32,12 @@ namespace DFC.App.Pages.ViewModels
         [Display(Name = "Include In SiteMap")]
         public bool IncludeInSitemap { get; set; }
 
+        [Display(Name = "SiteMap Priority")]
+        public decimal SiteMapPriority { get; set; }
+
+        [Display(Name = "SiteMap Change Frequency")]
+        public SiteMapChangeFrequency SiteMapChangeFrequency { get; set; }
+
         public Uri? Url { get; set; }
 
         public HtmlString? Content { get; set; }
@@ -36,8 +45,7 @@ namespace DFC.App.Pages.ViewModels
         [Display(Name = "Last Reviewed")]
         public DateTime LastReviewed { get; set; }
 
-        [Display(Name = "Alternative Names")]
-        public IList<string>? AlternativeNames { get; set; }
+        public IList<string>? Redirects { get; set; }
 
         public BodyViewModel? BodyViewModel { get; set; }
     }

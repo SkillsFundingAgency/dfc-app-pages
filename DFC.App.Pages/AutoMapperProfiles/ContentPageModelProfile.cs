@@ -18,6 +18,7 @@ namespace DFC.App.Pages.AutoMapperProfiles
 
             CreateMap<ContentPageModel, DocumentViewModel>()
                 .ForMember(d => d.DocumentId, s => s.MapFrom(a => a.Id))
+                .ForMember(d => d.Redirects, s => s.MapFrom(a => a.RedirectLocations))
                 .ForMember(d => d.HtmlHead, s => s.Ignore())
                 .ForMember(d => d.Breadcrumb, s => s.Ignore())
                 .ForMember(d => d.Content, opt => opt.ConvertUsing(new ContentItemsConverter(), a => a.ContentItems))

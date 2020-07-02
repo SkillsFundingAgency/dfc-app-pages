@@ -87,6 +87,22 @@
                 </dd>
 
                 <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.SiteMapChangeFrequency)
+                </dt>
+
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.SiteMapChangeFrequency)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.SiteMapPriority)
+                </dt>
+
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.SiteMapPriority)
+                </dd>
+
+                <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.Url)
                 </dt>
                 <dd class="col-sm-10">
@@ -100,18 +116,23 @@
                     @Html.DisplayFor(model => model.LastReviewed)
                 </dd>
 
-                @if (Model.AlternativeNames?.Count() > 0)
+                @if (Model.Redirects.Any())
                 {
                     <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.AlternativeNames)
+                        @Html.DisplayNameFor(model => model.Redirects)
                     </dt>
                     <dd class="col-sm-10">
-                        <ol>
-                            @foreach (var alternativeName in Model.AlternativeNames)
-                            {
-                                <li><a href="/pages/@alternativeName">@alternativeName</a></li>
-                            }
-                        </ol>
+                        @if (Model.Redirects != null)
+                        {
+                            <ol>
+                                @foreach (var redirect in Model.Redirects)
+                                {
+                                    var redirectUrl = "/pages" + redirect;
+
+                                    <li><a href="@redirectUrl">@redirect</a></li>
+                                }
+                            </ol>
+                        }
                     </dd>
                 }
             </dl>

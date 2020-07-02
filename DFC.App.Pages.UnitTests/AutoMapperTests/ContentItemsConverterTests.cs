@@ -95,7 +95,7 @@ namespace DFC.App.Pages.UnitTests
                     Ordinal = 1,
                     Alignment = "Centre",
                     Size = 50,
-                    Content = "",
+                    Content = string.Empty,
                     ContentItems = new List<SharedContentItemModel>
                     {
                         new SharedContentItemModel

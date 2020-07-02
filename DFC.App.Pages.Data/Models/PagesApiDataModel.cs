@@ -1,5 +1,5 @@
 ﻿using DFC.App.Pages.Data.Contracts;
-using DFC.App.Pages.Data.Enums;
+using DFC.Compui.Cosmos.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -16,6 +16,8 @@ namespace DFC.App.Pages.Data.Models
         [JsonProperty("alias_alias")]
         public string? CanonicalName { get; set; }
 
+        public string? Pagelocation { get; set; }
+
         public Guid? Version { get; set; }
 
         public string? BreadcrumbTitle { get; set; }
@@ -28,8 +30,6 @@ namespace DFC.App.Pages.Data.Models
 
         [JsonProperty(PropertyName = "uri")]
         public Uri? Url { get; set; }
-
-        public IList<string>? AlternativeNames { get; set; }
 
         [JsonProperty("skos__prefLabel")]
         public string? Title { get; set; }
@@ -60,7 +60,7 @@ namespace DFC.App.Pages.Data.Models
         public decimal SiteMapPriority { get; set; }
 
         [JsonProperty("sitemap_ChangeFrequency")]
-        public ChangeFrequency SiteMapChangeFrequency { get; set; }
+        public SiteMapChangeFrequency SiteMapChangeFrequency { get; set; }
 
         public string RedirectLocations { get; set; } = string.Empty;
 

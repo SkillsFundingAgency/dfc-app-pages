@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using DFC.App.Pages.Data.Enums;
 
 namespace DFC.App.Pages.Data.Models
 {
@@ -11,7 +9,9 @@ namespace DFC.App.Pages.Data.Models
     {
         [Required]
         [JsonProperty(Order = -10)]
-        public override string PartitionKey => "static-page";
+        public override string? PartitionKey => PageLocation;
+
+        public override string? PageLocation { get; set; } = "/missing-location";
 
         public new string? Content { get; set; }
 
@@ -22,13 +22,5 @@ namespace DFC.App.Pages.Data.Models
 
         [JsonProperty(Order = -10)]
         public new Guid? Version { get; set; }
-
-        public List<string> RedirectLocations { get; set; } = new List<string>();
-
-        [Display(Name = "SiteMap Priority")]
-        public decimal SiteMapPriority { get; set; }
-
-        [Display(Name="SiteMap Change Frequency")]
-        public ChangeFrequency SiteMapChangeFrequency { get; set; }
     }
 }

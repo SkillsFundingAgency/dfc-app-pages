@@ -362,7 +362,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                 BreadcrumbTitle = "An article",
                 ExcludeFromSitemap = true,
                 Url = new Uri("/aaa/bbb", UriKind.Relative),
-                AlternativeNames = new string[] { "alt-name-1", "alt-name-2" },
+                RedirectLocations = "alt-name-1\r\nalt-name-2",
                 Title = "A title",
                 Description = "a description",
                 Keywords = "some keywords",
@@ -412,7 +412,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                 Content = "<h1>A document</h1>",
                 ContentItems = new List<ContentItemModel>
                 {
-                    new ContentItemModel 
+                    new ContentItemModel
                     {
                         ItemId = Guid.NewGuid(),
                         Alignment = "Left",

@@ -25,7 +25,7 @@ namespace DFC.App.Pages.Services.EventProcessorService
         {
             var serviceDataModels = await contentPageService.GetAllAsync().ConfigureAwait(false);
 
-            return serviceDataModels.ToList();
+            return serviceDataModels?.ToList();
         }
 
         public async Task<HttpStatusCode> CreateAsync(TModel? upsertDocumentModel)

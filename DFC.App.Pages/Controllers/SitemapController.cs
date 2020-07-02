@@ -41,16 +41,8 @@ namespace DFC.App.Pages.Controllers
             {
                 logger.LogInformation("Generating Sitemap");
 
-                var sitemapUrlPrefix = $"{Request.GetBaseAddress()}{BasePagesController<PagesController>.RegistrationPath}";
+                var sitemapUrlPrefix = $"{Request.GetBaseAddress()}".TrimEnd('/');
                 var sitemap = new Sitemap();
-
-                // add the defaults
-                sitemap.Add(new SitemapLocation
-                {
-                    Url = sitemapUrlPrefix,
-                    Priority = 1,
-                });
-
                 var contentPageModels = await contentPageService.GetAllAsync().ConfigureAwait(false);
 
                 if (contentPageModels != null)
@@ -67,8 +59,9 @@ namespace DFC.App.Pages.Controllers
                         {
                             sitemap.Add(new SitemapLocation
                             {
-                                Url = $"{sitemapUrlPrefix}/{contentPageModel.CanonicalName}",
-                                Priority = 1,
+                                Url = $"{sitemapUrlPrefix}{contentPageModel.PageLocation}/{contentPageModel.CanonicalName}",
+                                Priority = contentPageModel.SiteMapPriority,
+                                ChangeFrequency = contentPageModel.SiteMapChangeFrequency,
                             });
                         }
                     }

@@ -1,27 +1,19 @@
-﻿using System;
+﻿using DFC.Compui.Cosmos.Enums;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
 
 namespace DFC.App.Pages.Models
 {
+    [ExcludeFromCodeCoverage]
     public class SitemapLocation
     {
-        public enum ChangeFrequencies
-        {
-            Always,
-            Hourly,
-            Daily,
-            Weekly,
-            Monthly,
-            Yearly,
-            Never,
-        }
-
         [XmlElement("loc")]
         public string? Url { get; set; }
 
         [XmlElement("changefreq")]
-        public ChangeFrequencies? ChangeFrequency { get; set; }
+        public SiteMapChangeFrequency? ChangeFrequency { get; set; }
 
         [XmlElement("lastmod")]
         public DateTime? LastModified { get; set; }

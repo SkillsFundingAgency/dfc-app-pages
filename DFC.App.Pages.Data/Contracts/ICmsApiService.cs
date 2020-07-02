@@ -11,7 +11,7 @@ namespace DFC.App.Pages.Data.Contracts
 
         Task<PagesApiDataModel?> GetItemAsync(Uri url);
 
-        Task<PagesApiContentItemModel?> GetContentItemAsync(LinkDetails url);
+        Task<PagesApiContentItemModel?> GetContentItemAsync(LinkDetails details);
 
         Task<PagesApiContentItemModel?> GetContentItemAsync(Uri uri);
     }

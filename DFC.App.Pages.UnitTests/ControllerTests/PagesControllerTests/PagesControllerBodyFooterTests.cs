@@ -13,11 +13,12 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         public void PagesControllerBodyFooterJsonReturnsSuccess(string mediaTypeName)
         {
             // Arrange
+            const string location = "a-location-name";
             const string article = "an-article-name";
             var controller = BuildPagesController(mediaTypeName);
 
             // Act
-            var result = controller.BodyFooter(article);
+            var result = controller.BodyFooter(location, article);
 
             // Assert
             var statusResult = Assert.IsType<NoContentResult>(result);
@@ -32,11 +33,12 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         public void PagesControllerBodyFooterWithNullArticleJsonReturnsSuccess(string mediaTypeName)
         {
             // Arrange
+            const string location = "a-location-name";
             const string? article = null;
             var controller = BuildPagesController(mediaTypeName);
 
             // Act
-            var result = controller.BodyFooter(article);
+            var result = controller.BodyFooter(location, article);
 
             // Assert
             var statusResult = Assert.IsType<NoContentResult>(result);

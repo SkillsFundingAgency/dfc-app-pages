@@ -1,8 +1,10 @@
-﻿using System.Xml.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Xml.Serialization;
 
 namespace DFC.App.Pages.Models
 {
     [XmlType(Namespace = "http://www.google.com/schemas/sitemap-image/1.1")]
+    [ExcludeFromCodeCoverage]
     public class SitemapImage
     {
         [XmlElement("loc")]

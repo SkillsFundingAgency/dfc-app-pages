@@ -35,7 +35,7 @@ namespace DFC.App.Pages.Controllers
 
             if (contentPageModels != null)
             {
-                viewModel.Documents = (from a in contentPageModels.OrderBy(o => o.CanonicalName)
+                viewModel.Documents = (from a in contentPageModels.OrderBy(o => o.PageLocation).ThenBy(o => o.CanonicalName)
                                        select mapper.Map<IndexDocumentViewModel>(a)).ToList();
 
                 viewModel.Documents.Add(new IndexDocumentViewModel { CanonicalName = HealthController.HealthViewCanonicalName });
@@ -53,10 +53,10 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/{article}")]
-        public async Task<IActionResult> Document(string article)
+        [Route("pages/{location}/{article}")]
+        public async Task<IActionResult> Document(string location, string article)
         {
-            var contentPageModel = await GetContentPageAsync(article).ConfigureAwait(false);
+            var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
 
             if (contentPageModel != null)
             {
@@ -73,14 +73,14 @@ namespace DFC.App.Pages.Controllers
 
             if (!string.IsNullOrWhiteSpace(article))
             {
-                var alternateContentPageModel = await GetAlternativeContentPageAsync(article).ConfigureAwait(false);
+                var redirectedContentPageModel = await GetRedirectedContentPageAsync(location, article).ConfigureAwait(false);
 
-                if (alternateContentPageModel != null)
+                if (redirectedContentPageModel != null)
                 {
-                    var alternateUrl = $"{Request.GetBaseAddress()}{LocalPath}/{alternateContentPageModel.CanonicalName}";
-                    Logger.LogWarning($"{nameof(Document)} has been redirected for: {article} to {alternateUrl}");
+                    var redirectedUrlateUrl = $"{Request.GetBaseAddress()}{LocalPath}/{location}/{redirectedContentPageModel.CanonicalName}";
+                    Logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrlateUrl}");
 
-                    return RedirectPermanentPreserveMethod(alternateUrl);
+                    return RedirectPermanent(redirectedUrlateUrl);
                 }
             }
 
@@ -90,11 +90,11 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/{article}/htmlhead")]
-        public async Task<IActionResult> HtmlHead(string? article)
+        [Route("pages/{location}/{article}/htmlhead")]
+        public async Task<IActionResult> HtmlHead(string location, string article)
         {
             var viewModel = new HtmlHeadViewModel();
-            var contentPageModel = await GetContentPageAsync(article).ConfigureAwait(false);
+            var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
 
             if (contentPageModel != null)
             {
@@ -108,10 +108,10 @@ namespace DFC.App.Pages.Controllers
             return this.NegotiateContentResult(viewModel);
         }
 
-        [Route("pages/{article}/breadcrumb")]
-        public async Task<IActionResult> Breadcrumb(string? article)
+        [Route("pages/{location}/{article}/breadcrumb")]
+        public async Task<IActionResult> Breadcrumb(string location, string article)
         {
-            var contentPageModel = await GetContentPageAsync(article).ConfigureAwait(false);
+            var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
             var breadcrumbItemModel = mapper.Map<BreadcrumbItemModel>(contentPageModel);
             var viewModel = BuildBreadcrumb(RegistrationPath, breadcrumbItemModel);
 
@@ -121,25 +121,25 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/{article}/bodytop")]
-        public IActionResult BodyTop(string? article)
+        [Route("pages/{location}/{article}/bodytop")]
+        public IActionResult BodyTop(string location, string article)
         {
             return NoContent();
         }
 
         [HttpGet]
-        [Route("pages/{article}/herobanner")]
-        public IActionResult HeroBanner(string? article)
+        [Route("pages/{location}/{article}/herobanner")]
+        public IActionResult HeroBanner(string location, string article)
         {
             return NoContent();
         }
 
         [HttpGet]
-        [Route("pages/{article}/body")]
-        public async Task<IActionResult> Body(string? article)
+        [Route("pages/{location}/{article}/body")]
+        public async Task<IActionResult> Body(string location, string article)
         {
             var viewModel = new BodyViewModel();
-            var contentPageModel = await GetContentPageAsync(article).ConfigureAwait(false);
+            var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
 
             if (contentPageModel != null)
             {
@@ -151,14 +151,14 @@ namespace DFC.App.Pages.Controllers
 
             if (!string.IsNullOrWhiteSpace(article))
             {
-                var alternateContentPageModel = await GetAlternativeContentPageAsync(article).ConfigureAwait(false);
+                var redirectedContentPageModel = await GetRedirectedContentPageAsync(location, article).ConfigureAwait(false);
 
-                if (alternateContentPageModel != null)
+                if (redirectedContentPageModel != null)
                 {
-                    var alternateUrl = $"{Request.GetBaseAddress()}{RegistrationPath}/{alternateContentPageModel.CanonicalName}";
-                    Logger.LogWarning($"{nameof(Body)} has been redirected for: {article} to {alternateUrl}");
+                    var redirectedUrl = $"{Request.GetBaseAddress()}{RegistrationPath}/{location}/{redirectedContentPageModel.CanonicalName}";
+                    Logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
 
-                    return RedirectPermanentPreserveMethod(alternateUrl);
+                    return RedirectPermanent(redirectedUrl);
                 }
             }
 
@@ -167,41 +167,44 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/{article}/sidebarright")]
-        public IActionResult SidebarRight(string? article)
+        [Route("pages/{location}/{article}/sidebarright")]
+        public IActionResult SidebarRight(string location, string article)
         {
             return NoContent();
         }
 
         [HttpGet]
-        [Route("pages/{article}/sidebarleft")]
-        public IActionResult SidebarLeft(string? article)
+        [Route("pages/{location}/{article}/sidebarleft")]
+        public IActionResult SidebarLeft(string location, string article)
         {
             return NoContent();
         }
 
         [HttpGet]
-        [Route("pages/{article}/bodyfooter")]
-        public IActionResult BodyFooter(string? article)
+        [Route("pages/{location}/{article}/bodyfooter")]
+        public IActionResult BodyFooter(string location, string article)
         {
             return NoContent();
         }
 
         #region Define helper methods
 
-        private async Task<ContentPageModel?> GetContentPageAsync(string? article)
+        private async Task<ContentPageModel?> GetContentPageAsync(string? location, string? article)
         {
             const string defaultArticleName = HomeController.ThisViewCanonicalName;
             var articleName = string.IsNullOrWhiteSpace(article) ? defaultArticleName : article;
 
-            var contentPageModel = await contentPageService.GetByNameAsync(articleName).ConfigureAwait(false);
+            var contentPageModel = await contentPageService.GetByNameAsync("/" + location, articleName).ConfigureAwait(false);
 
             return contentPageModel;
         }
 
-        private async Task<ContentPageModel?> GetAlternativeContentPageAsync(string article)
+        private async Task<ContentPageModel?> GetRedirectedContentPageAsync(string? location, string? article)
         {
-            var contentPageModel = await contentPageService.GetByAlternativeNameAsync(article).ConfigureAwait(false);
+            const string defaultArticleName = HomeController.ThisViewCanonicalName;
+            var articleName = string.IsNullOrWhiteSpace(article) ? defaultArticleName : article;
+
+            var contentPageModel = await contentPageService.GetByRedirectLocationAsync($"/{location}/{articleName}").ConfigureAwait(false);
 
             return contentPageModel;
         }

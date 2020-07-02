@@ -1,7 +1,9 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace DFC.App.Pages.Models.Robots
 {
+    [ExcludeFromCodeCoverage]
     public class Robot
     {
         private readonly StringBuilder robotData;
