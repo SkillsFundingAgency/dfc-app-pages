@@ -20,7 +20,7 @@ namespace DFC.App.Pages.Data.UnitTests.ValidationTests
         public void CanCheckIfDocumentIdIsInvalid(Guid documentId)
         {
             // Arrange
-            var model = CreateModel(documentId, "canonicalname1", "content1", new List<string>());
+            var model = CreateModel(documentId, "location1", "canonicalname1", "content1", new List<string>());
 
             // Act
             var vr = Validate(model);
@@ -38,10 +38,45 @@ namespace DFC.App.Pages.Data.UnitTests.ValidationTests
         [InlineData("xyz123")]
         [InlineData("abc_def")]
         [InlineData("abc-def")]
+        public void CanCheckIfPageLocationIsValid(string pageLocation)
+        {
+            // Arrange
+            var model = CreateModel(Guid.NewGuid(), pageLocation, "canonicalname1", "content", new List<string>());
+
+            // Act
+            var vr = Validate(model);
+
+            // Assert
+            Assert.True(vr.Count == 0);
+        }
+
+        [Theory]
+        [InlineData("ABCDEF")]
+        public void CanCheckIfPageLocationIsInvalid(string pageLocation)
+        {
+            // Arrange
+            var model = CreateModel(Guid.NewGuid(), pageLocation, "canonicalname1", "content", new List<string>());
+
+            // Act
+            var vr = Validate(model);
+
+            // Assert
+            Assert.True(vr.Count > 0);
+            Assert.NotNull(vr.First(f => f.MemberNames.Any(a => a == nameof(model.PageLocation))));
+            Assert.Equal(string.Format(CultureInfo.InvariantCulture, ValidationMessage.FieldNotLowercase, nameof(model.PageLocation)), vr.First(f => f.MemberNames.Any(a => a == nameof(model.PageLocation))).ErrorMessage);
+        }
+
+        [Theory]
+        [InlineData("abcdefghijklmnopqrstuvwxyz")]
+        [InlineData("0123456789")]
+        [InlineData("abc")]
+        [InlineData("xyz123")]
+        [InlineData("abc_def")]
+        [InlineData("abc-def")]
         public void CanCheckIfCanonicalNameIsValid(string canonicalName)
         {
             // Arrange
-            var model = CreateModel(Guid.NewGuid(), canonicalName, "content", new List<string>());
+            var model = CreateModel(Guid.NewGuid(), "location1", canonicalName, "content", new List<string>());
 
             // Act
             var vr = Validate(model);
@@ -55,7 +90,7 @@ namespace DFC.App.Pages.Data.UnitTests.ValidationTests
         public void CanCheckIfCanonicalNameIsInvalid(string canonicalName)
         {
             // Arrange
-            var model = CreateModel(Guid.NewGuid(), canonicalName, "content", new List<string>());
+            var model = CreateModel(Guid.NewGuid(), "location1", canonicalName, "content", new List<string>());
 
             // Act
             var vr = Validate(model);
@@ -73,10 +108,10 @@ namespace DFC.App.Pages.Data.UnitTests.ValidationTests
         [InlineData("xyz123")]
         [InlineData("abc_def")]
         [InlineData("abc-def")]
-        public void CanCheckIfAlternativeNameIsValid(string alternativeName)
+        public void CanCheckIfRedirectLocationsIsValid(string redirectLocations)
         {
             // Arrange
-            var model = CreateModel(Guid.NewGuid(), "canonicalname1", "content1", new List<string>() { alternativeName });
+            var model = CreateModel(Guid.NewGuid(), "location1", "canonicalname1", "content1", new List<string>() { redirectLocations });
 
             // Act
             var vr = Validate(model);
@@ -87,31 +122,32 @@ namespace DFC.App.Pages.Data.UnitTests.ValidationTests
 
         [Theory]
         [InlineData("ABCDEF")]
-        public void CanCheckIfAlternativeNameIsInvalid(string alternativeName)
+        public void CanCheckIfRedirectLocationsIsInvalid(string redirectLocations)
         {
             // Arrange
-            var model = CreateModel(Guid.NewGuid(), "canonicalname1", "content1", new List<string>() { alternativeName });
+            var model = CreateModel(Guid.NewGuid(), "location1", "canonicalname1", "content1", new List<string>() { redirectLocations });
 
             // Act
             var vr = Validate(model);
 
             // Assert
             Assert.True(vr.Count > 0);
-            Assert.NotNull(vr.First(f => f.MemberNames.Any(a => a == nameof(model.AlternativeNames))));
-            Assert.Equal(string.Format(CultureInfo.InvariantCulture, ValidationMessage.FieldNotLowercase, nameof(model.AlternativeNames)), vr.First(f => f.MemberNames.Any(a => a == nameof(model.AlternativeNames))).ErrorMessage);
+            Assert.NotNull(vr.First(f => f.MemberNames.Any(a => a == nameof(model.RedirectLocations))));
+            Assert.Equal(string.Format(CultureInfo.InvariantCulture, ValidationMessage.FieldNotLowercase, nameof(model.RedirectLocations)), vr.First(f => f.MemberNames.Any(a => a == nameof(model.RedirectLocations))).ErrorMessage);
         }
 
-        private ContentPageModel CreateModel(Guid documentId, string canonicalName, string content, List<string> alternativeNames)
+        private ContentPageModel CreateModel(Guid documentId, string pageLocation, string canonicalName, string content, List<string> redirectLocations)
         {
             var model = new ContentPageModel
             {
                 Id = documentId,
+                PageLocation = pageLocation,
                 CanonicalName = canonicalName,
                 BreadcrumbTitle = canonicalName,
                 Version = Guid.NewGuid(),
                 Url = new Uri("aaa-bbb", UriKind.Relative),
                 Content = content,
-                AlternativeNames = alternativeNames.ToArray(),
+                RedirectLocations = redirectLocations.ToArray(),
                 LastReviewed = DateTime.UtcNow,
             };
 

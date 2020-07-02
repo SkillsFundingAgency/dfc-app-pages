@@ -10,9 +10,9 @@ namespace DFC.App.Pages.Data.Models
     {
         [Required]
         [JsonProperty(Order = -10)]
-        public override string PartitionKey => PageLocation;
+        public override string? PartitionKey => PageLocation;
 
-        public string PageLocation { get; set; } = "/missing-location";
+        public override string? PageLocation { get; set; } = "/missing-location";
 
         public new string? Content { get; set; }
 

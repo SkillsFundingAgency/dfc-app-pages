@@ -17,19 +17,20 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         public async Task PagesControllerBreadcrumbHtmlReturnsSuccess(string mediaTypeName)
         {
             // Arrange
+            const string location = "a-location-name";
             const string article = "an-article-name";
             var expectedResult = A.Fake<ContentPageModel>();
             var controller = BuildPagesController(mediaTypeName);
 
             expectedResult.CanonicalName = article;
 
-            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
-            var result = await controller.Breadcrumb(article).ConfigureAwait(false);
+            var result = await controller.Breadcrumb(location, article).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<BreadcrumbViewModel>(viewResult.ViewData.Model);
@@ -44,19 +45,20 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         public async Task PagesControllerBreadcrumbJsonReturnsSuccess(string mediaTypeName)
         {
             // Arrange
+            const string location = "a-location-name";
             const string article = "an-article-name";
             var expectedResult = A.Fake<ContentPageModel>();
             var controller = BuildPagesController(mediaTypeName);
 
             expectedResult.CanonicalName = article;
 
-            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
-            var result = await controller.Breadcrumb(article).ConfigureAwait(false);
+            var result = await controller.Breadcrumb(location, article).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
             var model = Assert.IsAssignableFrom<BreadcrumbViewModel>(jsonResult.Value);
@@ -71,17 +73,18 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         public async Task PagesControllerBreadcrumbHtmlReturnsSuccessWhenNoData(string mediaTypeName)
         {
             // Arrange
+            const string location = "a-location-name";
             const string article = "an-article-name";
             ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
-            var result = await controller.Breadcrumb(article).ConfigureAwait(false);
+            var result = await controller.Breadcrumb(location, article).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<BreadcrumbViewModel>(viewResult.ViewData.Model);
@@ -96,17 +99,18 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         public async Task PagesControllerBreadcrumbJsonReturnsSuccessWhenNoData(string mediaTypeName)
         {
             // Arrange
+            const string location = "a-location-name";
             const string article = "an-article-name";
             ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
-            var result = await controller.Breadcrumb(article).ConfigureAwait(false);
+            var result = await controller.Breadcrumb(location, article).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
             var model = Assert.IsAssignableFrom<BreadcrumbViewModel>(jsonResult.Value);
@@ -121,19 +125,20 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         public async Task PagesControllerBreadcrumbReturnsNotAcceptable(string mediaTypeName)
         {
             // Arrange
+            const string location = "a-location-name";
             const string article = "an-article-name";
             var expectedResult = A.Fake<ContentPageModel>();
             var controller = BuildPagesController(mediaTypeName);
 
             expectedResult.CanonicalName = article;
 
-            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
-            var result = await controller.Breadcrumb(article).ConfigureAwait(false);
+            var result = await controller.Breadcrumb(location, article).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var statusResult = Assert.IsType<StatusCodeResult>(result);
 
