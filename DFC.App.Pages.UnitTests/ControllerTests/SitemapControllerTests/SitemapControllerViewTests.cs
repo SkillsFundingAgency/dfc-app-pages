@@ -57,9 +57,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
             // Assert
             A.CallTo(() => FakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
 
-            var contentResult = Assert.IsType<ContentResult>(result);
-
-            contentResult.ContentType.Should().Be(MediaTypeNames.Application.Xml);
+            _ = Assert.IsType<NoContentResult>(result);
 
             controller.Dispose();
         }

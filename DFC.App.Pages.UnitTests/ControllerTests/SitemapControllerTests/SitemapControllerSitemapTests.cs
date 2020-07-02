@@ -20,10 +20,13 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
             var controller = BuildSitemapController();
 
             expectedResults[0].IncludeInSitemap = true;
+            expectedResults[0].PageLocation = "default-location";
             expectedResults[0].CanonicalName = "default-article";
             expectedResults[1].IncludeInSitemap = false;
+            expectedResults[1].PageLocation = "default-location";
             expectedResults[1].CanonicalName = "not-in-sitemap";
             expectedResults[2].IncludeInSitemap = true;
+            expectedResults[2].PageLocation = "default-location";
             expectedResults[2].CanonicalName = "in-sitemap";
 
             A.CallTo(() => FakeContentPageService.GetAllAsync()).Returns(expectedResults);
@@ -57,9 +60,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
             // Assert
             A.CallTo(() => FakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
 
-            var contentResult = Assert.IsType<ContentResult>(result);
-
-            contentResult.ContentType.Should().Be(MediaTypeNames.Application.Xml);
+            _ = Assert.IsType<NoContentResult>(result);
 
             controller.Dispose();
         }
