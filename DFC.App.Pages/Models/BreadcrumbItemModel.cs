@@ -1,5 +1,8 @@
-﻿namespace DFC.App.Pages.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DFC.App.Pages.Models
 {
+    [ExcludeFromCodeCoverage]
     public class BreadcrumbItemModel
     {
         public string? CanonicalName { get; set; }

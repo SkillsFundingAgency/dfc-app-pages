@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages.ViewModels
 {
+    [ExcludeFromCodeCoverage]
     public class HtmlHeadViewModel
     {
         public string? Title { get; set; }

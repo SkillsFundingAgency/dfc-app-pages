@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Html;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages.ViewModels
 {
+    [ExcludeFromCodeCoverage]
     public class DocumentViewModel
     {
         public HtmlHeadViewModel? HtmlHead { get; set; }
