@@ -41,6 +41,7 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.TraceId, s => s.Ignore())
                 .ForMember(d => d.ParentId, s => s.Ignore())
                 .ForMember(d => d.Content, s => s.Ignore())
+                .ForMember(d => d.SiteMapPriority, s => s.MapFrom(a => a.SiteMapPriority / 10))
                 .ForMember(d => d.RedirectLocations, s => s.MapFrom(a => a.Redirects()))
                 .ForPath(d => d.LastReviewed, s => s.MapFrom(a => a.Published))
                 .ForPath(d => d.MetaTags.Title, s => s.MapFrom(a => a.Title))

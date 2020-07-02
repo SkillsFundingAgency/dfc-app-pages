@@ -59,7 +59,7 @@ namespace DFC.App.Pages.Data.Models
         [JsonProperty("sitemap_Priority")]
         public decimal SiteMapPriority { get; set; }
 
-        [JsonProperty("sitemap_ChangeFrequency ")]
+        [JsonProperty("sitemap_ChangeFrequency")]
         public ChangeFrequency SiteMapChangeFrequency { get; set; }
 
         public string RedirectLocations { get; set; } = string.Empty;
