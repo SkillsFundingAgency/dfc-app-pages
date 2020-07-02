@@ -100,16 +100,18 @@
                     @Html.DisplayFor(model => model.LastReviewed)
                 </dd>
 
-                @if (Model.AlternativeNames?.Count() > 0)
+                @if (Model.Redirects.Any())
                 {
                     <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.AlternativeNames)
+                        @Html.DisplayNameFor(model => model.Redirects)
                     </dt>
                     <dd class="col-sm-10">
                         <ol>
-                            @foreach (var alternativeName in Model.AlternativeNames)
+                            @foreach (var redirect in Model.Redirects)
                             {
-                                <li><a href="/pages/@alternativeName">@alternativeName</a></li>
+                                var redirectUrl = "/pages" + redirect;
+
+                                <li><a href="@redirectUrl">@redirect</a></li>
                             }
                         </ol>
                     </dd>

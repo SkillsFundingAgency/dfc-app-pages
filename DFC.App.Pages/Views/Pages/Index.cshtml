@@ -14,7 +14,14 @@
                 @foreach (var document in Model.Documents)
                 {
                     <li>
-                        <a href="/@Model.LocalPath/@document.CanonicalName">@document.CanonicalName</a>
+                        @if (string.IsNullOrWhiteSpace(@document.PageLocation))
+                        {
+                            <a href="/@Model.LocalPath/@document.CanonicalName">@document.CanonicalName</a>
+                        }
+                        else
+                        {
+                            <a href="/@Model.LocalPath@document.PageLocation/@document.CanonicalName">@document.PageLocation /  @document.CanonicalName</a>
+                        }
                     </li>
                 }
             </ul>

@@ -16,6 +16,8 @@ namespace DFC.App.Pages.Data.Models
         [JsonProperty("alias_alias")]
         public string? CanonicalName { get; set; }
 
+        public string? Pagelocation { get; set; }
+
         public Guid? Version { get; set; }
 
         public string? BreadcrumbTitle { get; set; }
@@ -28,8 +30,6 @@ namespace DFC.App.Pages.Data.Models
 
         [JsonProperty(PropertyName = "uri")]
         public Uri? Url { get; set; }
-
-        public IList<string>? AlternativeNames { get; set; }
 
         [JsonProperty("skos__prefLabel")]
         public string? Title { get; set; }
