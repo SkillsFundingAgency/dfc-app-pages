@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DFC.App.Pages.Data.Enums;
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -6,22 +7,11 @@ namespace DFC.App.Pages.Models
 {
     public class SitemapLocation
     {
-        public enum ChangeFrequencies
-        {
-            Always,
-            Hourly,
-            Daily,
-            Weekly,
-            Monthly,
-            Yearly,
-            Never,
-        }
-
         [XmlElement("loc")]
         public string? Url { get; set; }
 
         [XmlElement("changefreq")]
-        public ChangeFrequencies? ChangeFrequency { get; set; }
+        public ChangeFrequency? ChangeFrequency { get; set; }
 
         [XmlElement("lastmod")]
         public DateTime? LastModified { get; set; }

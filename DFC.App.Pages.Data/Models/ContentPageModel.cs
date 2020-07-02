@@ -25,7 +25,7 @@ namespace DFC.App.Pages.Data.Models
         public new Guid? Version { get; set; }
 
         [Display(Name = "SiteMap Priority")]
-        public decimal SiteMapPriority { get; set; }
+        public double SiteMapPriority { get; set; }
 
         [Display(Name = "SiteMap Change Frequency")]
         public ChangeFrequency SiteMapChangeFrequency { get; set; }
