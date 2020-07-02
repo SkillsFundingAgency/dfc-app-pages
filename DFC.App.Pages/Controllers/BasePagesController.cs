@@ -54,9 +54,9 @@ namespace DFC.App.Pages.Controllers
                 };
 
                 viewModel.Paths.Add(articlePathViewModel);
-            }
 
-            viewModel.Paths.Last().AddHyperlink = false;
+                viewModel.Paths.Last().AddHyperlink = false;
+            }
 
             return viewModel;
         }

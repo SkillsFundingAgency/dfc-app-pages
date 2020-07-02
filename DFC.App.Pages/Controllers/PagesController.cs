@@ -35,7 +35,7 @@ namespace DFC.App.Pages.Controllers
 
             if (contentPageModels != null)
             {
-                viewModel.Documents = (from a in contentPageModels.OrderBy(o => o.CanonicalName)
+                viewModel.Documents = (from a in contentPageModels.OrderBy(o => o.PageLocation).ThenBy(o => o.CanonicalName)
                                        select mapper.Map<IndexDocumentViewModel>(a)).ToList();
 
                 viewModel.Documents.Add(new IndexDocumentViewModel { CanonicalName = HealthController.HealthViewCanonicalName });

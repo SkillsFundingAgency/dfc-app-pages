@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using DFC.Compui.Cosmos.Enums;
+using Microsoft.AspNetCore.Html;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,6 +29,12 @@ namespace DFC.App.Pages.ViewModels
 
         [Display(Name = "Include In SiteMap")]
         public bool IncludeInSitemap { get; set; }
+
+        [Display(Name = "SiteMap Priority")]
+        public decimal SiteMapPriority { get; set; }
+
+        [Display(Name = "SiteMap Change Frequency")]
+        public SiteMapChangeFrequency SiteMapChangeFrequency { get; set; }
 
         public Uri? Url { get; set; }
 
