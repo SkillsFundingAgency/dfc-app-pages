@@ -37,7 +37,7 @@
         "cosmosDbKey": {
             "type": "securestring"
         },
-        "apimDSSProxyAddress": {
+        "apimProxyAddress": {
             "type": "string"
         },
         "apimDSSApiKey": {
@@ -210,7 +210,7 @@
                             },
                             {
                                 "name": "CmsApiClientOptions__BaseAddress",
-                                "value": "[parameters('apimDSSProxyAddress')]"
+                                "value": "[parameters('apimProxyAddress')]"
                             },
                             {
                                 "name": "Configuration__ApplicationName",

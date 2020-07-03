@@ -29,8 +29,8 @@
         "apimDSSApiKey": {
             "value": "__apimDSSApiKey__"
         },
-        "apimDSSProxyAddress": {
-            "value": "__apimDSSProxyAddress__"
+        "apimProxyAddress": {
+            "value": "__apimProxyAddress__"
         },
         "environment": {
             "value": "__ReleaseEnvironmentName__",
