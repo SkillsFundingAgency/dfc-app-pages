@@ -214,7 +214,7 @@
                             },
                             {
                                 "name": "Configuration__ApplicationName",
-                                "value": "DFC.App.Pages"
+                                "value": "DFC-App-Pages"
                             }
                         ]
                     }
