@@ -1,7 +1,6 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.Compui.Telemetry.HostedService;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
@@ -13,16 +12,14 @@ namespace DFC.App.Pages.HostedServices
     [ExcludeFromCodeCoverage]
     public class CacheReloadBackgroundService : BackgroundService
     {
-        private readonly IConfiguration configuration;
         private readonly ILogger<CacheReloadBackgroundService> logger;
         private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly ICacheReloadService cacheReloadService;
         private readonly IEventGridSubscriptionService eventGridSubscriptionService;
         private readonly IHostedServiceTelemetryWrapper hostedServiceTelemetryWrapper;
 
-        public CacheReloadBackgroundService(IConfiguration configuration, ILogger<CacheReloadBackgroundService> logger, CmsApiClientOptions cmsApiClientOptions, ICacheReloadService cacheReloadService, IEventGridSubscriptionService eventGridSubscriptionService, IHostedServiceTelemetryWrapper hostedServiceTelemetryWrapper)
+        public CacheReloadBackgroundService(ILogger<CacheReloadBackgroundService> logger, CmsApiClientOptions cmsApiClientOptions, ICacheReloadService cacheReloadService, IEventGridSubscriptionService eventGridSubscriptionService, IHostedServiceTelemetryWrapper hostedServiceTelemetryWrapper)
         {
-            this.configuration = configuration;
             this.logger = logger;
             this.cmsApiClientOptions = cmsApiClientOptions;
             this.cacheReloadService = cacheReloadService;
