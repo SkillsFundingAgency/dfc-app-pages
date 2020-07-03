@@ -26,6 +26,12 @@
         "CosmosDbResourceGroup": {
             "value": "__appSharedResourceGroup__"
         },
+        "apimDSSApiKey": {
+            "value": "__apimDSSApiKey__"
+        },
+        "apimDSSProxyAddress": {
+            "value": "__apimDSSProxyAddress__"
+        },
         "environment": {
             "value": "__ReleaseEnvironmentName__",
             "metadata": {

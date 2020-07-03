@@ -37,6 +37,12 @@
         "cosmosDbKey": {
             "type": "securestring"
         },
+        "apimDSSProxyAddress": {
+            "type": "string"
+        },
+        "apimDSSApiKey": {
+            "type": "securestring"
+        },
         "environment": {
             "type": "string"
         },
@@ -197,6 +203,14 @@
                             {
                                 "name": "Logging__ApplicationInsights__LogLevel__Default",
                                 "value": "Information"
+                            },
+                            {
+                                "name": "CmsApiClientOptions__ApiKey",
+                                "value": "[parameters('apimDssApiKey')]"
+                            },
+                            {
+                                "name": "CmsApiClientOptions__BaseAddress",
+                                "value": "[parameters('apimDSSProxyAddress')]"
                             },
                             {
                                 "name": "Configuration__ApplicationName",

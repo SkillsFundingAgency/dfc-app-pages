@@ -14,6 +14,12 @@
         "cosmosDbKey": {
             "value": "not-a-real-key"
         },
+        "apimDSSProxyAddress": {
+            "value": "https://foo.api.nationalcareersservice.org.uk"
+        },
+        "apimDSSApiKey": {
+            "value": "not-a-real-key"
+        },
         "Environment": {
             "value": "FOO"
         },
