@@ -246,7 +246,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Returns(httpResponse);
 
             // act
-            var result = await apiService.DeleteAsync(httpClient, url, MediaTypeNames.Application.Json).ConfigureAwait(false);
+            var result = await apiService.DeleteAsync(httpClient, url).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).MustHaveHappenedOnceExactly();
@@ -272,7 +272,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Returns(httpResponse);
 
             // act
-            var result = await apiService.DeleteAsync(httpClient, url, MediaTypeNames.Application.Json).ConfigureAwait(false);
+            var result = await apiService.DeleteAsync(httpClient, url).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).MustHaveHappenedOnceExactly();
@@ -296,7 +296,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Throws(new ArgumentException("fake exception"));
 
             // act
-            var result = await apiService.DeleteAsync(httpClient, url, MediaTypeNames.Application.Json).ConfigureAwait(false);
+            var result = await apiService.DeleteAsync(httpClient, url).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).MustHaveHappenedOnceExactly();
@@ -315,7 +315,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
             var url = new Uri("https://www.somewhere.com", UriKind.Absolute);
 
             // act
-            var exceptionResult = await Assert.ThrowsAsync<ArgumentNullException>(async () => await apiService.DeleteAsync(null, url, MediaTypeNames.Application.Json).ConfigureAwait(false)).ConfigureAwait(false);
+            var exceptionResult = await Assert.ThrowsAsync<ArgumentNullException>(async () => await apiService.DeleteAsync(null, url).ConfigureAwait(false)).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).MustNotHaveHappened();

@@ -1,10 +1,11 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DFC.App.Pages.Services.ApiProcessorService
@@ -69,7 +70,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService
                 {
                     Method = HttpMethod.Post,
                     RequestUri = url,
-                    Content = new ObjectContent(typeof(TModel), model, new JsonMediaTypeFormatter(), MediaTypeNames.Application.Json),
+                    Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, MediaTypeNames.Application.Json),
                 };
 
                 response = await httpClient.SendAsync(request).ConfigureAwait(false);
@@ -88,8 +89,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService
             return response?.StatusCode ?? HttpStatusCode.BadRequest;
         }
 
-        public async Task<HttpStatusCode> DeleteAsync<TModel>(HttpClient? httpClient, Uri url, TModel model)
-            where TModel : class
+        public async Task<HttpStatusCode> DeleteAsync(HttpClient? httpClient, Uri url)
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
@@ -102,7 +102,6 @@ namespace DFC.App.Pages.Services.ApiProcessorService
                 {
                     Method = HttpMethod.Delete,
                     RequestUri = url,
-                    Content = new ObjectContent(typeof(TModel), model, new JsonMediaTypeFormatter(), MediaTypeNames.Application.Json),
                 };
 
                 response = await httpClient.SendAsync(request).ConfigureAwait(false);

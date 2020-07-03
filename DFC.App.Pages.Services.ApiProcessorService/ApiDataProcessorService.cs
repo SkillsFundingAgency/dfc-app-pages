@@ -40,12 +40,11 @@ namespace DFC.App.Pages.Services.ApiProcessorService
             return await apiService.PostAsync(httpClient, url, model).ConfigureAwait(false);
         }
 
-        public async Task<HttpStatusCode> DeleteAsync<TModel>(HttpClient? httpClient, Uri url, TModel model)
-            where TModel : class
+        public async Task<HttpStatusCode> DeleteAsync(HttpClient? httpClient, Uri url)
         {
             _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
-            return await apiService.DeleteAsync(httpClient, url, model).ConfigureAwait(false);
+            return await apiService.DeleteAsync(httpClient, url).ConfigureAwait(false);
         }
     }
 }

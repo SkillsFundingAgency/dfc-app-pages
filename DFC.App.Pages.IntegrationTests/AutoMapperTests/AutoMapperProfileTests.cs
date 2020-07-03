@@ -30,20 +30,6 @@ namespace DFC.App.Pages.IntegrationTests.AutoMapperTests
         }
 
         [Fact]
-        public void AutoMapperProfileConfigurationForEventGridSubscriptionProfileReturnSuccess()
-        {
-            // Arrange
-            factory.CreateClient();
-            var mapper = factory.Server.Host.Services.GetRequiredService<IMapper>();
-
-            // Act
-            mapper.ConfigurationProvider.AssertConfigurationIsValid<EventGridSubscriptionProfile>();
-
-            // Assert
-            Assert.True(true);
-        }
-
-        [Fact]
         public void AutoMapperProfileConfigurationForAllProfilesReturnSuccess()
         {
             // Arrange
