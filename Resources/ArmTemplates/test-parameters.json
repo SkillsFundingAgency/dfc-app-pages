@@ -14,7 +14,7 @@
         "cosmosDbKey": {
             "value": "not-a-real-key"
         },
-        "apimDSSProxyAddress": {
+        "apimProxyAddress": {
             "value": "https://foo.api.nationalcareersservice.org.uk"
         },
         "apimDSSApiKey": {
