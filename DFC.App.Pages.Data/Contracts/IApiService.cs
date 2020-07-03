@@ -12,7 +12,6 @@ namespace DFC.App.Pages.Data.Contracts
         Task<HttpStatusCode> PostAsync<TApiModel>(HttpClient? httpClient, Uri url, TApiModel model)
             where TApiModel : class;
 
-        Task<HttpStatusCode> DeleteAsync<TApiModel>(HttpClient? httpClient, Uri url, TApiModel model)
-            where TApiModel : class;
+        Task<HttpStatusCode> DeleteAsync(HttpClient? httpClient, Uri url);
     }
 }

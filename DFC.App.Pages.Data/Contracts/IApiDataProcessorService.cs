@@ -13,7 +13,6 @@ namespace DFC.App.Pages.Data.Contracts
         Task<HttpStatusCode> PostAsync<TModel>(HttpClient? httpClient, Uri url, TModel model)
             where TModel : class;
 
-        Task<HttpStatusCode> DeleteAsync<TModel>(HttpClient? httpClient, Uri url, TModel model)
-            where TModel : class;
+        Task<HttpStatusCode> DeleteAsync(HttpClient? httpClient, Uri url);
     }
 }

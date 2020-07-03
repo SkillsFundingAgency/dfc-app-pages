@@ -1,5 +1,6 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models.SubscriptionModels;
 using FakeItEasy;
 using Newtonsoft.Json;
 using System;
@@ -112,17 +113,16 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
         {
             // arrange
             var expectedResult = HttpStatusCode.Created;
-            var fakeEventGridSubscriptionModel = A.Fake<EventGridSubscriptionModel>();
 
-            A.CallTo(() => fakeApiService.DeleteAsync(A<HttpClient>.Ignored, A<Uri>.Ignored, A<EventGridSubscriptionModel>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => fakeApiService.DeleteAsync(A<HttpClient>.Ignored, A<Uri>.Ignored)).Returns(expectedResult);
 
             var apiDataProcessorService = new ApiDataProcessorService(fakeApiService);
 
             // act
-            var result = await apiDataProcessorService.DeleteAsync(A.Fake<HttpClient>(), new Uri("https://somewhere.com"), fakeEventGridSubscriptionModel).ConfigureAwait(false);
+            var result = await apiDataProcessorService.DeleteAsync(A.Fake<HttpClient>(), new Uri("https://somewhere.com")).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeApiService.DeleteAsync(A<HttpClient>.Ignored, A<Uri>.Ignored, A<EventGridSubscriptionModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeApiService.DeleteAsync(A<HttpClient>.Ignored, A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
         }
 
@@ -130,15 +130,14 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
         public async Task ApiDataProcessorServiceDeleteReturnsExceptionForNoHttpClient()
         {
             // arrange
-            var fakeEventGridSubscriptionModel = A.Fake<EventGridSubscriptionModel>();
 
             var apiDataProcessorService = new ApiDataProcessorService(fakeApiService);
 
             // act
-            var exceptionResult = await Assert.ThrowsAsync<ArgumentNullException>(async () => await apiDataProcessorService.DeleteAsync(null, new Uri("https://somewhere.com"), fakeEventGridSubscriptionModel).ConfigureAwait(false)).ConfigureAwait(false);
+            var exceptionResult = await Assert.ThrowsAsync<ArgumentNullException>(async () => await apiDataProcessorService.DeleteAsync(null, new Uri("https://somewhere.com")).ConfigureAwait(false)).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeApiService.DeleteAsync(A<HttpClient>.Ignored, A<Uri>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeApiService.DeleteAsync(A<HttpClient>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
             Assert.Equal("Value cannot be null. (Parameter 'httpClient')", exceptionResult.Message);
         }
     }

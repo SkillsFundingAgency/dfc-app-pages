@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models.SubscriptionModels;
 using DFC.App.Pages.Extensions;
 using DFC.App.Pages.HostedServices;
 using DFC.App.Pages.HttpClientPolicies;
@@ -62,6 +63,9 @@ namespace DFC.App.Pages
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var eventGridSubscriptionModel = configuration.GetSection(nameof(EventGridSubscriptionModel)).Get<EventGridSubscriptionModel>() ?? new EventGridSubscriptionModel();
+            eventGridSubscriptionModel.Name = configuration.GetValue("Configuration:ApplicationName", typeof(Startup).Namespace!.Replace(".", "-", System.StringComparison.OrdinalIgnoreCase));
+            services.AddSingleton(eventGridSubscriptionModel);
             var cosmosDbConnectionContentPages = configuration.GetSection(CosmosDbContentPagesConfigAppSettings).Get<CosmosDbConnection>();
             services.AddContentPageServices<ContentPageModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
 
