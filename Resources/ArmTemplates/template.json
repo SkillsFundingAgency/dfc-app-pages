@@ -206,11 +206,11 @@
                             },
                             {
                                 "name": "CmsApiClientOptions__ApiKey",
-                                "value": "[parameters('apimDssApiKey')]"
+                                "value": ""
                             },
                             {
                                 "name": "CmsApiClientOptions__BaseAddress",
-                                "value": "[parameters('apimProxyAddress')]"
+                                "value": ""
                             },
                             {
                                 "name": "Configuration__ApplicationName",
