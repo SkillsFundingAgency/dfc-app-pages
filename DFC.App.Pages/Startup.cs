@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models.ClientOptions;
 using DFC.App.Pages.Data.Models.SubscriptionModels;
 using DFC.App.Pages.Extensions;
 using DFC.App.Pages.HostedServices;

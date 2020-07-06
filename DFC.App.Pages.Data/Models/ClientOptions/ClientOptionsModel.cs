@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DFC.App.Pages.Data.Models
+namespace DFC.App.Pages.Data.Models.ClientOptions
 {
     public abstract class ClientOptionsModel
     {
