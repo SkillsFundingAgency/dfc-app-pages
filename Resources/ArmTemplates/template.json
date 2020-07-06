@@ -71,16 +71,15 @@
             "metadata": {
                 "description": "Enable or disable alerting"
             }
+        },
+        "eventGridSubscriptionModelFilterTypes": {
+            "type": "array",
+            "defaultValue": [
+                "published",
+                "unpublished",
+                "deleted"
+            ]
         }
-        // ,
-        // "eventGridSubscriptionModelFilterTypes": {
-        //     "type": "array",
-        //     "defaultValue": [
-        //         "published",
-        //         "unpublished",
-        //         "deleted"
-        //     ]
-        // }
     },
     "variables": {
         "productionEnvironment": "[or(equals(parameters('environment'), 'PP'), equals(parameters('Environment'), 'PRD'))]",
@@ -224,12 +223,11 @@
                             {
                                 "name": "Configuration__ApplicationName",
                                 "value": "DFC-App-Pages"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes",
+                                "value": "[parameters('eventGridSubscriptionModelFilterTypes')]"
                             }
-                            // ,
-                            // {
-                            //     "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes",
-                            //     "value": "[array(parameters('eventGridSubscriptionModelFilterTypes'))]"
-                            // }
                         ]
                     }
                 }
