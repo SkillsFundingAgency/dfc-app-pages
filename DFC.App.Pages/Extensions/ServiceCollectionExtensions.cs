@@ -1,4 +1,4 @@
-﻿using DFC.App.Pages.Data.Models;
+﻿using DFC.App.Pages.Data.Models.ClientOptions;
 using DFC.App.Pages.HttpClientPolicies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

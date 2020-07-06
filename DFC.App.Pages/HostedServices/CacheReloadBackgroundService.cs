@@ -1,5 +1,5 @@
 ﻿using DFC.App.Pages.Data.Contracts;
-using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models.ClientOptions;
 using DFC.Compui.Telemetry.HostedService;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -15,15 +15,13 @@ namespace DFC.App.Pages.HostedServices
         private readonly ILogger<CacheReloadBackgroundService> logger;
         private readonly CmsApiClientOptions cmsApiClientOptions;
         private readonly ICacheReloadService cacheReloadService;
-        private readonly IEventGridSubscriptionService eventGridSubscriptionService;
         private readonly IHostedServiceTelemetryWrapper hostedServiceTelemetryWrapper;
 
-        public CacheReloadBackgroundService(ILogger<CacheReloadBackgroundService> logger, CmsApiClientOptions cmsApiClientOptions, ICacheReloadService cacheReloadService, IEventGridSubscriptionService eventGridSubscriptionService, IHostedServiceTelemetryWrapper hostedServiceTelemetryWrapper)
+        public CacheReloadBackgroundService(ILogger<CacheReloadBackgroundService> logger, CmsApiClientOptions cmsApiClientOptions, ICacheReloadService cacheReloadService, IHostedServiceTelemetryWrapper hostedServiceTelemetryWrapper)
         {
             this.logger = logger;
             this.cmsApiClientOptions = cmsApiClientOptions;
             this.cacheReloadService = cacheReloadService;
-            this.eventGridSubscriptionService = eventGridSubscriptionService;
             this.hostedServiceTelemetryWrapper = hostedServiceTelemetryWrapper;
         }
 
@@ -43,11 +41,13 @@ namespace DFC.App.Pages.HostedServices
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _ = hostedServiceTelemetryWrapper.Execute(() => eventGridSubscriptionService.CreateAsync(), nameof(CacheReloadBackgroundService));
-
             if (cmsApiClientOptions.BaseAddress != null)
             {
+                logger.LogInformation("Cache reload executing");
+
                 var cacheReloadServiceTask = hostedServiceTelemetryWrapper.Execute(() => cacheReloadService.Reload(stoppingToken), nameof(CacheReloadBackgroundService));
+
+                logger.LogInformation("Cache reload execute");
 
                 return cacheReloadServiceTask;
             }

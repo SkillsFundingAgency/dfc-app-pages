@@ -9,7 +9,7 @@ namespace DFC.App.Pages.Data.Models.SubscriptionModels
 
         public string? EndsWith { get; set; }
 
-        public List<string> IncludeEventTypes { get; set; } = new List<string> { "published", "unpublished", "deleted" };
+        public List<string> IncludeEventTypes { get; set; } = new List<string>();
 
         public StringInAdvancedFilter? PropertyContainsFilter { get; set; }
     }

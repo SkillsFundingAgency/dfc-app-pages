@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models.ClientOptions;
 using DFC.App.Pages.Data.Models.SubscriptionModels;
 using DFC.App.Pages.Extensions;
 using DFC.App.Pages.HostedServices;
@@ -82,6 +83,7 @@ namespace DFC.App.Pages
             services.AddSingleton(configuration.GetSection(nameof(EventGridSubscriptionClientOptions)).Get<EventGridSubscriptionClientOptions>() ?? new EventGridSubscriptionClientOptions());
             services.AddHostedServiceTelemetryWrapper();
             services.AddHostedService<CacheReloadBackgroundService>();
+            services.AddHostedService<CreateSubscriptionBackgroundService>();
 
             const string AppSettingsPolicies = "Policies";
             var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();

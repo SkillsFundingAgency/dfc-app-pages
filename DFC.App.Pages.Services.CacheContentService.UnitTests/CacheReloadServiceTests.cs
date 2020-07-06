@@ -1,5 +1,6 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models.ClientOptions;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
