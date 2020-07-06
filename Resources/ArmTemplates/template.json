@@ -73,8 +73,12 @@
             }
         },
         "eventGridSubscriptionModelFilterTypes": {
-            "type": "string",
-            "defaultValue": "published,unpublished,deleted"
+            "type": "array",
+            "defaultValue": [
+                "published",
+                "unpublished",
+                "deleted"
+            ]
         }
     },
     "variables": {
@@ -221,8 +225,16 @@
                                 "value": "DFC-App-Pages"
                             },
                             {
-                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes",
-                                "value": "[parameters('eventGridSubscriptionModelFilterTypes')]"
+                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__0",
+                                "value": "published"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__1",
+                                "value": "unpublished"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__2",
+                                "value": "deleted"
                             }
                         ]
                     }
