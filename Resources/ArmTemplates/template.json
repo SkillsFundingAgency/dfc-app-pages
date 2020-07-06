@@ -71,6 +71,14 @@
             "metadata": {
                 "description": "Enable or disable alerting"
             }
+        },
+        "eventGridSubscriptionModelFilterTypes": {
+            "type": "array",
+            "defaultValue": [
+                "published",
+                "unpublished",
+                "deleted"
+            ]
         }
     },
     "variables": {
@@ -218,7 +226,7 @@
                             },
                             {
                                 "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes",
-                                "value": [ "published", "unpublished", "deleted" ]
+                                "value": "[array(parameters('eventGridSubscriptionModelFilterTypes'))]"
                             }
                         ]
                     }
