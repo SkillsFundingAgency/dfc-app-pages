@@ -45,11 +45,19 @@ namespace DFC.App.Pages.HostedServices
             {
                 logger.LogInformation("Cache reload executing");
 
-                var cacheReloadServiceTask = hostedServiceTelemetryWrapper.Execute(() => cacheReloadService.Reload(stoppingToken), nameof(CacheReloadBackgroundService));
+                var task = hostedServiceTelemetryWrapper.Execute(() => cacheReloadService.Reload(stoppingToken), nameof(CacheReloadBackgroundService));
 
-                logger.LogInformation("Cache reload execute");
+                if (!task.IsCompletedSuccessfully)
+                {
+                    logger.LogInformation("Cache reload didn't complete successfully");
+                    if (task.Exception != null)
+                    {
+                        logger.LogError(task.Exception.ToString());
+                        throw task.Exception;
+                    }
+                }
 
-                return cacheReloadServiceTask;
+                return task;
             }
 
             return Task.CompletedTask;
