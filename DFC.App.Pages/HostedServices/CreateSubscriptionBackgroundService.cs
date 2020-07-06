@@ -1,5 +1,4 @@
 ﻿using DFC.App.Pages.Data.Contracts;
-using DFC.App.Pages.Data.Models;
 using DFC.Compui.Telemetry.HostedService;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -43,7 +42,15 @@ namespace DFC.App.Pages.HostedServices
 
             var task = hostedServiceTelemetryWrapper.Execute(() => eventGridSubscriptionService.CreateAsync(), nameof(CreateSubscriptionBackgroundService));
 
-            logger.LogInformation("Event subscription create execute");
+            if (!task.IsCompletedSuccessfully)
+            {
+                logger.LogInformation("Event subscription create didn't complete successfully");
+                if (task.Exception != null)
+                {
+                    logger.LogError(task.Exception.ToString());
+                    throw task.Exception;
+                }
+            }
 
             return task;
         }
