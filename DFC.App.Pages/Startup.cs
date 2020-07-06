@@ -82,6 +82,7 @@ namespace DFC.App.Pages
             services.AddSingleton(configuration.GetSection(nameof(EventGridSubscriptionClientOptions)).Get<EventGridSubscriptionClientOptions>() ?? new EventGridSubscriptionClientOptions());
             services.AddHostedServiceTelemetryWrapper();
             services.AddHostedService<CacheReloadBackgroundService>();
+            services.AddHostedService<CreateSubscriptionBackgroundService>();
 
             const string AppSettingsPolicies = "Policies";
             var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
