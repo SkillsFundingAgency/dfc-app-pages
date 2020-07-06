@@ -73,16 +73,13 @@
             }
         },
         "eventGridSubscriptionModelFilterTypes": {
-            "type": "array",
-            "defaultValue": [
-                "published",
-                "unpublished",
-                "deleted"
-            ]
+            "type": "string",
+            "defaultValue": "published,unpublished,deleted"
         }
     },
     "variables": {
         "productionEnvironment": "[or(equals(parameters('environment'), 'PP'), equals(parameters('Environment'), 'PRD'))]",
+        "filterTypeVariable" : "[split(parameters('eventGridSubscriptionModelFilterTypes'), ',')]",
         "appServicePlanName": "[if(greater(length(parameters('sharedAppServicePlanName')), 0), parameters('sharedAppServicePlanName'), concat(variables('resourcePrefix'), '-asp'))]",
         "appServicePlanResourceGroup": "[if(greater(length(parameters('SharedAppServicePlanResourceGroup')), 0), parameters('SharedAppServicePlanResourceGroup'), resourceGroup().name)]",
         "buildingBlocksDfcBaseUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
@@ -226,7 +223,7 @@
                             },
                             {
                                 "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes",
-                                "value": "[parameters('eventGridSubscriptionModelFilterTypes')]"
+                                "value": "[variables('filterTypeVariable')]"
                             }
                         ]
                     }
