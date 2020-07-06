@@ -215,6 +215,10 @@
                             {
                                 "name": "Configuration__ApplicationName",
                                 "value": "DFC-App-Pages"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes",
+                                "value": [ "published", "unpublished", "deleted" ]
                             }
                         ]
                     }
