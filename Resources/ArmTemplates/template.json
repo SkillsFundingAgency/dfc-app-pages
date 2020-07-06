@@ -225,8 +225,16 @@
                                 "value": "DFC-App-Pages"
                             },
                             {
-                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes",
-                                "value": "[array(parameters('eventGridSubscriptionModelFilterTypes'))]"
+                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__0",
+                                "value": "published"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__1",
+                                "value": "unpublished"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__2",
+                                "value": "deleted"
                             }
                         ]
                     }
