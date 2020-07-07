@@ -17,7 +17,7 @@
         "apimProxyAddress": {
             "value": "https://foo.api.nationalcareersservice.org.uk"
         },
-        "apimDSSApiKey": {
+        "apimContentApiKey": {
             "value": "not-a-real-key"
         },
         "Environment": {

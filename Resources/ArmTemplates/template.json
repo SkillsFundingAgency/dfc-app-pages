@@ -40,7 +40,7 @@
         "apimProxyAddress": {
             "type": "string"
         },
-        "apimDSSApiKey": {
+        "apimContentApiKey": {
             "type": "securestring"
         },
         "environment": {
@@ -206,11 +206,11 @@
                             },
                             {
                                 "name": "CmsApiClientOptions__ApiKey",
-                                "value": ""
+                                "value": "[parameters('apimContentApiKey')]"
                             },
                             {
                                 "name": "CmsApiClientOptions__BaseAddress",
-                                "value": ""
+                                "value": "[parameters('apimProxyAddress')]"
                             },
                             {
                                 "name": "Configuration__ApplicationName",
