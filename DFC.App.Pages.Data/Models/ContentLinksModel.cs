@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DFC.App.Pages.Data.Enums;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -79,6 +80,13 @@ namespace DFC.App.Pages.Data.Models
                     $"{contentCuriesDetails.Name}:",
                     string.Empty,
                     StringComparison.CurrentCultureIgnoreCase);
+
+                Enum.TryParse(typeof(ContentRelationship), relationShipKey, true, out var type);
+
+                if (type == null || (ContentRelationship)type == ContentRelationship.Undefined)
+                {
+                    continue;
+                }
 
                 if (jValue is JArray)
                 {

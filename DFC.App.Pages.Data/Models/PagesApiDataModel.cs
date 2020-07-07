@@ -16,7 +16,11 @@ namespace DFC.App.Pages.Data.Models
         [JsonProperty("alias_alias")]
         public string? CanonicalName { get; set; }
 
-        public string? Pagelocation { get; set; }
+        [JsonIgnore]
+        public string Pagelocation => $"{TaxonomyTerms.FirstOrDefault() ?? string.Empty}/{CanonicalName}";
+
+        [JsonProperty("taxonomy_terms")]
+        public List<string> TaxonomyTerms { get; set; } = new List<string>();
 
         public Guid? Version { get; set; }
 
