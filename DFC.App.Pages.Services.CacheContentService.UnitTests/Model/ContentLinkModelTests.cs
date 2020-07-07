@@ -14,7 +14,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.Model
             var jsonData = File.ReadAllText(Directory.GetCurrentDirectory() + "/Model/LinksData.json");
             var model = new ContentLinksModel(JObject.Parse(jsonData));
             var links = model.ContentLinks;
-            Assert.Equal(6, links.SelectMany(x => x.Value).Count());
+            Assert.Equal(4, links.SelectMany(x => x.Value).Count());
         }
 
         [Fact]
