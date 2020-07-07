@@ -26,8 +26,8 @@
         "CosmosDbResourceGroup": {
             "value": "__appSharedResourceGroup__"
         },
-        "apimDSSApiKey": {
-            "value": "__apimDSSApiKey__"
+        "apimContentApiKey": {
+            "value": "__apimContentKey__"
         },
         "apimProxyAddress": {
             "value": "__apimProxyAddress__"
