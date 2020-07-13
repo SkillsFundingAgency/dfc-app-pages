@@ -5,6 +5,7 @@ using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
 using System.Diagnostics.CodeAnalysis;
+using DFC.App.Pages.Models.Api;
 
 namespace DFC.App.Pages.AutoMapperProfiles
 {
@@ -31,6 +32,7 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.Keywords, s => s.MapFrom(a => a.MetaTags != null ? a.MetaTags.Keywords : null));
 
             CreateMap<ContentPageModel, IndexDocumentViewModel>();
+            CreateMap<ContentPageModel, GetIndexModel>();
 
             CreateMap<ContentPageModel, BreadcrumbItemModel>();
 
