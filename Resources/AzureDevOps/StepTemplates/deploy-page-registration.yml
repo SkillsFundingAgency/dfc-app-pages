@@ -8,6 +8,9 @@ parameters:
   ApimCompositeKey: ''
 
 steps:
+- checkout: dfc-devops
+  path: 's/dfc-devops/'
+  
 - task: esfadevops.Tokenization.custom-build-task.Tokenization@0
   displayName: 'Tokenization: Transform file ${{ parameters.PageRegistrationFile }}'
   inputs:
