@@ -7,6 +7,8 @@ variables:
   value: pages
 - name: EnableAzureMonitorAlerting
   value: true
+- name: EventGridSubscriptionModelEndpoint
+  value: https://dfc-dev-app-pages-as.azurewebsites.net
 - name: pagesAppDatabaseThroughput
   value: 400
 - name: ResourceGroup

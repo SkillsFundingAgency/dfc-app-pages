@@ -56,6 +56,12 @@
         "enableAlerts": {
             "value": __EnableAzureMonitorAlerting__
         },
+        "eventGridSubscriptionModelEndpoint": {
+            "value": "__eventGridSubscriptionModelEndpoint__"
+        },
+        "apimCompositeApiKey": {
+            "value": "__apimCompositeKey__"
+        },
         "ApimProductInstanceName": {
             "value": "__ApimProductInstanceName__"
         },
