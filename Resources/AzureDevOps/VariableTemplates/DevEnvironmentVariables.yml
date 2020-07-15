@@ -2,7 +2,7 @@ variables:
 - name: ReleaseEnvironmentName
   value: DEV
 - name: AppServiceName
-  value: dfc-sit-app-pages-as
+  value: dfc-dev-app-pages-as
 - name: cosmosDbCollectionName
   value: pages
 - name: EnableAzureMonitorAlerting
