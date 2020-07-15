@@ -71,6 +71,9 @@
             "metadata": {
                 "description": "Enable or disable alerting"
             }
+        },
+         "eventGridSubscriptionModelEndpoint": {
+            "type": "string"
         }
     },
     "variables": {
@@ -227,6 +230,18 @@
                             {
                                 "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__2",
                                 "value": "deleted"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Endpoint",
+                                "value": "[concat(parameters('eventGridSubscriptionModelEndpoint'),'/api/webhook/ReceiveEvents')]"
+                            },
+                            {
+                                "name": "EventGridSubscriptionClientOptions__BaseAddress",
+                                "value": "[concat(parameters('apimProxyAddress'),'/content/Subscription/')]"
+                            },
+                            {
+                                "name": "EventGridSubscriptionClientOptions__ApiKey",
+                                "value": "[parameters('apimContentApiKey')]"
                             }
                         ]
                     }

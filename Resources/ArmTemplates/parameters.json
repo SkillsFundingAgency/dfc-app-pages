@@ -55,6 +55,9 @@
         },
         "enableAlerts": {
             "value": __EnableAzureMonitorAlerting__
+        },
+        "eventGridSubscriptionModelEndpoint": {
+            "value": "__eventGridSubscriptionModelEndpoint__"
         }
     }
 }
