@@ -76,7 +76,6 @@ jobs:
         - template: ../StepTemplates/deploy-page-registration.yml
           parameters: 
             AzureSubscription: '${{ parameters.AzureSubscription }}'
-            DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
             PageRegistrationPath: '${{ parameters.PageRegistrationPath }}'
             PageRegistrationFile: '${{ parameters.PageRegistrationFile }}'
             PathRegistrationApiUrl: '${{ parameters.PathRegistrationApiUrl }}'
