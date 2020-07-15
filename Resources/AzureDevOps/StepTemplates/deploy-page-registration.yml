@@ -1,6 +1,6 @@
 parameters:
   azureSubscription: ''
-  DfCDevopsPath: ''
+  DfCDevopsPath: ''  #DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
   PageRegistrationPath: ''
   PageRegistrationFile: ''
   PathRegistrationApiUrl: ''
@@ -17,22 +17,22 @@ steps:
     SourcePath: '${{ parameters.PageRegistrationPath }}'
     TargetFileNames: '${{ parameters.PageRegistrationFile }}'
 
-# - task: PowerShell@2
-#   displayName: 'Register application'
-#   inputs:
-#     azureSubscription: '${{ parameters.AzureSubscription }}'
-#     targetType: filePath
-#     filePath: './${{ parameters.DfCDevopsPath }}/PSScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
-#     arguments: '-PathApiUrl ${{ parameters.PathRegistrationApiUrl }}  -RegionApiUrl ${{ parameters.RegionRegistrationApiUrl }} -RegistrationFile ${{ parameters.PageRegistrationPath }}/${{ parameters.PageRegistrationFile }} -ApiKey ${{ parameters.ApimCompositeKey }} -Verbose'
-#     workingDirectory: '${{ parameters.DfCDevopsPath }}/PSScripts'
-
-- task: AzurePowerShell@4
+- task: PowerShell@2
   displayName: 'Register application'
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
-    ScriptPath: '${{ parameters.DfCDevopsPath }}/PSScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
-    ScriptArguments: '-PathApiUrl ${{ parameters.PathRegistrationApiUrl }}  -RegionApiUrl ${{ parameters.RegionRegistrationApiUrl }} -RegistrationFile ${{ parameters.PageRegistrationPath }}/${{ parameters.PageRegistrationFile }} -ApiKey ${{ parameters.ApimCompositeKey }} -Verbose'
-    azurePowerShellVersion: LatestVersion
+    targetType: filePath
+    filePath: './${{ parameters.DfCDevopsPath }}/PSScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
+    arguments: '-PathApiUrl ${{ parameters.PathRegistrationApiUrl }}  -RegionApiUrl ${{ parameters.RegionRegistrationApiUrl }} -RegistrationFile ${{ parameters.PageRegistrationPath }}/${{ parameters.PageRegistrationFile }} -ApiKey ${{ parameters.ApimCompositeKey }} -Verbose'
+    # workingDirectory: '${{ parameters.DfCDevopsPath }}/PSScripts'
+
+# - task: AzurePowerShell@4
+#   displayName: 'Register application'
+#   inputs:
+#     azureSubscription: '${{ parameters.AzureSubscription }}'
+#     ScriptPath: '${{ parameters.DfCDevopsPath }}/PSScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
+#     ScriptArguments: '-PathApiUrl ${{ parameters.PathRegistrationApiUrl }}  -RegionApiUrl ${{ parameters.RegionRegistrationApiUrl }} -RegistrationFile ${{ parameters.PageRegistrationPath }}/${{ parameters.PageRegistrationFile }} -ApiKey ${{ parameters.ApimCompositeKey }} -Verbose'
+#     azurePowerShellVersion: LatestVersion
 
 - task: DeleteFiles@1
   displayName: 'Remove tokenized page registration file'

@@ -104,6 +104,7 @@ jobs:
                 FunctionType: '${{ api.name }}'
                 WebAppName: '${{ api.azureFunctionName }}'
                 AzureSubscription: '${{ parameters.AzureSubscription }}'
+                DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
                 SharedResourceGroup: '${{ parameters.SharedResourceGroup }}'
                 ApimServiceName: '${{ parameters.ApimServiceName }}'
                 ApimImportScript: '${{ parameters.ApimImportScript }}'
