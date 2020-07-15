@@ -103,12 +103,12 @@ stages:
       ResourceGroup: $(ResourceGroup)
       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
-      ApimPoliciesPath:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies"
       ApimProductId: "$(ApimProductId)"
       ApimLoggerName: "$(ApimLoggerName)"
       APIProductInstanceName: "$(ApimProductInstanceName)"
       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+      PolicyFilePath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
       SharedResourceGroup: "$(SharedResourceGroup)"
       ApimServiceName: "$(ApimServiceName)"
