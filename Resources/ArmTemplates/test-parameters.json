@@ -43,6 +43,9 @@
         },
         "enableAlerts": {
             "value": false
+        },
+        "eventGridSubscriptionModelEndpoint": {
+            "value": "http://www.food.co.uk"
         }             
     }
 }
