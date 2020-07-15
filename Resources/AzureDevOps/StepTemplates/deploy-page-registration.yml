@@ -23,7 +23,7 @@ steps:
     azureSubscription: '${{ parameters.AzureSubscription }}'
     targetType: filePath
     # filePath: './${{ parameters.DfCDevopsPath }}/PSScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
-    filePath: './$(System.DefaultWorkingDirectory)/PSScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
+    filePath: './PSScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
     arguments: '-PathApiUrl ${{ parameters.PathRegistrationApiUrl }}  -RegionApiUrl ${{ parameters.RegionRegistrationApiUrl }} -RegistrationFile ${{ parameters.PageRegistrationPath }}/${{ parameters.PageRegistrationFile }} -ApiKey ${{ parameters.ApimCompositeKey }} -Verbose'
     # workingDirectory: '${{ parameters.DfCDevopsPath }}/PSScripts'
 
