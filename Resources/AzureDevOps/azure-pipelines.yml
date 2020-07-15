@@ -118,7 +118,7 @@ stages:
       DFCAzureDevOpsProjectGuid: $(DFCAzureDevOpsProjectGuid)
       AppSharedResourceGroup: $(AppSharedResourceGroup)
       appSharedCosmosDBName: $(appSharedCosmosDBName)
-      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.PageRegistrations/"
+      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
       PageRegistrationFile: "$(PageRegistrationFile)"
       PathRegistrationApiUrl: "$(PathRegistrationApiUrl)"
       RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
