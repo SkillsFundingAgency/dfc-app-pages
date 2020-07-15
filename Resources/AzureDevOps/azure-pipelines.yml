@@ -129,5 +129,5 @@ stages:
       # The inner level -'s defines an array of mappings.
       Apis: 
         -
-          - name: DFCPagesAPI
+          - name: GetAllPages
             azureFunctionName: '$(AppServiceName)'

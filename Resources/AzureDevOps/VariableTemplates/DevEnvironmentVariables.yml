@@ -22,6 +22,6 @@ variables:
 - name: ApimLoggerName
   value: Pages-logger
 - name: ApiName
-  value: Pages-API
+  value: GetAllPages
 - name: PageRegistrationFile
   value: registration.json

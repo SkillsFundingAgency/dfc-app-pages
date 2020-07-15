@@ -41,17 +41,17 @@ steps:
   displayName: "Set full hostname as variable"
 
 - task: esfadevops.Tokenization.custom-build-task.Tokenization@0
-  displayName: 'Tokenization: Transform file ${{ parameters.FunctionType }}OpenApi.txt'
+  displayName: 'Tokenization: Transform file ${{ parameters.FunctionType }}.txt'
   inputs:
     SourcePath: '${{ parameters.SpecificationPath }}'
-    TargetFileNames: '${{ parameters.FunctionType }}OpenApi.txt'
+    TargetFileNames: '${{ parameters.FunctionType }}.txt'
 
 - task: AzurePowerShell@4
   displayName: 'Import OpenAPI specification'
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
     ScriptPath: '${{ parameters.ApimImportScript }}'
-    ScriptArguments: "-ApimResourceGroup '${{ parameters.SharedResourceGroup }}' -InstanceName '${{ parameters.ApimServiceName }}' -ApiName '${{ parameters.FunctionType }}' -OpenApiSpecificationFile '${{ parameters.SpecificationPath }}/${{ parameters.FunctionType }}OpenApi.txt' -ApiPath 'content/${{ parameters.FunctionType }}'"
+    ScriptArguments: "-ApimResourceGroup '${{ parameters.SharedResourceGroup }}' -InstanceName '${{ parameters.ApimServiceName }}' -ApiName '${{ parameters.FunctionType }}' -OpenApiSpecificationFile '${{ parameters.SpecificationPath }}/${{ parameters.FunctionType }}.txt' -ApiPath 'content/${{ parameters.FunctionType }}'"
     azurePowerShellVersion: LatestVersion
 
 - task: AzurePowerShell@4
