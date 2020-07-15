@@ -72,8 +72,11 @@
                 "description": "Enable or disable alerting"
             }
         },
-         "eventGridSubscriptionModelEndpoint": {
+        "eventGridSubscriptionModelEndpoint": {
             "type": "string"
+        },
+        "apimCompositeApiKey": {
+            "type": "securestring"
         }
     },
     "variables": {
@@ -241,7 +244,7 @@
                             },
                             {
                                 "name": "EventGridSubscriptionClientOptions__ApiKey",
-                                "value": "[parameters('apimContentApiKey')]"
+                                "value": "[parameters('apimCompositeApiKey')]"
                             }
                         ]
                     }

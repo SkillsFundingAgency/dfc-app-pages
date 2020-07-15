@@ -46,6 +46,9 @@
         },
         "eventGridSubscriptionModelEndpoint": {
             "value": "http://www.food.co.uk"
+        },
+        "apimCompositeApiKey": {
+            "value": "fake-key-mate"
         }             
     }
 }
