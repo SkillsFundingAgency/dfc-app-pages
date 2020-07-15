@@ -59,8 +59,8 @@
         "eventGridSubscriptionModelEndpoint": {
             "value": "__eventGridSubscriptionModelEndpoint__"
         },
-        "apimCompositeKey": {
-            "value": "__apimCompositeApiKey__"
+        "apimCompositeApiKey": {
+            "value": "__apimCompositeKey__"
         }
     }
 }
