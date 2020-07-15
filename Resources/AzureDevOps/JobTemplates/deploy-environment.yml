@@ -14,6 +14,7 @@ parameters:
   ParentBusiness: ''
   ServiceOffering: ''
   ResourceGroup: ''
+  DfCDevopsPath: ''
   SharedResourceGroup: ''
   ApimServiceName: ''
   FunctionAppDomain: ''
@@ -51,6 +52,7 @@ jobs:
         - template: ../StepTemplates/deploy-arm-template.yml
           parameters: 
             AzureSubscription: '${{ parameters.AzureSubscription }}'
+            DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
             SetEsfaResourceGroupTagsScript: '${{ parameters.SetEsfaResourceGroupTagsScript }}'
             EnvironmentTag: '${{ parameters.EnvironmentTag }}'
             ParentBusiness: '${{ parameters.ParentBusiness }}'
@@ -74,6 +76,7 @@ jobs:
         - template: ../StepTemplates/deploy-page-registration.yml
           parameters: 
             AzureSubscription: '${{ parameters.AzureSubscription }}'
+            DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
             PageRegistrationPath: '${{ parameters.PageRegistrationPath }}'
             PageRegistrationFile: '${{ parameters.PageRegistrationFile }}'
             PathRegistrationApiUrl: '${{ parameters.PathRegistrationApiUrl }}'

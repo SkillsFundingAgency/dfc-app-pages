@@ -101,6 +101,7 @@ stages:
       ParentBusiness: '$(ParentBusiness)'
       ServiceOffering: '$(ServiceOffering)'
       ResourceGroup: $(ResourceGroup)
+      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
       ApimPoliciesPath:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies"
       ApimProductId: "$(ApimProductId)"

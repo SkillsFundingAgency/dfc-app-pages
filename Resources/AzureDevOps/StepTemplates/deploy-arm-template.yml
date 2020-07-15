@@ -5,6 +5,7 @@ parameters:
   ParentBusiness: ''
   ServiceOffering: ''
   ResourceGroup: ''
+  DfCDevopsPath: ''
   Location: 'West Europe'
   ArmTemplateFolder: ''
   ArmOutputVariableName: 'ARMOutputs'
@@ -30,7 +31,7 @@ steps:
   displayName: 'Test if cosmos database exists'
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
-    ScriptPath: "${{ variables['System.DefaultWorkingDirectory'] }}/_SkillsFundingAgency_dfc-devops/PSCoreScripts/Test-CosmosDbDatabaseDoesntExist.ps1"
+    ScriptPath: "${{ parameters.DfCDevopsPath }}/PSCoreScripts/Test-CosmosDbDatabaseDoesntExist.ps1"
     ScriptArguments: '-ResourceGroup ${{ parameters.AppSharedResourceGroup }} -CosmosDbAccountName ${{ parameters.appSharedCosmosDBName }} -DatabaseName dfc-app-pages'
     azurePowerShellVersion: LatestVersion
 

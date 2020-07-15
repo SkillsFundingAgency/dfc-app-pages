@@ -1,11 +1,11 @@
 parameters:
   azureSubscription: ''
+  DfCDevopsPath: ''
   PageRegistrationPath: ''
   PageRegistrationFile: ''
   PathRegistrationApiUrl: ''
   RegionRegistrationApiUrl: ''
   ApimCompositeKey: ''
-  PSScriptPath: '$(Agent.BuildDirectory)/s/dfc-devops/PSScripts'
 
 steps:
 - task: esfadevops.Tokenization.custom-build-task.Tokenization@0
@@ -19,9 +19,9 @@ steps:
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
     targetType: filePath
-    filePath: './${{ parameters.PSScriptPath }}/Invoke-AddOrUpdateCompositeRegistrations.ps1'
+    filePath: './${{ parameters.PSScriptPath }}/PSScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
     arguments: '-PathApiUrl ${{ parameters.PathRegistrationApiUrl }}  -RegionApiUrl ${{ parameters.RegionRegistrationApiUrl }} -RegistrationFile ${{ parameters.PageRegistrationPath }}/${{ parameters.PageRegistrationFile }} -ApiKey ${{ parameters.ApimCompositeKey }} -Verbose'
-    workingDirectory: '${{ parameters.PSScriptPath }}'
+    workingDirectory: '${{ parameters.PSScriptPath }}/PSScripts'
 
 - task: DeleteFiles@1
   displayName: 'Remove tokenized page registration file'

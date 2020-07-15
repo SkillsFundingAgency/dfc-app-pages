@@ -1,6 +1,7 @@
 parameters:
   FunctionType: ''
   AzureSubscription: ''
+  DfCDevopsPath: ''
   SharedResourceGroup: ''
   ApimServiceName: ''
   ApimImportScript: ''
@@ -11,7 +12,6 @@ parameters:
   ResourceGroup: ''
   FunctionAppDomain: ''
   PackageFile: ''
-  PSScriptPath: '$(Agent.BuildDirectory)/s/dfc-devops/PSScripts'
 
 steps:
 - checkout: dfc-devops
@@ -59,6 +59,6 @@ steps:
   condition: ne( '${{ parameters.ApimLoggerName }}', '')
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
-    ScriptPath: '${{ parameters.PSScriptPath }}/Set-ApimProductAndLogger.ps1'
+    ScriptPath: '${{ parameters.DfCDevopsPath }}/PSScripts/Set-ApimProductAndLogger.ps1'
     ScriptArguments: '-ApimResourceGroup ${{ parameters.SharedResourceGroup }} -InstanceName ${{ parameters.ApimServiceName }} -ApiId ${{ parameters.FunctionType }} -ApiProductId ${{ parameters.ApimProductId }} -ApimLoggerName ${{ parameters.ApimLoggerName }}'
     azurePowerShellVersion: LatestVersion
