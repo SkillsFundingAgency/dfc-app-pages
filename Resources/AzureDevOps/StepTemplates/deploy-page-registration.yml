@@ -1,0 +1,29 @@
+parameters:
+  azureSubscription: ''
+  PageRegistrationFile: ''
+  PathRegistrationApiUrl: ''
+  RegionRegistrationApiUrl: ''
+  ApimCompositeKey: ''
+
+steps:
+- task: esfadevops.Tokenization.custom-build-task.Tokenization@0
+  displayName: 'Tokenization: Transform file ${{ parameters.PageRegistrationFile }}'
+  inputs:
+    SourcePath: '${{ variables['System.DefaultWorkingDirectory'] }}/_dfc-app-pages/DFC.App.Pages.PageRegistrations'
+    TargetFileNames: '${{ parameters.PageRegistrationFile }}'
+
+- task: PowerShell@2
+  displayName: 'Register application'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    targetType: filePath
+    filePath: './${{ variables['System.DefaultWorkingDirectory'] }}/_SkillsFundingAgency_dfc-devops//PSScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
+    arguments: '-PathApiUrl ${{ parameters.PathRegistrationApiUrl }}  -RegionApiUrl ${{ parameters.RegionRegistrationApiUrl }} -RegistrationFile ${{ variables['System.DefaultWorkingDirectory'] }}/_dfc-app-pages/DFC.App.Pages.PageRegistrations/${{ parameters.PageRegistrationFile }} -ApiKey ${{ parameters.ApimCompositeKey }} -Verbose'
+    workingDirectory: '${{ variables['System.DefaultWorkingDirectory'] }}/_SkillsFundingAgency_dfc-devops/PSScripts'
+
+- task: DeleteFiles@1
+  displayName: 'Remove tokenized page registration file'
+  inputs:
+    SourceFolder: '${{ variables['System.DefaultWorkingDirectory'] }}/_dfc-app-pages/DFC.App.Pages.PageRegistrations'
+    Contents: '${{ parameters.PageRegistrationFile }}'
+  condition: always()

@@ -1,8 +1,8 @@
 variables:
-    ArmTemplateRoot: '$(Build.SourcesDirectory)\Resources\ArmTemplates'
-    SolutionBaseName: 'DFC.App.Pages'
-    BuildPlatform: 'any cpu'
-    BuildConfiguration: 'release'
+  ArmTemplateRoot: '$(Build.SourcesDirectory)\Resources\ArmTemplates'
+  SolutionBaseName: 'DFC.App.Pages'
+  BuildPlatform: 'any cpu'
+  BuildConfiguration: 'release'
 
 resources:
   repositories:
@@ -18,6 +18,18 @@ pool:
   demands:
   - msbuild
   - visualstudio
+
+trigger: 
+  branches:
+    include: 
+    - dev
+    - master
+
+pr:
+  branches:
+    include: 
+    - dev
+    - master
     
 
 stages:
@@ -39,6 +51,23 @@ stages:
         targetPath: '$(Build.SourcesDirectory)/Resources/PageRegistration'
         artifactName: ${{ variables.SolutionBaseName }}.PageRegistrations
 
+    - task: PublishPipelineArtifact@1
+      displayName: Publish OpenAPI docs to Pipeline Artifact
+      inputs:
+        targetPath: "$(System.DefaultWorkingDirectory)/${{ variables.SolutionBaseName }}/OpenAPIDocs"
+        artifactName: ${{ variables.SolutionBaseName }}.OpenAPIDocs
+  
+    - task: PublishPipelineArtifact@1
+      displayName: Publish API import script to Pipeline Artifact
+      inputs:
+        targetPath: "$(System.DefaultWorkingDirectory)/Resources/Scripts"
+        artifactName: ${{ variables.SolutionBaseName }}.Scripts
+
+    - task: PublishPipelineArtifact@1
+      displayName: Publish apim policies
+      inputs:
+        targetPath: "$(System.DefaultWorkingDirectory)/Resources/ApimPolicy"
+        artifactName: ${{ variables.SolutionBaseName }}.ApimPolicies
 
   - job: BuildDotNetCore
     displayName: Build-DotNetCore
@@ -52,3 +81,51 @@ stages:
         DotNetCoreVersion: '3.1.100'
         PublishWebApp: true
         TestSuffix: UnitTests
+
+- stage: DeployToDevAppPages
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  displayName: Deploy to DEV_AppPages
+  variables:
+  - group: dfc-shared-all
+  - group: dfc-shared-dev
+  - group: dfc-app-shared-all
+  - group: dfc-app-shared-dev
+  - group: dfc-app-shared-registration
+  - template: VariableTemplates\DevEnvironmentVariables.yml
+  
+  jobs:
+  - template: JobTemplates/deploy-environment.yml
+    parameters:
+      AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
+      EnvironmentTag: '$(EnvironmentTag)'
+      ParentBusiness: '$(ParentBusiness)'
+      ServiceOffering: '$(ServiceOffering)'
+      ResourceGroup: $(ResourceGroup)
+      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+      ApimPoliciesPath:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies"
+      ApimProductId: "$(ApimProductId)"
+      ApimLoggerName: "$(ApimLoggerName)"
+      APIProductInstanceName: "$(ApimProductInstanceName)"
+      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      SharedResourceGroup: "$(SharedResourceGroup)"
+      ApimServiceName: "$(ApimServiceName)"
+      FunctionAppDomain: "$(FunctionAppDomain)"
+      FunctionAppName: '$(AppServiceName)'
+      EnvironmentName: DEV_AppPages
+      DFCAzureDevOpsProjectGuid: $(DFCAzureDevOpsProjectGuid)
+      AppSharedResourceGroup: $(AppSharedResourceGroup)
+      appSharedCosmosDBName: $(appSharedCosmosDBName)
+      PageRegistrationFile: "$(PageRegistrationFile)"
+      PathRegistrationApiUrl: "$(PathRegistrationApiUrl)"
+      RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
+      ApimCompositeKey: "$(ApimCompositeKey)"
+
+      # The Apis parameter requires a complex object be passed in,  which requires some odd looking yaml.
+      # The top level -`s here defines an array of "something"
+      # The inner level -'s defines an array of mappings.
+      Apis: 
+        -
+          - name: DFCPagesAPI
+            azureFunctionName: '$(AppServiceName)'

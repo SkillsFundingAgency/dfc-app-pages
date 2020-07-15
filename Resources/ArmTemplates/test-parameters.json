@@ -5,7 +5,7 @@
         "appSharedResourceGroup": {
             "value": "dfc-dev-app-sharedresources-rg"
         },
-         "appSharedStorageAccountName": {
+        "appSharedStorageAccountName": {
             "value": "dfcdevappsharedstr"
         },
         "cosmosDBName": {
@@ -43,6 +43,18 @@
         },
         "enableAlerts": {
             "value": false
-        }             
+        },
+        "ApimProductInstanceName": {
+            "value": "test-api-product"
+        },
+        "ApimResourceGroup": {
+            "value": "dfc-test-template-rg"
+        },
+        "ApimServiceName": {
+            "value": "an-apim-instance"
+        },
+        "ApiName": {
+            "value": "api-name"
+        }
     }
 }
