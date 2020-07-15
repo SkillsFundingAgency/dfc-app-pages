@@ -10,7 +10,7 @@ parameters:
 steps:
 - checkout: dfc-devops
   path: 's/dfc-devops/'
-  
+
 - task: esfadevops.Tokenization.custom-build-task.Tokenization@0
   displayName: 'Tokenization: Transform file ${{ parameters.PageRegistrationFile }}'
   inputs:
@@ -22,9 +22,9 @@ steps:
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
     targetType: filePath
-    filePath: './${{ parameters.PSScriptPath }}/PSScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
+    filePath: './${{ parameters.DfCDevopsPath }}/PSScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
     arguments: '-PathApiUrl ${{ parameters.PathRegistrationApiUrl }}  -RegionApiUrl ${{ parameters.RegionRegistrationApiUrl }} -RegistrationFile ${{ parameters.PageRegistrationPath }}/${{ parameters.PageRegistrationFile }} -ApiKey ${{ parameters.ApimCompositeKey }} -Verbose'
-    workingDirectory: '${{ parameters.PSScriptPath }}/PSScripts'
+    workingDirectory: '${{ parameters.DfCDevopsPath }}/PSScripts'
 
 - task: DeleteFiles@1
   displayName: 'Remove tokenized page registration file'

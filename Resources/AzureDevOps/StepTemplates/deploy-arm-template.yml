@@ -15,6 +15,9 @@ parameters:
   ApimProductId: ''
 
 steps:
+- checkout: dfc-devops
+  path: 's/dfc-devops/'
+  
 - powershell: |
     Invoke-WebRequest -Uri "${{ parameters.SetEsfaResourceGroupTagsScript }}" -OutFile "${{ variables['System.DefaultWorkingDirectory']}}/Set-EsfaResourceGroupTags.ps1"
   displayName: "Download scripts from dfc-devops repo"
