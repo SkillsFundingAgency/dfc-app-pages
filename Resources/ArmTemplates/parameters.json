@@ -61,6 +61,18 @@
         },
         "apimCompositeApiKey": {
             "value": "__apimCompositeKey__"
+        },
+        "ApimProductInstanceName": {
+            "value": "__ApimProductInstanceName__"
+        },
+        "ApimResourceGroup": {
+            "value": "__SharedResourceGroupName__"
+        },
+        "ApiName": {
+            "value": "__ApiName__"
+        },
+        "ApimServiceName": {
+            "value": "__ApimServiceName__"
         }
     }
 }

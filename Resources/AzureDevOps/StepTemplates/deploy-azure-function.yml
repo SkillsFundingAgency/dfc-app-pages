@@ -1,0 +1,64 @@
+parameters:
+  FunctionType: ''
+  AzureSubscription: ''
+  DfCDevopsPath: ''
+  SharedResourceGroup: ''
+  ApimServiceName: ''
+  ApimImportScript: ''
+  ApimProductId: ''
+  ApimLoggerName: ''
+  SpecificationPath: ''
+  WebAppName: ''
+  ResourceGroup: ''
+  FunctionAppDomain: ''
+  PackageFile: ''
+
+steps:
+- checkout: dfc-devops
+  path: 's/dfc-devops/'
+
+- task: AzureRmWebAppDeployment@4
+  displayName: 'Azure App Service Deploy: ${{ parameters.WebAppName }}'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    appType: functionApp
+    WebAppName: '${{ parameters.WebAppName }}'
+    Package: "${{ parameters.PackageFile }}"
+    deployToSlotOrASE: true
+    ResourceGroupName: '${{ parameters.ResourceGroup }}'
+    SlotName: staging
+
+- task: AzureAppServiceManage@0
+  displayName: 'Swap Slots: ${{ parameters.WebAppName }}'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    WebAppName: '${{ parameters.WebAppName }}'
+    ResourceGroupName: '${{ parameters.ResourceGroup }}'
+    SourceSlot: staging
+
+- powershell: |
+    Write-Host "##vso[task.setvariable variable=FunctionAppUrl]https://${{ parameters.WebAppName }}.${{ parameters.FunctionAppDomain }}"
+  displayName: "Set full hostname as variable"
+
+- task: esfadevops.Tokenization.custom-build-task.Tokenization@0
+  displayName: 'Tokenization: Transform file ${{ parameters.FunctionType }}.txt'
+  inputs:
+    SourcePath: '${{ parameters.SpecificationPath }}'
+    TargetFileNames: '${{ parameters.FunctionType }}.txt'
+
+- task: AzurePowerShell@4
+  displayName: 'Import OpenAPI specification'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    ScriptPath: '${{ parameters.ApimImportScript }}'
+    ScriptArguments: "-ApimResourceGroup '${{ parameters.SharedResourceGroup }}' -InstanceName '${{ parameters.ApimServiceName }}' -ApiName '${{ parameters.FunctionType }}' -OpenApiSpecificationFile '${{ parameters.SpecificationPath }}/${{ parameters.FunctionType }}.txt' -ApiPath 'content/${{ parameters.FunctionType }}'"
+    azurePowerShellVersion: LatestVersion
+
+- task: AzurePowerShell@4
+  displayName: 'Set-ApimProductAndLogger'
+  condition: ne( '${{ parameters.ApimLoggerName }}', '')
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    ScriptPath: '${{ parameters.DfCDevopsPath }}/PSScripts/Set-ApimProductAndLogger.ps1'
+    ScriptArguments: '-ApimResourceGroup ${{ parameters.SharedResourceGroup }} -InstanceName ${{ parameters.ApimServiceName }} -ApiId ${{ parameters.FunctionType }} -ApiProductId ${{ parameters.ApimProductId }} -ApimLoggerName ${{ parameters.ApimLoggerName }}'
+    azurePowerShellVersion: LatestVersion
