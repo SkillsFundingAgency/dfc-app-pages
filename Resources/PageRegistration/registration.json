@@ -1,8 +1,8 @@
 [
   {
     "Path": "pages",
-    "TopNavigationText": "Pages",
-    "TopNavigationOrder": 600,
+    "TopNavigationText": null,
+    "TopNavigationOrder": 3000,
     "Layout": 1,
     "IsOnline": true,
     "OfflineHtml": "<div class=\"govuk-width-container\"><H2>Pages Service Unavailable</H2></div>",
