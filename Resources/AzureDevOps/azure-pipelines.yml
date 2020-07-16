@@ -131,3 +131,53 @@ stages:
         -
           - name: GetAllPages
             azureFunctionName: '$(AppServiceName)'
+
+- stage: DeployToSITAppPages
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  displayName: Deploy to SIT_AppPages
+  variables:
+  - group: dfc-shared-all
+  - group: dfc-shared-sit
+  - group: dfc-app-shared-all
+  - group: dfc-app-shared-sit
+  - group: dfc-app-shared-registration
+  - template: VariableTemplates\SitEnvironmentVariables.yml
+  
+  jobs:
+  - template: JobTemplates/deploy-environment.yml
+    parameters:
+      AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
+      EnvironmentTag: '$(EnvironmentTag)'
+      ParentBusiness: '$(ParentBusiness)'
+      ServiceOffering: '$(ServiceOffering)'
+      ResourceGroup: $(ResourceGroup)
+      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+      ApimProductId: "$(ApimProductId)"
+      ApimLoggerName: "$(ApimLoggerName)"
+      APIProductInstanceName: "$(ApimProductInstanceName)"
+      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+      PolicyFilePath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies"
+      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      SharedResourceGroup: "$(SharedResourceGroup)"
+      ApimServiceName: "$(ApimServiceName)"
+      FunctionAppDomain: "$(FunctionAppDomain)"
+      FunctionAppName: '$(AppServiceName)'
+      EnvironmentName: SIT_AppPages
+      DFCAzureDevOpsProjectGuid: $(DFCAzureDevOpsProjectGuid)
+      AppSharedResourceGroup: $(AppSharedResourceGroup)
+      appSharedCosmosDBName: $(appSharedCosmosDBName)
+      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+      PageRegistrationFile: "$(PageRegistrationFile)"
+      PathRegistrationApiUrl: "$(PathRegistrationApiUrl)"
+      RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
+      ApimCompositeKey: "$(ApimCompositeKey)"
+
+      # The Apis parameter requires a complex object be passed in,  which requires some odd looking yaml.
+      # The top level -`s here defines an array of "something"
+      # The inner level -'s defines an array of mappings.
+      Apis: 
+        -
+          - name: GetAllPages
+            azureFunctionName: '$(AppServiceName)'

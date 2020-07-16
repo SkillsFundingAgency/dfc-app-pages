@@ -1,3 +1,27 @@
 variables:
 - name: ReleaseEnvironmentName
   value: SIT
+- name: AppServiceName
+  value: dfc-sit-app-pages-as
+- name: cosmosDbCollectionName
+  value: pages
+- name: EnableAzureMonitorAlerting
+  value: true
+- name: EventGridSubscriptionModelEndpoint
+  value: https://dfc-sit-app-pages-as.azurewebsites.net
+- name: pagesAppDatabaseThroughput
+  value: 400
+- name: ResourceGroup
+  value: dfc-sit-app-pages-rg
+- name: WebAppProjectName
+  value: DFC.App.Pages
+- name: ApimProductInstanceName
+  value: Pages
+- name: ApimProductId
+  value: Pages
+- name: ApimLoggerName
+  value: Pages-logger
+- name: ApiName
+  value: GetAllPages
+- name: PageRegistrationFile
+  value: registration.json
