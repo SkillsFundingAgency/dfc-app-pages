@@ -98,7 +98,7 @@ jobs:
         runOnce:
           deploy:
             steps:
-            - template: ../StepTemplates/deploy-azure-function.yml
+            - template: ../StepTemplates/deploy-azure-app-service.yml
               parameters:
                 FunctionType: '${{ api.name }}'
                 WebAppName: '${{ api.azureFunctionName }}'
