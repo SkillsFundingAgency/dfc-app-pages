@@ -115,6 +115,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var model = new ContentPageModel()
             {
                 Id = ContentIdForUpdate,
+                Etag = Guid.NewGuid().ToString(),
                 CanonicalName = "an-article",
                 BreadcrumbTitle = "An article",
                 IncludeInSitemap = true,

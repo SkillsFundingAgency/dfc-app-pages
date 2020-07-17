@@ -189,7 +189,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             return HttpStatusCode.OK;
         }
 
-        public bool TryValidateModel(ContentPageModel contentPageModel)
+        public bool TryValidateModel(ContentPageModel? contentPageModel)
         {
             _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
 
