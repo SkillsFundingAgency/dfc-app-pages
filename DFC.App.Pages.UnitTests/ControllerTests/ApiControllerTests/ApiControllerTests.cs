@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DFC.App.Pages.Controllers;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models.Api;
@@ -9,6 +6,9 @@ using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
@@ -29,7 +29,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
         [Fact]
         public async Task WhenNoDateInApiReturnEmptyList()
         {
-            var controller = new ApiController(logger, fakeContentPageService, fakeMapper);
+            using var controller = new ApiController(logger, fakeContentPageService, fakeMapper);
             var result = await controller.Index().ConfigureAwait(false) as OkObjectResult;
 
             Assert.NotNull(result);
@@ -40,9 +40,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
         [Fact]
         public async Task WhenNoDateInApiReturnsData()
         {
-            var ContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
+            var contentPageService = A.Fake<IContentPageService<ContentPageModel>>();
 
-            A.CallTo(() => ContentPageService.GetAllAsync()).Returns(new List<ContentPageModel>
+            A.CallTo(() => contentPageService.GetAllAsync()).Returns(new List<ContentPageModel>
             {
                 new ContentPageModel
                 {
@@ -55,11 +55,11 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
                 },
             });
 
-            var controller = new ApiController(logger, ContentPageService, fakeMapper);
+            using var controller = new ApiController(logger, contentPageService, fakeMapper);
             var result = await controller.Index().ConfigureAwait(false) as OkObjectResult;
 
             Assert.NotNull(result);
-            Assert.IsType<List<GetIndexModel>>(result.Value);
+            Assert.IsType<List<GetIndexModel>>(result!.Value);
             Assert.NotEmpty(result.Value as List<GetIndexModel>);
         }
 

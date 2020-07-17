@@ -73,8 +73,7 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
                         {
                             Uri = contentUrl,
                         },
-
-                        }),
+                    }),
                 },
             };
             expectedItemResult.ContentLinks = new ContentLinksModel(new JObject())
@@ -89,7 +88,6 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
                             {
                                 Uri = new Uri("http://www.testChild.com"),
                             },
-
                         }),
                 },
             };
@@ -100,7 +98,6 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
             var result = await cmsApiService.GetItemAsync(url).ConfigureAwait(false);
 
             // assert
-
             var expectedCount =
                 expectedResult.ContentLinks.ContentLinks.SelectMany(contentLink => contentLink.Value).Count() +
                 expectedItemResult.ContentLinks.ContentLinks.SelectMany(contentLink => contentLink.Value).Count();

@@ -2,11 +2,11 @@
 using DFC.App.Pages.Data.Enums;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Data.Models.ClientOptions;
-using Microsoft.Azure.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DFC.App.Pages.Services.EventProcessorService
@@ -14,11 +14,13 @@ namespace DFC.App.Pages.Services.EventProcessorService
     public class EventGridService : IEventGridService
     {
         private readonly ILogger<EventGridService> logger;
+        private readonly IEventGridClientService eventGridClientService;
         private readonly EventGridPublishClientOptions eventGridPublishClientOptions;
 
-        public EventGridService(ILogger<EventGridService> logger, EventGridPublishClientOptions eventGridPublishClientOptions)
+        public EventGridService(ILogger<EventGridService> logger, IEventGridClientService eventGridClientService, EventGridPublishClientOptions eventGridPublishClientOptions)
         {
             this.logger = logger;
+            this.eventGridClientService = eventGridClientService;
             this.eventGridPublishClientOptions = eventGridPublishClientOptions;
         }
 
@@ -34,8 +36,7 @@ namespace DFC.App.Pages.Services.EventProcessorService
             {
                 containsDifferences |= !Equals(existingContentPageModel!.PageLocation, updatedContentPageModel.PageLocation);
 
-                //TODO: ian: string array coparison required on following line
-                containsDifferences |= !Equals(existingContentPageModel!.RedirectLocations, updatedContentPageModel.RedirectLocations);
+                containsDifferences |= !Enumerable.SequenceEqual(existingContentPageModel!.RedirectLocations, updatedContentPageModel.RedirectLocations);
             }
 
             if (containsDifferences)
@@ -52,7 +53,8 @@ namespace DFC.App.Pages.Services.EventProcessorService
         {
             _ = updatedContentPageModel ?? throw new ArgumentNullException(nameof(updatedContentPageModel));
 
-            logger.LogInformation($"Sending Event Grid message for: {webhookCacheOperation} - {updatedContentPageModel.Id} - {updatedContentPageModel.CanonicalName}");
+            var logMessage = $"{webhookCacheOperation} - {updatedContentPageModel.Id} - {updatedContentPageModel.CanonicalName}";
+            logger.LogInformation($"Sending Event Grid message for: {logMessage}");
 
             var eventGridEvents = new List<EventGridEvent>
             {
@@ -76,20 +78,7 @@ namespace DFC.App.Pages.Services.EventProcessorService
 
             eventGridEvents.ForEach(f => f.Validate());
 
-            try
-            {
-                string topicHostname = new Uri(eventGridPublishClientOptions.TopicEndpoint).Host;
-                var topicCredentials = new TopicCredentials(eventGridPublishClientOptions.TopicKey);
-                using var client = new EventGridClient(topicCredentials);
-
-                await client.PublishEventsAsync(topicHostname, eventGridEvents).ConfigureAwait(false);
-
-                logger.LogInformation($"Sent Event Grid message for: {webhookCacheOperation} - {updatedContentPageModel.Id} - {updatedContentPageModel.CanonicalName}");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, $"Exception sending Event Grid message for: {webhookCacheOperation} - {updatedContentPageModel.Id} - {updatedContentPageModel.CanonicalName}");
-            }
+            await eventGridClientService.SendEventAsync(eventGridEvents, eventGridPublishClientOptions.TopicEndpoint, eventGridPublishClientOptions.TopicKey, logMessage).ConfigureAwait(false);
         }
     }
 }
