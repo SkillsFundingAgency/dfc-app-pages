@@ -12,7 +12,7 @@ using Xunit;
 
 namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
 {
-    [Trait("Category", "Event Message Service Unit Tests")]
+    [Trait("Category", "Event Grid Subscription Service Unit Tests")]
     public class EventGridSubscriptionServiceTests
     {
         private readonly ILogger<EventGridSubscriptionService> fakeLogger = A.Fake<ILogger<EventGridSubscriptionService>>();

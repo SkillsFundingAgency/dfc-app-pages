@@ -6,8 +6,8 @@ namespace DFC.App.Pages.Data.Contracts
 {
     public interface IEventGridService
     {
-        Task CompareAndSendEventAsync(ContentPageModel? existingContentPageModel, ContentPageModel updatedContentPageModel);
+        Task CompareAndSendEventAsync(ContentPageModel? existingContentPageModel, ContentPageModel? updatedContentPageModel);
 
-        Task SendEventAsync(WebhookCacheOperation webhookCacheOperation, ContentPageModel updatedContentPageModel);
+        Task SendEventAsync(WebhookCacheOperation webhookCacheOperation, ContentPageModel? updatedContentPageModel);
     }
 }

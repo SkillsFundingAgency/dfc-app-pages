@@ -6,6 +6,7 @@ using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,7 +25,7 @@ namespace DFC.App.Pages.Services.EventProcessorService
             this.eventGridPublishClientOptions = eventGridPublishClientOptions;
         }
 
-        public async Task CompareAndSendEventAsync(ContentPageModel? existingContentPageModel, ContentPageModel updatedContentPageModel)
+        public async Task CompareAndSendEventAsync(ContentPageModel? existingContentPageModel, ContentPageModel? updatedContentPageModel)
         {
             _ = updatedContentPageModel ?? throw new ArgumentNullException(nameof(updatedContentPageModel));
 
@@ -34,9 +35,15 @@ namespace DFC.App.Pages.Services.EventProcessorService
 
             if (!containsDifferences)
             {
-                containsDifferences |= !Equals(existingContentPageModel!.PageLocation, updatedContentPageModel.PageLocation);
+                containsDifferences |= !Equals(existingContentPageModel.PageLocation, updatedContentPageModel.PageLocation);
 
-                containsDifferences |= !Enumerable.SequenceEqual(existingContentPageModel!.RedirectLocations, updatedContentPageModel.RedirectLocations);
+                containsDifferences |= existingContentPageModel.RedirectLocations == null && updatedContentPageModel.RedirectLocations != null;
+                containsDifferences |= existingContentPageModel.RedirectLocations != null && updatedContentPageModel.RedirectLocations == null;
+
+                if (!containsDifferences && existingContentPageModel!.RedirectLocations != null && updatedContentPageModel.RedirectLocations != null)
+                {
+                    containsDifferences |= !Enumerable.SequenceEqual(existingContentPageModel.RedirectLocations, updatedContentPageModel.RedirectLocations);
+                }
             }
 
             if (containsDifferences)
@@ -49,8 +56,23 @@ namespace DFC.App.Pages.Services.EventProcessorService
             }
         }
 
-        public async Task SendEventAsync(WebhookCacheOperation webhookCacheOperation, ContentPageModel updatedContentPageModel)
+        public async Task SendEventAsync(WebhookCacheOperation webhookCacheOperation, ContentPageModel? updatedContentPageModel)
         {
+            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.TopicEndpoint))
+            {
+                throw new DataException($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.TopicEndpoint)}");
+            }
+
+            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.TopicKey))
+            {
+                throw new DataException($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.TopicKey)}");
+            }
+
+            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.SubjectPrefix))
+            {
+                throw new DataException($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.SubjectPrefix)}");
+            }
+
             _ = updatedContentPageModel ?? throw new ArgumentNullException(nameof(updatedContentPageModel));
 
             var logMessage = $"{webhookCacheOperation} - {updatedContentPageModel.Id} - {updatedContentPageModel.CanonicalName}";
