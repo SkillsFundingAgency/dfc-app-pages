@@ -20,6 +20,7 @@ namespace DFC.App.Pages.Services.CacheContentService
         private readonly ICmsApiService cmsApiService;
         private readonly IContentPageService<ContentPageModel> contentPageService;
         private readonly IContentCacheService contentCacheService;
+        private readonly IEventGridService eventGridService;
 
         public WebhooksService(
             ILogger<WebhooksService> logger,
@@ -27,7 +28,8 @@ namespace DFC.App.Pages.Services.CacheContentService
             IEventMessageService<ContentPageModel> eventMessageService,
             ICmsApiService cmsApiService,
             IContentPageService<ContentPageModel> contentPageService,
-            IContentCacheService contentCacheService)
+            IContentCacheService contentCacheService,
+            IEventGridService eventGridService)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -35,6 +37,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             this.cmsApiService = cmsApiService;
             this.contentPageService = contentPageService;
             this.contentCacheService = contentCacheService;
+            this.eventGridService = eventGridService;
         }
 
         public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, Uri url)
@@ -84,6 +87,9 @@ namespace DFC.App.Pages.Services.CacheContentService
                 return HttpStatusCode.BadRequest;
             }
 
+            var existingContentPageModel = await contentPageService.GetByIdAsync(contentId).ConfigureAwait(false);
+            contentPageModel.Etag = existingContentPageModel?.Etag;
+
             var contentResult = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 
             if (contentResult == HttpStatusCode.NotFound)
@@ -93,6 +99,8 @@ namespace DFC.App.Pages.Services.CacheContentService
 
             if (contentResult == HttpStatusCode.OK || contentResult == HttpStatusCode.Created)
             {
+                await eventGridService.CompareAndSendEventAsync(existingContentPageModel, contentPageModel).ConfigureAwait(false);
+
                 var contentItemIds = (from a in contentPageModel.ContentItems select a.ItemId!.Value).ToList();
 
                 contentCacheService.AddOrReplace(contentId, contentItemIds);
@@ -134,10 +142,13 @@ namespace DFC.App.Pages.Services.CacheContentService
 
         public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)
         {
+            var existingContentPageModel = await contentPageService.GetByIdAsync(contentId).ConfigureAwait(false);
             var result = await eventMessageService.DeleteAsync(contentId).ConfigureAwait(false);
 
-            if (result == HttpStatusCode.OK)
+            if (result == HttpStatusCode.OK && existingContentPageModel != null)
             {
+                await eventGridService.SendEventAsync(WebhookCacheOperation.Delete, existingContentPageModel).ConfigureAwait(false);
+
                 contentCacheService.Remove(contentId);
             }
 

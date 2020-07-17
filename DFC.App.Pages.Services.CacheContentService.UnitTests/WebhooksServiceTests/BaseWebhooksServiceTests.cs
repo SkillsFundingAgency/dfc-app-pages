@@ -20,11 +20,12 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
         protected BaseWebhooksServiceTests()
         {
             Logger = A.Fake<ILogger<WebhooksService>>();
+            FakeMapper = A.Fake<AutoMapper.IMapper>();
             FakeEventMessageService = A.Fake<IEventMessageService<ContentPageModel>>();
             FakeCmsApiService = A.Fake<ICmsApiService>();
             FakeContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
             FakeContentCacheService = A.Fake<IContentCacheService>();
-            FakeMapper = A.Fake<AutoMapper.IMapper>();
+            FakeEventGridService = A.Fake<IEventGridService>();
         }
 
         protected Guid ContentIdForCreate { get; } = Guid.NewGuid();
@@ -41,6 +42,8 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
 
         protected ILogger<WebhooksService> Logger { get; }
 
+        protected AutoMapper.IMapper FakeMapper { get; }
+
         protected IEventMessageService<ContentPageModel> FakeEventMessageService { get; }
 
         protected ICmsApiService FakeCmsApiService { get; }
@@ -49,7 +52,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
 
         protected IContentCacheService FakeContentCacheService { get; }
 
-        protected AutoMapper.IMapper FakeMapper { get; }
+        protected IEventGridService FakeEventGridService { get; }
 
         protected static PagesApiDataModel BuildValidPagesApiContentModel()
         {
@@ -144,7 +147,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
 
         protected WebhooksService BuildWebhooksService()
         {
-            var service = new WebhooksService(Logger, FakeMapper, FakeEventMessageService, FakeCmsApiService, FakeContentPageService, FakeContentCacheService);
+            var service = new WebhooksService(Logger, FakeMapper, FakeEventMessageService, FakeCmsApiService, FakeContentPageService, FakeContentCacheService, FakeEventGridService);
 
             return service;
         }
