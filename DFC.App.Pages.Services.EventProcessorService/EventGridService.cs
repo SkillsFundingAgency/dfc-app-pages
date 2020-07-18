@@ -6,7 +6,6 @@ using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,28 +24,41 @@ namespace DFC.App.Pages.Services.EventProcessorService
             this.eventGridPublishClientOptions = eventGridPublishClientOptions;
         }
 
+        public static bool ContainsDifferences(ContentPageModel? existingContentPageModel, ContentPageModel? updatedContentPageModel)
+        {
+            _ = updatedContentPageModel ?? throw new ArgumentNullException(nameof(updatedContentPageModel));
+
+            if (existingContentPageModel == null)
+            {
+                return true;
+            }
+
+            if (!Equals(existingContentPageModel.PageLocation, updatedContentPageModel.PageLocation))
+            {
+                return true;
+            }
+
+            if ((existingContentPageModel.RedirectLocations == null && updatedContentPageModel.RedirectLocations != null) ||
+                (existingContentPageModel.RedirectLocations != null && updatedContentPageModel.RedirectLocations == null))
+            {
+                return true;
+            }
+
+            if (!Enumerable.SequenceEqual(existingContentPageModel.RedirectLocations, updatedContentPageModel.RedirectLocations))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task CompareAndSendEventAsync(ContentPageModel? existingContentPageModel, ContentPageModel? updatedContentPageModel)
         {
             _ = updatedContentPageModel ?? throw new ArgumentNullException(nameof(updatedContentPageModel));
 
             logger.LogInformation($"Comparing differences to new: {updatedContentPageModel.Id} - {updatedContentPageModel.CanonicalName}");
 
-            bool containsDifferences = existingContentPageModel == null;
-
-            if (!containsDifferences)
-            {
-                containsDifferences |= !Equals(existingContentPageModel.PageLocation, updatedContentPageModel.PageLocation);
-
-                containsDifferences |= existingContentPageModel.RedirectLocations == null && updatedContentPageModel.RedirectLocations != null;
-                containsDifferences |= existingContentPageModel.RedirectLocations != null && updatedContentPageModel.RedirectLocations == null;
-
-                if (!containsDifferences && existingContentPageModel!.RedirectLocations != null && updatedContentPageModel.RedirectLocations != null)
-                {
-                    containsDifferences |= !Enumerable.SequenceEqual(existingContentPageModel.RedirectLocations, updatedContentPageModel.RedirectLocations);
-                }
-            }
-
-            if (containsDifferences)
+            if (ContainsDifferences(existingContentPageModel, updatedContentPageModel))
             {
                 await SendEventAsync(WebhookCacheOperation.CreateOrUpdate, updatedContentPageModel).ConfigureAwait(false);
             }
@@ -58,22 +70,13 @@ namespace DFC.App.Pages.Services.EventProcessorService
 
         public async Task SendEventAsync(WebhookCacheOperation webhookCacheOperation, ContentPageModel? updatedContentPageModel)
         {
-            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.TopicEndpoint))
-            {
-                throw new DataException($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.TopicEndpoint)}");
-            }
-
-            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.TopicKey))
-            {
-                throw new DataException($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.TopicKey)}");
-            }
-
-            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.SubjectPrefix))
-            {
-                throw new DataException($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.SubjectPrefix)}");
-            }
-
             _ = updatedContentPageModel ?? throw new ArgumentNullException(nameof(updatedContentPageModel));
+
+            if (!IsValidEventGridPublishClientOptions())
+            {
+                logger.LogWarning("Unable to send to event grid due to invalid EventGridPublishClientOptions options");
+                return;
+            }
 
             var logMessage = $"{webhookCacheOperation} - {updatedContentPageModel.Id} - {updatedContentPageModel.CanonicalName}";
             logger.LogInformation($"Sending Event Grid message for: {logMessage}");
@@ -87,7 +90,7 @@ namespace DFC.App.Pages.Services.EventProcessorService
                     Data = new EventGridEventData
                     {
                         ItemId = updatedContentPageModel.Id.ToString(),
-                        Api = updatedContentPageModel.Url!.ToString(),
+                        Api = $"{eventGridPublishClientOptions.ApiEndpoint}/{updatedContentPageModel.Id}",
                         DisplayText = updatedContentPageModel.CanonicalName,
                         VersionId = updatedContentPageModel.Version.ToString(),
                         Author = eventGridPublishClientOptions.SubjectPrefix,
@@ -101,6 +104,35 @@ namespace DFC.App.Pages.Services.EventProcessorService
             eventGridEvents.ForEach(f => f.Validate());
 
             await eventGridClientService.SendEventAsync(eventGridEvents, eventGridPublishClientOptions.TopicEndpoint, eventGridPublishClientOptions.TopicKey, logMessage).ConfigureAwait(false);
+        }
+
+        public bool IsValidEventGridPublishClientOptions()
+        {
+            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.TopicEndpoint))
+            {
+                logger.LogWarning($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.TopicEndpoint)}");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.TopicKey))
+            {
+                logger.LogWarning($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.TopicKey)}");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.SubjectPrefix))
+            {
+                logger.LogWarning($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.SubjectPrefix)}");
+                return false;
+            }
+
+            if (eventGridPublishClientOptions.ApiEndpoint == null)
+            {
+                logger.LogWarning($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.ApiEndpoint)}");
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -7,7 +7,6 @@ using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -23,6 +22,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             TopicEndpoint = "http://somewhere.com",
             TopicKey = "a topic key",
             SubjectPrefix = "/a-subject-prefix",
+            ApiEndpoint = new Uri("http://someendpoint", UriKind.Absolute),
         };
 
         [Fact]
@@ -41,7 +41,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
         }
 
         [Fact]
-        public async Task EventGridServiceCompareAndSendEventAsyncReturnsSuccessForDifferentPageLocation()
+        public async Task EventGridServiceCompareAndSendEventAsyncReturnsSuccessForDifferences()
         {
             // arrange
             var existingContentPageModel = BuildValidContentPageModel();
@@ -49,72 +49,6 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
 
             updatedContentPageModel.PageLocation = existingContentPageModel.PageLocation + ".with-a-difference";
-
-            // act
-            await eventGridService.CompareAndSendEventAsync(existingContentPageModel, updatedContentPageModel).ConfigureAwait(false);
-
-            // assert
-            A.CallTo(() => fakeEventGridClientService.SendEventAsync(A<List<EventGridEvent>>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task EventGridServiceCompareAndSendEventAsyncReturnsSuccessForDifferentRedirectLocations()
-        {
-            // arrange
-            var existingContentPageModel = BuildValidContentPageModel();
-            var updatedContentPageModel = BuildValidContentPageModel();
-            var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
-
-            updatedContentPageModel.RedirectLocations = new List<string> { "/location-3", "/location-4" };
-
-            // act
-            await eventGridService.CompareAndSendEventAsync(existingContentPageModel, updatedContentPageModel).ConfigureAwait(false);
-
-            // assert
-            A.CallTo(() => fakeEventGridClientService.SendEventAsync(A<List<EventGridEvent>>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task EventGridServiceCompareAndSendEventAsyncReturnsSuccessForNullRedirectLocations1()
-        {
-            // arrange
-            var existingContentPageModel = BuildValidContentPageModel();
-            var updatedContentPageModel = BuildValidContentPageModel();
-            var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
-
-            updatedContentPageModel.RedirectLocations = null;
-
-            // act
-            await eventGridService.CompareAndSendEventAsync(existingContentPageModel, updatedContentPageModel).ConfigureAwait(false);
-
-            // assert
-            A.CallTo(() => fakeEventGridClientService.SendEventAsync(A<List<EventGridEvent>>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task EventGridServiceCompareAndSendEventAsyncReturnsSuccessForNullRedirectLocations2()
-        {
-            // arrange
-            var existingContentPageModel = BuildValidContentPageModel();
-            var updatedContentPageModel = BuildValidContentPageModel();
-            var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
-
-            existingContentPageModel.RedirectLocations = null;
-
-            // act
-            await eventGridService.CompareAndSendEventAsync(existingContentPageModel, updatedContentPageModel).ConfigureAwait(false);
-
-            // assert
-            A.CallTo(() => fakeEventGridClientService.SendEventAsync(A<List<EventGridEvent>>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task EventGridServiceCompareAndSendEventAsyncReturnsSuccessForNullExistingContentPageModel()
-        {
-            // arrange
-            ContentPageModel? existingContentPageModel = null;
-            var updatedContentPageModel = BuildValidContentPageModel();
-            var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
 
             // act
             await eventGridService.CompareAndSendEventAsync(existingContentPageModel, updatedContentPageModel).ConfigureAwait(false);
@@ -133,6 +67,119 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
 
             // act
             var exceptionResult = await Assert.ThrowsAsync<ArgumentNullException>(async () => await eventGridService.CompareAndSendEventAsync(existingContentPageModel, updatedContentPageModel).ConfigureAwait(false)).ConfigureAwait(false);
+
+            // assert
+            A.CallTo(() => fakeEventGridClientService.SendEventAsync(A<List<EventGridEvent>>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
+            Assert.Equal("Value cannot be null. (Parameter 'updatedContentPageModel')", exceptionResult.Message);
+        }
+
+        [Fact]
+        public void EventGridServiceContainsDifferencesReturnsNoDifferences()
+        {
+            // arrange
+            const bool expectedResult = false;
+            var existingContentPageModel = BuildValidContentPageModel();
+            var updatedContentPageModel = BuildValidContentPageModel();
+
+            // act
+            var result = EventGridService.ContainsDifferences(existingContentPageModel, updatedContentPageModel);
+
+            // assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void EventGridServiceContainsDifferencesReturnsDifferencesForDifferentPageLocation()
+        {
+            // arrange
+            const bool expectedResult = true;
+            var existingContentPageModel = BuildValidContentPageModel();
+            var updatedContentPageModel = BuildValidContentPageModel();
+
+            updatedContentPageModel.PageLocation = existingContentPageModel.PageLocation + ".with-a-difference";
+
+            // act
+            var result = EventGridService.ContainsDifferences(existingContentPageModel, updatedContentPageModel);
+
+            // assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void EventGridServiceContainsDifferencesReturnsDifferencesForDifferentRedirectLocations()
+        {
+            // arrange
+            const bool expectedResult = true;
+            var existingContentPageModel = BuildValidContentPageModel();
+            var updatedContentPageModel = BuildValidContentPageModel();
+
+            updatedContentPageModel.RedirectLocations = new List<string> { "/location-3", "/location-4" };
+
+            // act
+            var result = EventGridService.ContainsDifferences(existingContentPageModel, updatedContentPageModel);
+
+            // assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void EventGridServiceContainsDifferencesReturnsDifferencesForNullRedirectLocations1()
+        {
+            // arrange
+            const bool expectedResult = true;
+            var existingContentPageModel = BuildValidContentPageModel();
+            var updatedContentPageModel = BuildValidContentPageModel();
+
+            updatedContentPageModel.RedirectLocations = null;
+
+            // act
+            var result = EventGridService.ContainsDifferences(existingContentPageModel, updatedContentPageModel);
+
+            // assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void EventGridServiceContainsDifferencesReturnsDifferencesForNullRedirectLocations2()
+        {
+            // arrange
+            const bool expectedResult = true;
+            var existingContentPageModel = BuildValidContentPageModel();
+            var updatedContentPageModel = BuildValidContentPageModel();
+
+            existingContentPageModel.RedirectLocations = null;
+
+            // act
+            var result = EventGridService.ContainsDifferences(existingContentPageModel, updatedContentPageModel);
+
+            // assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void EventGridServiceContainsDifferencesReturnsDifferencesForNullExistingContentPageModel()
+        {
+            // arrange
+            const bool expectedResult = true;
+            ContentPageModel? existingContentPageModel = null;
+            var updatedContentPageModel = BuildValidContentPageModel();
+
+            // act
+            var result = EventGridService.ContainsDifferences(existingContentPageModel, updatedContentPageModel);
+
+            // assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void EventGridServiceContainsDifferencesRaisesExceptionWhenNullUpdatedContantPageModel()
+        {
+            // arrange
+            var existingContentPageModel = BuildValidContentPageModel();
+            ContentPageModel? updatedContentPageModel = null;
+
+            // act
+            var exceptionResult = Assert.Throws<ArgumentNullException>(() => EventGridService.ContainsDifferences(existingContentPageModel, updatedContentPageModel));
 
             // assert
             A.CallTo(() => fakeEventGridClientService.SendEventAsync(A<List<EventGridEvent>>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
@@ -169,7 +216,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
         }
 
         [Fact]
-        public async Task EventGridServiceSendEventAsyncRaisesExceptionWhenNullTopicEndpoint()
+        public async Task EventGridServiceSendEventAsyncRaisesExceptionWhenInvalidEventGridPublishClientOptions()
         {
             // arrange
             var contentPageModel = BuildValidContentPageModel();
@@ -178,45 +225,88 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             eventGridPublishClientOptions.TopicEndpoint = string.Empty;
 
             // act
-            var exceptionResult = await Assert.ThrowsAsync<DataException>(async () => await eventGridService.SendEventAsync(WebhookCacheOperation.CreateOrUpdate, contentPageModel).ConfigureAwait(false)).ConfigureAwait(false);
+            await eventGridService.SendEventAsync(WebhookCacheOperation.CreateOrUpdate, contentPageModel).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeEventGridClientService.SendEventAsync(A<List<EventGridEvent>>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
-            Assert.Equal("EventGridPublishClientOptions is missing a value for: TopicEndpoint", exceptionResult.Message);
         }
 
         [Fact]
-        public async Task EventGridServiceSendEventAsyncRaisesExceptionWhenNullTopicKey()
+        public void EventGridServiceIsValidEventGridPublishClientOptionsReturnsSuccess()
         {
             // arrange
-            var contentPageModel = BuildValidContentPageModel();
+            const bool expectedResult = true;
+            var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
+
+            // act
+            var result = eventGridService.IsValidEventGridPublishClientOptions();
+
+            // assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void EventGridServiceIsValidEventGridPublishClientOptionsReturnsFalseWhenNullTopicEndpoint()
+        {
+            // arrange
+            const bool expectedResult = false;
+            var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
+
+            eventGridPublishClientOptions.TopicEndpoint = string.Empty;
+
+            // act
+            var result = eventGridService.IsValidEventGridPublishClientOptions();
+
+            // assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void EventGridServiceIsValidEventGridPublishClientOptionsReturnsFalsenWhenNullTopicKey()
+        {
+            // arrange
+            const bool expectedResult = false;
             var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
 
             eventGridPublishClientOptions.TopicKey = string.Empty;
 
             // act
-            var exceptionResult = await Assert.ThrowsAsync<DataException>(async () => await eventGridService.SendEventAsync(WebhookCacheOperation.CreateOrUpdate, contentPageModel).ConfigureAwait(false)).ConfigureAwait(false);
+            var result = eventGridService.IsValidEventGridPublishClientOptions();
 
             // assert
-            A.CallTo(() => fakeEventGridClientService.SendEventAsync(A<List<EventGridEvent>>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
-            Assert.Equal("EventGridPublishClientOptions is missing a value for: TopicKey", exceptionResult.Message);
+            Assert.Equal(expectedResult, result);
         }
 
         [Fact]
-        public async Task EventGridServiceSendEventAsyncRaisesExceptionWhenNullSubjectPrefix()
+        public void EventGridServiceIsValidEventGridPublishClientOptionsReturnsFalseWhenNullSubjectPrefix()
         {
             // arrange
-            var contentPageModel = BuildValidContentPageModel();
+            const bool expectedResult = false;
             var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
 
             eventGridPublishClientOptions.SubjectPrefix = string.Empty;
 
             // act
-            var exceptionResult = await Assert.ThrowsAsync<DataException>(async () => await eventGridService.SendEventAsync(WebhookCacheOperation.CreateOrUpdate, contentPageModel).ConfigureAwait(false)).ConfigureAwait(false);
+            var result = eventGridService.IsValidEventGridPublishClientOptions();
 
             // assert
-            A.CallTo(() => fakeEventGridClientService.SendEventAsync(A<List<EventGridEvent>>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
-            Assert.Equal("EventGridPublishClientOptions is missing a value for: SubjectPrefix", exceptionResult.Message);
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void EventGridServiceIsValidEventGridPublishClientOptionsReturnsFalseWhenNullApiEndpoint()
+        {
+            // arrange
+            const bool expectedResult = false;
+            var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
+
+            eventGridPublishClientOptions.ApiEndpoint = null;
+
+            // act
+            var result = eventGridService.IsValidEventGridPublishClientOptions();
+
+            // assert
+            Assert.Equal(expectedResult, result);
         }
 
         private ContentPageModel BuildValidContentPageModel()
