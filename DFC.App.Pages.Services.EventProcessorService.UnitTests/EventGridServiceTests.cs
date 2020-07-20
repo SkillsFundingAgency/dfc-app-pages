@@ -236,10 +236,9 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
         {
             // arrange
             const bool expectedResult = true;
-            var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
 
             // act
-            var result = eventGridService.IsValidEventGridPublishClientOptions();
+            var result = EventGridService.IsValidEventGridPublishClientOptions(fakeLogger, eventGridPublishClientOptions);
 
             // assert
             Assert.Equal(expectedResult, result);
@@ -250,12 +249,11 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
         {
             // arrange
             const bool expectedResult = false;
-            var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
 
             eventGridPublishClientOptions.TopicEndpoint = string.Empty;
 
             // act
-            var result = eventGridService.IsValidEventGridPublishClientOptions();
+            var result = EventGridService.IsValidEventGridPublishClientOptions(fakeLogger, eventGridPublishClientOptions);
 
             // assert
             Assert.Equal(expectedResult, result);
@@ -266,12 +264,11 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
         {
             // arrange
             const bool expectedResult = false;
-            var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
 
             eventGridPublishClientOptions.TopicKey = string.Empty;
 
             // act
-            var result = eventGridService.IsValidEventGridPublishClientOptions();
+            var result = EventGridService.IsValidEventGridPublishClientOptions(fakeLogger, eventGridPublishClientOptions);
 
             // assert
             Assert.Equal(expectedResult, result);
@@ -282,12 +279,11 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
         {
             // arrange
             const bool expectedResult = false;
-            var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
 
             eventGridPublishClientOptions.SubjectPrefix = string.Empty;
 
             // act
-            var result = eventGridService.IsValidEventGridPublishClientOptions();
+            var result = EventGridService.IsValidEventGridPublishClientOptions(fakeLogger, eventGridPublishClientOptions);
 
             // assert
             Assert.Equal(expectedResult, result);
@@ -298,15 +294,27 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
         {
             // arrange
             const bool expectedResult = false;
-            var eventGridService = new EventGridService(fakeLogger, fakeEventGridClientService, eventGridPublishClientOptions);
 
             eventGridPublishClientOptions.ApiEndpoint = null;
 
             // act
-            var result = eventGridService.IsValidEventGridPublishClientOptions();
+            var result = EventGridService.IsValidEventGridPublishClientOptions(fakeLogger, eventGridPublishClientOptions);
 
             // assert
             Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void EventGridServiceIsValidEventGridPublishClientOptionsRaisesExceptionWhenNullEventGridPublishClientOptions()
+        {
+            // arrange
+
+            // act
+            var exceptionResult = Assert.Throws<ArgumentNullException>(() => EventGridService.IsValidEventGridPublishClientOptions(fakeLogger, null));
+
+            // assert
+            A.CallTo(() => fakeEventGridClientService.SendEventAsync(A<List<EventGridEvent>>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
+            Assert.Equal("Value cannot be null. (Parameter 'eventGridPublishClientOptions')", exceptionResult.Message);
         }
 
         private ContentPageModel BuildValidContentPageModel()

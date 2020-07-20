@@ -52,6 +52,37 @@ namespace DFC.App.Pages.Services.EventProcessorService
             return false;
         }
 
+        public static bool IsValidEventGridPublishClientOptions(ILogger<EventGridService> logger, EventGridPublishClientOptions? eventGridPublishClientOptions)
+        {
+            _ = eventGridPublishClientOptions ?? throw new ArgumentNullException(nameof(eventGridPublishClientOptions));
+
+            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.TopicEndpoint))
+            {
+                logger.LogWarning($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.TopicEndpoint)}");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.TopicKey))
+            {
+                logger.LogWarning($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.TopicKey)}");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.SubjectPrefix))
+            {
+                logger.LogWarning($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.SubjectPrefix)}");
+                return false;
+            }
+
+            if (eventGridPublishClientOptions.ApiEndpoint == null)
+            {
+                logger.LogWarning($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.ApiEndpoint)}");
+                return false;
+            }
+
+            return true;
+        }
+
         public async Task CompareAndSendEventAsync(ContentPageModel? existingContentPageModel, ContentPageModel? updatedContentPageModel)
         {
             _ = updatedContentPageModel ?? throw new ArgumentNullException(nameof(updatedContentPageModel));
@@ -72,7 +103,7 @@ namespace DFC.App.Pages.Services.EventProcessorService
         {
             _ = updatedContentPageModel ?? throw new ArgumentNullException(nameof(updatedContentPageModel));
 
-            if (!IsValidEventGridPublishClientOptions())
+            if (!IsValidEventGridPublishClientOptions(logger, eventGridPublishClientOptions))
             {
                 logger.LogWarning("Unable to send to event grid due to invalid EventGridPublishClientOptions options");
                 return;
@@ -104,35 +135,6 @@ namespace DFC.App.Pages.Services.EventProcessorService
             eventGridEvents.ForEach(f => f.Validate());
 
             await eventGridClientService.SendEventAsync(eventGridEvents, eventGridPublishClientOptions.TopicEndpoint, eventGridPublishClientOptions.TopicKey, logMessage).ConfigureAwait(false);
-        }
-
-        public bool IsValidEventGridPublishClientOptions()
-        {
-            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.TopicEndpoint))
-            {
-                logger.LogWarning($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.TopicEndpoint)}");
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.TopicKey))
-            {
-                logger.LogWarning($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.TopicKey)}");
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(eventGridPublishClientOptions.SubjectPrefix))
-            {
-                logger.LogWarning($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.SubjectPrefix)}");
-                return false;
-            }
-
-            if (eventGridPublishClientOptions.ApiEndpoint == null)
-            {
-                logger.LogWarning($"EventGridPublishClientOptions is missing a value for: {nameof(eventGridPublishClientOptions.ApiEndpoint)}");
-                return false;
-            }
-
-            return true;
         }
     }
 }
