@@ -130,7 +130,6 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
         public async Task ApiDataProcessorServiceDeleteReturnsExceptionForNoHttpClient()
         {
             // arrange
-
             var apiDataProcessorService = new ApiDataProcessorService(fakeApiService);
 
             // act

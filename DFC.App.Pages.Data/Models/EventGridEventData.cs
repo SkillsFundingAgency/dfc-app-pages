@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace DFC.App.Pages.Models
+namespace DFC.App.Pages.Data.Models
 {
     [ExcludeFromCodeCoverage]
     public class EventGridEventData

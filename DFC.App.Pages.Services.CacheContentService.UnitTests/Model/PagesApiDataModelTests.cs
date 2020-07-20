@@ -1,14 +1,11 @@
-﻿using System;
+﻿using DFC.App.Pages.Data.Models;
 using System.Collections.Generic;
-using System.Text;
-using DFC.App.Pages.Data.Models;
 using Xunit;
 
 namespace DFC.App.Pages.Services.CacheContentService.UnitTests.Model
 {
     public class PagesApiDataModelTests
     {
-
         [Fact]
         public void PageApiDataModelReturnCorrectPageLocation()
         {
@@ -21,7 +18,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.Model
                 },
             };
 
-            Assert.Equal(model.Pagelocation, "location/test");
+            Assert.Equal("location/test", model.Pagelocation);
         }
 
         [Fact]
@@ -33,7 +30,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.Model
                 TaxonomyTerms = new List<string>(),
             };
 
-            Assert.Equal(model.Pagelocation, "/test");
+            Assert.Equal("/test", model.Pagelocation);
         }
     }
 }

@@ -78,9 +78,12 @@ namespace DFC.App.Pages
             services.AddTransient<IApiService, ApiService>();
             services.AddTransient<IApiDataProcessorService, ApiDataProcessorService>();
             services.AddTransient<IWebhooksService, WebhooksService>();
+            services.AddTransient<IEventGridService, EventGridService>();
+            services.AddTransient<IEventGridClientService, EventGridClientService>();
             services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddSingleton(configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
             services.AddSingleton(configuration.GetSection(nameof(EventGridSubscriptionClientOptions)).Get<EventGridSubscriptionClientOptions>() ?? new EventGridSubscriptionClientOptions());
+            services.AddSingleton(configuration.GetSection(nameof(EventGridPublishClientOptions)).Get<EventGridPublishClientOptions>() ?? new EventGridPublishClientOptions());
             services.AddHostedServiceTelemetryWrapper();
             services.AddHostedService<CacheReloadBackgroundService>();
             services.AddHostedService<CreateSubscriptionBackgroundService>();

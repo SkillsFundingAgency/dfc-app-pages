@@ -4,6 +4,7 @@ using DFC.App.Pages.Models.Api;
 using DFC.Compui.Cosmos.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ namespace DFC.App.Pages.Controllers
 
             var contentPageModels = await contentPageService.GetAllAsync().ConfigureAwait(false);
 
-            if (contentPageModels != null)
+            if (contentPageModels != null && contentPageModels.Any())
             {
                 pages = (from a in contentPageModels.OrderBy(o => o.PageLocation).ThenBy(o => o.CanonicalName)
                          select mapper.Map<GetIndexModel>(a)).ToList();
@@ -41,6 +42,24 @@ namespace DFC.App.Pages.Controllers
             }
 
             return Ok(pages);
+        }
+
+        [HttpGet]
+        [Route("api/pages/{id}")]
+        public async Task<IActionResult> Document(Guid id)
+        {
+            var contentPageModel = await contentPageService.GetByIdAsync(id).ConfigureAwait(false);
+
+            if (contentPageModel != null)
+            {
+                var getIndexModel = mapper.Map<GetIndexModel>(contentPageModel);
+                Logger.LogInformation($"{nameof(Document)} has succeeded");
+                return Ok(getIndexModel);
+            }
+
+            Logger.LogWarning($"{nameof(Document)} has returned with no content");
+
+            return NoContent();
         }
     }
 }

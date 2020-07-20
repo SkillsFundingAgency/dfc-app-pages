@@ -1,4 +1,4 @@
-﻿using DFC.App.Pages.Models;
+﻿using DFC.App.Pages.Data.Models;
 using Microsoft.Azure.EventGrid.Models;
 using System;
 using System.Net.Http;
