@@ -5,6 +5,8 @@ namespace DFC.App.Pages.Models.Api
 {
     public class GetIndexModel
     {
+        public Guid? Id { get; set; }
+
         public string? CanonicalName { get; set; }
 
         public Uri? Url { get; set; }
