@@ -1,21 +1,40 @@
 ﻿openapi: 3.0.1
 info:
   title: DFC Pages API
-  description: 'Retrieves a list of all pages and redirects' 
+  description: 'Retrieves pages and their redirects' 
   version: 1.0.0
 servers:
   - url: __FunctionAppUrl__
 paths:
   /api/pages:
     get:
-      description: Auto generated using Swagger Inspector
+      description: Returns a list of all pages and their redirects
       responses:
         '200':
-          description: Auto generated using Swagger Inspector
+          description: successful operation
           content:
             application/json; charset=utf-8:
               schema:
                 $ref: '#/components/schemas/DynamicResponse'
+  /api/pages/{id}:
+    get:
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      description: Returns the page for the id and its redirects
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/DynamicResponse'
+        '204':
+          description: No content can be found.
+          content: {}
 components:
   schemas:
     DynamicResponse: 
