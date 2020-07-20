@@ -73,6 +73,15 @@
         },
         "ApimServiceName": {
             "value": "__ApimServiceName__"
+        },
+        "EventGridAegSasKey": {
+            "value": "__EventGridAegSasKey__"
+        },
+        "EventGridTopicUrl": {
+            "value": "__EventGridTopicUrl__"
+        },
+        "EventGridPublishClientOptionsApiEndpoint": {
+            "value": "__EventGridPublishClientOptionsApiEndpoint__"
         }
     }
 }
