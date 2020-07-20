@@ -29,7 +29,7 @@ namespace DFC.App.Pages.Controllers
 
             var contentPageModels = await contentPageService.GetAllAsync().ConfigureAwait(false);
 
-            if (contentPageModels != null)
+            if (contentPageModels != null && contentPageModels.Any())
             {
                 pages = (from a in contentPageModels.OrderBy(o => o.PageLocation).ThenBy(o => o.CanonicalName)
                          select mapper.Map<GetIndexModel>(a)).ToList();
