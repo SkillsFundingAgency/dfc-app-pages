@@ -89,6 +89,15 @@
         },
         "ApiName": {
             "type": "string"
+        },
+        "EventGridAegSasKey": {
+            "type": "string"
+        },
+        "EventGridTopicUrl": {
+            "type": "string"
+        },
+        "EventGridPublishClientOptionsApiEndpoint": {
+            "type": "string"
         }
     },
     "variables": {
@@ -332,6 +341,22 @@
                             {
                                 "name": "EventGridSubscriptionClientOptions__ApiKey",
                                 "value": "[parameters('apimCompositeApiKey')]"
+                            },
+                            {
+                                "name": "EventGridPublishClientOptions__TopicKey",
+                                "value": "[parameters('EventGridAegSasKey')]"
+                            },
+                            {
+                                "name": "EventGridPublishClientOptions__TopicEndpoint",
+                                "value": "[parameters('EventGridTopicUrl')]"
+                            },
+                            {
+                                "name": "EventGridPublishClientOptions__SubjectPrefix",
+                                "value": "/dfc-app-pages"
+                            },
+                            {
+                                "name": "EventGridPublishClientOptions__ApiEndpoint",
+                                "value": "[parameters('EventGridPublishClientOptionsApiEndpoint')]"
                             }
                         ]
                     }

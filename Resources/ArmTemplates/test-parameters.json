@@ -61,6 +61,15 @@
         },
         "ApiName": {
             "value": "api-name"
+        },
+        "EventGridAegSasKey": {
+            "value": "a key"
+        },
+        "EventGridTopicUrl": {
+            "value": "a url"
+        },
+        "EventGridPublishClientOptionsApiEndpoint": {
+            "value": "a url"
         }
     }
 }
