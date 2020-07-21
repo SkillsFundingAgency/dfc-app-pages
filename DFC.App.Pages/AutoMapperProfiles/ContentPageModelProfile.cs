@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.AutoMapperProfiles.ValuerConverters;
-using DFC.App.Pages.Controllers;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.Models.Api;
@@ -27,7 +26,7 @@ namespace DFC.App.Pages.AutoMapperProfiles
 
             CreateMap<ContentPageModel, HtmlHeadViewModel>()
                 .ForMember(d => d.CanonicalUrl, s => s.Ignore())
-                .ForMember(d => d.Title, s => s.MapFrom(a => a.MetaTags != null ? a.MetaTags.Title + " | " + PagesController.PagesPageTitleSuffix : PagesController.PagesPageTitleSuffix))
+                .ForMember(d => d.Title, s => s.MapFrom(a => a.MetaTags != null && !string.IsNullOrWhiteSpace(a.MetaTags.Title) ? a.MetaTags.Title + " | Pages | National Careers Service" : "National Careers Service"))
                 .ForMember(d => d.Description, s => s.MapFrom(a => a.MetaTags != null ? a.MetaTags.Description : null))
                 .ForMember(d => d.Keywords, s => s.MapFrom(a => a.MetaTags != null ? a.MetaTags.Keywords : null));
 
