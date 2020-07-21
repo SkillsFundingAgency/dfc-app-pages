@@ -16,7 +16,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
         private readonly IContentPageService<ContentPageModel> fakeContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
 
         [Fact]
-        public async Task EventMessageServiceGetAllCachedCanonicalNamesReturnsSuccess()
+        public async Task EventMessageServiceGetAllCachedItemsReturnsSuccess()
         {
             // arrange
             var expectedResult = A.CollectionOfFake<ContentPageModel>(2);
@@ -26,7 +26,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var eventMessageService = new EventMessageService<ContentPageModel>(fakeLogger, fakeContentPageService);
 
             // act
-            var result = await eventMessageService.GetAllCachedCanonicalNamesAsync().ConfigureAwait(false);
+            var result = await eventMessageService.GetAllCachedItemsAsync().ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();

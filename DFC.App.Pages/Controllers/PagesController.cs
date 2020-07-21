@@ -6,6 +6,7 @@ using DFC.Compui.Cosmos.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,17 +31,22 @@ namespace DFC.App.Pages.Controllers
             var viewModel = new IndexViewModel()
             {
                 LocalPath = LocalPath,
+                Documents = new List<IndexDocumentViewModel>
+                {
+                    new IndexDocumentViewModel { CanonicalName = HomeController.ThisViewCanonicalName, PageLocation = "/" },
+                    new IndexDocumentViewModel { CanonicalName = HealthController.HealthViewCanonicalName },
+                    new IndexDocumentViewModel { CanonicalName = SitemapController.SitemapViewCanonicalName },
+                    new IndexDocumentViewModel { CanonicalName = RobotController.RobotsViewCanonicalName },
+                },
             };
             var contentPageModels = await contentPageService.GetAllAsync().ConfigureAwait(false);
 
             if (contentPageModels != null)
             {
-                viewModel.Documents = (from a in contentPageModels.OrderBy(o => o.PageLocation).ThenBy(o => o.CanonicalName)
-                                       select mapper.Map<IndexDocumentViewModel>(a)).ToList();
+                var documents = from a in contentPageModels.OrderBy(o => o.PageLocation).ThenBy(o => o.CanonicalName)
+                                select mapper.Map<IndexDocumentViewModel>(a);
 
-                viewModel.Documents.Add(new IndexDocumentViewModel { CanonicalName = HealthController.HealthViewCanonicalName });
-                viewModel.Documents.Add(new IndexDocumentViewModel { CanonicalName = SitemapController.SitemapViewCanonicalName });
-                viewModel.Documents.Add(new IndexDocumentViewModel { CanonicalName = HomeController.ThisViewCanonicalName });
+                viewModel.Documents.AddRange(documents);
 
                 Logger.LogInformation($"{nameof(Index)} has succeeded");
             }

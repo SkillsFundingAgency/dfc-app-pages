@@ -29,6 +29,12 @@ namespace DFC.App.Pages.ViewModels
         [Display(Name = "Breadcrumb Title")]
         public string? BreadcrumbTitle { get; set; }
 
+        [Display(Name = "Is Default For Page Location")]
+        public bool IsDefaultForPageLocation { get; set; }
+
+        [Display(Name = "Page Location")]
+        public string? PageLocation { get; set; }
+
         [Display(Name = "Include In SiteMap")]
         public bool IncludeInSitemap { get; set; }
 

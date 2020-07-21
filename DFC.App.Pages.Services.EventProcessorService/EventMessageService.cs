@@ -21,7 +21,7 @@ namespace DFC.App.Pages.Services.EventProcessorService
             this.contentPageService = contentPageService;
         }
 
-        public async Task<IList<TModel>?> GetAllCachedCanonicalNamesAsync()
+        public async Task<IList<TModel>?> GetAllCachedItemsAsync()
         {
             var serviceDataModels = await contentPageService.GetAllAsync().ConfigureAwait(false);
 
@@ -61,7 +61,24 @@ namespace DFC.App.Pages.Services.EventProcessorService
                 return HttpStatusCode.NotFound;
             }
 
-            upsertDocumentModel.Etag = existingDocument.Etag;
+            if (existingDocument.PartitionKey != null && existingDocument.PartitionKey.Equals(upsertDocumentModel.PartitionKey, StringComparison.Ordinal))
+            {
+                upsertDocumentModel.Etag = existingDocument.Etag;
+            }
+            else
+            {
+                var deleted = await contentPageService.DeleteAsync(existingDocument.Id).ConfigureAwait(false);
+
+                if (deleted)
+                {
+                    logger.LogInformation($"{nameof(UpdateAsync)} has deleted content for: {existingDocument.CanonicalName} due to partition key change: {existingDocument.PartitionKey} -> {upsertDocumentModel.PartitionKey}");
+                }
+                else
+                {
+                    logger.LogWarning($"{nameof(UpdateAsync)} failed to delete content for: {existingDocument.CanonicalName} due to partition key change: {existingDocument.PartitionKey} -> {upsertDocumentModel.PartitionKey}");
+                    return HttpStatusCode.BadRequest;
+                }
+            }
 
             var response = await contentPageService.UpsertAsync(upsertDocumentModel).ConfigureAwait(false);
 

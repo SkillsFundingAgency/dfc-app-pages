@@ -41,10 +41,12 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService
 
         public async Task<PagesApiDataModel?> GetItemAsync(Uri url)
         {
-            var pagesApiDataModel = await apiDataProcessorService.GetAsync<PagesApiDataModel>(httpClient, url)
-                .ConfigureAwait(false);
+            var pagesApiDataModel = await apiDataProcessorService.GetAsync<PagesApiDataModel>(httpClient, url).ConfigureAwait(false);
 
-            await GetSharedChildContentItems(pagesApiDataModel.ContentLinks, pagesApiDataModel.ContentItems).ConfigureAwait(false);
+            if (pagesApiDataModel != null)
+            {
+                await GetSharedChildContentItems(pagesApiDataModel.ContentLinks, pagesApiDataModel.ContentItems).ConfigureAwait(false);
+            }
 
             return pagesApiDataModel;
         }
