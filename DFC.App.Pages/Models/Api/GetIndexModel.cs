@@ -7,7 +7,7 @@ namespace DFC.App.Pages.Models.Api
     {
         public Guid? Id { get; set; }
 
-        public string? CanonicalName { get; set; }
+        public string? Location { get; set; }
 
         public Uri? Url { get; set; }
 

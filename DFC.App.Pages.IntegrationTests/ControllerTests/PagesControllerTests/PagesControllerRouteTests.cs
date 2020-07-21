@@ -25,6 +25,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
         {
             new object[] { "/" },
             new object[] { "/pages" },
+            new object[] { "/pages/contact-us" },
             new object[] { $"/pages/{DataSeeding.ExampleArticleName}" },
             new object[] { $"/pages/{DataSeeding.ExampleArticleName}/htmlhead" },
             new object[] { $"/pages/{DataSeeding.ExampleArticleName}/breadcrumb" },

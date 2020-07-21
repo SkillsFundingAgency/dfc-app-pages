@@ -31,7 +31,9 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.Keywords, s => s.MapFrom(a => a.MetaTags != null ? a.MetaTags.Keywords : null));
 
             CreateMap<ContentPageModel, IndexDocumentViewModel>();
-            CreateMap<ContentPageModel, GetIndexModel>();
+
+            CreateMap<ContentPageModel, GetIndexModel>()
+                .ForMember(d => d.Location, s => s.MapFrom(a => a.IsDefaultForPageLocation ? a.PageLocation : $"{a.PageLocation}/{a.CanonicalName}"));
 
             CreateMap<ContentPageModel, BreadcrumbItemModel>();
 

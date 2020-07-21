@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace DFC.App.Pages.Controllers
@@ -60,7 +61,8 @@ namespace DFC.App.Pages.Controllers
 
         [HttpGet]
         [Route("pages/{location}/{article}")]
-        public async Task<IActionResult> Document(string location, string article)
+        [Route("pages/{location}")]
+        public async Task<IActionResult> Document(string location, string? article)
         {
             var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
 
@@ -195,22 +197,32 @@ namespace DFC.App.Pages.Controllers
 
         #region Define helper methods
 
-        private async Task<ContentPageModel?> GetContentPageAsync(string? location, string? article)
+        private async Task<ContentPageModel?> GetContentPageAsync(string location, string? article)
         {
-            const string defaultArticleName = HomeController.ThisViewCanonicalName;
-            var articleName = string.IsNullOrWhiteSpace(article) ? defaultArticleName : article;
+            Expression<Func<ContentPageModel, bool>> where;
 
-            var contentPageModel = await contentPageService.GetByNameAsync("/" + location, articleName).ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(article))
+            {
+                where = p => p.PageLocation == "/" + location && p.IsDefaultForPageLocation;
+            }
+            else
+            {
+                where = p => p.PageLocation == "/" + location && p.CanonicalName == article.ToLowerInvariant();
+            }
 
-            return contentPageModel;
+            var contentPageModels = await contentPageService.GetAsync(where).ConfigureAwait(false);
+
+            if (contentPageModels != null && contentPageModels.Any())
+            {
+                return contentPageModels.First();
+            }
+
+            return default;
         }
 
-        private async Task<ContentPageModel?> GetRedirectedContentPageAsync(string? location, string? article)
+        private async Task<ContentPageModel?> GetRedirectedContentPageAsync(string location, string article)
         {
-            const string defaultArticleName = HomeController.ThisViewCanonicalName;
-            var articleName = string.IsNullOrWhiteSpace(article) ? defaultArticleName : article;
-
-            var contentPageModel = await contentPageService.GetByRedirectLocationAsync($"/{location}/{articleName}").ConfigureAwait(false);
+            var contentPageModel = await contentPageService.GetByRedirectLocationAsync($"/{location}/{article}").ConfigureAwait(false);
 
             return contentPageModel;
         }
