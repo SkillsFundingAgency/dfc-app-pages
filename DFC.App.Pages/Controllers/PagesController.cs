@@ -34,7 +34,7 @@ namespace DFC.App.Pages.Controllers
                 LocalPath = LocalPath,
                 Documents = new List<IndexDocumentViewModel>
                 {
-                    new IndexDocumentViewModel { CanonicalName = HomeController.ThisViewCanonicalName, PageLocation = "/" },
+                    new IndexDocumentViewModel { CanonicalName = HomeController.HomeViewCanonicalName, PageLocation = "/" },
                     new IndexDocumentViewModel { CanonicalName = HealthController.HealthViewCanonicalName },
                     new IndexDocumentViewModel { CanonicalName = SitemapController.SitemapViewCanonicalName },
                     new IndexDocumentViewModel { CanonicalName = RobotController.RobotsViewCanonicalName },
@@ -99,7 +99,8 @@ namespace DFC.App.Pages.Controllers
 
         [HttpGet]
         [Route("pages/{location}/{article}/htmlhead")]
-        public async Task<IActionResult> HtmlHead(string location, string article)
+        [Route("pages/{location}/htmlhead")]
+        public async Task<IActionResult> HtmlHead(string location, string? article)
         {
             var viewModel = new HtmlHeadViewModel();
             var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
@@ -117,7 +118,8 @@ namespace DFC.App.Pages.Controllers
         }
 
         [Route("pages/{location}/{article}/breadcrumb")]
-        public async Task<IActionResult> Breadcrumb(string location, string article)
+        [Route("pages/{location}/breadcrumb")]
+        public async Task<IActionResult> Breadcrumb(string location, string? article)
         {
             var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
             var breadcrumbItemModel = mapper.Map<BreadcrumbItemModel>(contentPageModel);
@@ -130,21 +132,24 @@ namespace DFC.App.Pages.Controllers
 
         [HttpGet]
         [Route("pages/{location}/{article}/bodytop")]
-        public IActionResult BodyTop(string location, string article)
+        [Route("pages/{location}/bodytop")]
+        public IActionResult BodyTop(string location, string? article)
         {
             return NoContent();
         }
 
         [HttpGet]
         [Route("pages/{location}/{article}/herobanner")]
-        public IActionResult HeroBanner(string location, string article)
+        [Route("pages/{location}/herobanner")]
+        public IActionResult HeroBanner(string location, string? article)
         {
             return NoContent();
         }
 
         [HttpGet]
         [Route("pages/{location}/{article}/body")]
-        public async Task<IActionResult> Body(string location, string article)
+        [Route("pages/{location}/body")]
+        public async Task<IActionResult> Body(string location, string? article)
         {
             var viewModel = new BodyViewModel();
             var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
@@ -176,21 +181,24 @@ namespace DFC.App.Pages.Controllers
 
         [HttpGet]
         [Route("pages/{location}/{article}/sidebarright")]
-        public IActionResult SidebarRight(string location, string article)
+        [Route("pages/{location}/sidebarright")]
+        public IActionResult SidebarRight(string location, string? article)
         {
             return NoContent();
         }
 
         [HttpGet]
         [Route("pages/{location}/{article}/sidebarleft")]
-        public IActionResult SidebarLeft(string location, string article)
+        [Route("pages/{location}/sidebarleft")]
+        public IActionResult SidebarLeft(string location, string? article)
         {
             return NoContent();
         }
 
         [HttpGet]
         [Route("pages/{location}/{article}/bodyfooter")]
-        public IActionResult BodyFooter(string location, string article)
+        [Route("pages/{location}/bodyfooter")]
+        public IActionResult BodyFooter(string location, string? article)
         {
             return NoContent();
         }

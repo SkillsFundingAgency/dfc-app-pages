@@ -7,7 +7,7 @@ namespace DFC.App.Pages.Controllers
 {
     public class HomeController : BasePagesController<HomeController>
     {
-        public const string ThisViewCanonicalName = "home";
+        public const string HomeViewCanonicalName = "home";
 
         public HomeController(ILogger<HomeController> logger) : base(logger)
         {
