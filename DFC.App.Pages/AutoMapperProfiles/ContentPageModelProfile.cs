@@ -39,6 +39,8 @@ namespace DFC.App.Pages.AutoMapperProfiles
 
             CreateMap<PagesApiDataModel, ContentPageModel>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
+                .ForMember(d => d.CanonicalName, opt => opt.ConvertUsing(new CanonicalNameConverter(), a => a))
+                .ForMember(d => d.PageLocation, opt => opt.ConvertUsing(new PageLocationConverter(), a => a.PageLocation))
                 .ForMember(d => d.Etag, s => s.Ignore())
                 .ForMember(d => d.PartitionKey, s => s.Ignore())
                 .ForMember(d => d.TraceId, s => s.Ignore())

@@ -19,7 +19,7 @@ namespace DFC.App.Pages.Data.Models
         public bool IsDefaultForPageLocation { get; set; }
 
         [JsonIgnore]
-        public string Pagelocation => $"{TaxonomyTerms.FirstOrDefault() ?? "/"}";
+        public string PageLocation => $"{TaxonomyTerms.FirstOrDefault() ?? "/"}";
 
         [JsonProperty("taxonomy_terms")]
         public List<string> TaxonomyTerms { get; set; } = new List<string>();
