@@ -4,7 +4,9 @@ using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -48,16 +50,16 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         {
             // Arrange
             var controller = BuildController(route);
-            var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>" };
+            var expectedResults = new List<ContentPageModel> { new ContentPageModel() { Content = "<h1>A document</h1>" } };
 
-            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
 
             // Act
             var result = await RunControllerAction(controller, location, article, actionMethod).ConfigureAwait(false);
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
-            A.CallTo(() => FakeContentPageService.GetByNameAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).MustHaveHappenedOnceExactly();
 
             controller.Dispose();
         }
