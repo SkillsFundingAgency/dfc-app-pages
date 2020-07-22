@@ -93,10 +93,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             };
             var expectedGetIndexModel = new GetIndexModel
             {
-                Id = expectedContentPageModel.Id,
-                Location = expectedContentPageModel.CanonicalName,
-                RedirectLocations = expectedContentPageModel.RedirectLocations,
-                Url = expectedContentPageModel.Url,
+                Locations = expectedContentPageModel.RedirectLocations,
             };
             A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(expectedContentPageModel);
             A.CallTo(() => fakeMapper.Map<GetIndexModel>(expectedContentPageModel)).Returns(expectedGetIndexModel);
@@ -142,10 +139,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
         {
             _ = new GetIndexModel
             {
-                Id = Guid.NewGuid(),
-                Location = "test",
-                RedirectLocations = new List<string>(),
-                Url = new Uri("http://www.test.com"),
+                Locations = new List<string>(),
             };
         }
     }

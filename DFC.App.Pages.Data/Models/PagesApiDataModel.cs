@@ -68,13 +68,8 @@ namespace DFC.App.Pages.Data.Models
         [JsonProperty("sitemap_ChangeFrequency")]
         public SiteMapChangeFrequency SiteMapChangeFrequency { get; set; }
 
-        public string RedirectLocations { get; set; } = string.Empty;
+        public List<string> RedirectLocations { get; set; } = new List<string>();
 
         private ContentLinksModel? PrivateLinksModel { get; set; }
-
-        public List<string> Redirects()
-        {
-            return string.IsNullOrEmpty(RedirectLocations) ? new List<string>() : RedirectLocations.Split("\r\n").ToList();
-        }
     }
 }

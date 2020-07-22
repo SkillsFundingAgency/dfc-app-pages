@@ -33,7 +33,7 @@ namespace DFC.App.Pages.AutoMapperProfiles
             CreateMap<ContentPageModel, IndexDocumentViewModel>();
 
             CreateMap<ContentPageModel, GetIndexModel>()
-                .ForMember(d => d.Location, opt => opt.ConvertUsing(new LocationPathConverter(), a => a));
+                .ForMember(d => d.Locations, opt => opt.ConvertUsing(new LocationsConverter(), a => a));
 
             CreateMap<ContentPageModel, BreadcrumbItemModel>();
 
@@ -47,7 +47,6 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.ParentId, s => s.Ignore())
                 .ForMember(d => d.Content, s => s.Ignore())
                 .ForMember(d => d.SiteMapPriority, s => s.MapFrom(a => a.SiteMapPriority / 10))
-                .ForMember(d => d.RedirectLocations, s => s.MapFrom(a => a.Redirects()))
                 .ForPath(d => d.LastReviewed, s => s.MapFrom(a => a.Published))
                 .ForPath(d => d.MetaTags.Title, s => s.MapFrom(a => a.Title))
                 .ForPath(d => d.MetaTags.Description, s => s.MapFrom(a => a.Description))
