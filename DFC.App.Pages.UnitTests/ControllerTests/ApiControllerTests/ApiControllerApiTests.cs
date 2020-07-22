@@ -6,7 +6,6 @@ using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.Web.CodeGeneration;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -15,13 +14,13 @@ using Xunit;
 
 namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
 {
-    public class ApiControllerTests
+    public class ApiControllerApiTests
     {
         private readonly ILogger<ApiController> logger;
         private readonly IMapper fakeMapper;
         private readonly IContentPageService<ContentPageModel> fakeContentPageService;
 
-        public ApiControllerTests()
+        public ApiControllerApiTests()
         {
             logger = A.Fake<ILogger<ApiController>>();
             fakeMapper = A.Fake<AutoMapper.IMapper>();
@@ -36,7 +35,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
 
             A.CallTo(() => fakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
             Assert.NotNull(result);
-            Assert.IsType<List<GetIndexModel>>(result.Value);
+            Assert.IsType<List<GetIndexModel>>(result!.Value);
             Assert.Empty(result.Value as List<GetIndexModel>);
         }
 
@@ -48,6 +47,18 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
                 new ContentPageModel
                 {
                     CanonicalName = "test-test",
+                    PageLocation = "/top-of-the-tree",
+                    RedirectLocations = new List<string>
+                    {
+                        "/test/test",
+                    },
+                    Url = new Uri("http://www.test.com"),
+                },
+                new ContentPageModel
+                {
+                    CanonicalName = "default-page",
+                    PageLocation = "/top-of-the-tree",
+                    IsDefaultForPageLocation = true,
                     RedirectLocations = new List<string>
                     {
                         "/test/test",
@@ -83,7 +94,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             var expectedGetIndexModel = new GetIndexModel
             {
                 Id = expectedContentPageModel.Id,
-                CanonicalName = expectedContentPageModel.CanonicalName,
+                Location = expectedContentPageModel.CanonicalName,
                 RedirectLocations = expectedContentPageModel.RedirectLocations,
                 Url = expectedContentPageModel.Url,
             };
@@ -101,7 +112,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
             var modelResult = Assert.IsAssignableFrom<GetIndexModel>(jsonResult.Value);
-            Assert.Equal(expectedStatusCode, (HttpStatusCode)jsonResult.StatusCode);
+            Assert.Equal((int)expectedStatusCode, jsonResult.StatusCode);
             Assert.Equal(expectedGetIndexModel, modelResult);
         }
 
@@ -132,7 +143,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             _ = new GetIndexModel
             {
                 Id = Guid.NewGuid(),
-                CanonicalName = "test",
+                Location = "test",
                 RedirectLocations = new List<string>(),
                 Url = new Uri("http://www.test.com"),
             };

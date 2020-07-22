@@ -13,8 +13,6 @@ namespace DFC.App.Pages.Controllers
     {
         public const string RegistrationPath = "pages";
         public const string LocalPath = "pages";
-        public const string PagesPageTitleSuffix = "Pages | National Careers Service";
-        public const string PageTitleSuffix = " | " + PagesPageTitleSuffix;
 
         protected BasePagesController(ILogger<TController> logger)
         {

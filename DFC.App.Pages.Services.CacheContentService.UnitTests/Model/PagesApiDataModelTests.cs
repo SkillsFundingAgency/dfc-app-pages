@@ -18,7 +18,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.Model
                 },
             };
 
-            Assert.Equal("location/test", model.Pagelocation);
+            Assert.Equal("location", model.PageLocation);
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.Model
                 TaxonomyTerms = new List<string>(),
             };
 
-            Assert.Equal("/test", model.Pagelocation);
+            Assert.Equal("/", model.PageLocation);
         }
     }
 }

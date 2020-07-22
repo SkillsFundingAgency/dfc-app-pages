@@ -8,6 +8,6 @@ namespace DFC.App.Pages.ViewModels
     {
         public string? LocalPath { get; set; }
 
-        public IList<IndexDocumentViewModel>? Documents { get; set; }
+        public List<IndexDocumentViewModel>? Documents { get; set; }
     }
 }

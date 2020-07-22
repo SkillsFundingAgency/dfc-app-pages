@@ -32,6 +32,24 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
         }
 
         [Fact]
+        public async Task CmsApiServiceGetSummaryReturnsNullFornoData()
+        {
+            // arrange
+            IList<PagesSummaryItemModel>? nullExpectedResults = null;
+
+            A.CallTo(() => fakeApiDataProcessorService.GetAsync<IList<PagesSummaryItemModel>>(A<HttpClient>.Ignored, A<Uri>.Ignored)).Returns(nullExpectedResults);
+
+            var cmsApiService = new CmsApiService(CmsApiClientOptions, fakeApiDataProcessorService, fakeHttpClient, mapper);
+
+            // act
+            var result = await cmsApiService.GetSummaryAsync().ConfigureAwait(false);
+
+            // assert
+            A.CallTo(() => fakeApiDataProcessorService.GetAsync<IList<PagesSummaryItemModel>>(A<HttpClient>.Ignored, A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            Assert.Equal(result, nullExpectedResults);
+        }
+
+        [Fact]
         public async Task CmsApiServiceGetSummaryReturnsSuccess()
         {
             // arrange

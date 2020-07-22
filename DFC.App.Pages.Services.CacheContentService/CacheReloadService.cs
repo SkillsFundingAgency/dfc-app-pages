@@ -39,6 +39,8 @@ namespace DFC.App.Pages.Services.CacheContentService
             {
                 logger.LogInformation("Reload cache started");
 
+                await RemoveDuplicateCacheItems().ConfigureAwait(false);
+
                 var summaryList = await GetSummaryListAsync().ConfigureAwait(false);
 
                 if (stoppingToken.IsCancellationRequested)
@@ -70,6 +72,34 @@ namespace DFC.App.Pages.Services.CacheContentService
             }
         }
 
+        public async Task RemoveDuplicateCacheItems()
+        {
+            logger.LogInformation("Removing duplicate cache items");
+
+            var cachedContentPages = await eventMessageService.GetAllCachedItemsAsync().ConfigureAwait(false);
+            var duplicates = cachedContentPages.GroupBy(s => s.Url).SelectMany(grp => grp.Skip(1)).Select(t => t.Id).ToList();
+
+            if (duplicates != null && duplicates.Any())
+            {
+                foreach (var id in duplicates)
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        if (await eventMessageService.DeleteAsync(id).ConfigureAwait(false) == HttpStatusCode.OK)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                logger.LogInformation($"Removed {duplicates.Count} duplicate cache items");
+            }
+            else
+            {
+                logger.LogInformation("No duplicate items to be removed");
+            }
+        }
+
         public async Task<IList<PagesSummaryItemModel>?> GetSummaryListAsync()
         {
             logger.LogInformation("Get summary list");
@@ -87,7 +117,7 @@ namespace DFC.App.Pages.Services.CacheContentService
 
             contentCacheService.Clear();
 
-            foreach (var item in summaryList.OrderBy(o => o.Published))
+            foreach (var item in summaryList.OrderByDescending(o => o.Published).ThenBy(o => o.CanonicalName))
             {
                 if (stoppingToken.IsCancellationRequested)
                 {
@@ -172,12 +202,11 @@ namespace DFC.App.Pages.Services.CacheContentService
         {
             logger.LogInformation("Delete stale cache items started");
 
-            var cachedContentPages = await eventMessageService.GetAllCachedCanonicalNamesAsync().ConfigureAwait(false);
+            var cachedContentPages = await eventMessageService.GetAllCachedItemsAsync().ConfigureAwait(false);
 
             if (cachedContentPages != null && cachedContentPages.Any())
             {
-                var hashedSummaryList = new HashSet<Uri>(summaryList.Select(p => p.Url!));
-                var staleContentPages = cachedContentPages.Where(p => !hashedSummaryList.Contains(p.Url!)).ToList();
+                var staleContentPages = cachedContentPages.Where(x => !summaryList.Any(z => z.Url == x.Url)).ToList();
 
                 if (staleContentPages.Any())
                 {

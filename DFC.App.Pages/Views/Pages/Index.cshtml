@@ -18,7 +18,11 @@
                         {
                             <a href="/@Model.LocalPath/@document.CanonicalName">@document.CanonicalName</a>
                         }
-                        else
+                        else if (@document.PageLocation == "/")
+                        {
+                            <a href="/@Model.LocalPath@document.PageLocation">@document.CanonicalName</a>
+                        }
+                        else 
                         {
                             <a href="/@Model.LocalPath@document.PageLocation/@document.CanonicalName">@document.PageLocation /  @document.CanonicalName</a>
                         }

@@ -57,6 +57,16 @@ namespace DFC.App.Pages.Controllers
 
                         foreach (var contentPageModel in sitemapContentPageModels)
                         {
+                            if (contentPageModel.IsDefaultForPageLocation)
+                            {
+                                sitemap.Add(new SitemapLocation
+                                {
+                                    Url = $"{sitemapUrlPrefix}{contentPageModel.PageLocation}",
+                                    Priority = contentPageModel.SiteMapPriority,
+                                    ChangeFrequency = contentPageModel.SiteMapChangeFrequency,
+                                });
+                            }
+
                             sitemap.Add(new SitemapLocation
                             {
                                 Url = $"{sitemapUrlPrefix}{contentPageModel.PageLocation}/{contentPageModel.CanonicalName}",

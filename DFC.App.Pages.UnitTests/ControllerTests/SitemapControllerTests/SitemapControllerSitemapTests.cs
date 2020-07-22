@@ -22,6 +22,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
             expectedResults[0].IncludeInSitemap = true;
             expectedResults[0].PageLocation = "default-location";
             expectedResults[0].CanonicalName = "default-article";
+            expectedResults[0].IsDefaultForPageLocation = true;
             expectedResults[1].IncludeInSitemap = false;
             expectedResults[1].PageLocation = "default-location";
             expectedResults[1].CanonicalName = "not-in-sitemap";

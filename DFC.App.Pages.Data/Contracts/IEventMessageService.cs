@@ -9,7 +9,7 @@ namespace DFC.App.Pages.Data.Contracts
     public interface IEventMessageService<TModel>
         where TModel : class, IContentPageModel
     {
-        Task<IList<TModel>?> GetAllCachedCanonicalNamesAsync();
+        Task<IList<TModel>?> GetAllCachedItemsAsync();
 
         Task<HttpStatusCode> CreateAsync(TModel? upsertDocumentModel);
 

@@ -11,7 +11,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests
     {
         public const string ExampleArticleName = "send-us-a-letter";
         public const string AlternativeArticleName = "alternative-name";
-
+        public const string DefaultLocationName = "contact-us";
         private const string EventTypePublished = "published";
         private const string WebhookApiUrl = "api/webhook/ReceiveEvents";
 
