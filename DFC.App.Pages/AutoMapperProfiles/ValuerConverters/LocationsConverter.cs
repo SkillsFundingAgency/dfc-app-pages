@@ -1,22 +1,24 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.Data.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
 {
-    public class LocationPathConverter : IValueConverter<ContentPageModel?, string?>
+    public class LocationsConverter : IValueConverter<ContentPageModel?, IList<string>?>
     {
-        public string? Convert(ContentPageModel? sourceMember, ResolutionContext context)
+        public IList<string>? Convert(ContentPageModel? sourceMember, ResolutionContext context)
         {
             const string delimiter = "/";
 
             if (sourceMember == null)
             {
-                return null;
+                return default;
             }
 
+            var result = new List<string>();
             string pageLocation;
-            string? fullPath;
 
             if (string.IsNullOrWhiteSpace(sourceMember.PageLocation) || sourceMember.PageLocation == delimiter)
             {
@@ -33,22 +35,28 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
 
             if (sourceMember.IsDefaultForPageLocation)
             {
-                fullPath = pageLocation;
+                result.Add($"{delimiter}{pageLocation}");
+                result.Add($"{delimiter}{pageLocation}{delimiter}{sourceMember.CanonicalName}");
             }
             else if (string.IsNullOrWhiteSpace(pageLocation))
             {
-                fullPath = sourceMember.CanonicalName;
+                result.Add($"{delimiter}{sourceMember.CanonicalName}");
             }
             else if (string.IsNullOrWhiteSpace(sourceMember.CanonicalName))
             {
-                fullPath = $"{pageLocation}";
+                result.Add($"{delimiter}{pageLocation}");
             }
             else
             {
-                fullPath = $"{pageLocation}/{sourceMember.CanonicalName}";
+                result.Add($"{delimiter}{pageLocation}{delimiter}{sourceMember.CanonicalName}");
             }
 
-            return delimiter + fullPath;
+            if (sourceMember.RedirectLocations != null && sourceMember.RedirectLocations.Any())
+            {
+                result.AddRange(sourceMember.RedirectLocations);
+            }
+
+            return result;
         }
     }
 }

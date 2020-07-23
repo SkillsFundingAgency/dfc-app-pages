@@ -5,12 +5,6 @@ namespace DFC.App.Pages.Models.Api
 {
     public class GetIndexModel
     {
-        public Guid? Id { get; set; }
-
-        public string? Location { get; set; }
-
-        public Uri? Url { get; set; }
-
-        public IList<string>? RedirectLocations { get; set; }
+        public IList<string>? Locations { get; set; }
     }
 }

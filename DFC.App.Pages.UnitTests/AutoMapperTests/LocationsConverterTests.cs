@@ -1,18 +1,19 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.AutoMapperProfiles.ValuerConverters;
 using DFC.App.Pages.Data.Models;
+using System.Collections.Generic;
 using Xunit;
 
 namespace DFC.App.Pages.UnitTests.AutoMapperTests
 {
     [Trait("Category", "AutoMapper")]
-    public class LocationPathConverterTests
+    public class LocationsConverterTests
     {
         [Fact]
-        public void LocationPathConverterReturnsNullForNullSourceMember()
+        public void LocationsConverterReturnsNullForNullSourceMember()
         {
             // Arrange
-            var converter = new LocationPathConverter();
+            var converter = new LocationsConverter();
             ContentPageModel? sourceMember = null;
             var context = new ResolutionContext(null, null);
 
@@ -24,11 +25,11 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
-        public void LocationPathConverterReturnsSlashForNoData()
+        public void LocationsConverterReturnsSlashForNoData()
         {
             // Arrange
-            const string expectedResult = "/";
-            var converter = new LocationPathConverter();
+            var expectedResult = new List<string> { "/" };
+            var converter = new LocationsConverter();
             var sourceMember = new ContentPageModel { PageLocation = string.Empty, CanonicalName = string.Empty };
             var context = new ResolutionContext(null, null);
 
@@ -40,11 +41,11 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
-        public void LocationPathConverterReturnsSlashForNoCanonicalName()
+        public void LocationsConverterReturnsSlashForNoCanonicalName()
         {
             // Arrange
-            const string expectedResult = "/";
-            var converter = new LocationPathConverter();
+            var expectedResult = new List<string> { "/" };
+            var converter = new LocationsConverter();
             var sourceMember = new ContentPageModel { PageLocation = "/", CanonicalName = string.Empty };
             var context = new ResolutionContext(null, null);
 
@@ -56,11 +57,11 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
-        public void LocationPathConverterReturnsPathForNoPageLocation()
+        public void LocationsConverterReturnsPathForNoPageLocation()
         {
             // Arrange
-            const string expectedResult = "/world";
-            var converter = new LocationPathConverter();
+            var expectedResult = new List<string> { "/world" };
+            var converter = new LocationsConverter();
             var sourceMember = new ContentPageModel { PageLocation = string.Empty, CanonicalName = "world" };
             var context = new ResolutionContext(null, null);
 
@@ -72,11 +73,11 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
-        public void LocationPathConverterReturnsPathForNoCanonicalName()
+        public void LocationsConverterReturnsPathForNoCanonicalName()
         {
             // Arrange
-            const string expectedResult = "/hello";
-            var converter = new LocationPathConverter();
+            var expectedResult = new List<string> { "/hello" };
+            var converter = new LocationsConverter();
             var sourceMember = new ContentPageModel { PageLocation = "/hello", CanonicalName = string.Empty };
             var context = new ResolutionContext(null, null);
 
@@ -88,11 +89,11 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
-        public void LocationPathConverterReturnsPathForData()
+        public void LocationsConverterReturnsPathForData()
         {
             // Arrange
-            const string expectedResult = "/hello/world";
-            var converter = new LocationPathConverter();
+            var expectedResult = new List<string> { "/hello/world" };
+            var converter = new LocationsConverter();
             var sourceMember = new ContentPageModel { PageLocation = "/hello", CanonicalName = "world" };
             var context = new ResolutionContext(null, null);
 
@@ -104,11 +105,11 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
-        public void LocationPathConverterReturnsPathForMissingSlash()
+        public void LocationsConverterReturnsPathForMissingSlash()
         {
             // Arrange
-            const string expectedResult = "/hello/world";
-            var converter = new LocationPathConverter();
+            var expectedResult = new List<string> { "/hello/world" };
+            var converter = new LocationsConverter();
             var sourceMember = new ContentPageModel { PageLocation = "hello", CanonicalName = "world" };
             var context = new ResolutionContext(null, null);
 
@@ -120,12 +121,28 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
-        public void LocationPathConverterReturnsPathForDefaultPageLocation()
+        public void LocationsConverterReturnsPathForDefaultPageLocation()
         {
             // Arrange
-            const string expectedResult = "/hello";
-            var converter = new LocationPathConverter();
+            var expectedResult = new List<string> { "/hello", "/hello/world" };
+            var converter = new LocationsConverter();
             var sourceMember = new ContentPageModel { PageLocation = "hello", CanonicalName = "world", IsDefaultForPageLocation = true };
+            var context = new ResolutionContext(null, null);
+
+            // Act
+            var result = converter.Convert(sourceMember, context);
+
+            // Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void LocationsConverterReturnsPathWithRedirectLocations()
+        {
+            // Arrange
+            var expectedResult = new List<string> { "/hello/world", "/hello/cruel/world", "/hello/big/wide/world" };
+            var converter = new LocationsConverter();
+            var sourceMember = new ContentPageModel { PageLocation = "hello", CanonicalName = "world", RedirectLocations = new List<string> { "/hello/cruel/world", "/hello/big/wide/world" } };
             var context = new ResolutionContext(null, null);
 
             // Act
