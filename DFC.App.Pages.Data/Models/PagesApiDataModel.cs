@@ -1,4 +1,5 @@
 ﻿using DFC.App.Pages.Data.Contracts;
+using DFC.App.Pages.Data.JsonConveerters;
 using DFC.Compui.Cosmos.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -68,6 +69,7 @@ namespace DFC.App.Pages.Data.Models
         [JsonProperty("sitemap_ChangeFrequency")]
         public SiteMapChangeFrequency SiteMapChangeFrequency { get; set; }
 
+        [JsonConverter(typeof(SingleOrArrayConverter<string>))]
         public List<string> RedirectLocations { get; set; } = new List<string>();
 
         private ContentLinksModel? PrivateLinksModel { get; set; }
