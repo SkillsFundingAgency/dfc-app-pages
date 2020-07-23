@@ -45,7 +45,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         {
             // Arrange
             var converter = new CanonicalNameConverter();
-            var sourceMember = new PagesApiDataModel { TaxonomyTerms = new List<string> { "root" } };
+            var sourceMember = new PagesApiDataModel { RedirectLocations = new List<string> { "root" } };
             var context = new ResolutionContext(null, null);
 
             // Act
@@ -76,7 +76,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
             // Arrange
             const string expectedResult = "leaf";
             var converter = new CanonicalNameConverter();
-            var sourceMember = new PagesApiDataModel { TaxonomyTerms = new List<string> { "/root/branch/leaf" } };
+            var sourceMember = new PagesApiDataModel { RedirectLocations = new List<string> { "/root/branch/leaf" } };
             var context = new ResolutionContext(null, null);
 
             // Act

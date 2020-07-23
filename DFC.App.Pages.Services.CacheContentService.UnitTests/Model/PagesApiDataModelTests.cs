@@ -12,7 +12,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.Model
             var model = new PagesApiDataModel
             {
                 CanonicalName = "test",
-                TaxonomyTerms = new List<string>
+                RedirectLocations = new List<string>
                 {
                     "location",
                 },
@@ -22,12 +22,12 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.Model
         }
 
         [Fact]
-        public void WhenTaxonomyTermsEmptyThenPageApiDataModelReturnsCorrectPageLocation()
+        public void WhenRedirectLocationsEmptyThenPageApiDataModelReturnsCorrectPageLocation()
         {
             var model = new PagesApiDataModel
             {
                 CanonicalName = "test",
-                TaxonomyTerms = new List<string>(),
+                RedirectLocations = new List<string>(),
             };
 
             Assert.Equal("/", model.PageLocation);

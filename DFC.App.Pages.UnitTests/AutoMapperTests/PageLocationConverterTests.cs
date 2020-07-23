@@ -36,7 +36,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
             var result = converter.Convert(sourceMember, context);
 
             // Assert
-            Assert.Equal(expectedResult,result);
+            Assert.Equal(expectedResult, result);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
             var result = converter.Convert(sourceMember, context);
 
             // Assert
-            Assert.Equal(expectedResult,result);
+            Assert.Equal(expectedResult, result);
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
             var result = converter.Convert(sourceMember, context);
 
             // Assert
-            Assert.Equal(expectedResult,result);
+            Assert.Equal(expectedResult, result);
         }
     }
 }

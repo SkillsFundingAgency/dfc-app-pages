@@ -79,17 +79,14 @@ namespace DFC.App.Pages.Controllers
                 return this.NegotiateContentResult(viewModel);
             }
 
-            if (!string.IsNullOrWhiteSpace(article))
+            var redirectedContentPageModel = await GetRedirectedContentPageAsync(location, article).ConfigureAwait(false);
+
+            if (redirectedContentPageModel != null)
             {
-                var redirectedContentPageModel = await GetRedirectedContentPageAsync(location, article).ConfigureAwait(false);
+                var redirectedUrlateUrl = $"{Request.GetBaseAddress()}{LocalPath}/{location}/{redirectedContentPageModel.CanonicalName}";
+                Logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrlateUrl}");
 
-                if (redirectedContentPageModel != null)
-                {
-                    var redirectedUrlateUrl = $"{Request.GetBaseAddress()}{LocalPath}/{location}/{redirectedContentPageModel.CanonicalName}";
-                    Logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrlateUrl}");
-
-                    return RedirectPermanent(redirectedUrlateUrl);
-                }
+                return RedirectPermanent(redirectedUrlateUrl);
             }
 
             Logger.LogWarning($"{nameof(Document)} has returned no content for: {article}");
@@ -162,17 +159,14 @@ namespace DFC.App.Pages.Controllers
                 return this.NegotiateContentResult(viewModel, contentPageModel);
             }
 
-            if (!string.IsNullOrWhiteSpace(article))
+            var redirectedContentPageModel = await GetRedirectedContentPageAsync(location, article).ConfigureAwait(false);
+
+            if (redirectedContentPageModel != null)
             {
-                var redirectedContentPageModel = await GetRedirectedContentPageAsync(location, article).ConfigureAwait(false);
+                var redirectedUrl = $"{Request.GetBaseAddress()}{location}/{redirectedContentPageModel.CanonicalName}";
+                Logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
 
-                if (redirectedContentPageModel != null)
-                {
-                    var redirectedUrl = $"{Request.GetBaseAddress()}{location}/{redirectedContentPageModel.CanonicalName}";
-                    Logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
-
-                    return RedirectPermanent(redirectedUrl);
-                }
+                return RedirectPermanent(redirectedUrl);
             }
 
             Logger.LogWarning($"{nameof(Body)} has not returned any content for: {article}");
@@ -228,9 +222,16 @@ namespace DFC.App.Pages.Controllers
             return default;
         }
 
-        private async Task<ContentPageModel?> GetRedirectedContentPageAsync(string location, string article)
+        private async Task<ContentPageModel?> GetRedirectedContentPageAsync(string location, string? article)
         {
-            var contentPageModel = await contentPageService.GetByRedirectLocationAsync($"/{location}/{article}").ConfigureAwait(false);
+            var redirectLocation = location;
+
+            if (!string.IsNullOrWhiteSpace(article))
+            {
+                redirectLocation += "/" + article;
+            }
+
+            var contentPageModel = await contentPageService.GetByRedirectLocationAsync($"/{redirectLocation}").ConfigureAwait(false);
 
             return contentPageModel;
         }
