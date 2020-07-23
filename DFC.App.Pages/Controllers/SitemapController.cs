@@ -67,9 +67,11 @@ namespace DFC.App.Pages.Controllers
                                 });
                             }
 
+                            var location = string.IsNullOrWhiteSpace(contentPageModel.PageLocation) || contentPageModel.PageLocation == "/" ? string.Empty : $"{contentPageModel.PageLocation}";
+
                             sitemap.Add(new SitemapLocation
                             {
-                                Url = $"{sitemapUrlPrefix}{contentPageModel.PageLocation}/{contentPageModel.CanonicalName}",
+                                Url = $"{sitemapUrlPrefix}{location}/{contentPageModel.CanonicalName}",
                                 Priority = contentPageModel.SiteMapPriority,
                                 ChangeFrequency = contentPageModel.SiteMapChangeFrequency,
                             });
