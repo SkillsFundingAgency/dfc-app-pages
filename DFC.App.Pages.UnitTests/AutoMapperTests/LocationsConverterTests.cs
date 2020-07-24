@@ -121,12 +121,28 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
+        public void LocationsConverterReturnsPathForDefaultRootPageLocation()
+        {
+            // Arrange
+            var expectedResult = new List<string> { "/", "/home" };
+            var converter = new LocationsConverter();
+            var sourceMember = new ContentPageModel { PageLocation = "/", CanonicalName = "home", IsDefaultForPageLocation = true };
+            var context = new ResolutionContext(null, null);
+
+            // Act
+            var result = converter.Convert(sourceMember, context);
+
+            // Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
         public void LocationsConverterReturnsPathForDefaultPageLocation()
         {
             // Arrange
             var expectedResult = new List<string> { "/hello", "/hello/world" };
             var converter = new LocationsConverter();
-            var sourceMember = new ContentPageModel { PageLocation = "hello", CanonicalName = "world", IsDefaultForPageLocation = true };
+            var sourceMember = new ContentPageModel { PageLocation = "/hello", CanonicalName = "world", IsDefaultForPageLocation = true };
             var context = new ResolutionContext(null, null);
 
             // Act
@@ -142,7 +158,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
             // Arrange
             var expectedResult = new List<string> { "/hello/world", "/hello/cruel/world", "/hello/big/wide/world" };
             var converter = new LocationsConverter();
-            var sourceMember = new ContentPageModel { PageLocation = "hello", CanonicalName = "world", RedirectLocations = new List<string> { "/hello/cruel/world", "/hello/big/wide/world" } };
+            var sourceMember = new ContentPageModel { PageLocation = "/hello", CanonicalName = "world", RedirectLocations = new List<string> { "/hello/cruel/world", "/hello/big/wide/world" } };
             var context = new ResolutionContext(null, null);
 
             // Act

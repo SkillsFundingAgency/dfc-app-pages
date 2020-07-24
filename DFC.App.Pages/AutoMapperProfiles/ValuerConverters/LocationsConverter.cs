@@ -36,7 +36,15 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             if (sourceMember.IsDefaultForPageLocation)
             {
                 result.Add($"{delimiter}{pageLocation}");
-                result.Add($"{delimiter}{pageLocation}{delimiter}{sourceMember.CanonicalName}");
+
+                if (string.IsNullOrWhiteSpace(pageLocation))
+                {
+                    result.Add($"{delimiter}{sourceMember.CanonicalName}");
+                }
+                else
+                {
+                    result.Add($"{delimiter}{pageLocation}{delimiter}{sourceMember.CanonicalName}");
+                }
             }
             else if (string.IsNullOrWhiteSpace(pageLocation))
             {
