@@ -163,7 +163,13 @@ namespace DFC.App.Pages.Controllers
 
             if (redirectedContentPageModel != null)
             {
-                var redirectedUrl = $"{Request.GetBaseAddress()}{location}/{redirectedContentPageModel.CanonicalName}";
+                var pageLocation = redirectedContentPageModel.PageLocation;
+                if (pageLocation != null && pageLocation.StartsWith("/", StringComparison.Ordinal))
+                {
+                    pageLocation = pageLocation.Substring(1);
+                }
+
+                var redirectedUrl = $"{Request.GetBaseAddress()}{pageLocation}/{redirectedContentPageModel.CanonicalName}";
                 Logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
 
                 return RedirectPermanent(redirectedUrl);
