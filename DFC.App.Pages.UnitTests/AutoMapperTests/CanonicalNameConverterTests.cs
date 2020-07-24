@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.AutoMapperProfiles.ValuerConverters;
 using DFC.App.Pages.Data.Models;
-using System.Collections.Generic;
 using Xunit;
 
 namespace DFC.App.Pages.UnitTests.AutoMapperTests
@@ -41,11 +40,11 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
-        public void CanonicalNameConverterTestsReturnsNullForNoSlashTaxonomyTerms()
+        public void CanonicalNameConverterTestsReturnsNullForNoSlashPageLocation()
         {
             // Arrange
             var converter = new CanonicalNameConverter();
-            var sourceMember = new PagesApiDataModel { TaxonomyTerms = new List<string> { "root" } };
+            var sourceMember = new PagesApiDataModel { PageLocation = "root" };
             var context = new ResolutionContext(null, null);
 
             // Act
@@ -56,7 +55,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
-        public void CanonicalNameConverterTestsReturnsNullForRootTaxonomyTerms()
+        public void CanonicalNameConverterTestsReturnsNullForRootPageLocation()
         {
             // Arrange
             var converter = new CanonicalNameConverter();
@@ -71,12 +70,12 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
-        public void CanonicalNameConverterTestsReturnsNullForLeafTaxonomyTerms()
+        public void CanonicalNameConverterTestsReturnsLeafFromPageLocation()
         {
             // Arrange
             const string expectedResult = "leaf";
             var converter = new CanonicalNameConverter();
-            var sourceMember = new PagesApiDataModel { TaxonomyTerms = new List<string> { "/root/branch/leaf" } };
+            var sourceMember = new PagesApiDataModel { PageLocation = "/root/branch/leaf" };
             var context = new ResolutionContext(null, null);
 
             // Act

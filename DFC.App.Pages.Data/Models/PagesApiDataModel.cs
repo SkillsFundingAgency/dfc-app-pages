@@ -5,25 +5,40 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DFC.App.Pages.Data.Models
 {
+    //TODO: ian add these new properties
+    /*
+     *
+         *@Ian Crisp, your updated property names for page locations should be as follows:
+        15:06
+        pagelocation_UrlName is the canonical name, auto generated from the page title of left blank
+        15:07
+   ^     pagelocation_FullUrl is the generated "alias", which is the page location hierarchy concatenated together with the UrlName and slugified
+        15:08
+   ^     pagelocation_DefaultPageForLocation is the default page flag
+        15:08
+   ^     pagelocation_RedirectLocations is the redirect URL's array
+     */
+
     public class PagesApiDataModel : IApiDataModel
     {
         [JsonProperty("id")]
         public Guid? ItemId { get; set; }
 
-        [JsonProperty("alias_alias")]
+        [JsonIgnore]
+        [JsonProperty("pagelocation_UrlName")]
         public string? CanonicalName { get; set; }
 
+        [JsonProperty("pagelocation_DefaultPageForLocation")]
         public bool IsDefaultForPageLocation { get; set; }
 
-        [JsonIgnore]
-        public string PageLocation => $"{TaxonomyTerms.FirstOrDefault() ?? "/"}";
+        [JsonProperty("pagelocation_FullUrl")]
+        public string? PageLocation { get; set; }
 
-        [JsonProperty("taxonomy_terms")]
-        public List<string> TaxonomyTerms { get; set; } = new List<string>();
+        //[JsonProperty("taxonomy_terms")]
+        //public List<string> TaxonomyTerms { get; set; } = new List<string>();
 
         public Guid? Version { get; set; }
 
@@ -69,6 +84,7 @@ namespace DFC.App.Pages.Data.Models
         [JsonProperty("sitemap_ChangeFrequency")]
         public SiteMapChangeFrequency SiteMapChangeFrequency { get; set; }
 
+        [JsonProperty("pagelocation_RedirectLocations")]
         [JsonConverter(typeof(SingleOrArrayConverter<string>))]
         public List<string> RedirectLocations { get; set; } = new List<string>();
 
