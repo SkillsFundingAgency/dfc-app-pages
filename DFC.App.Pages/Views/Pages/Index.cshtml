@@ -20,7 +20,11 @@
                         }
                         else if (@document.PageLocation == "/")
                         {
-                            <a href="/@Model.LocalPath@document.PageLocation">@document.CanonicalName</a>
+                            <a href="/@Model.LocalPath/@document.CanonicalName">@document.CanonicalName</a>
+                        }
+                        else if (document.IsDefaultForPageLocation)
+                        {
+                            <a href="/@Model.LocalPath@document.PageLocation">@document.PageLocation</a>
                         }
                         else 
                         {

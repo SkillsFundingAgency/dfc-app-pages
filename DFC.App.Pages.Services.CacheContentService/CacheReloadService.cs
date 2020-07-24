@@ -77,7 +77,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             logger.LogInformation("Removing duplicate cache items");
 
             var cachedContentPages = await eventMessageService.GetAllCachedItemsAsync().ConfigureAwait(false);
-            var duplicates = cachedContentPages.GroupBy(s => s.Url).SelectMany(grp => grp.Skip(1)).Select(t => t.Id).ToList();
+            var duplicates = cachedContentPages?.GroupBy(s => s.Url).SelectMany(grp => grp.Skip(1)).Select(t => t.Id).ToList();
 
             if (duplicates != null && duplicates.Any())
             {
