@@ -26,6 +26,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResults = new List<ContentPageModel> { new ContentPageModel() { Content = "<h1>A document</h1>" } };
             var controller = BuildPagesController(mediaTypeName);
 
+            expectedResults.First().PageLocation = "/" + location;
             expectedResults.First().CanonicalName = article;
 
             A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
@@ -54,6 +55,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResults = new List<ContentPageModel> { new ContentPageModel() { Content = "<h1>A document</h1>" } };
             var controller = BuildPagesController(mediaTypeName);
 
+            expectedResults.First().PageLocation = "/" + location;
             expectedResults.First().CanonicalName = article;
 
             A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
@@ -82,6 +84,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResults = new List<ContentPageModel> { new ContentPageModel() { Content = "<h1>A document</h1>" } };
             var controller = BuildPagesController(mediaTypeName);
 
+            expectedResults.First().PageLocation = "/" + location;
             expectedResults.First().CanonicalName = article;
 
             A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
@@ -110,6 +113,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResults = new List<ContentPageModel> { new ContentPageModel() { Content = "<h1>A document</h1>" } };
             var controller = BuildPagesController(mediaTypeName);
 
+            expectedResults.First().PageLocation = "/" + location;
             expectedResults.First().CanonicalName = article;
 
             A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
@@ -140,6 +144,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedRedirectResult = A.Fake<ContentPageModel>();
             var controller = BuildPagesController(mediaTypeName);
 
+            expectedRedirectResult.PageLocation = "/" + location;
             expectedRedirectResult.CanonicalName = article;
 
             A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
@@ -199,6 +204,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResults = new List<ContentPageModel> { new ContentPageModel() { Content = "<h1>A document</h1>" } };
             var controller = BuildPagesController(mediaTypeName);
 
+            expectedResults.First().PageLocation = "/" + location;
             expectedResults.First().CanonicalName = article;
 
             A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
