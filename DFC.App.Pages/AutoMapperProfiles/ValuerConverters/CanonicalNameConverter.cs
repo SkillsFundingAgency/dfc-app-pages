@@ -26,7 +26,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             {
                 int fromPosition = sourceMember.PageLocation.LastIndexOf(delimiter, StringComparison.OrdinalIgnoreCase);
 
-                result = fromPosition > 0 ? sourceMember.PageLocation.Substring(fromPosition + 1) : null;
+                result = fromPosition != -1 ? sourceMember.PageLocation.Substring(fromPosition + 1) : null;
             }
 
             return result;

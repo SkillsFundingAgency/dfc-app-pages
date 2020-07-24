@@ -40,6 +40,22 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
+        public void PageLocationConverterTestsReturnsSlashForRootLevelOnly()
+        {
+            // Arrange
+            const string expectedResult = "/";
+            var converter = new PageLocationConverter();
+            var sourceMember = "/root";
+            var context = new ResolutionContext(null, null);
+
+            // Act
+            var result = converter.Convert(sourceMember, context);
+
+            // Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
         public void PageLocationConverterTestsReturnsRootFromPath()
         {
             // Arrange

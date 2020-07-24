@@ -84,5 +84,21 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
             // Assert
             Assert.Equal(expectedResult, result);
         }
+
+        [Fact]
+        public void CanonicalNameConverterTestsReturnsRootFromPageLocation()
+        {
+            // Arrange
+            const string expectedResult = "root";
+            var converter = new CanonicalNameConverter();
+            var sourceMember = new PagesApiDataModel { PageLocation = "/root" };
+            var context = new ResolutionContext(null, null);
+
+            // Act
+            var result = converter.Convert(sourceMember, context);
+
+            // Assert
+            Assert.Equal(expectedResult, result);
+        }
     }
 }
