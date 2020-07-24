@@ -164,6 +164,25 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
         }
 
         [Fact]
+        public async Task CacheReloadServiceRemoveDuplicateCacheItemsNoData()
+        {
+            // arrange
+            const int NumberOfItems = 0;
+            var fakeCachedContentPageModels = BuldFakeContentPageModels(NumberOfItems);
+
+            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync()).Returns(fakeCachedContentPageModels);
+
+            var cacheReloadService = new CacheReloadService(fakeLogger, fakeMapper, fakeEventMessageService, fakeCmsApiService, fakeContentCacheService);
+
+            // act
+            await cacheReloadService.RemoveDuplicateCacheItems().ConfigureAwait(false);
+
+            // assert
+            A.CallTo(() => fakeEventMessageService.GetAllCachedItemsAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
+        }
+
+        [Fact]
         public async Task CacheReloadServiceGetAndSaveItemIsSuccessfulForCreate()
         {
             // arrange
@@ -473,9 +492,9 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             return models.ToList();
         }
 
-        private List<ContentPageModel> BuldFakeContentPageModels(int iemCount)
+        private List<ContentPageModel> BuldFakeContentPageModels(int itemCount)
         {
-            var models = A.CollectionOfFake<ContentPageModel>(iemCount);
+            var models = A.CollectionOfFake<ContentPageModel>(itemCount);
 
             foreach (var item in models)
             {
