@@ -32,7 +32,7 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
         }
 
         [Fact]
-        public async Task CmsApiServiceGetSummaryReturnsNullFornoData()
+        public async Task CmsApiServiceGetSummaryReturnsNullFornNData()
         {
             // arrange
             IList<PagesSummaryItemModel>? nullExpectedResults = null;

@@ -32,6 +32,13 @@ namespace DFC.App.Pages.Services.ApiProcessorService
             return default;
         }
 
+        public async Task<HttpStatusCode> PostAsync(HttpClient? httpClient, Uri url)
+        {
+            _ = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+
+            return await apiService.PostAsync(httpClient, url).ConfigureAwait(false);
+        }
+
         public async Task<HttpStatusCode> PostAsync<TModel>(HttpClient? httpClient, Uri url, TModel model)
             where TModel : class
         {

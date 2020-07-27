@@ -78,6 +78,39 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
         {
             // arrange
             var expectedResult = HttpStatusCode.Created;
+
+            A.CallTo(() => fakeApiService.PostAsync(A<HttpClient>.Ignored, A<Uri>.Ignored)).Returns(expectedResult);
+
+            var apiDataProcessorService = new ApiDataProcessorService(fakeApiService);
+
+            // act
+            var result = await apiDataProcessorService.PostAsync(A.Fake<HttpClient>(), new Uri("https://somewhere.com")).ConfigureAwait(false);
+
+            // assert
+            A.CallTo(() => fakeApiService.PostAsync(A<HttpClient>.Ignored, A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.Equals(result, expectedResult);
+        }
+
+        [Fact]
+        public async Task ApiDataProcessorServicePostReturnsExceptionForNoHttpClient()
+        {
+            // arrange
+
+            var apiDataProcessorService = new ApiDataProcessorService(fakeApiService);
+
+            // act
+            var exceptionResult = await Assert.ThrowsAsync<ArgumentNullException>(async () => await apiDataProcessorService.PostAsync(null, new Uri("https://somewhere.com")).ConfigureAwait(false)).ConfigureAwait(false);
+
+            // assert
+            A.CallTo(() => fakeApiService.PostAsync(A<HttpClient>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
+            Assert.Equal("Value cannot be null. (Parameter 'httpClient')", exceptionResult.Message);
+        }
+
+        [Fact]
+        public async Task ApiDataProcessorServicePostWithModelReturnsSuccess()
+        {
+            // arrange
+            var expectedResult = HttpStatusCode.Created;
             var fakeEventGridSubscriptionModel = A.Fake<EventGridSubscriptionModel>();
 
             A.CallTo(() => fakeApiService.PostAsync(A<HttpClient>.Ignored, A<Uri>.Ignored, A<EventGridSubscriptionModel>.Ignored)).Returns(expectedResult);
@@ -93,7 +126,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
         }
 
         [Fact]
-        public async Task ApiDataProcessorServicePostReturnsExceptionForNoHttpClient()
+        public async Task ApiDataProcessorServicePostWithModelReturnsExceptionForNoHttpClient()
         {
             // arrange
             var fakeEventGridSubscriptionModel = A.Fake<EventGridSubscriptionModel>();
@@ -104,7 +137,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
             var exceptionResult = await Assert.ThrowsAsync<ArgumentNullException>(async () => await apiDataProcessorService.PostAsync(null, new Uri("https://somewhere.com"), fakeEventGridSubscriptionModel).ConfigureAwait(false)).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeApiService.PostAsync(A<HttpClient>.Ignored, A<Uri>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeApiService.PostAsync(A<HttpClient>.Ignored, A<Uri>.Ignored, A<EventGridSubscriptionModel>.Ignored)).MustNotHaveHappened();
             Assert.Equal("Value cannot be null. (Parameter 'httpClient')", exceptionResult.Message);
         }
 

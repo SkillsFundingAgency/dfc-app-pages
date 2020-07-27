@@ -18,19 +18,22 @@ namespace DFC.App.Pages.Services.CacheContentService
         private readonly IEventMessageService<ContentPageModel> eventMessageService;
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
+        private readonly IAppRegistryApiService appRegistryService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
             AutoMapper.IMapper mapper,
             IEventMessageService<ContentPageModel> eventMessageService,
             ICmsApiService cmsApiService,
-            IContentCacheService contentCacheService)
+            IContentCacheService contentCacheService,
+            IAppRegistryApiService appRegistryService)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.eventMessageService = eventMessageService;
             this.cmsApiService = cmsApiService;
             this.contentCacheService = contentCacheService;
+            this.appRegistryService = appRegistryService;
         }
 
         public async Task Reload(CancellationToken stoppingToken)
@@ -63,6 +66,8 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                     await DeleteStaleCacheEntriesAsync(summaryList, stoppingToken).ConfigureAwait(false);
                 }
+
+                await PostAppRegistryRefresh().ConfigureAwait(false);
 
                 logger.LogInformation("Reload cache completed");
             }
@@ -243,6 +248,15 @@ namespace DFC.App.Pages.Services.CacheContentService
                     logger.LogError($"Cache delete error status {deletionResult} from {staleContentPage.CanonicalName} - {staleContentPage.Id}");
                 }
             }
+        }
+
+        public async Task PostAppRegistryRefresh()
+        {
+            logger.LogInformation("Posting to appRegistry to reload page locations");
+
+            await appRegistryService.PagesDataLoadAsync().ConfigureAwait(false);
+
+            logger.LogInformation("Posted to appRegistry to reload page locations");
         }
 
         public bool TryValidateModel(ContentPageModel contentPageModel)
