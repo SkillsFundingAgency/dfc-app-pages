@@ -357,6 +357,14 @@
                             {
                                 "name": "EventGridPublishClientOptions__ApiEndpoint",
                                 "value": "[parameters('EventGridPublishClientOptionsApiEndpoint')]"
+                            },
+                            {
+                                "name": "AppRegistryClientOptions__ApiKey",
+                                "value": "[parameters('apimCompositeApiKey')]"
+                            },
+                            {
+                                "name": "AppRegistryClientOptions__BaseAddress",
+                                "value": "[concat(parameters('apimProxyAddress'),'/composite-ui-appRegistry/pages/')]"
                             }
                         ]
                     }
