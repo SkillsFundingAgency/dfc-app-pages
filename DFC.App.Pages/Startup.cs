@@ -7,6 +7,7 @@ using DFC.App.Pages.Extensions;
 using DFC.App.Pages.HostedServices;
 using DFC.App.Pages.HttpClientPolicies;
 using DFC.App.Pages.Services.ApiProcessorService;
+using DFC.App.Pages.Services.AppRegistryService;
 using DFC.App.Pages.Services.CacheContentService;
 using DFC.App.Pages.Services.CmsApiProcessorService;
 using DFC.App.Pages.Services.EventProcessorService;
@@ -84,6 +85,7 @@ namespace DFC.App.Pages
             services.AddSingleton(configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
             services.AddSingleton(configuration.GetSection(nameof(EventGridSubscriptionClientOptions)).Get<EventGridSubscriptionClientOptions>() ?? new EventGridSubscriptionClientOptions());
             services.AddSingleton(configuration.GetSection(nameof(EventGridPublishClientOptions)).Get<EventGridPublishClientOptions>() ?? new EventGridPublishClientOptions());
+            services.AddSingleton(configuration.GetSection(nameof(AppRegistryClientOptions)).Get<AppRegistryClientOptions>() ?? new AppRegistryClientOptions());
             services.AddHostedServiceTelemetryWrapper();
             services.AddHostedService<CacheReloadBackgroundService>();
             services.AddHostedService<CreateSubscriptionBackgroundService>();
@@ -99,6 +101,10 @@ namespace DFC.App.Pages
             services
                 .AddPolicies(policyRegistry, nameof(EventGridSubscriptionClientOptions), policyOptions)
                 .AddHttpClient<IEventGridSubscriptionService, EventGridSubscriptionService, EventGridSubscriptionClientOptions>(configuration, nameof(EventGridSubscriptionClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
+
+            services
+                .AddPolicies(policyRegistry, nameof(AppRegistryClientOptions), policyOptions)
+                .AddHttpClient<IAppRegistryApiService, AppRegistryApiService, AppRegistryClientOptions>(configuration, nameof(AppRegistryClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
 
             services.AddMvc(config =>
                 {

@@ -9,6 +9,8 @@ namespace DFC.App.Pages.Data.Contracts
     {
         Task<string?> GetAsync(HttpClient? httpClient, Uri url, string acceptHeader);
 
+        Task<HttpStatusCode> PostAsync(HttpClient? httpClient, Uri url);
+
         Task<HttpStatusCode> PostAsync<TApiModel>(HttpClient? httpClient, Uri url, TApiModel model)
             where TApiModel : class;
 
