@@ -30,50 +30,80 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
         [Fact]
         public async Task IndexWhenNoDateInApiReturnEmptyList()
         {
+            // arrange
+            List<ContentPageModel>? nullContentPageModels = null;
+            A.CallTo(() => fakeContentPageService.GetAllAsync()).Returns(nullContentPageModels);
+
             using var controller = new ApiController(logger, fakeContentPageService, fakeMapper);
+
+            // act
             var result = await controller.Index().ConfigureAwait(false) as OkObjectResult;
 
+            // assert
             A.CallTo(() => fakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeMapper.Map<GetIndexModel>(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
+
             Assert.NotNull(result);
-            Assert.IsType<List<GetIndexModel>>(result!.Value);
-            Assert.Empty(result.Value as List<GetIndexModel>);
+            Assert.IsType<Dictionary<Guid, GetIndexModel>>(result!.Value);
+            Assert.Empty(result.Value as Dictionary<Guid, GetIndexModel>);
         }
 
         [Fact]
         public async Task IndexWhenNoDateInApiReturnsData()
         {
-            A.CallTo(() => fakeContentPageService.GetAllAsync()).Returns(new List<ContentPageModel>
+            // arrange
+            var expectedContentPageModel1 = new ContentPageModel
             {
-                new ContentPageModel
-                {
-                    CanonicalName = "test-test",
-                    PageLocation = "/top-of-the-tree",
-                    RedirectLocations = new List<string>
+                Id = Guid.NewGuid(),
+                CanonicalName = "test-test",
+                PageLocation = "/top-of-the-tree",
+                RedirectLocations = new List<string>
                     {
                         "/test/test",
                     },
-                    Url = new Uri("http://www.test.com"),
-                },
-                new ContentPageModel
-                {
-                    CanonicalName = "default-page",
-                    PageLocation = "/top-of-the-tree",
-                    IsDefaultForPageLocation = true,
-                    RedirectLocations = new List<string>
+                Url = new Uri("http://www.test.com"),
+            };
+            var expectedContentPageModel2 = new ContentPageModel
+            {
+                Id = Guid.NewGuid(),
+                CanonicalName = "default-page",
+                PageLocation = "/top-of-the-tree",
+                IsDefaultForPageLocation = true,
+                RedirectLocations = new List<string>
                     {
                         "/test/test",
                     },
-                    Url = new Uri("http://www.test.com"),
-                },
-            });
+                Url = new Uri("http://www.test.com"),
+            };
+            var expectedContentPageModels = new List<ContentPageModel> { expectedContentPageModel1, expectedContentPageModel2, };
+            var expectedGetIndexModel1 = new GetIndexModel
+            {
+                Id = expectedContentPageModel1.Id,
+                Locations = expectedContentPageModel1.RedirectLocations,
+            };
+            var expectedGetIndexModel2 = new GetIndexModel
+            {
+                Id = expectedContentPageModel2.Id,
+                Locations = expectedContentPageModel2.RedirectLocations,
+            };
+            A.CallTo(() => fakeContentPageService.GetAllAsync()).Returns(expectedContentPageModels);
 
             using var controller = new ApiController(logger, fakeContentPageService, fakeMapper);
+
+            A.CallTo(() => fakeMapper.Map<GetIndexModel>(expectedContentPageModel1)).Returns(expectedGetIndexModel1);
+            A.CallTo(() => fakeMapper.Map<GetIndexModel>(expectedContentPageModel2)).Returns(expectedGetIndexModel2);
+
+            // act
             var result = await controller.Index().ConfigureAwait(false) as OkObjectResult;
 
+            // assert
             A.CallTo(() => fakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeMapper.Map<GetIndexModel>(expectedContentPageModel1)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeMapper.Map<GetIndexModel>(expectedContentPageModel2)).MustHaveHappenedOnceExactly();
+
             Assert.NotNull(result);
-            Assert.IsType<List<GetIndexModel>>(result!.Value);
-            Assert.NotEmpty(result.Value as List<GetIndexModel>);
+            Assert.IsType<Dictionary<Guid, GetIndexModel>>(result!.Value);
+            Assert.NotEmpty(result.Value as Dictionary<Guid, GetIndexModel>);
         }
 
         [Fact]

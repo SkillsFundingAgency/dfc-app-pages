@@ -26,14 +26,14 @@ namespace DFC.App.Pages.Controllers
         [Route("api/pages")]
         public async Task<IActionResult> Index()
         {
-            var pages = new List<GetIndexModel>();
+            var pages = new Dictionary<Guid, GetIndexModel>();
 
             var contentPageModels = await contentPageService.GetAllAsync().ConfigureAwait(false);
 
             if (contentPageModels != null && contentPageModels.Any())
             {
                 pages = (from a in contentPageModels.OrderBy(o => o.PageLocation).ThenBy(o => o.CanonicalName)
-                         select mapper.Map<GetIndexModel>(a)).ToList();
+                         select mapper.Map<GetIndexModel>(a)).ToDictionary(x => x.Id);
                 Logger.LogInformation($"{nameof(Index)} has succeeded");
             }
             else
