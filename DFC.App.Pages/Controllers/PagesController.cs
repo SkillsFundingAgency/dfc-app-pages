@@ -211,7 +211,7 @@ namespace DFC.App.Pages.Controllers
 
             if (string.IsNullOrWhiteSpace(article))
             {
-                where = p => p.PageLocation == "/" + location && p.IsDefaultForPageLocation;
+                where = p => (p.PageLocation == "/" + location && p.IsDefaultForPageLocation) || (p.PageLocation == "/" && p.CanonicalName == location.ToLowerInvariant());
             }
             else
             {
