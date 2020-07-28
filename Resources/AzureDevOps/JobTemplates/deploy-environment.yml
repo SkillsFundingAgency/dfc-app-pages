@@ -3,11 +3,6 @@ parameters:
   SetEsfaResourceGroupTagsScript: 'https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/PSScripts/Set-EsfaResourceGroupTags.ps1'
   PackageFile:  ''
   ArmTemplateFolder: ''
-  ApimProductId: ''
-  ApimLoggerName: ''
-  ApimImportScript: ''
-  PolicyFilePath: ''
-  SpecificationPath: ''
   Location: 'West Europe'
   ArmOutputVariableName: 'ARMOutputs'
   EnvironmentTag: 'DEV/Test'
@@ -15,31 +10,16 @@ parameters:
   ServiceOffering: ''
   ResourceGroup: ''
   DfCDevopsPath: ''
-  SharedResourceGroup: ''
-  ApimServiceName: ''
-  FunctionAppDomain: ''
   EnvironmentName: ''
-  DFCAzureDevOpsProjectGuid: ''
-  DfcContentTestsBuildId: ''
   AppSharedResourceGroup: ''
   appSharedCosmosDBName: ''
   PageRegistrationDirectory: ''
   PageRegistrationPath: ''
   PageRegistrationFile: ''
-  DfcDevopsLocation: ''
   PathRegistrationApiUrl: ''
   RegionRegistrationApiUrl: ''
   ApimCompositeKey: ''
-  
-  # The 'Apis' parameter is a bit special here - it requires a structured, complex parameter:  an array of arrays of objects
-  # Below is a simple example of what it expects:
-  # - 
-  #   - name: anItem
-  #     value: someValue
-  # -
-  #   - name: anotherItem
-  #     value: aDifferentValue
-  Apis: []
+  AppServiceName: ''
 
 jobs:
 - deployment: DeployTemplate
@@ -63,8 +43,6 @@ jobs:
             ArmTemplateFolder: '${{ parameters.ArmTemplateFolder }}'
             AppSharedResourceGroup: '${{ parameters.AppSharedResourceGroup }}'
             appSharedCosmosDBName: '${{ parameters.appSharedCosmosDBName }}'
-            PolicyFilePath: '${{ parameters.PolicyFilePath }}'
-            ApimProductId: '${{ parameters.ApimProductId }}'
 
 - deployment: DeployRegistration
   displayName: "Deploy page registration"
@@ -82,34 +60,19 @@ jobs:
             RegionRegistrationApiUrl: '${{ parameters.RegionRegistrationApiUrl }}'
             ApimCompositeKey: '${{ parameters.ApimCompositeKey }}'
 
-# Please see https://github.com/microsoft/azure-pipelines-yaml/blob/master/design/each-expression.md for more information on the each expression.
-- ${{ each apiPartition in parameters.Apis }}:
-  - ${{ each api in apiPartition }}:
-    - deployment: Deploy${{ api.name }}
-      displayName: "Deploy ${{ api.name }}"
-      environment: ${{ parameters.EnvironmentName }}
-      dependsOn: 
-      - DeployTemplate
-     # - SetupConditions
-     # - ${{ if api.dependsOn }}:
-      #  - Deploy${{ api.dependsOn }}
-     # condition: and(succeeded(), or(eq(dependencies.SetupConditions.outputs['setupConditionStep.projectsToDeploy'], '*'), contains(dependencies.SetupConditions.outputs['setupConditionStep.projectsToDeploy'], '${{ api.name }}')))
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-            - template: ../StepTemplates/deploy-azure-app-service.yml
-              parameters:
-                FunctionType: '${{ api.name }}'
-                WebAppName: '${{ api.azureFunctionName }}'
-                AzureSubscription: '${{ parameters.AzureSubscription }}'
-                DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
-                SharedResourceGroup: '${{ parameters.SharedResourceGroup }}'
-                ApimServiceName: '${{ parameters.ApimServiceName }}'
-                ApimImportScript: '${{ parameters.ApimImportScript }}'
-                SpecificationPath:  '${{ parameters.SpecificationPath }}'
-                FunctionAppDomain: '${{ parameters.FunctionAppDomain }}'
-                PackageFile: '${{ parameters.PackageFile }}'
-                ResourceGroup: '${{ parameters.ResourceGroup }}'
-                ApimProductId: '${{ parameters.ApimProductId }}'
-                ApimLoggerName: '${{ parameters.ApimLoggerName }}'
+- deployment: DeployApplication
+  displayName: "Deploy Application"
+  environment: ${{ parameters.EnvironmentName }}
+  dependsOn: 
+  - DeployTemplate
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - template: ../StepTemplates/deploy-azure-app-service.yml
+          parameters:
+            WebAppName: '${{ parameters.AppServiceName }}'
+            AzureSubscription: '${{ parameters.AzureSubscription }}'
+            DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
+            PackageFile: '${{ parameters.PackageFile }}'
+            ResourceGroup: '${{ parameters.ResourceGroup }}'
