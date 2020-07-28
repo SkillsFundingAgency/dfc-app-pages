@@ -15,14 +15,6 @@ variables:
   value: dfc-dev-app-pages-rg
 - name: WebAppProjectName
   value: DFC.App.Pages
-- name: ApimProductInstanceName
-  value: Pages
-- name: ApimProductId
-  value: Pages
-- name: ApimLoggerName
-  value: Pages-logger
-- name: ApiName
-  value: GetAllPages
 - name: PageRegistrationFile
   value: registration.json
 - name: EventGridPublishClientOptionsApiEndpoint
