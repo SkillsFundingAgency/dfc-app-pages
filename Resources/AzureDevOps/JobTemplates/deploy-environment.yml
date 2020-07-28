@@ -61,18 +61,18 @@ jobs:
             ApimCompositeKey: '${{ parameters.ApimCompositeKey }}'
 
 - deployment: DeployApplication
-    displayName: "Deploy Application"
-    environment: ${{ parameters.EnvironmentName }}
-    dependsOn: 
-    - DeployTemplate
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - template: ../StepTemplates/deploy-azure-app-service.yml
-            parameters:
-              WebAppName: '${{ parameters.AppServiceName }}'
-              AzureSubscription: '${{ parameters.AzureSubscription }}'
-              DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
-              PackageFile: '${{ parameters.PackageFile }}'
-              ResourceGroup: '${{ parameters.ResourceGroup }}'
+  displayName: "Deploy Application"
+  environment: ${{ parameters.EnvironmentName }}
+  dependsOn: 
+  - DeployTemplate
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - template: ../StepTemplates/deploy-azure-app-service.yml
+          parameters:
+            WebAppName: '${{ parameters.AppServiceName }}'
+            AzureSubscription: '${{ parameters.AzureSubscription }}'
+            DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
+            PackageFile: '${{ parameters.PackageFile }}'
+            ResourceGroup: '${{ parameters.ResourceGroup }}'
