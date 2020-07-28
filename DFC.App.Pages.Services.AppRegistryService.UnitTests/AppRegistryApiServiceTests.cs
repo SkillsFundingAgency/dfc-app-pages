@@ -1,13 +1,12 @@
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models.ClientOptions;
-using DFC.App.Pages.Services.AppRegistryService;
 using FakeItEasy;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace DFC.App.Pages.Services.AppRegistryServiceTests
+namespace DFC.App.Pages.Services.AppRegistryService.UnitTests
 {
     public class AppRegistryApiServiceTests
     {

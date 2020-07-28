@@ -60,9 +60,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFC.App.Pages.Services.CmsA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFC.App.Pages.Services.EventProcessorService.UnitTests", "DFC.App.Pages.Services.EventProcessorService.UnitTests\DFC.App.Pages.Services.EventProcessorService.UnitTests.csproj", "{C7E4A907-7B1F-4F14-8FA0-7C5B58588AF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFC.App.Pages.Services.AppRegistryService", "DFC.App.Pages.Services.AppRegistryService\DFC.App.Pages.Services.AppRegistryService.csproj", "{1A5141FF-DB43-490A-8DA9-45963993F1AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFC.App.Pages.Services.AppRegistryService", "DFC.App.Pages.Services.AppRegistryService\DFC.App.Pages.Services.AppRegistryService.csproj", "{1A5141FF-DB43-490A-8DA9-45963993F1AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFC.App.Pages.Services.AppRegistryServiceTests", "DFC.App.Pages.Services.AppRegistryServiceTests\DFC.App.Pages.Services.AppRegistryServiceTests.csproj", "{6444A5AC-A7C2-41E4-A828-CBC8D31750CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFC.App.Pages.Services.AppRegistryService.UnitTests", "DFC.App.Pages.Services.AppRegistryService.UnitTests\DFC.App.Pages.Services.AppRegistryService.UnitTests.csproj", "{6444A5AC-A7C2-41E4-A828-CBC8D31750CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
