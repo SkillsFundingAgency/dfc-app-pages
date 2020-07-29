@@ -21,6 +21,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.RobotControllerTests
         public static IEnumerable<object[]> RobotRouteData => new List<object[]>
         {
             new object[] { "/robots.txt" },
+            new object[] { "/pages/robots/document" },
         };
 
         [Theory]
