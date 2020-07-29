@@ -60,9 +60,10 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/{location}/{article}")]
-        [Route("pages/{location}")]
-        public async Task<IActionResult> Document(string location, string? article)
+        [Route("pages/{location}/{article}/document")]
+        [Route("pages/{location}/document")]
+        [Route("pages/document")]
+        public async Task<IActionResult> Document(string? location, string? article)
         {
             var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
 
@@ -83,7 +84,14 @@ namespace DFC.App.Pages.Controllers
 
             if (redirectedContentPageModel != null)
             {
-                var redirectedUrlateUrl = $"{Request.GetBaseAddress()}{LocalPath}/{location}/{redirectedContentPageModel.CanonicalName}";
+                var redirectedUrlateUrl = $"{Request.GetBaseAddress()}{LocalPath}{redirectedContentPageModel.PageLocation}";
+                if (redirectedContentPageModel.PageLocation != "/")
+                {
+                    redirectedUrlateUrl += "/";
+                }
+
+                redirectedUrlateUrl += $"{redirectedContentPageModel.CanonicalName}/document";
+
                 Logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrlateUrl}");
 
                 return RedirectPermanent(redirectedUrlateUrl);
@@ -97,7 +105,8 @@ namespace DFC.App.Pages.Controllers
         [HttpGet]
         [Route("pages/{location}/{article}/htmlhead")]
         [Route("pages/{location}/htmlhead")]
-        public async Task<IActionResult> HtmlHead(string location, string? article)
+        [Route("pages/htmlhead")]
+        public async Task<IActionResult> HtmlHead(string? location, string? article)
         {
             var viewModel = new HtmlHeadViewModel();
             var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
@@ -116,7 +125,8 @@ namespace DFC.App.Pages.Controllers
 
         [Route("pages/{location}/{article}/breadcrumb")]
         [Route("pages/{location}/breadcrumb")]
-        public async Task<IActionResult> Breadcrumb(string location, string? article)
+        [Route("pages/breadcrumb")]
+        public async Task<IActionResult> Breadcrumb(string? location, string? article)
         {
             var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
             var breadcrumbItemModel = mapper.Map<BreadcrumbItemModel>(contentPageModel);
@@ -130,7 +140,8 @@ namespace DFC.App.Pages.Controllers
         [HttpGet]
         [Route("pages/{location}/{article}/bodytop")]
         [Route("pages/{location}/bodytop")]
-        public IActionResult BodyTop(string location, string? article)
+        [Route("pages/bodytop")]
+        public IActionResult BodyTop(string? location, string? article)
         {
             return NoContent();
         }
@@ -138,7 +149,8 @@ namespace DFC.App.Pages.Controllers
         [HttpGet]
         [Route("pages/{location}/{article}/herobanner")]
         [Route("pages/{location}/herobanner")]
-        public IActionResult HeroBanner(string location, string? article)
+        [Route("pages/herobanner")]
+        public IActionResult HeroBanner(string? location, string? article)
         {
             return NoContent();
         }
@@ -146,7 +158,8 @@ namespace DFC.App.Pages.Controllers
         [HttpGet]
         [Route("pages/{location}/{article}/body")]
         [Route("pages/{location}/body")]
-        public async Task<IActionResult> Body(string location, string? article)
+        [Route("pages/body")]
+        public async Task<IActionResult> Body(string? location, string? article)
         {
             var viewModel = new BodyViewModel();
             var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
@@ -182,7 +195,8 @@ namespace DFC.App.Pages.Controllers
         [HttpGet]
         [Route("pages/{location}/{article}/sidebarright")]
         [Route("pages/{location}/sidebarright")]
-        public IActionResult SidebarRight(string location, string? article)
+        [Route("pages/sidebarright")]
+        public IActionResult SidebarRight(string? location, string? article)
         {
             return NoContent();
         }
@@ -190,7 +204,8 @@ namespace DFC.App.Pages.Controllers
         [HttpGet]
         [Route("pages/{location}/{article}/sidebarleft")]
         [Route("pages/{location}/sidebarleft")]
-        public IActionResult SidebarLeft(string location, string? article)
+        [Route("pages/sidebarleft")]
+        public IActionResult SidebarLeft(string? location, string? article)
         {
             return NoContent();
         }
@@ -198,24 +213,29 @@ namespace DFC.App.Pages.Controllers
         [HttpGet]
         [Route("pages/{location}/{article}/bodyfooter")]
         [Route("pages/{location}/bodyfooter")]
-        public IActionResult BodyFooter(string location, string? article)
+        [Route("pages/bodyfooter")]
+        public IActionResult BodyFooter(string? location, string? article)
         {
             return NoContent();
         }
 
         #region Define helper methods
 
-        private async Task<ContentPageModel?> GetContentPageAsync(string location, string? article)
+        private async Task<ContentPageModel?> GetContentPageAsync(string? location, string? article)
         {
             Expression<Func<ContentPageModel, bool>> where;
 
-            if (string.IsNullOrWhiteSpace(article))
+            if (string.IsNullOrWhiteSpace(location) && string.IsNullOrWhiteSpace(article))
             {
-                where = p => (p.PageLocation == "/" + location && p.IsDefaultForPageLocation) || (p.PageLocation == "/" && p.CanonicalName == location.ToLowerInvariant());
+                where = p => p.PageLocation == "/" && p.IsDefaultForPageLocation;
+            }
+            else if (string.IsNullOrWhiteSpace(article))
+            {
+                where = p => (p.PageLocation == $"/{location}" && p.IsDefaultForPageLocation) || (p.PageLocation == "/" && p.CanonicalName == location);
             }
             else
             {
-                where = p => p.PageLocation == "/" + location && p.CanonicalName == article.ToLowerInvariant();
+                where = p => p.PageLocation == $"/{location}" && p.CanonicalName == article;
             }
 
             var contentPageModels = await contentPageService.GetAsync(where).ConfigureAwait(false);
@@ -228,16 +248,16 @@ namespace DFC.App.Pages.Controllers
             return default;
         }
 
-        private async Task<ContentPageModel?> GetRedirectedContentPageAsync(string location, string? article)
+        private async Task<ContentPageModel?> GetRedirectedContentPageAsync(string? location, string? article)
         {
-            var redirectLocation = location;
+            var redirectLocation = $"/{location}";
 
             if (!string.IsNullOrWhiteSpace(article))
             {
-                redirectLocation += "/" + article;
+                redirectLocation += $"/{article}";
             }
 
-            var contentPageModel = await contentPageService.GetByRedirectLocationAsync($"/{redirectLocation}").ConfigureAwait(false);
+            var contentPageModel = await contentPageService.GetByRedirectLocationAsync(redirectLocation).ConfigureAwait(false);
 
             return contentPageModel;
         }

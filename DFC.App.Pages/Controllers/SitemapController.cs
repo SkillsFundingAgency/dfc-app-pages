@@ -25,7 +25,7 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/sitemap")]
+        [Route("pages/sitemap/document")]
         public async Task<IActionResult> SitemapView()
         {
             var result = await Sitemap().ConfigureAwait(false);
