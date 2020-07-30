@@ -5,12 +5,12 @@ namespace DFC.App.Pages.Data.Models.SubscriptionModels
 {
     public class SubscriptionFilterModel
     {
-        public string BeginsWith { get; set; } = "/content/page/";
+        public string? BeginsWith { get; set; }
 
         public string? EndsWith { get; set; }
 
         public List<string> IncludeEventTypes { get; set; } = new List<string>();
 
-        public StringInAdvancedFilter? PropertyContainsFilter { get; set; }
+        public List<StringInAdvancedFilter> PropertyContainsFilters { get; set; } = new List<StringInAdvancedFilter>();
     }
 }
