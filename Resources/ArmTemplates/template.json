@@ -277,6 +277,18 @@
                             {
                                 "name": "AppRegistryClientOptions__BaseAddress",
                                 "value": "[concat(parameters('apimProxyAddress'),'/composite-ui-appRegistry/pages/')]"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Filter__PropertyContainsFilters__0__Key",
+                                "value": "subject"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Filter__PropertyContainsFilters__0__Values__0",
+                                "value": "/content/page/"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Filter__PropertyContainsFilters__0__Values__1",
+                                "value": "/content/pagelocation/"
                             }
                         ]
                     }
