@@ -38,6 +38,11 @@ namespace DFC.App.Pages.Services.EventProcessorService
                 return true;
             }
 
+            if (!Equals(existingContentPageModel.CanonicalName, updatedContentPageModel.CanonicalName))
+            {
+                return true;
+            }
+
             if ((existingContentPageModel.RedirectLocations == null && updatedContentPageModel.RedirectLocations != null) ||
                 (existingContentPageModel.RedirectLocations != null && updatedContentPageModel.RedirectLocations == null))
             {
