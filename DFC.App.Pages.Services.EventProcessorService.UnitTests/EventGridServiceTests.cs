@@ -106,6 +106,23 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
         }
 
         [Fact]
+        public void EventGridServiceContainsDifferencesReturnsDifferencesForDifferentCanonicalName()
+        {
+            // arrange
+            const bool expectedResult = true;
+            var existingContentPageModel = BuildValidContentPageModel();
+            var updatedContentPageModel = BuildValidContentPageModel();
+
+            updatedContentPageModel.CanonicalName = existingContentPageModel.CanonicalName + ".with-a-difference";
+
+            // act
+            var result = EventGridService.ContainsDifferences(existingContentPageModel, updatedContentPageModel);
+
+            // assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
         public void EventGridServiceContainsDifferencesReturnsDifferencesForDifferentRedirectLocations()
         {
             // arrange
