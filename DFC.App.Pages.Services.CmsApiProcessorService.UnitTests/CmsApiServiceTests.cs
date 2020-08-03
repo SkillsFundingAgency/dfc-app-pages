@@ -88,10 +88,10 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
                         new List<LinkDetailModel>
                         {
                             new LinkDetailModel
-                        {
-                            Uri = contentUrl,
-                        },
-                    }),
+                            {
+                                Uri = contentUrl,
+                            },
+                        }),
                 },
             };
             expectedItemResult.ContentLinks = new ContentLinksModel(new JObject())

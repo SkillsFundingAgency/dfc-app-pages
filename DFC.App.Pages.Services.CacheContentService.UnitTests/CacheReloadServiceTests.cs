@@ -475,9 +475,9 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                         HtmlBody = "body",
                         BreadcrumbText = "Breadcrumb Text",
                         BreadcrumbLinkSegment = "breadcrumb-segment",
-                        ContentItems = new List<SharedContentItemModel>
+                        ContentItems = new List<ContentItemModel>
                         {
-                            new SharedContentItemModel
+                            new ContentItemModel
                             {
                                 CreatedDate = DateTime.Now,
                                 Url = new Uri("http://www.test.com"),

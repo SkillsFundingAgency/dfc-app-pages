@@ -74,6 +74,7 @@ namespace DFC.App.Pages.Controllers
             if (contentPageModel != null)
             {
                 var viewModel = mapper.Map<DocumentViewModel>(contentPageModel);
+                viewModel.Breadcrumb = mapper.Map<BreadcrumbViewModel>(contentPageModel);
 
                 logger.LogInformation($"{nameof(Document)} has succeeded for: {article}");
 
@@ -129,7 +130,7 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Breadcrumb(string? location, string? article)
         {
             var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
-            var viewModel = mapper.Map<List<BreadcrumbItemViewModel>>(contentPageModel);
+            var viewModel = mapper.Map<BreadcrumbViewModel>(contentPageModel);
 
             logger.LogInformation($"{nameof(Breadcrumb)} has returned content for: {article}");
 

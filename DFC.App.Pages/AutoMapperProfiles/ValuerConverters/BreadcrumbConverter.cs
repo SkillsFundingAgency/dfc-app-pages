@@ -15,16 +15,16 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
                 return null;
             }
 
-            var pageLocations = sourceMember.ContentItems.Where(w => w.ContentType!.Equals(ContentPageModelProfile.ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase)).ToList();
+            var contentItems = sourceMember.ContentItems.Where(w => w.ContentType!.Equals(ContentPageModelProfile.ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase)).ToList();
 
-            if (pageLocations == null || !pageLocations.Any())
+            if (contentItems == null || !contentItems.Any())
             {
                 return null;
             }
 
             var result = new List<BreadcrumbItemViewModel>();
 
-            foreach (var item in pageLocations)
+            foreach (var item in contentItems)
             {
                 result.AddRange(IterateChilderen(item));
             }
@@ -56,29 +56,6 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
         }
 
         private static List<BreadcrumbItemViewModel> IterateChilderen(ContentItemModel item)
-        {
-            var result = new List<BreadcrumbItemViewModel>();
-
-            if (!string.IsNullOrWhiteSpace(item.BreadcrumbText))
-            {
-                var breadcrumbItemModel = new BreadcrumbItemViewModel
-                {
-                    Title = item.BreadcrumbText,
-                    Route = item.BreadcrumbLinkSegment,
-                };
-
-                result.Add(breadcrumbItemModel);
-            }
-
-            foreach (var sharedContentItemModel in item.ContentItems.Where(w => !string.IsNullOrWhiteSpace(w.BreadcrumbText)))
-            {
-                result.AddRange(IterateChilderen(sharedContentItemModel));
-            }
-
-            return result;
-        }
-
-        private static List<BreadcrumbItemViewModel> IterateChilderen(SharedContentItemModel item)
         {
             var result = new List<BreadcrumbItemViewModel>();
 

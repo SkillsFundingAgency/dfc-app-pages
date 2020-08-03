@@ -46,8 +46,6 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 var summaryList = await GetSummaryListAsync().ConfigureAwait(false);
 
-                summaryList = summaryList.Where(w => w.Title == "Hello from level 2 - ian's test page - please leave alone").ToList();
-
                 if (stoppingToken.IsCancellationRequested)
                 {
                     logger.LogWarning("Reload cache cancelled");
@@ -196,8 +194,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                     logger.LogInformation($"Updated cache with {item.Title} - {item.Url}");
                 }
 
-                var contentItemIds = contentPageModel.ContentItems.Where(w => w.ItemId.HasValue).Select(s => s.ItemId!.Value).ToList();
-                contentCacheService.AddOrReplace(contentPageModel.Id, contentItemIds);
+                contentCacheService.AddOrReplace(contentPageModel.Id, contentPageModel.AllContentItemIds);
             }
             catch (Exception ex)
             {

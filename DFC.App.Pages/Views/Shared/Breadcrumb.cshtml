@@ -1,11 +1,11 @@
-﻿@model IList<BreadcrumbItemViewModel>
+﻿@model BreadcrumbViewModel
 
 <div class="govuk-width-container">
     <div class="govuk-breadcrumbs">
         <ol class="govuk-breadcrumbs__list">
-            @if (Model != null && Model.Any())
+            @if (Model.Breadcrumbs != null && Model.Breadcrumbs.Any())
             {
-                @foreach (var breadcrumb in Model)
+                @foreach (var breadcrumb in Model.Breadcrumbs)
                 {
                     if (breadcrumb.AddHyperlink)
                     {

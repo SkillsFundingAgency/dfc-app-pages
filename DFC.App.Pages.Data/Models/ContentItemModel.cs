@@ -43,6 +43,6 @@ namespace DFC.App.Pages.Data.Models
         public string? HtmlBody { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public IList<SharedContentItemModel>? ContentItems { get; set; }
+        public List<ContentItemModel> ContentItems { get; set; } = new List<ContentItemModel>();
     }
 }
