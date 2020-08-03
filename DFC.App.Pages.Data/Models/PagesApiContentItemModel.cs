@@ -26,8 +26,6 @@ namespace DFC.App.Pages.Data.Models
 
         public int? Ordinal { get; set; }
 
-        public int? Width { get; set; }
-
         public int? Size { get; set; }
 
         [JsonProperty(PropertyName = "ModifiedDate")]

@@ -14,12 +14,10 @@ namespace DFC.App.Pages.Data.Models
 
         public string? Alignment { get; set; }
 
-        public int Ordinal { get; set; }
+        public int? Ordinal { get; set; }
 
-        public int Size { get; set; }
+        public int? Size { get; set; }
 
         public string? Title { get; set; }
-
- //       public Type? LinkedType { get; set; } = typeof(PagesApiContentItemModel);
     }
 }

@@ -8,14 +8,14 @@ using Xunit;
 namespace DFC.App.Pages.UnitTests
 {
     [Trait("Category", "AutoMapper")]
-    public class ContentItemsConverterTests
+    public class MarkupContentConverterTests
     {
         [Fact]
         public void ContentItemsConverterTestsWithAlignmentReturnsSuccess()
         {
             // Arrange
             var expectedResult = "<div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">this is content</div></div>";
-            var converter = new ContentItemsConverter();
+            var converter = new MarkupContentConverter();
             IList<ContentItemModel> sourceMember = new List<ContentItemModel>
             {
                 new ContentItemModel
@@ -43,7 +43,7 @@ namespace DFC.App.Pages.UnitTests
         {
             // Arrange
             var expectedResult = "<div class=\"govuk-grid-column-one-half\">this is content</div>";
-            var converter = new ContentItemsConverter();
+            var converter = new MarkupContentConverter();
             IList<ContentItemModel> sourceMember = new List<ContentItemModel>
             {
                 new ContentItemModel
@@ -69,7 +69,7 @@ namespace DFC.App.Pages.UnitTests
         public void ContentItemsConverterTestsReturnsNullForNullSourceMember()
         {
             // Arrange
-            var converter = new ContentItemsConverter();
+            var converter = new MarkupContentConverter();
             IList<ContentItemModel>? sourceMember = null;
             var context = new ResolutionContext(null, null);
 
@@ -85,7 +85,7 @@ namespace DFC.App.Pages.UnitTests
         {
             // Arrange
             var expectedResult = "<div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">Test</div></div>";
-            var converter = new ContentItemsConverter();
+            var converter = new MarkupContentConverter();
             IList<ContentItemModel> sourceMember = new List<ContentItemModel>
             {
                 new ContentItemModel

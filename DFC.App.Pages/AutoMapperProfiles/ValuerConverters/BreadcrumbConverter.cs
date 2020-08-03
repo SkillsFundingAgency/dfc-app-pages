@@ -15,7 +15,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
                 return null;
             }
 
-            var pageLocations = sourceMember.ContentItems.Where(w => w.ContentType!.Equals("PageLocation", System.StringComparison.OrdinalIgnoreCase)).ToList();
+            var pageLocations = sourceMember.ContentItems.Where(w => w.ContentType!.Equals(ContentPageModelProfile.ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase)).ToList();
 
             if (pageLocations == null || !pageLocations.Any())
             {
