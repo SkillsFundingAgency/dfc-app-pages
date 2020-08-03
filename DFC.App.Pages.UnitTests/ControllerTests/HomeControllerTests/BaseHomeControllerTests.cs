@@ -12,13 +12,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.HomeControllerTests
 {
     public abstract class BaseHomeControllerTests
     {
-        protected const string LocalPath = "pages";
-
-        protected BaseHomeControllerTests()
-        {
-            Logger = A.Fake<ILogger<HomeController>>();
-        }
-
         public static IEnumerable<object[]> HtmlMediaTypes => new List<object[]>
         {
             new string[] { "*/*" },
@@ -35,15 +28,13 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.HomeControllerTests
             new string[] { MediaTypeNames.Application.Json },
         };
 
-        protected ILogger<HomeController> Logger { get; }
-
         protected HomeController BuildHomeController(string mediaTypeName)
         {
             var httpContext = new DefaultHttpContext();
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new HomeController(Logger)
+            var controller = new HomeController()
             {
                 ControllerContext = new ControllerContext()
                 {

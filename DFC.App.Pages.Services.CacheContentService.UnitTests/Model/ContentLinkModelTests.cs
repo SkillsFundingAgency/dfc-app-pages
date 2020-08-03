@@ -8,13 +8,16 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.Model
 {
     public class ContentLinkModelTests
     {
-        [Fact]
-        public void WhenContentLinksIsNotNullThenReturnLinks()
+        [Theory]
+        [InlineData(true, 4)]
+        [InlineData(false, 5)]
+        public void WhenContentLinksIsNotNullThenReturnLinks(bool excludePageLocation, int epresctedResultsCount)
         {
             var jsonData = File.ReadAllText(Directory.GetCurrentDirectory() + "/Model/LinksData.json");
             var model = new ContentLinksModel(JObject.Parse(jsonData));
+            model.ExcludePageLocation = excludePageLocation;
             var links = model.ContentLinks;
-            Assert.Equal(4, links.SelectMany(x => x.Value).Count());
+            Assert.Equal(epresctedResultsCount, links.SelectMany(x => x.Value).Count());
         }
 
         [Fact]

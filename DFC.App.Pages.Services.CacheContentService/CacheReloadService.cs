@@ -122,7 +122,7 @@ namespace DFC.App.Pages.Services.CacheContentService
 
             contentCacheService.Clear();
 
-            foreach (var item in summaryList.OrderByDescending(o => o.Published).ThenBy(o => o.CanonicalName))
+            foreach (var item in summaryList.OrderByDescending(o => o.Published).ThenBy(o => o.Title))
             {
                 if (stoppingToken.IsCancellationRequested)
                 {
@@ -194,8 +194,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                     logger.LogInformation($"Updated cache with {item.Title} - {item.Url}");
                 }
 
-                var contentItemIds = contentPageModel.ContentItems.Where(w => w.ItemId.HasValue).Select(s => s.ItemId!.Value).ToList();
-                contentCacheService.AddOrReplace(contentPageModel.Id, contentItemIds);
+                contentCacheService.AddOrReplace(contentPageModel.Id, contentPageModel.AllContentItemIds);
             }
             catch (Exception ex)
             {

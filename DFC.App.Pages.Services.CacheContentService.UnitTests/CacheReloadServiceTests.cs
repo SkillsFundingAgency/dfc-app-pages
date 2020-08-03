@@ -419,21 +419,21 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                 Keywords = "some keywords",
                 ContentLinks = new ContentLinksModel(new JObject())
                 {
-                    ContentLinks = new List<KeyValuePair<string, List<LinkDetails>>>()
+                    ContentLinks = new List<KeyValuePair<string, List<LinkDetailModel>>>()
                     {
-                        new KeyValuePair<string, List<LinkDetails>>(
+                        new KeyValuePair<string, List<LinkDetailModel>>(
                             "test",
-                            new List<LinkDetails>
+                            new List<LinkDetailModel>
                             {
-                                new LinkDetails
+                                new LinkDetailModel
                                 {
                                     Uri = new Uri("http://www.one.com"),
                                 },
-                                new LinkDetails
+                                new LinkDetailModel
                                 {
                                     Uri = new Uri("http://www.two.com"),
                                 },
-                                new LinkDetails
+                                new LinkDetailModel
                                 {
                                     Uri = new Uri("http://www.three.com"),
                                 },
@@ -473,15 +473,15 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                         Title = "title",
                         ContentType = "content type",
                         HtmlBody = "body",
-                        DisplayText = "displaytext",
-                        ContentItems = new List<SharedContentItemModel>
+                        BreadcrumbText = "Breadcrumb Text",
+                        BreadcrumbLinkSegment = "breadcrumb-segment",
+                        ContentItems = new List<ContentItemModel>
                         {
-                            new SharedContentItemModel
+                            new ContentItemModel
                             {
                                 CreatedDate = DateTime.Now,
                                 Url = new Uri("http://www.test.com"),
                                 Content = "content",
-                                Version = Guid.NewGuid(),
                                 ItemId = Guid.NewGuid(),
                                 LastReviewed = DateTime.Now,
                             },
@@ -503,7 +503,6 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                 var id = Guid.NewGuid();
 
                 item.Url = new Uri($"http://somewhere.com/item/{id}", UriKind.Absolute);
-                item.CanonicalName = id.ToString();
             }
 
             return models.ToList();

@@ -11,13 +11,15 @@ using System.Threading.Tasks;
 
 namespace DFC.App.Pages.Controllers
 {
-    public class ApiController : BasePagesController<ApiController>
+    public class ApiController : Controller
     {
+        private readonly ILogger<ApiController> logger;
         private readonly IContentPageService<ContentPageModel> contentPageService;
         private readonly AutoMapper.IMapper mapper;
 
-        public ApiController(ILogger<ApiController> logger, IContentPageService<ContentPageModel> contentPageService, IMapper mapper) : base(logger)
+        public ApiController(ILogger<ApiController> logger, IContentPageService<ContentPageModel> contentPageService, IMapper mapper)
         {
+            this.logger = logger;
             this.contentPageService = contentPageService;
             this.mapper = mapper;
         }
@@ -34,11 +36,11 @@ namespace DFC.App.Pages.Controllers
             {
                 pages = (from a in contentPageModels.OrderBy(o => o.PageLocation).ThenBy(o => o.CanonicalName)
                          select mapper.Map<GetIndexModel>(a)).ToDictionary(x => x.Id);
-                Logger.LogInformation($"{nameof(Index)} has succeeded");
+                logger.LogInformation($"{nameof(Index)} has succeeded");
             }
             else
             {
-                Logger.LogWarning($"{nameof(Index)} has returned with no results");
+                logger.LogWarning($"{nameof(Index)} has returned with no results");
             }
 
             return Ok(pages);
@@ -53,11 +55,11 @@ namespace DFC.App.Pages.Controllers
             if (contentPageModel != null)
             {
                 var getIndexModel = mapper.Map<GetIndexModel>(contentPageModel);
-                Logger.LogInformation($"{nameof(Document)} has succeeded");
+                logger.LogInformation($"{nameof(Document)} has succeeded");
                 return Ok(getIndexModel);
             }
 
-            Logger.LogWarning($"{nameof(Document)} has returned with no content");
+            logger.LogWarning($"{nameof(Document)} has returned with no content");
 
             return NoContent();
         }

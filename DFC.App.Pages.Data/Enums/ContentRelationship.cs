@@ -6,5 +6,7 @@
         HasHTMLShared,
         HasHTML,
         HasSharedContent,
+        HasPageLocation,
+        HasPageLocationParent,
     }
 }

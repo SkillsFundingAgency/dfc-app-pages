@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
 {
-    public class ContentItemsConverter : IValueConverter<IList<ContentItemModel>?, HtmlString?>
+    public class MarkupContentConverter : IValueConverter<IList<ContentItemModel>?, HtmlString?>
     {
         private readonly Dictionary<int, string> columnWidthClasses = new Dictionary<int, string>
         {
@@ -39,9 +39,9 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
                 var sizeClass = "govuk-grid-column-full";
                 var alignmentClass = string.Empty;
 
-                if (columnWidthClasses.Keys.Contains(contentItemModel.Size))
+                if (contentItemModel.Size.HasValue && columnWidthClasses.Keys.Contains(contentItemModel.Size.Value))
                 {
-                    sizeClass = columnWidthClasses[contentItemModel.Size];
+                    sizeClass = columnWidthClasses[contentItemModel.Size.Value];
                 }
 
                 if (!string.IsNullOrWhiteSpace(contentItemModel.Alignment) && alignmentClasses.Keys.Contains(contentItemModel.Alignment))
@@ -74,7 +74,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             var content = new StringBuilder();
             content.Append(string.IsNullOrEmpty(model.Content) ? model.HtmlBody : model.Content);
 
-            if (model.ContentItems != null)
+            if (model.ContentItems != null && model.ContentItems.Any())
             {
                 foreach (var item in model.ContentItems)
                 {

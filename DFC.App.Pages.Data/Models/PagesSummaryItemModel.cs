@@ -12,9 +12,6 @@ namespace DFC.App.Pages.Data.Models
         [JsonProperty(PropertyName = "skos__prefLabel")]
         public string? Title { get; set; }
 
-        [JsonProperty(PropertyName = "alias_alias")]
-        public string? CanonicalName { get; set; }
-
         public DateTime? CreatedDate { get; set; }
 
         [JsonProperty(PropertyName = "ModifiedDate")]

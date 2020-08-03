@@ -118,7 +118,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                 return HttpStatusCode.NoContent;
             }
 
-            var apiDataContentItemModel = await cmsApiService.GetContentItemAsync(url).ConfigureAwait(false);
+            var apiDataContentItemModel = await cmsApiService.GetContentItemAsync<PagesApiContentItemModel>(url).ConfigureAwait(false);
 
             foreach (var contentId in contentIds)
             {
@@ -126,7 +126,7 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 if (contentPageModel != null)
                 {
-                    var contentItemModel = contentPageModel.ContentItems.FirstOrDefault(f => f.ItemId == contentItemId);
+                    var contentItemModel = FindContentItem(contentItemId, contentPageModel.ContentItems);
 
                     if (contentItemModel != null)
                     {
@@ -170,12 +170,10 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 if (contentPageModel != null)
                 {
-                    var contentItemModel = contentPageModel.ContentItems.FirstOrDefault(f => f.ItemId == contentItemId);
+                    var removedContentitem = RemoveContentItem(contentItemId, contentPageModel.ContentItems);
 
-                    if (contentItemModel != null)
+                    if (removedContentitem)
                     {
-                        contentPageModel.ContentItems!.Remove(contentItemModel);
-
                         var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 
                         if (result == HttpStatusCode.OK)
@@ -187,6 +185,57 @@ namespace DFC.App.Pages.Services.CacheContentService
             }
 
             return HttpStatusCode.OK;
+        }
+
+        public ContentItemModel? FindContentItem(Guid contentItemId, List<ContentItemModel>? items)
+        {
+            if (items == null || !items.Any())
+            {
+                return default;
+            }
+
+            foreach (var contentItemModel in items)
+            {
+                if (contentItemModel.ItemId == contentItemId)
+                {
+                    return contentItemModel;
+                }
+
+                var childContentItemModel = FindContentItem(contentItemId, contentItemModel.ContentItems);
+
+                if (childContentItemModel != null)
+                {
+                    return childContentItemModel;
+                }
+            }
+
+            return default;
+        }
+
+        public bool RemoveContentItem(Guid contentItemId, List<ContentItemModel>? items)
+        {
+            if (items == null || !items.Any())
+            {
+                return false;
+            }
+
+            foreach (var contentItemModel in items)
+            {
+                if (contentItemModel.ItemId == contentItemId)
+                {
+                    items.Remove(contentItemModel);
+                    return true;
+                }
+
+                var removedContentitem = RemoveContentItem(contentItemId, contentItemModel.ContentItems);
+
+                if (removedContentitem)
+                {
+                    return removedContentitem;
+                }
+            }
+
+            return false;
         }
 
         public bool TryValidateModel(ContentPageModel? contentPageModel)
