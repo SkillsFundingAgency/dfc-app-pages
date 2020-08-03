@@ -503,7 +503,6 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                 var id = Guid.NewGuid();
 
                 item.Url = new Uri($"http://somewhere.com/item/{id}", UriKind.Absolute);
-                item.CanonicalName = id.ToString();
             }
 
             return models.ToList();

@@ -122,7 +122,7 @@ namespace DFC.App.Pages.Services.CacheContentService
 
             contentCacheService.Clear();
 
-            foreach (var item in summaryList.OrderByDescending(o => o.Published).ThenBy(o => o.CanonicalName))
+            foreach (var item in summaryList.OrderByDescending(o => o.Published).ThenBy(o => o.Title))
             {
                 if (stoppingToken.IsCancellationRequested)
                 {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DFC.App.Pages.Data.Models
 {
@@ -12,8 +13,14 @@ namespace DFC.App.Pages.Data.Models
 
         public string? Content { get; set; }
 
+        public string? BreadcrumbText { get; set; }
+
+        public string? BreadcrumbLinkSegment { get; set; }
+
         public DateTime? CreatedDate { get; set; }
 
         public DateTime LastReviewed { get; set; }
+
+        public IList<SharedContentItemModel>? ContentItems { get; set; }
     }
 }

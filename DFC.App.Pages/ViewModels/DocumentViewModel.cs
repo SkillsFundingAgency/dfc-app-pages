@@ -12,7 +12,7 @@ namespace DFC.App.Pages.ViewModels
     {
         public HtmlHeadViewModel? HtmlHead { get; set; }
 
-        public BreadcrumbViewModel? Breadcrumb { get; set; }
+        public IList<BreadcrumbItemViewModel>? Breadcrumbs { get; set; }
 
         [Display(Name = "Document Id")]
         public Guid? DocumentId { get; set; }

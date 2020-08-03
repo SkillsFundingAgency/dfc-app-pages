@@ -24,22 +24,25 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             const string location = "a-location-name";
             const string article = "an-article-name";
             var expectedResults = A.CollectionOfFake<ContentPageModel>(1);
+            var expectedBreadcrumbs = new List<BreadcrumbItemViewModel> { new BreadcrumbItemViewModel { Route = "a-route", Title = "A title", }, };
             var controller = BuildPagesController(mediaTypeName);
 
             expectedResults.First().CanonicalName = article;
 
             A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
+            A.CallTo(() => FakeMapper.Map<List<BreadcrumbItemViewModel>>(A<ContentPageModel>.Ignored)).Returns(expectedBreadcrumbs);
 
             // Act
             var result = await controller.Breadcrumb(location, article).ConfigureAwait(false);
 
             // Assert
             A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<List<BreadcrumbItemViewModel>>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
 
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<BreadcrumbViewModel>(viewResult.ViewData.Model);
+            var model = Assert.IsAssignableFrom<List<BreadcrumbItemViewModel>>(viewResult.ViewData.Model);
 
-            model.Paths?.Count.Should().BeGreaterThan(0);
+            model?.Count.Should().BeGreaterThan(0);
 
             controller.Dispose();
         }
@@ -52,22 +55,26 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             const string location = "a-location-name";
             const string article = "an-article-name";
             var expectedResults = A.CollectionOfFake<ContentPageModel>(1);
+            var expectedBreadcrumbs = new List<BreadcrumbItemViewModel> { new BreadcrumbItemViewModel { Route = "a-route", Title = "A title", }, };
             var controller = BuildPagesController(mediaTypeName);
 
             expectedResults.First().CanonicalName = article;
+            expectedResults.First().MetaTags.Title = article.ToUpperInvariant();
 
             A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
+            A.CallTo(() => FakeMapper.Map<List<BreadcrumbItemViewModel>>(A<ContentPageModel>.Ignored)).Returns(expectedBreadcrumbs);
 
             // Act
             var result = await controller.Breadcrumb(location, article).ConfigureAwait(false);
 
             // Assert
             A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<List<BreadcrumbItemViewModel>>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
-            var model = Assert.IsAssignableFrom<BreadcrumbViewModel>(jsonResult.Value);
+            var model = Assert.IsAssignableFrom<List<BreadcrumbItemViewModel>>(jsonResult.Value);
 
-            model.Paths?.Count.Should().BeGreaterThan(0);
+            model?.Count.Should().BeGreaterThan(0);
 
             controller.Dispose();
         }
@@ -91,9 +98,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).MustHaveHappenedOnceExactly();
 
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<BreadcrumbViewModel>(viewResult.ViewData.Model);
+            var model = Assert.IsAssignableFrom<List<BreadcrumbItemViewModel>>(viewResult.ViewData.Model);
 
-            model.Paths?.Count.Should().BeGreaterThan(0);
+            model?.Count.Should().Be(0);
 
             controller.Dispose();
         }
@@ -117,9 +124,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             A.CallTo(() => FakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).MustHaveHappenedOnceExactly();
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
-            var model = Assert.IsAssignableFrom<BreadcrumbViewModel>(jsonResult.Value);
+            var model = Assert.IsAssignableFrom<List<BreadcrumbItemViewModel>>(jsonResult.Value);
 
-            model.Paths?.Count.Should().BeGreaterThan(0);
+            model?.Count.Should().Be(0);
 
             controller.Dispose();
         }

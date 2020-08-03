@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.AutoMapperProfiles.ValuerConverters;
 using DFC.App.Pages.Data.Models;
-using DFC.App.Pages.Models;
 using DFC.App.Pages.Models.Api;
 using DFC.App.Pages.ViewModels;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace DFC.App.Pages.AutoMapperProfiles
 {
@@ -14,14 +14,14 @@ namespace DFC.App.Pages.AutoMapperProfiles
         public ContentPageModelProfile()
         {
             CreateMap<ContentPageModel, BodyViewModel>()
-                .ForMember(d => d.Content, opt => opt.ConvertUsing(new ContentItemsConverter(), a => a.ContentItems));
+                .ForMember(d => d.Content, opt => opt.ConvertUsing(new ContentItemsConverter(), a => a.ContentItems.Where(w => !w.ContentType!.Equals("PageLocation", System.StringComparison.OrdinalIgnoreCase)).ToList()));
 
             CreateMap<ContentPageModel, DocumentViewModel>()
                 .ForMember(d => d.DocumentId, s => s.MapFrom(a => a.Id))
                 .ForMember(d => d.Redirects, s => s.MapFrom(a => a.RedirectLocations))
-                .ForMember(d => d.HtmlHead, s => s.Ignore())
-                .ForMember(d => d.Breadcrumb, s => s.Ignore())
-                .ForMember(d => d.Content, opt => opt.ConvertUsing(new ContentItemsConverter(), a => a.ContentItems))
+                .ForMember(d => d.HtmlHead, s => s.MapFrom(a => a))
+                .ForMember(d => d.Breadcrumbs, opt => opt.ConvertUsing(new BreadcrumbConverter(), a => a))
+                .ForMember(d => d.Content, opt => opt.ConvertUsing(new ContentItemsConverter(), a => a.ContentItems.Where(w => !w.ContentType!.Equals("PageLocation", System.StringComparison.OrdinalIgnoreCase)).ToList()))
                 .ForMember(d => d.BodyViewModel, s => s.MapFrom(a => a));
 
             CreateMap<ContentPageModel, HtmlHeadViewModel>()
@@ -35,7 +35,8 @@ namespace DFC.App.Pages.AutoMapperProfiles
             CreateMap<ContentPageModel, GetIndexModel>()
                 .ForMember(d => d.Locations, opt => opt.ConvertUsing(new LocationsConverter(), a => a));
 
-            CreateMap<ContentPageModel, BreadcrumbItemModel>();
+            CreateMap<BreadcrumbItemModel, BreadcrumbItemViewModel>()
+                .ForMember(d => d.AddHyperlink, s => s.Ignore());
 
             CreateMap<PagesApiDataModel, ContentPageModel>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
@@ -63,6 +64,8 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.Url, s => s.Ignore())
                 .ForMember(d => d.ItemId, s => s.Ignore())
                 .ForMember(d => d.DisplayText, s => s.Ignore())
+                .ForMember(d => d.BreadcrumbLinkSegment, s => s.Ignore())
+                .ForMember(d => d.BreadcrumbText, s => s.Ignore())
                 .ForMember(d => d.Version, s => s.Ignore())
                 .ForMember(d => d.Content, s => s.Ignore())
                 .ForMember(d => d.Justify, s => s.Ignore())

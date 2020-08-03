@@ -15,6 +15,11 @@ namespace DFC.App.Pages.Data.Models
 
         public string? DisplayText { get; set; }
 
+        [JsonProperty("skos__prefLabel")]
+        public string? BreadcrumbLinkSegment { get; set; }
+
+        public string? BreadcrumbText { get; set; }
+
         public Guid Version { get; set; }
 
         public string? Content { get; set; }

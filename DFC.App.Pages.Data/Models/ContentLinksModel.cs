@@ -23,6 +23,8 @@ namespace DFC.App.Pages.Data.Models
             set => LinksPrivate = value;
         }
 
+        public bool ExcludePageLocation { get; set; } = false;
+
         private List<KeyValuePair<string, List<LinkDetails>>>? LinksPrivate { get; set; }
 
         private static CuriesDetails? GetContentCuriesDetails(JObject links)
@@ -83,7 +85,7 @@ namespace DFC.App.Pages.Data.Models
 
                 Enum.TryParse(typeof(ContentRelationship), relationShipKey, true, out var type);
 
-                if (type == null || (ContentRelationship)type == ContentRelationship.Undefined)
+                if (type == null || (ContentRelationship)type == ContentRelationship.Undefined || ((ContentRelationship)type == ContentRelationship.HasPageLocation && ExcludePageLocation))
                 {
                     continue;
                 }

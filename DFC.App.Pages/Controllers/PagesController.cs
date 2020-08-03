@@ -1,6 +1,5 @@
 ﻿using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Extensions;
-using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
 using DFC.Compui.Cosmos.Contracts;
 using Microsoft.AspNetCore.Mvc;
@@ -70,10 +69,6 @@ namespace DFC.App.Pages.Controllers
             if (contentPageModel != null)
             {
                 var viewModel = mapper.Map<DocumentViewModel>(contentPageModel);
-                var breadcrumbItemModel = mapper.Map<BreadcrumbItemModel>(contentPageModel);
-
-                viewModel.HtmlHead = mapper.Map<HtmlHeadViewModel>(contentPageModel);
-                viewModel.Breadcrumb = BuildBreadcrumb(LocalPath, breadcrumbItemModel);
 
                 Logger.LogInformation($"{nameof(Document)} has succeeded for: {article}");
 
@@ -129,8 +124,7 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Breadcrumb(string? location, string? article)
         {
             var contentPageModel = await GetContentPageAsync(location, article).ConfigureAwait(false);
-            var breadcrumbItemModel = mapper.Map<BreadcrumbItemModel>(contentPageModel);
-            var viewModel = BuildBreadcrumb(RegistrationPath, breadcrumbItemModel);
+            var viewModel = mapper.Map<List<BreadcrumbItemViewModel>>(contentPageModel);
 
             Logger.LogInformation($"{nameof(Breadcrumb)} has returned content for: {article}");
 

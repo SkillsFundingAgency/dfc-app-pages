@@ -11,6 +11,10 @@ namespace DFC.App.Pages.Data.Models
 
         public string? DisplayText { get; set; }
 
+        public string? BreadcrumbText { get; set; }
+
+        public string? BreadcrumbLinkSegment { get; set; }
+
         public Guid Version { get; set; }
 
         public string? Content { get; set; }

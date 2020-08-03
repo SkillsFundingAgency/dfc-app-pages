@@ -74,7 +74,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             var content = new StringBuilder();
             content.Append(string.IsNullOrEmpty(model.Content) ? model.HtmlBody : model.Content);
 
-            if (model.ContentItems != null)
+            if (model.ContentItems != null && model.ContentItems.Any())
             {
                 foreach (var item in model.ContentItems)
                 {
