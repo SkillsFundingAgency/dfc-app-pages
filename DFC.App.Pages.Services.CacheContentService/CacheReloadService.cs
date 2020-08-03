@@ -46,6 +46,8 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 var summaryList = await GetSummaryListAsync().ConfigureAwait(false);
 
+                summaryList = summaryList.Where(w => w.Title == "Hello from level 2 - ian's test page - please leave alone").ToList();
+
                 if (stoppingToken.IsCancellationRequested)
                 {
                     logger.LogWarning("Reload cache cancelled");

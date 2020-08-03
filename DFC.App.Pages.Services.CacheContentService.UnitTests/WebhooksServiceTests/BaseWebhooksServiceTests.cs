@@ -66,21 +66,21 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
                 Url = new Uri("https://localhost"),
                 ContentLinks = new ContentLinksModel(new JObject())
                 {
-                    ContentLinks = new List<KeyValuePair<string, List<LinkDetails>>>()
+                    ContentLinks = new List<KeyValuePair<string, List<LinkDetailModel>>>()
                     {
-                        new KeyValuePair<string, List<LinkDetails>>(
+                        new KeyValuePair<string, List<LinkDetailModel>>(
                             "test",
-                            new List<LinkDetails>
+                            new List<LinkDetailModel>
                             {
-                                new LinkDetails
+                                new LinkDetailModel
                                 {
                                     Uri = new Uri("http://www.one.com"),
                                 },
-                                new LinkDetails
+                                new LinkDetailModel
                                 {
                                     Uri = new Uri("http://www.two.com"),
                                 },
-                                new LinkDetails
+                                new LinkDetailModel
                                 {
                                     Uri = new Uri("http://www.three.com"),
                                 },
@@ -139,7 +139,6 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var model = new ContentItemModel()
             {
                 ItemId = contentItemId,
-                Version = Guid.NewGuid(),
                 LastReviewed = DateTime.Now,
             };
 

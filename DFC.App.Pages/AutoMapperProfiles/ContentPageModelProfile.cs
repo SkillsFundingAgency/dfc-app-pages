@@ -55,18 +55,18 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForPath(d => d.MetaTags.Keywords, s => s.MapFrom(a => a.Keywords));
 
             CreateMap<PagesApiContentItemModel, ContentItemModel>()
+                .ForMember(d => d.BreadcrumbLinkSegment, s => s.MapFrom(a => a.Title))
                 .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published));
 
             CreateMap<PagesApiContentItemModel, SharedContentItemModel>()
+                .ForMember(d => d.BreadcrumbLinkSegment, s => s.MapFrom(a => a.Title))
                 .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published));
 
-            CreateMap<LinkDetails, PagesApiContentItemModel>()
+            CreateMap<LinkDetailModel, PagesApiContentItemModel>()
                 .ForMember(d => d.Url, s => s.Ignore())
                 .ForMember(d => d.ItemId, s => s.Ignore())
-                .ForMember(d => d.DisplayText, s => s.Ignore())
-                .ForMember(d => d.BreadcrumbLinkSegment, s => s.Ignore())
+                .ForMember(d => d.Title, s => s.Ignore())
                 .ForMember(d => d.BreadcrumbText, s => s.Ignore())
-                .ForMember(d => d.Version, s => s.Ignore())
                 .ForMember(d => d.Content, s => s.Ignore())
                 .ForMember(d => d.Justify, s => s.Ignore())
                 .ForMember(d => d.Width, s => s.Ignore())

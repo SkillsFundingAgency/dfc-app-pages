@@ -81,13 +81,13 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
             A.CallTo(() => fakeApiDataProcessorService.GetAsync<PagesApiContentItemModel>(A<HttpClient>.Ignored, childContentUrl)).Returns(new PagesApiContentItemModel());
             expectedResult.ContentLinks = new ContentLinksModel(new JObject())
             {
-                ContentLinks = new List<KeyValuePair<string, List<LinkDetails>>>()
+                ContentLinks = new List<KeyValuePair<string, List<LinkDetailModel>>>()
                 {
-                    new KeyValuePair<string, List<LinkDetails>>(
+                    new KeyValuePair<string, List<LinkDetailModel>>(
                         "test",
-                        new List<LinkDetails>
+                        new List<LinkDetailModel>
                         {
-                            new LinkDetails
+                            new LinkDetailModel
                         {
                             Uri = contentUrl,
                         },
@@ -96,13 +96,13 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
             };
             expectedItemResult.ContentLinks = new ContentLinksModel(new JObject())
             {
-                ContentLinks = new List<KeyValuePair<string, List<LinkDetails>>>()
+                ContentLinks = new List<KeyValuePair<string, List<LinkDetailModel>>>()
                 {
-                    new KeyValuePair<string, List<LinkDetails>>(
+                    new KeyValuePair<string, List<LinkDetailModel>>(
                         "Child",
-                        new List<LinkDetails>
+                        new List<LinkDetailModel>
                         {
-                            new LinkDetails
+                            new LinkDetailModel
                             {
                                 Uri = new Uri("http://www.testChild.com"),
                             },
@@ -137,7 +137,7 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService.UnitTests
             var cmsApiService = new CmsApiService(CmsApiClientOptions, fakeApiDataProcessorService, fakeHttpClient, mapper);
 
             // act
-            var result = await cmsApiService.GetContentItemAsync(url).ConfigureAwait(false);
+            var result = await cmsApiService.GetContentItemAsync<PagesApiContentItemModel>(url).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeApiDataProcessorService.GetAsync<PagesApiContentItemModel>(A<HttpClient>.Ignored, A<Uri>.Ignored)).MustHaveHappenedOnceExactly();

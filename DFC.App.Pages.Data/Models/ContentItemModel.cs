@@ -9,13 +9,11 @@ namespace DFC.App.Pages.Data.Models
 
         public Guid? ItemId { get; set; }
 
-        public string? DisplayText { get; set; }
+        public string? Title { get; set; }
 
         public string? BreadcrumbText { get; set; }
 
         public string? BreadcrumbLinkSegment { get; set; }
-
-        public Guid Version { get; set; }
 
         public string? Content { get; set; }
 
@@ -28,8 +26,6 @@ namespace DFC.App.Pages.Data.Models
         public DateTime? LastReviewed { get; set; }
 
         public DateTime? CreatedDate { get; set; }
-
-        public string? Title { get; set; }
 
         public string? ContentType { get; set; }
 

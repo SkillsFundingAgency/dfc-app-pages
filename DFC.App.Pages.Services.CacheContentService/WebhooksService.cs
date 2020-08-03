@@ -118,7 +118,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                 return HttpStatusCode.NoContent;
             }
 
-            var apiDataContentItemModel = await cmsApiService.GetContentItemAsync(url).ConfigureAwait(false);
+            var apiDataContentItemModel = await cmsApiService.GetContentItemAsync<PagesApiContentItemModel>(url).ConfigureAwait(false);
 
             foreach (var contentId in contentIds)
             {

@@ -50,14 +50,10 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService
             return pagesApiDataModel;
         }
 
-        public async Task<PagesApiContentItemModel?> GetContentItemAsync(LinkDetails details)
+        public async Task<TApiModel?> GetContentItemAsync<TApiModel>(Uri uri)
+            where TApiModel : class, IApiDataModel
         {
-            return await apiDataProcessorService.GetAsync<PagesApiContentItemModel>(httpClient, details.Uri).ConfigureAwait(false);
-        }
-
-        public async Task<PagesApiContentItemModel?> GetContentItemAsync(Uri uri)
-        {
-            return await apiDataProcessorService.GetAsync<PagesApiContentItemModel>(httpClient, uri).ConfigureAwait(false);
+            return await apiDataProcessorService.GetAsync<TApiModel>(httpClient, uri).ConfigureAwait(false);
         }
 
         private async Task GetSharedChildContentItems(ContentLinksModel? model, IList<PagesApiContentItemModel> contentItem)
@@ -68,7 +64,7 @@ namespace DFC.App.Pages.Services.CmsApiProcessorService
             {
                 foreach (var linkDetail in linkDetails)
                 {
-                    var pagesApiContentItemModel = await GetContentItemAsync(linkDetail).ConfigureAwait(false);
+                    var pagesApiContentItemModel = await GetContentItemAsync<PagesApiContentItemModel>(linkDetail.Uri!).ConfigureAwait(false);
 
                     if (pagesApiContentItemModel != null)
                     {

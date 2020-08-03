@@ -16,7 +16,7 @@ namespace DFC.App.Pages.Data.Models
             this.jLinks = jLinks;
         }
 
-        public List<KeyValuePair<string, List<LinkDetails>>> ContentLinks
+        public List<KeyValuePair<string, List<LinkDetailModel>>> ContentLinks
         {
             get => LinksPrivate ??= GetLinksFromJObject();
 
@@ -25,7 +25,7 @@ namespace DFC.App.Pages.Data.Models
 
         public bool ExcludePageLocation { get; set; } = false;
 
-        private List<KeyValuePair<string, List<LinkDetails>>>? LinksPrivate { get; set; }
+        private List<KeyValuePair<string, List<LinkDetailModel>>>? LinksPrivate { get; set; }
 
         private static CuriesDetails? GetContentCuriesDetails(JObject links)
         {
@@ -41,21 +41,21 @@ namespace DFC.App.Pages.Data.Models
             return curiesList.FirstOrDefault();
         }
 
-        private static KeyValuePair<string, List<LinkDetails>> GetLinkDetailsFromArray(JToken array, string relationshipKey, string baseHref)
+        private static KeyValuePair<string, List<LinkDetailModel>> GetLinkDetailsFromArray(JToken array, string relationshipKey, string baseHref)
         {
-            var links = JsonConvert.DeserializeObject<List<LinkDetails>>(array.ToString());
+            var links = JsonConvert.DeserializeObject<List<LinkDetailModel>>(array.ToString());
 
             foreach (var link in links)
             {
                 link.Uri = new Uri($"{baseHref}{link.Href}");
             }
 
-            return new KeyValuePair<string, List<LinkDetails>>(relationshipKey, links);
+            return new KeyValuePair<string, List<LinkDetailModel>>(relationshipKey, links);
         }
 
-        private List<KeyValuePair<string, List<LinkDetails>>> GetLinksFromJObject()
+        private List<KeyValuePair<string, List<LinkDetailModel>>> GetLinksFromJObject()
         {
-            var contLink = new List<KeyValuePair<string, List<LinkDetails>>>();
+            var contLink = new List<KeyValuePair<string, List<LinkDetailModel>>>();
 
             if (jLinks == null)
             {
@@ -85,7 +85,8 @@ namespace DFC.App.Pages.Data.Models
 
                 Enum.TryParse(typeof(ContentRelationship), relationShipKey, true, out var type);
 
-                if (type == null || (ContentRelationship)type == ContentRelationship.Undefined || ((ContentRelationship)type == ContentRelationship.HasPageLocation && ExcludePageLocation))
+                if (type == null || (ContentRelationship)type == ContentRelationship.Undefined ||
+                    ((ContentRelationship)type == ContentRelationship.HasPageLocation && ExcludePageLocation))
                 {
                     continue;
                 }
@@ -96,12 +97,12 @@ namespace DFC.App.Pages.Data.Models
                 }
                 else
                 {
-                    var child = JsonConvert.DeserializeObject<LinkDetails>(value.ToString());
+                    var child = JsonConvert.DeserializeObject<LinkDetailModel>(value.ToString());
                     child.Uri = new Uri($"{contentCuriesDetails.Href}{child.Href}");
 
-                    contLink.Add(new KeyValuePair<string, List<LinkDetails>>(
+                    contLink.Add(new KeyValuePair<string, List<LinkDetailModel>>(
                         relationShipKey,
-                        new List<LinkDetails>
+                        new List<LinkDetailModel>
                         {
                             child,
                         }));
