@@ -143,7 +143,6 @@ namespace DFC.App.Pages.Data.UnitTests.ValidationTests
                 Id = documentId,
                 PageLocation = pageLocation,
                 CanonicalName = canonicalName,
-                BreadcrumbTitle = canonicalName,
                 Version = Guid.NewGuid(),
                 Url = new Uri("aaa-bbb", UriKind.Relative),
                 Content = content,

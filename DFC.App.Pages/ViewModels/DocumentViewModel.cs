@@ -26,9 +26,6 @@ namespace DFC.App.Pages.ViewModels
         [Required]
         public Guid? Version { get; set; }
 
-        [Display(Name = "Breadcrumb Title")]
-        public string? BreadcrumbTitle { get; set; }
-
         [Display(Name = "Is Default For Page Location")]
         public bool IsDefaultForPageLocation { get; set; }
 

@@ -4,6 +4,7 @@ using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Data.Models.ClientOptions;
 using DFC.App.Pages.Data.Models.SubscriptionModels;
 using DFC.App.Pages.Extensions;
+using DFC.App.Pages.Helpers;
 using DFC.App.Pages.HostedServices;
 using DFC.App.Pages.HttpClientPolicies;
 using DFC.App.Pages.Services.ApiProcessorService;
@@ -67,12 +68,14 @@ namespace DFC.App.Pages
         {
             var eventGridSubscriptionModel = configuration.GetSection(nameof(EventGridSubscriptionModel)).Get<EventGridSubscriptionModel>() ?? new EventGridSubscriptionModel();
             eventGridSubscriptionModel.Name = configuration.GetValue("Configuration:ApplicationName", typeof(Startup).Namespace!.Replace(".", "-", System.StringComparison.OrdinalIgnoreCase));
+            eventGridSubscriptionModel.Filter.IncludeEventTypes.RemoveAll(r => string.IsNullOrWhiteSpace(r));
             services.AddSingleton(eventGridSubscriptionModel);
             var cosmosDbConnectionContentPages = configuration.GetSection(CosmosDbContentPagesConfigAppSettings).Get<CosmosDbConnection>();
             services.AddContentPageServices<ContentPageModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
+            services.AddTransient<IPagesControlerHelpers, PagesControlerHelpers>();
             services.AddSingleton<IContentCacheService>(new ContentCacheService());
             services.AddTransient<IEventMessageService<ContentPageModel>, EventMessageService<ContentPageModel>>();
             services.AddTransient<ICacheReloadService, CacheReloadService>();

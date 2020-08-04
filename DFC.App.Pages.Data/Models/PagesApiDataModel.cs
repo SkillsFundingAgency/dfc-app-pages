@@ -28,8 +28,6 @@ namespace DFC.App.Pages.Data.Models
 
         public Guid? Version { get; set; }
 
-        public string? BreadcrumbTitle { get; set; }
-
         [JsonProperty("sitemap_Exclude")]
         public bool ExcludeFromSitemap { get; set; }
 
