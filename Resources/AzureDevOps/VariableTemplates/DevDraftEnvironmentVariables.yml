@@ -1,0 +1,21 @@
+variables:
+- name: ReleaseEnvironmentName
+  value: DEV-DRAFT
+- name: AppServiceName
+  value: dfc-dev-draft-app-pages-as
+- name: cosmosDbCollectionName
+  value: pages-draft
+- name: EnableAzureMonitorAlerting
+  value: true
+- name: EventGridSubscriptionModelEndpoint
+  value: https://dfc-dev-draft-app-pages-as.azurewebsites.net
+- name: pagesAppDatabaseThroughput
+  value: 400
+- name: ResourceGroup
+  value: dfc-dev-draft-app-pages-rg
+- name: WebAppProjectName
+  value: DFC.App.Pages
+- name: PageRegistrationFile
+  value: registration.json
+- name: EventGridPublishClientOptionsApiEndpoint
+  value: https://dfc-dev-draft-app-pages-as.azurewebsites.net/api/pages
