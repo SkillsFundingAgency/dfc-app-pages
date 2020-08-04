@@ -1,3 +1,4 @@
+using DFC.App.Pages.Models;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -13,12 +14,15 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         public void PagesControllerBodyFooterJsonReturnsSuccess(string mediaTypeName)
         {
             // Arrange
-            const string location = "a-location-name";
-            const string article = "an-article-name";
+            var pageRequestModel = new PageRequestModel
+            {
+                Location1 = "a-location-name",
+                Location2 = "an-article-name",
+            };
             var controller = BuildPagesController(mediaTypeName);
 
             // Act
-            var result = controller.BodyFooter(location, article);
+            var result = controller.BodyFooter(pageRequestModel);
 
             // Assert
             var statusResult = Assert.IsType<NoContentResult>(result);
@@ -33,12 +37,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         public void PagesControllerBodyFooterWithNullArticleJsonReturnsSuccess(string mediaTypeName)
         {
             // Arrange
-            const string location = "a-location-name";
-            const string? article = null;
+            var pageRequestModel = new PageRequestModel
+            {
+                Location1 = "a-location-name",
+            };
             var controller = BuildPagesController(mediaTypeName);
 
             // Act
-            var result = controller.BodyFooter(location, article);
+            var result = controller.BodyFooter(pageRequestModel);
 
             // Assert
             var statusResult = Assert.IsType<NoContentResult>(result);

@@ -410,7 +410,6 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                 ItemId = Guid.NewGuid(),
                 CanonicalName = "an-article",
                 Version = Guid.NewGuid(),
-                BreadcrumbTitle = "An article",
                 ExcludeFromSitemap = true,
                 Url = new Uri("/aaa/bbb", UriKind.Relative),
                 RedirectLocations = new List<string> { "alt-name-1", "alt-name-2" },
@@ -456,7 +455,6 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             {
                 Id = Guid.NewGuid(),
                 CanonicalName = "an-article",
-                BreadcrumbTitle = "An article",
                 IncludeInSitemap = true,
                 Version = Guid.NewGuid(),
                 Url = new Uri("/aaa/bbb", UriKind.Relative),

@@ -60,7 +60,6 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             {
                 ItemId = Guid.NewGuid(),
                 CanonicalName = "an-article",
-                BreadcrumbTitle = "An article",
                 ExcludeFromSitemap = true,
                 Version = Guid.NewGuid(),
                 Url = new Uri("https://localhost"),
@@ -117,7 +116,6 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
                 Id = ContentIdForUpdate,
                 Etag = Guid.NewGuid().ToString(),
                 CanonicalName = "an-article",
-                BreadcrumbTitle = "An article",
                 IncludeInSitemap = true,
                 Version = Guid.NewGuid(),
                 Url = new Uri("https://localhost"),
