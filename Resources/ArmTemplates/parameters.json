@@ -70,6 +70,12 @@
         },
         "EventGridPublishClientOptionsApiEndpoint": {
             "value": "__EventGridPublishClientOptionsApiEndpoint__"
+        },
+        "EventGridSubscriptionModelFilterIncludeEventTypes3": {
+            "value": "__EventGridSubscriptionModelFilterIncludeEventTypes3__"
+        },
+        "EventGridSubscriptionModelFilterIncludeEventTypes4": {
+            "value": "__EventGridSubscriptionModelFilterIncludeEventTypes4__"
         }
     }
 }

@@ -86,6 +86,12 @@
         },
         "EventGridPublishClientOptionsApiEndpoint": {
             "type": "string"
+        },
+        "EventGridSubscriptionModelFilterIncludeEventTypes3": {
+            "type": "string"
+        },
+        "EventGridSubscriptionModelFilterIncludeEventTypes4": {
+            "type": "string"
         }
     },
     "variables": {
@@ -241,6 +247,14 @@
                             {
                                 "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__2",
                                 "value": "deleted"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__3",
+                                "value": "[parameters('EventGridSubscriptionModelFilterIncludeEventTypes3')]"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__4",
+                                "value": "[parameters('EventGridSubscriptionModelFilterIncludeEventTypes4')]"
                             },
                             {
                                 "name": "EventGridSubscriptionModel__Endpoint",

@@ -19,3 +19,7 @@ variables:
   value: registration.json
 - name: EventGridPublishClientOptionsApiEndpoint
   value: https://dfc-sit-draft-app-pages-as.azurewebsites.net/api/pages
+- name: EventGridSubscriptionModelFilterIncludeEventTypes3
+  value: draft
+- name: EventGridSubscriptionModelFilterIncludeEventTypes4
+  value: draft-discarded
