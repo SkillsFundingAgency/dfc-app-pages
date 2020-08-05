@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFC.App.Pages.Data.Common;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.ViewModels;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
                 return null;
             }
 
-            var contentItems = sourceMember.ContentItems.Where(w => w.ContentType!.Equals(ContentPageModelProfile.ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase)).ToList();
+            var contentItems = sourceMember.ContentItems.Where(w => w.ContentType!.Equals(Constants.ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase)).ToList();
 
             if (contentItems == null || !contentItems.Any())
             {

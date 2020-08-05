@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.AutoMapperProfiles.ValuerConverters;
+using DFC.App.Pages.Data.Common;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models.Api;
 using DFC.App.Pages.ViewModels;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -12,19 +12,17 @@ namespace DFC.App.Pages.AutoMapperProfiles
     [ExcludeFromCodeCoverage]
     public class ContentPageModelProfile : Profile
     {
-        public const string ContentTypePageLocation = "PageLocation";
-
         public ContentPageModelProfile()
         {
             CreateMap<ContentPageModel, BodyViewModel>()
-                .ForMember(d => d.Content, opt => opt.ConvertUsing(new MarkupContentConverter(), a => a.ContentItems.Where(w => !w.ContentType!.Equals(ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase)).ToList()));
+                .ForMember(d => d.Content, opt => opt.ConvertUsing(new MarkupContentConverter(), a => a.ContentItems.Where(w => !w.ContentType!.Equals(Constants.ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase)).ToList()));
 
             CreateMap<ContentPageModel, DocumentViewModel>()
                 .ForMember(d => d.DocumentId, s => s.MapFrom(a => a.Id))
                 .ForMember(d => d.Redirects, s => s.MapFrom(a => a.RedirectLocations))
                 .ForMember(d => d.HtmlHead, s => s.MapFrom(a => a))
                 .ForMember(d => d.Breadcrumb, s => s.Ignore())
-                .ForMember(d => d.Content, opt => opt.ConvertUsing(new MarkupContentConverter(), a => a.ContentItems.Where(w => !w.ContentType!.Equals(ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase)).ToList()))
+                .ForMember(d => d.Content, opt => opt.ConvertUsing(new MarkupContentConverter(), a => a.ContentItems.Where(w => !w.ContentType!.Equals(Constants.ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase)).ToList()))
                 .ForMember(d => d.BodyViewModel, s => s.MapFrom(a => a));
 
             CreateMap<ContentPageModel, HtmlHeadViewModel>()
@@ -65,8 +63,8 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForPath(d => d.MetaTags.Keywords, s => s.MapFrom(a => a.Keywords));
 
             CreateMap<PagesApiContentItemModel, ContentItemModel>()
-                .ForMember(d => d.Title, s => s.MapFrom(a => !a.ContentType!.Equals(ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase) ? a.Title : null))
-                .ForMember(d => d.BreadcrumbLinkSegment, s => s.MapFrom(a => a.ContentType!.Equals(ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase) ? a.Title : null))
+                .ForMember(d => d.Title, s => s.MapFrom(a => !a.ContentType!.Equals(Constants.ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase) ? a.Title : null))
+                .ForMember(d => d.BreadcrumbLinkSegment, s => s.MapFrom(a => a.ContentType!.Equals(Constants.ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase) ? a.Title : null))
                 .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published))
                 .ForMember(d => d.ContentItems, s => s.MapFrom(a => a.ContentItems != null && a.ContentItems.Any() ? a.ContentItems : null))
                 .ForMember(d => d.LastCached, s => s.Ignore());

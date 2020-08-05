@@ -1,4 +1,6 @@
-﻿using DFC.App.Pages.Data.Contracts;
+﻿using DFC.App.Pages.Data.Common;
+using DFC.App.Pages.Data.Contracts;
+using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
@@ -41,6 +43,8 @@ namespace DFC.App.Pages.Services.EventProcessorService
                 return HttpStatusCode.AlreadyReported;
             }
 
+            upsertDocumentModel.PageLocation = ExtractPageLocation(upsertDocumentModel);
+
             var response = await contentPageService.UpsertAsync(upsertDocumentModel).ConfigureAwait(false);
 
             logger.LogInformation($"{nameof(CreateAsync)} has upserted content for: {upsertDocumentModel.CanonicalName} with response code {response}");
@@ -60,6 +64,8 @@ namespace DFC.App.Pages.Services.EventProcessorService
             {
                 return HttpStatusCode.NotFound;
             }
+
+            upsertDocumentModel.PageLocation = ExtractPageLocation(upsertDocumentModel);
 
             if (existingDocument.PartitionKey != null && existingDocument.PartitionKey.Equals(upsertDocumentModel.PartitionKey, StringComparison.Ordinal))
             {
@@ -101,6 +107,49 @@ namespace DFC.App.Pages.Services.EventProcessorService
                 logger.LogWarning($"{nameof(DeleteAsync)} has returned no content for: {id}");
                 return HttpStatusCode.NotFound;
             }
+        }
+
+        public string? ExtractPageLocation(TModel? model)
+        {
+            string? result = null;
+            var contentPageModel = model as ContentPageModel;
+            var contentItems = contentPageModel?.ContentItems.Where(w => w.ContentType == Constants.ContentTypePageLocation).ToList();
+
+            if (contentItems != null && contentItems.Any())
+            {
+                var pageLocations = ExtractPageLocationItem(contentItems);
+
+                pageLocations.RemoveAll(r => string.IsNullOrWhiteSpace(r));
+                pageLocations.RemoveAll(r => r.Equals("/", StringComparison.Ordinal));
+
+                pageLocations.Reverse();
+
+                result = "/" + string.Join("/", pageLocations);
+            }
+
+            return result;
+        }
+
+        private List<string> ExtractPageLocationItem(List<ContentItemModel> contentItems)
+        {
+            var pageLocations = new List<string>();
+
+            foreach (var contentItem in contentItems)
+            {
+                if (!string.IsNullOrWhiteSpace(contentItem.BreadcrumbLinkSegment))
+                {
+                    pageLocations.Add(contentItem.BreadcrumbLinkSegment);
+                }
+
+                var children = contentItem.ContentItems.Where(w => w.ContentType == Constants.ContentTypePageLocation).ToList();
+
+                if (children != null && children.Any())
+                {
+                    pageLocations.AddRange(ExtractPageLocationItem(children));
+                }
+            }
+
+            return pageLocations;
         }
     }
 }
