@@ -67,6 +67,9 @@
         },
         "ApplicationName": {
             "value": "anothervalue"
+        },
+        "EventGridSubjectPrefix": {
+            "value": "anothervalue"
         }
     }
 }
