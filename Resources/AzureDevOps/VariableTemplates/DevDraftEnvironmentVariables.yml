@@ -25,3 +25,5 @@ variables:
   value: draft-discarded
 - name: ApplicationName
   value: DFC-App-Pages-draft
+- name: EventGridSubjectPrefix
+  value: /dfc-app-pages-draft/

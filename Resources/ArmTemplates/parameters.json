@@ -79,6 +79,9 @@
         },
         "ApplicationName": {
             "value": "__ApplicationName__"
+        },
+        "EventGridSubjectPrefix": {
+            "value": "__EventGridSubjectPrefix__"
         }
     }
 }

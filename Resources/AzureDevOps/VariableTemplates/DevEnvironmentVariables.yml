@@ -21,3 +21,5 @@ variables:
   value: https://dfc-dev-app-pages-as.azurewebsites.net/api/pages
 - name: ApplicationName
   value: DFC-App-Pages
+- name: EventGridSubjectPrefix
+  value: /dfc-app-pages/
