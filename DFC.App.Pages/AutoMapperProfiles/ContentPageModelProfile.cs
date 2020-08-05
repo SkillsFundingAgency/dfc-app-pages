@@ -47,13 +47,14 @@ namespace DFC.App.Pages.AutoMapperProfiles
             CreateMap<PagesApiDataModel, ContentPageModel>()
                 .ForMember(d => d.Id, s => s.MapFrom(a => a.ItemId))
                 .ForMember(d => d.CanonicalName, opt => opt.ConvertUsing(new CanonicalNameConverter(), a => a))
-                .ForMember(d => d.PageLocation, opt => opt.ConvertUsing(new PageLocationConverter(), a => a.PageLocation))
                 .ForMember(d => d.RedirectLocations, opt => opt.ConvertUsing(new CleanStringListConverter(), a => a.RedirectLocations))
+                .ForMember(d => d.PageLocation, s => s.Ignore())
                 .ForMember(d => d.Etag, s => s.Ignore())
                 .ForMember(d => d.PartitionKey, s => s.Ignore())
                 .ForMember(d => d.TraceId, s => s.Ignore())
                 .ForMember(d => d.ParentId, s => s.Ignore())
                 .ForMember(d => d.Content, s => s.Ignore())
+                .ForMember(d => d.LastCached, s => s.Ignore())
                 .ForMember(d => d.AllContentItemIds, s => s.Ignore())
                 .ForMember(d => d.SiteMapPriority, s => s.MapFrom(a => a.SiteMapPriority / 10))
                 .ForMember(d => d.SiteMapPriority, s => s.MapFrom(a => a.SiteMapPriority / 10))
@@ -67,7 +68,8 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.Title, s => s.MapFrom(a => !a.ContentType!.Equals(ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase) ? a.Title : null))
                 .ForMember(d => d.BreadcrumbLinkSegment, s => s.MapFrom(a => a.ContentType!.Equals(ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase) ? a.Title : null))
                 .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published))
-                .ForMember(d => d.ContentItems, s => s.MapFrom(a => a.ContentItems != null && a.ContentItems.Any() ? a.ContentItems : null));
+                .ForMember(d => d.ContentItems, s => s.MapFrom(a => a.ContentItems != null && a.ContentItems.Any() ? a.ContentItems : null))
+                .ForMember(d => d.LastCached, s => s.Ignore());
 
             CreateMap<LinkDetailModel, PagesApiContentItemModel>()
                 .ForMember(d => d.Url, s => s.Ignore())

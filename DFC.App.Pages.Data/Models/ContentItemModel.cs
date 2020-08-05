@@ -31,6 +31,8 @@ namespace DFC.App.Pages.Data.Models
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? Size { get; set; }
 
+        public DateTime LastCached { get; set; } = DateTime.UtcNow;
+
         public DateTime LastReviewed { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

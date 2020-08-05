@@ -14,6 +14,8 @@ namespace DFC.App.Pages.Data.Models
 
         public override string? PageLocation { get; set; } = "/missing-location";
 
+        public DateTime LastCached { get; set; } = DateTime.UtcNow;
+
         public new Guid? Version { get; set; }
 
         public new string? Content { get; set; }
