@@ -92,6 +92,9 @@
         },
         "EventGridSubscriptionModelFilterIncludeEventTypes4": {
             "type": "string"
+        },
+        "ApplicationName": {
+            "type": "string"
         }
     },
     "variables": {
@@ -234,7 +237,7 @@
                             },
                             {
                                 "name": "Configuration__ApplicationName",
-                                "value": "DFC-App-Pages"
+                                "value": "[parameters('ApplicationName')]"
                             },
                             {
                                 "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__0",

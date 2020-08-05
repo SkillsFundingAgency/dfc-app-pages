@@ -76,6 +76,9 @@
         },
         "EventGridSubscriptionModelFilterIncludeEventTypes4": {
             "value": "__EventGridSubscriptionModelFilterIncludeEventTypes4__"
+        },
+        "ApplicationName": {
+            "value": "__ApplicationName__"
         }
     }
 }
