@@ -134,10 +134,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.WebhooksControllerTests
 
         [Theory]
         [MemberData(nameof(PublishedEvents))]
-        public async Task WebhooksControllerPublishCreatePostReturnsOkForConflict(string mediaTypeName, string eventType)
+        public async Task WebhooksControllerPublishCreatePostReturnsExceptionForConflict(string mediaTypeName, string eventType)
         {
             // Arrange
-            const HttpStatusCode expectedResponse = HttpStatusCode.OK;
             var eventGridEvents = BuildValidEventGridEvent(eventType, new EventGridEventData { ItemId = ItemIdForCreate.ToString(), Api = "https://somewhere.com", });
             var controller = BuildWebhooksController(mediaTypeName);
             controller.HttpContext.Request.Body = BuildStreamFromModel(eventGridEvents);
@@ -145,13 +144,10 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.WebhooksControllerTests
             A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<Uri>.Ignored)).Returns(HttpStatusCode.Conflict);
 
             // Act
-            var result = await controller.ReceiveEvents().ConfigureAwait(false);
+            await Assert.ThrowsAsync<InvalidDataException>(async () => await controller.ReceiveEvents().ConfigureAwait(false)).ConfigureAwait(false);
 
             // Assert
             A.CallTo(() => FakeWebhooksService.ProcessMessageAsync(A<WebhookCacheOperation>.Ignored, A<Guid>.Ignored, A<Guid>.Ignored, A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
-            var okResult = Assert.IsType<OkResult>(result);
-
-            Assert.Equal((int)expectedResponse, okResult.StatusCode);
 
             controller.Dispose();
         }
