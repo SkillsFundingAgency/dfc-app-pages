@@ -23,3 +23,5 @@ variables:
   value: draft
 - name: EventGridSubscriptionModelFilterIncludeEventTypes4
   value: draft-discarded
+- name: ApplicationName
+  value: DFC-App-Pages-draft

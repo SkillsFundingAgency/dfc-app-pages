@@ -64,6 +64,9 @@
         },
         "EventGridSubscriptionModelFilterIncludeEventTypes4": {
             "value": "anothervalue"
+        },
+        "ApplicationName": {
+            "value": "anothervalue"
         }
     }
 }

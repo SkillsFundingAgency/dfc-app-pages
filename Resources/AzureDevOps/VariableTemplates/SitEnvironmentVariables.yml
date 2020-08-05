@@ -19,3 +19,5 @@ variables:
   value: registration.json
 - name: EventGridPublishClientOptionsApiEndpoint
   value: https://dfc-sit-app-pages-as.azurewebsites.net/api/pages
+- name: ApplicationName
+  value: DFC-App-Pages
