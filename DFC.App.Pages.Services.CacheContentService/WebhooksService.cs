@@ -88,7 +88,6 @@ namespace DFC.App.Pages.Services.CacheContentService
             }
 
             var existingContentPageModel = await contentPageService.GetByIdAsync(contentId).ConfigureAwait(false);
-            contentPageModel.Etag = existingContentPageModel?.Etag;
 
             var contentResult = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 

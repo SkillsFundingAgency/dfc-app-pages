@@ -1,8 +1,10 @@
-﻿using DFC.App.Pages.Data.Models;
+﻿using DFC.App.Pages.Data.Common;
+using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -253,6 +255,94 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             // assert
             A.CallTo(() => fakeContentPageService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
+        }
+
+        [Fact]
+        public void EventMessageServiceExtractPageLocationReturnsSuccess()
+        {
+            // arrange
+            var contentPageModel = BuildContentPageModelWithPageLocations();
+            const string expectedResult = "/a/b/c";
+
+            var eventMessageService = new EventMessageService<ContentPageModel>(fakeLogger, fakeContentPageService);
+
+            // act
+            var result = eventMessageService.ExtractPageLocation(contentPageModel);
+
+            // assert
+            A.Equals(expectedResult, result);
+        }
+
+        [Fact]
+        public void EventMessageServiceExtractPageLocationReturnsNullForMissingModel()
+        {
+            // arrange
+            ContentPageModel? contentPageModel = null;
+
+            var eventMessageService = new EventMessageService<ContentPageModel>(fakeLogger, fakeContentPageService);
+
+            // act
+            var result = eventMessageService.ExtractPageLocation(contentPageModel);
+
+            // assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void EventMessageServiceExtractPageLocationReturnsnullForMissingContentItems()
+        {
+            // arrange
+            var contentPageModel = new ContentPageModel();
+
+            var eventMessageService = new EventMessageService<ContentPageModel>(fakeLogger, fakeContentPageService);
+
+            // act
+            var result = eventMessageService.ExtractPageLocation(contentPageModel);
+
+            // assert
+            Assert.Null(result);
+        }
+
+        private ContentPageModel BuildContentPageModelWithPageLocations()
+        {
+            var model = new ContentPageModel
+            {
+                ContentItems = new List<ContentItemModel>
+                {
+                    new ContentItemModel
+                    {
+                        ContentType = Constants.ContentTypePageLocation,
+                        BreadcrumbLinkSegment = "c",
+                        ContentItems = new List<ContentItemModel>
+                        {
+                            new ContentItemModel
+                            {
+                                ContentType = Constants.ContentTypePageLocation,
+                                BreadcrumbLinkSegment = null,
+                                ContentItems = new List<ContentItemModel>
+                                {
+                                    new ContentItemModel
+                                    {
+                                        ContentType = Constants.ContentTypePageLocation,
+                                        BreadcrumbLinkSegment = "b",
+                                        ContentItems = new List<ContentItemModel>
+                                        {
+                                            new ContentItemModel
+                                            {
+                                                ContentType = Constants.ContentTypePageLocation,
+                                                BreadcrumbLinkSegment = "a",
+                                                ContentItems = new List<ContentItemModel>(),
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            };
+
+            return model;
         }
     }
 }
