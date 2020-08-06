@@ -33,6 +33,11 @@ namespace DFC.App.Pages.Services.EventProcessorService
                 return true;
             }
 
+            if (!Equals(existingContentPageModel.IsDefaultForPageLocation, updatedContentPageModel.IsDefaultForPageLocation))
+            {
+                return true;
+            }
+
             if (!Equals(existingContentPageModel.PageLocation, updatedContentPageModel.PageLocation))
             {
                 return true;
@@ -122,7 +127,7 @@ namespace DFC.App.Pages.Services.EventProcessorService
                 new EventGridEvent
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Subject = $"{eventGridPublishClientOptions.SubjectPrefix}/{updatedContentPageModel.Id}",
+                    Subject = $"{eventGridPublishClientOptions.SubjectPrefix}{updatedContentPageModel.Id}",
                     Data = new EventGridEventData
                     {
                         ItemId = updatedContentPageModel.Id.ToString(),
