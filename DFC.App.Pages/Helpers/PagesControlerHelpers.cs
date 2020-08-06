@@ -44,15 +44,15 @@ namespace DFC.App.Pages.Helpers
 
             if (string.IsNullOrWhiteSpace(location) && string.IsNullOrWhiteSpace(article))
             {
-                where = p => p.PartitionKey == "/" && p.IsDefaultForPageLocation;
+                where = p => p.PageLocation == "/" && p.IsDefaultForPageLocation;
             }
             else if (string.IsNullOrWhiteSpace(article))
             {
-                where = p => (p.PartitionKey == $"/{location}" && p.IsDefaultForPageLocation) || (p.PartitionKey == "/" && p.CanonicalName == location);
+                where = p => (p.PageLocation == $"/{location}" && p.IsDefaultForPageLocation) || (p.PageLocation == "/" && p.CanonicalName == location);
             }
             else
             {
-                where = p => (p.PartitionKey == $"/{location}" && p.CanonicalName == article) || (p.PartitionKey == $"/{location}/{article}" && p.IsDefaultForPageLocation);
+                where = p => (p.PageLocation == $"/{location}" && p.CanonicalName == article) || (p.PageLocation == $"/{location}/{article}" && p.IsDefaultForPageLocation);
             }
 
             var contentPageModels = await contentPageService.GetAsync(where).ConfigureAwait(false);
