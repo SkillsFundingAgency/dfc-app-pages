@@ -98,6 +98,9 @@
         },
         "EventGridSubjectPrefix": {
             "type": "string"
+        },
+        "AppRegistryClientOptionsBaseAddress": {
+            "type": "string"
         }
     },
     "variables": {
@@ -296,7 +299,7 @@
                             },
                             {
                                 "name": "AppRegistryClientOptions__BaseAddress",
-                                "value": "[concat(parameters('apimProxyAddress'),'/composite-ui-appRegistry/pages/')]"
+                                "value": "[parameters('AppRegistryClientOptionsBaseAddress')]"
                             },
                             {
                                 "name": "EventGridSubscriptionModel__Filter__PropertyContainsFilters__0__Key",

@@ -96,6 +96,7 @@ stages:
       RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
+      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
 
 - stage: DeployToDevDraftAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
@@ -130,6 +131,7 @@ stages:
       RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
+      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
 
 - stage: DeployToSITAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
@@ -163,6 +165,7 @@ stages:
       RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
+      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
 
 - stage: DeployToSITDraftAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
@@ -197,3 +200,4 @@ stages:
       RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
+      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)

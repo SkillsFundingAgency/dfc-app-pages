@@ -27,3 +27,5 @@ variables:
   value: DFC-App-Pages-draft
 - name: EventGridSubjectPrefix
   value: /dfc-app-pages-draft/
+- name: AppRegistryClientOptionsBaseAddress
+  value: $(ApimProxyAddress)/composite-ui-appRegistry-draft/pages/
