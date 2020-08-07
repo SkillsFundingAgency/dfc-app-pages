@@ -131,6 +131,8 @@ namespace DFC.App.Pages.Services.CacheContentService
                     {
                         mapper.Map(apiDataContentItemModel, contentItemModel);
 
+                        contentItemModel.LastCached = DateTime.UtcNow;
+
                         await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
                     }
                 }
