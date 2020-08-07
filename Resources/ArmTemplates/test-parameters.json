@@ -73,6 +73,9 @@
         },
         "AppRegistryClientOptionsBaseAddress": {
             "value": "anothervalue"
+        },
+        "SummaryEndpoint": {
+            "value": "anothervalue"
         }
     }
 }
