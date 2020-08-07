@@ -82,6 +82,9 @@
         },
         "EventGridSubjectPrefix": {
             "value": "__EventGridSubjectPrefix__"
+        },
+        "AppRegistryClientOptionsBaseAddress": {
+            "value": "__AppRegistryClientOptionsBaseAddress__"
         }
     }
 }
