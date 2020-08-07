@@ -195,6 +195,9 @@
                     "deployStagingSlot": {
                         "value": true
                     },
+                    "clientAffinity": {
+                        "value": true
+                    },
                     "appServiceAppSettings": {
                         "value": [
                             {
