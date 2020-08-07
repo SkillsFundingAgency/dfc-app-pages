@@ -85,6 +85,9 @@
         },
         "AppRegistryClientOptionsBaseAddress": {
             "value": "__AppRegistryClientOptionsBaseAddress__"
+        },
+        "SummaryEndpoint": {
+            "value": "__SummaryEndpoint__"
         }
     }
 }

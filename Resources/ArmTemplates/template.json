@@ -101,6 +101,9 @@
         },
         "AppRegistryClientOptionsBaseAddress": {
             "type": "string"
+        },
+        "SummaryEndpoint": {
+            "type": "string"
         }
     },
     "variables": {
@@ -243,6 +246,10 @@
                             {
                                 "name": "CmsApiClientOptions__BaseAddress",
                                 "value": "[parameters('apimProxyAddress')]"
+                            },
+                            {
+                                "name": "CmsApiClientOptions__SummaryEndpoint",
+                                "value": "[parameters('SummaryEndpoint')]"
                             },
                             {
                                 "name": "Configuration__ApplicationName",
