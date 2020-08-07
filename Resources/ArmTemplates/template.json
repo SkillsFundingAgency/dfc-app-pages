@@ -315,6 +315,10 @@
                             {
                                 "name": "EventGridSubscriptionModel__Filter__PropertyContainsFilters__0__Values__1",
                                 "value": "/content/pagelocation/"
+                            },
+                            {
+                                "name": "EventGridSubscriptionModel__Filter__PropertyContainsFilters__0__Values__2",
+                                "value": "/content/sharedcontent/"
                             }
                         ]
                     }
