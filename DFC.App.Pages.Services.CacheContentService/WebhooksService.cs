@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -40,7 +41,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             this.eventGridService = eventGridService;
         }
 
-        public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, Uri url)
+        public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndPoint)
         {
             bool isContentItem = contentCacheService.CheckIsContentItem(contentId);
 
@@ -57,6 +58,12 @@ namespace DFC.App.Pages.Services.CacheContentService
                     }
 
                 case WebhookCacheOperation.CreateOrUpdate:
+
+                    if (!Uri.TryCreate(apiEndPoint, UriKind.Absolute, out Uri? url))
+                    {
+                        throw new InvalidDataException($"Invalid Api url '{apiEndPoint}' received for Event Id: {eventId}");
+                    }
+
                     if (isContentItem)
                     {
                         return await ProcessContentItemAsync(url, contentId).ConfigureAwait(false);

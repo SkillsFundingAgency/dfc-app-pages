@@ -3,6 +3,7 @@ using DFC.App.Pages.Data.Models;
 using FakeItEasy;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,7 +19,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             // Arrange
             const bool isContentItem = false;
             const HttpStatusCode expectedResponse = HttpStatusCode.BadRequest;
-            var url = new Uri("https://somewhere.com");
+            var url = "https://somewhere.com";
             var service = BuildWebhooksService();
 
             A.CallTo(() => FakeContentCacheService.CheckIsContentItem(A<Guid>.Ignored)).Returns(isContentItem);
@@ -38,6 +39,25 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
         }
 
         [Fact]
+        public async Task WebhooksServiceProcessMessageAsyncContentThrowsErrorForInvalidUrl()
+        {
+            // Arrange
+            const bool isContentItem = false;
+            const HttpStatusCode expectedResponse = HttpStatusCode.Created;
+            var expectedValidApiContentModel = BuildValidPagesApiContentModel();
+            var expectedValidContentPageModel = BuildValidContentPageModel();
+            var url = "/somewhere.com";
+            var service = BuildWebhooksService();
+
+            A.CallTo(() => FakeContentCacheService.CheckIsContentItem(A<Guid>.Ignored)).Returns(isContentItem);
+            A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).Returns(expectedValidApiContentModel);
+            A.CallTo(() => FakeMapper.Map<ContentPageModel>(A<PagesApiDataModel>.Ignored)).Returns(expectedValidContentPageModel);
+            A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).Returns(HttpStatusCode.NotFound);
+            A.CallTo(() => FakeEventMessageService.CreateAsync(A<ContentPageModel>.Ignored)).Returns(HttpStatusCode.Created);
+            await Assert.ThrowsAsync<InvalidDataException>(async () => await service.ProcessMessageAsync(WebhookCacheOperation.CreateOrUpdate, Guid.NewGuid(), ContentIdForCreate, url).ConfigureAwait(false)).ConfigureAwait(false);
+        }
+
+        [Fact]
         public async Task WebhooksServiceProcessMessageAsyncContentCreateReturnsSuccess()
         {
             // Arrange
@@ -45,7 +65,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             const HttpStatusCode expectedResponse = HttpStatusCode.Created;
             var expectedValidApiContentModel = BuildValidPagesApiContentModel();
             var expectedValidContentPageModel = BuildValidContentPageModel();
-            var url = new Uri("https://somewhere.com");
+            var url = "https://somewhere.com";
             var service = BuildWebhooksService();
 
             A.CallTo(() => FakeContentCacheService.CheckIsContentItem(A<Guid>.Ignored)).Returns(isContentItem);
@@ -76,7 +96,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             const HttpStatusCode expectedResponse = HttpStatusCode.OK;
             var expectedValidApiContentModel = BuildValidPagesApiContentModel();
             var expectedValidContentPageModel = BuildValidContentPageModel();
-            var url = new Uri("https://somewhere.com");
+            var url = "https://somewhere.com";
             var service = BuildWebhooksService();
 
             A.CallTo(() => FakeContentCacheService.CheckIsContentItem(A<Guid>.Ignored)).Returns(isContentItem);
@@ -104,7 +124,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             // Arrange
             const bool isContentItem = false;
             const HttpStatusCode expectedResponse = HttpStatusCode.OK;
-            var url = new Uri("https://somewhere.com");
+            var url = "https://somewhere.com";
             var service = BuildWebhooksService();
 
             A.CallTo(() => FakeContentCacheService.CheckIsContentItem(A<Guid>.Ignored)).Returns(isContentItem);
@@ -132,7 +152,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var expectedValidApiContentItemModel = BuildValidPagesApiContentItemDataModel();
             var expectedValidContentPageModel = BuildValidContentPageModel();
             var expectedValidContentItemModel = BuildValidContentItemModel(ContentItemIdForCreate);
-            var url = new Uri("https://somewhere.com");
+            var url = "https://somewhere.com";
             var service = BuildWebhooksService();
 
             A.CallTo(() => FakeContentCacheService.CheckIsContentItem(A<Guid>.Ignored)).Returns(isContentItem);
@@ -168,7 +188,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var expectedValidApiContentItemModel = BuildValidPagesApiContentItemDataModel();
             var expectedValidContentPageModel = BuildValidContentPageModel();
             var expectedValidContentItemModel = BuildValidContentItemModel(ContentItemIdForUpdate);
-            var url = new Uri("https://somewhere.com");
+            var url = "https://somewhere.com";
             var service = BuildWebhooksService();
 
             A.CallTo(() => FakeContentCacheService.CheckIsContentItem(A<Guid>.Ignored)).Returns(isContentItem);
@@ -201,7 +221,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             const bool isContentItem = true;
             const HttpStatusCode expectedResponse = HttpStatusCode.OK;
             var expectedValidContentPageModel = BuildValidContentPageModel();
-            var url = new Uri("https://somewhere.com");
+            var url = "https://somewhere.com";
             var service = BuildWebhooksService();
 
             A.CallTo(() => FakeContentCacheService.CheckIsContentItem(A<Guid>.Ignored)).Returns(isContentItem);
