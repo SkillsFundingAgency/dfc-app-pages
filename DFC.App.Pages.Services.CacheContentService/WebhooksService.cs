@@ -249,6 +249,7 @@ namespace DFC.App.Pages.Services.CacheContentService
         public bool TryValidateModel(ContentPageModel? contentPageModel, string contentType)
         {
             _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
+            _ = contentType ?? throw new ArgumentNullException(nameof(contentType));
 
             if (contentType.Equals("sharedcontent", StringComparison.OrdinalIgnoreCase))
             {
