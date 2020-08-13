@@ -101,10 +101,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             // Assert
             A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<BreadcrumbViewModel>(viewResult.ViewData.Model);
+            var statusResult = Assert.IsType<NoContentResult>(result);
 
-            Assert.Null(model?.Breadcrumbs);
+            A.Equals((int)HttpStatusCode.NoContent, statusResult.StatusCode);
 
             controller.Dispose();
         }
@@ -130,10 +129,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             // Assert
             A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
-            var jsonResult = Assert.IsType<OkObjectResult>(result);
-            var model = Assert.IsAssignableFrom<BreadcrumbViewModel>(jsonResult.Value);
+            var statusResult = Assert.IsType<NoContentResult>(result);
 
-            Assert.Null(model?.Breadcrumbs);
+            A.Equals((int)HttpStatusCode.NoContent, statusResult.StatusCode);
 
             controller.Dispose();
         }
