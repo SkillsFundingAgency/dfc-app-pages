@@ -34,8 +34,4 @@
     <ProjectReference Include="..\DFC.App.Pages\DFC.App.Pages.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="HelperTests\" />
-  </ItemGroup>
-
 </Project>
