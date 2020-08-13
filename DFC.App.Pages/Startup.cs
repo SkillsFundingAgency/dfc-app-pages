@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages
@@ -76,7 +77,6 @@ namespace DFC.App.Pages
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
             services.AddTransient<IPagesControlerHelpers, PagesControlerHelpers>();
-            services.AddSingleton<IContentCacheService>(new ContentCacheService());
             services.AddTransient<IEventMessageService<ContentPageModel>, EventMessageService<ContentPageModel>>();
             services.AddTransient<ICacheReloadService, CacheReloadService>();
             services.AddTransient<IApiService, ApiService>();
@@ -108,6 +108,9 @@ namespace DFC.App.Pages
             services
                 .AddPolicies(policyRegistry, nameof(AppRegistryClientOptions), policyOptions)
                 .AddHttpClient<IAppRegistryApiService, AppRegistryApiService, AppRegistryClientOptions>(configuration, nameof(AppRegistryClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
+
+            var sp = services.BuildServiceProvider();
+            services.AddSingleton<IContentCacheService>(new ContentCacheService(sp.GetRequiredService<ILogger<ContentCacheService>>()));
 
             services.AddMvc(config =>
                 {
