@@ -157,6 +157,12 @@ namespace DFC.App.Pages.Controllers
         {
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
+
+            if (contentPageModel == null)
+            {
+                return NoContent();
+            }
+
             var viewModel = mapper.Map<BreadcrumbViewModel>(contentPageModel);
 
             logger.LogInformation($"{nameof(Breadcrumb)} has returned content for: /{location}/{article}");
