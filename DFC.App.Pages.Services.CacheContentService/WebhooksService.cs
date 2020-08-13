@@ -1,5 +1,6 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Enums;
+using DFC.App.Pages.Data.Helpers;
 using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
@@ -89,7 +90,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                 return HttpStatusCode.NoContent;
             }
 
-            if (!TryValidateModel(contentPageModel))
+            if (!TryValidateModel(contentPageModel, url))
             {
                 return HttpStatusCode.BadRequest;
             }
@@ -246,9 +247,16 @@ namespace DFC.App.Pages.Services.CacheContentService
             return false;
         }
 
-        public bool TryValidateModel(ContentPageModel? contentPageModel)
+        public bool TryValidateModel(ContentPageModel? contentPageModel, Uri contentUrl)
         {
             _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
+
+            var eventContentType = contentUrl.GetContentTypeFromUrl();
+
+            if (eventContentType == EventContentType.SharedContent)
+            {
+                contentPageModel.CanonicalName = "sharedcontent";
+            }
 
             var validationContext = new ValidationContext(contentPageModel, null, null);
             var validationResults = new List<ValidationResult>();
@@ -258,7 +266,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             {
                 foreach (var validationResult in validationResults)
                 {
-                    logger.LogError($"Error validating {contentPageModel.CanonicalName} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
+                    logger.LogError($"Error validating {contentPageModel.CanonicalName ?? eventContentType.ToString()} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
                 }
             }
 
