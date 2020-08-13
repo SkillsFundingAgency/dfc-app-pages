@@ -16,7 +16,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var service = BuildWebhooksService();
 
             // Act
-            var result = service.TryValidateModel(expectedValidContentPageModel);
+            var result = service.TryValidateModel(expectedValidContentPageModel, "page");
 
             // Assert
             Assert.Equal(expectedResponse, result);
@@ -31,7 +31,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var service = BuildWebhooksService();
 
             // Act
-            var result = service.TryValidateModel(expectedInvalidContentPageModel);
+            var result = service.TryValidateModel(expectedInvalidContentPageModel, "page");
 
             // Assert
             Assert.Equal(expectedResponse, result);
@@ -45,7 +45,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var service = BuildWebhooksService();
 
             // Act
-            var exceptionResult = Assert.Throws<ArgumentNullException>(() => service.TryValidateModel(nullContentPageModel));
+            var exceptionResult = Assert.Throws<ArgumentNullException>(() => service.TryValidateModel(nullContentPageModel, "page"));
 
             // Assert
             Assert.Equal("Value cannot be null. (Parameter 'contentPageModel')", exceptionResult.Message);

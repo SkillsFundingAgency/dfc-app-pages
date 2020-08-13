@@ -27,7 +27,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             A.CallTo(() => FakeEventMessageService.CreateAsync(A<ContentPageModel>.Ignored)).Returns(HttpStatusCode.Created);
 
             // Act
-            var result = await service.ProcessContentAsync(url, ContentIdForCreate).ConfigureAwait(false);
+            var result = await service.ProcessContentAsync(url, ContentIdForCreate, "page").ConfigureAwait(false);
 
             // Assert
             A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
@@ -57,7 +57,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).Returns(HttpStatusCode.OK);
 
             // Act
-            var result = await service.ProcessContentAsync(url, ContentIdForCreate).ConfigureAwait(false);
+            var result = await service.ProcessContentAsync(url, ContentIdForCreate, "page").ConfigureAwait(false);
 
             // Assert
             A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
@@ -85,7 +85,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             A.CallTo(() => FakeMapper.Map<ContentPageModel?>(A<PagesApiDataModel>.Ignored)).Returns(expectedValidContentPageModel);
 
             // Act
-            var result = await service.ProcessContentAsync(url, ContentIdForCreate).ConfigureAwait(false);
+            var result = await service.ProcessContentAsync(url, ContentIdForCreate, "page").ConfigureAwait(false);
 
             // Assert
             A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
@@ -113,7 +113,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             A.CallTo(() => FakeMapper.Map<ContentPageModel>(A<PagesApiDataModel>.Ignored)).Returns(expectedValidContentPageModel);
 
             // Act
-            var result = await service.ProcessContentAsync(url, ContentIdForCreate).ConfigureAwait(false);
+            var result = await service.ProcessContentAsync(url, ContentIdForCreate, "page").ConfigureAwait(false);
 
             // Assert
             A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
