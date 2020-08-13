@@ -1,6 +1,5 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Enums;
-using DFC.App.Pages.Data.Helpers;
 using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
@@ -42,7 +41,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             this.eventGridService = eventGridService;
         }
 
-        public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndPoint)
+        public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string contentType, string apiEndPoint)
         {
             bool isContentItem = contentCacheService.CheckIsContentItem(contentId);
 
@@ -71,7 +70,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                     }
                     else
                     {
-                        return await ProcessContentAsync(url, contentId).ConfigureAwait(false);
+                        return await ProcessContentAsync(url, contentId, contentType).ConfigureAwait(false);
                     }
 
                 default:
@@ -80,7 +79,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             }
         }
 
-        public async Task<HttpStatusCode> ProcessContentAsync(Uri url, Guid contentId)
+        public async Task<HttpStatusCode> ProcessContentAsync(Uri url, Guid contentId, string contentType)
         {
             var apiDataModel = await cmsApiService.GetItemAsync(url).ConfigureAwait(false);
             var contentPageModel = mapper.Map<ContentPageModel>(apiDataModel);
@@ -90,7 +89,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                 return HttpStatusCode.NoContent;
             }
 
-            if (!TryValidateModel(contentPageModel, url))
+            if (!TryValidateModel(contentPageModel, contentType))
             {
                 return HttpStatusCode.BadRequest;
             }
@@ -247,13 +246,11 @@ namespace DFC.App.Pages.Services.CacheContentService
             return false;
         }
 
-        public bool TryValidateModel(ContentPageModel? contentPageModel, Uri contentUrl)
+        public bool TryValidateModel(ContentPageModel? contentPageModel, string contentType)
         {
             _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
 
-            var eventContentType = contentUrl.GetContentTypeFromUrl();
-
-            if (eventContentType == EventContentType.SharedContent)
+            if (contentType.Equals("sharedcontent", StringComparison.OrdinalIgnoreCase))
             {
                 contentPageModel.CanonicalName = "sharedcontent";
             }
@@ -266,7 +263,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             {
                 foreach (var validationResult in validationResults)
                 {
-                    logger.LogError($"Error validating {contentPageModel.CanonicalName ?? eventContentType.ToString()} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
+                    logger.LogError($"Error validating {contentPageModel.CanonicalName ?? contentType} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
                 }
             }
 
