@@ -89,7 +89,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                 return HttpStatusCode.NoContent;
             }
 
-            if (!TryValidateModel(contentPageModel, contentType))
+            if (!TryValidateModel(contentPageModel))
             {
                 return HttpStatusCode.BadRequest;
             }
@@ -246,15 +246,9 @@ namespace DFC.App.Pages.Services.CacheContentService
             return false;
         }
 
-        public bool TryValidateModel(ContentPageModel? contentPageModel, string contentType)
+        public bool TryValidateModel(ContentPageModel? contentPageModel)
         {
             _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
-            _ = contentType ?? throw new ArgumentNullException(nameof(contentType));
-
-            if (contentType.Equals("sharedcontent", StringComparison.OrdinalIgnoreCase))
-            {
-                contentPageModel.CanonicalName = "sharedcontent";
-            }
 
             var validationContext = new ValidationContext(contentPageModel, null, null);
             var validationResults = new List<ValidationResult>();
@@ -264,7 +258,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             {
                 foreach (var validationResult in validationResults)
                 {
-                    logger.LogError($"Error validating {contentPageModel.CanonicalName ?? contentType} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
+                    logger.LogError($"Error validating {contentPageModel.CanonicalName} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
                 }
             }
 
