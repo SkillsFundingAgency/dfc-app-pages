@@ -1,5 +1,6 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Enums;
+using DFC.App.Pages.Data.Helpers;
 using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
@@ -41,7 +42,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             this.eventGridService = eventGridService;
         }
 
-        public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string contentType, string apiEndPoint)
+        public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndPoint)
         {
             bool isContentItem = contentCacheService.CheckIsContentItem(contentId);
 
@@ -70,7 +71,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                     }
                     else
                     {
-                        return await ProcessContentAsync(url, contentId, contentType).ConfigureAwait(false);
+                        return await ProcessContentAsync(url, contentId).ConfigureAwait(false);
                     }
 
                 default:
@@ -79,7 +80,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             }
         }
 
-        public async Task<HttpStatusCode> ProcessContentAsync(Uri url, Guid contentId, string contentType)
+        public async Task<HttpStatusCode> ProcessContentAsync(Uri url, Guid contentId)
         {
             var apiDataModel = await cmsApiService.GetItemAsync(url).ConfigureAwait(false);
             var contentPageModel = mapper.Map<ContentPageModel>(apiDataModel);
@@ -249,6 +250,11 @@ namespace DFC.App.Pages.Services.CacheContentService
         public bool TryValidateModel(ContentPageModel? contentPageModel)
         {
             _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
+
+            if (contentType.Equals("sharedcontent", StringComparison.OrdinalIgnoreCase))
+            {
+                contentPageModel.CanonicalName = "sharedcontent";
+            }
 
             var validationContext = new ValidationContext(contentPageModel, null, null);
             var validationResults = new List<ValidationResult>();

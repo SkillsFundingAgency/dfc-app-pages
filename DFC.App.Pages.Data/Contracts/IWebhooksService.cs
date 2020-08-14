@@ -13,11 +13,11 @@ namespace DFC.App.Pages.Data.Contracts
 
         Task<HttpStatusCode> DeleteContentItemAsync(Guid contentItemId);
 
-        Task<HttpStatusCode> ProcessContentAsync(Uri url, Guid contentId, string contentType);
+        Task<HttpStatusCode> ProcessContentAsync(Uri url, Guid contentId);
 
         Task<HttpStatusCode> ProcessContentItemAsync(Uri url, Guid contentItemId);
 
-        Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string contentType, string apiEndpoint);
+        Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint);
 
         ContentItemModel? FindContentItem(Guid contentItemId, List<ContentItemModel>? items);
 
