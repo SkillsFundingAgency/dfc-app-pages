@@ -4,6 +4,8 @@
 @if (Model.Content != null)
 {
     <div class="govuk-width-container">
-        @Html.Raw(Model.Content)
+        <div class="govuk-grid-row">
+            @Html.Raw(Model.Content)
+        </div>
     </div>
 }
