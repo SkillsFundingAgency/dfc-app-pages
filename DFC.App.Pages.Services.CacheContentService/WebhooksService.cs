@@ -1,6 +1,5 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Enums;
-using DFC.App.Pages.Data.Helpers;
 using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
@@ -250,11 +249,6 @@ namespace DFC.App.Pages.Services.CacheContentService
         public bool TryValidateModel(ContentPageModel? contentPageModel)
         {
             _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
-
-            if (contentType.Equals("sharedcontent", StringComparison.OrdinalIgnoreCase))
-            {
-                contentPageModel.CanonicalName = "sharedcontent";
-            }
 
             var validationContext = new ValidationContext(contentPageModel, null, null);
             var validationResults = new List<ValidationResult>();
