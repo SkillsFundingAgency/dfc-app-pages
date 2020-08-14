@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="HelperTests\**" />
+    <EmbeddedResource Remove="HelperTests\**" />
+    <None Remove="HelperTests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
@@ -32,10 +38,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DFC.App.Pages\DFC.App.Pages.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="HelperTests\" />
   </ItemGroup>
 
 </Project>
