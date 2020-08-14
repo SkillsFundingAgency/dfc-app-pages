@@ -7,7 +7,7 @@
     <ProjectGuid>{897234F4-769A-4865-B2B3-3F308015C3E8}</ProjectGuid>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+ 
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
