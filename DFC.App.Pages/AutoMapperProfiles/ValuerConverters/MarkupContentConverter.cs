@@ -76,7 +76,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
 
             if (model.ContentItems != null && model.ContentItems.Any())
             {
-                foreach (var item in model.ContentItems)
+                foreach (var item in model.ContentItems.OrderBy(x => x.Ordinal))
                 {
                     content.Append(item.Content);
                 }
