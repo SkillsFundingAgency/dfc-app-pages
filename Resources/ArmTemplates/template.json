@@ -279,6 +279,10 @@
                                 "name": "EventGridSubscriptionModel__Endpoint",
                                 "value": "[concat(parameters('eventGridSubscriptionModelEndpoint'),'/api/webhook/ReceiveEvents')]"
                             },
+							  {
+                                "name": "EventGridSubscriptionModel__SubscriptionRegistrationDelay",
+                                "value": "00:02:00"
+                            },
                             {
                                 "name": "EventGridSubscriptionClientOptions__BaseAddress",
                                 "value": "[concat(parameters('apimProxyAddress'),'/content/Subscription/')]"
