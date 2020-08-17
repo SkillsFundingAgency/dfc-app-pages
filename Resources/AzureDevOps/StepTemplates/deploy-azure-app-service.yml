@@ -36,7 +36,7 @@ steps:
     azureSubscription: '${{ parameters.AzureSubscription }}'
     ScriptPath: '${{ parameters.DfCDevopsPath }}/PSCoreScripts/Invoke-SmokeTestOnWebApp.ps1'
     ScriptArguments: |
-     -ResourceGroup ${{ parameters.ResourceGroup }} -AppName ${{ parameters.WebAppName }} -Path '/health/ping' -Slot staging -TimeoutInSecs 10 -Verbose
+     -ResourceGroup ${{ parameters.ResourceGroup }} -AppName ${{ parameters.WebAppName }} -Path '/health/ping' -Slot staging -TimeoutInSecs 20 -Verbose
      
     FailOnStandardError: true
     azurePowerShellVersion: LatestVersion
