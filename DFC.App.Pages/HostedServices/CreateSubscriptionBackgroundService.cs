@@ -36,9 +36,11 @@ namespace DFC.App.Pages.HostedServices
             return base.StopAsync(cancellationToken);
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             logger.LogInformation("Event subscription create executing");
+
+            await Task.Delay(System.TimeSpan.FromSeconds(60)).ConfigureAwait(false);
 
             var task = hostedServiceTelemetryWrapper.Execute(() => eventGridSubscriptionService.CreateAsync(), nameof(CreateSubscriptionBackgroundService));
 
@@ -52,7 +54,7 @@ namespace DFC.App.Pages.HostedServices
                 }
             }
 
-            return task;
+            return;
         }
     }
 }
