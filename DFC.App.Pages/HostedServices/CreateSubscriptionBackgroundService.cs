@@ -40,7 +40,7 @@ namespace DFC.App.Pages.HostedServices
         {
             logger.LogInformation("Event subscription create executing");
 
-            await Task.Delay(System.TimeSpan.FromSeconds(60)).ConfigureAwait(false);
+            await Task.Delay(System.TimeSpan.FromSeconds(120)).ConfigureAwait(false);
 
             var task = hostedServiceTelemetryWrapper.Execute(() => eventGridSubscriptionService.CreateAsync(), nameof(CreateSubscriptionBackgroundService));
 
