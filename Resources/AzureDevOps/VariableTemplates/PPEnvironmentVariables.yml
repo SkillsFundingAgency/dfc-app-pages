@@ -8,7 +8,7 @@ variables:
 - name: EnableAzureMonitorAlerting
   value: true
 - name: EventGridSubscriptionModelEndpoint
-  value: https://dfc-pp-app-pages-as.azurewebsites.net
+  value: https://dfc-pp-app-pages-as.ase-01.dfc.preprodazure.sfa.bis.gov.uk
 - name: pagesAppDatabaseThroughput
   value: 400
 - name: ResourceGroup
@@ -18,7 +18,7 @@ variables:
 - name: PageRegistrationFile
   value: registration.json
 - name: EventGridPublishClientOptionsApiEndpoint
-  value: https://dfc-pp-app-pages-as.azurewebsites.net/api/pages
+  value: https://dfc-pp-app-pages-as.ase-01.dfc.preprodazure.sfa.bis.gov.uk/api/pages
 - name: ApplicationName
   value: DFC-App-Pages
 - name: EventGridSubjectPrefix
