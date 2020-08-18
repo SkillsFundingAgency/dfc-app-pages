@@ -40,7 +40,7 @@ namespace DFC.App.Pages.HostedServices
             return base.StopAsync(cancellationToken);
         }
 
-        protected async override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             logger.LogInformation("Event subscription create executing");
 
