@@ -201,3 +201,37 @@ stages:
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+
+- stage: DeployToPPAppPages
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  displayName: Deploy to PP_AppPages
+  variables:
+  - group: dfc-shared-all
+  - group: dfc-shared-pp
+  - group: dfc-app-shared-all
+  - group: dfc-app-shared-pp
+  - group: dfc-app-shared-registration
+  - group: dfc-stax-shared-pp
+  - template: VariableTemplates\PPEnvironmentVariables.yml
+  
+  jobs:
+  - template: JobTemplates/deploy-environment.yml
+    parameters:
+      AzureSubscription: 'SFA-DIG-PreProd (931bc9f6-359c-4f65-a753-1ee191a1fd6c)'
+      EnvironmentTag: '$(EnvironmentTag)'
+      ParentBusiness: '$(ParentBusiness)'
+      ServiceOffering: '$(ServiceOffering)'
+      ResourceGroup: $(ResourceGroup)
+      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+      EnvironmentName: PP_AppPages
+      AppSharedResourceGroup: $(AppSharedResourceGroup)
+      appSharedCosmosDBName: $(appSharedCosmosDBName)
+      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+      PageRegistrationFile: "$(PageRegistrationFile)"
+      PathRegistrationApiUrl: "$(PathRegistrationApiUrl)"
+      RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
+      ApimCompositeKey: "$(ApimCompositeKey)"
+      AppServiceName: '$(AppServiceName)'
+      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
