@@ -1,0 +1,38 @@
+﻿@model IndexViewModel
+
+@{
+    Layout = "_LocalLayout";
+
+    ViewData["Title"] = "Index";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @if (Model.Documents?.Count() > 0)
+        {
+            <ul>
+                @foreach (var document in Model.Documents)
+                {
+                    <li>
+                        @if (string.IsNullOrWhiteSpace(@document.PageLocation))
+                        {
+                            <a href="/@Model.LocalPath/@document.CanonicalName/document">/@document.CanonicalName</a>
+                        }
+                        else if (@document.PageLocation == "/")
+                        {
+                            <a href="/@Model.LocalPath/@document.CanonicalName/document">/@document.CanonicalName</a>
+                        }
+                        else if (document.IsDefaultForPageLocation)
+                        {
+                            <a href="/@Model.LocalPath@document.PageLocation/document">@document.PageLocation</a>
+                        }
+                        else 
+                        {
+                            <a href="/@Model.LocalPath@document.PageLocation/@document.CanonicalName/document">@document.PageLocation /  @document.CanonicalName</a>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

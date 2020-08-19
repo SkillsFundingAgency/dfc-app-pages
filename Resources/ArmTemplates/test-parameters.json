@@ -1,0 +1,81 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appSharedResourceGroup": {
+            "value": "dfc-dev-app-sharedresources-rg"
+        },
+        "appSharedStorageAccountName": {
+            "value": "dfcdevappsharedstr"
+        },
+        "cosmosDBName": {
+            "value": "dfc-dev-app-sharedresources-cdb"
+        },
+        "cosmosDbKey": {
+            "value": "not-a-real-key"
+        },
+        "apimProxyAddress": {
+            "value": "https://foo.api.nationalcareersservice.org.uk"
+        },
+        "apimContentApiKey": {
+            "value": "not-a-real-key"
+        },
+        "Environment": {
+            "value": "FOO"
+        },
+        "sharedAppServicePlanName": {
+            "value": "dfc-dev-app-shared-asp"
+        },
+        "sharedAppServicePlanResourceGroup": {
+            "value": "dfc-dev-app-sharedresources-rg"
+        },
+        "cosmosDbCollectionName": {
+            "value": "a-test-collection"
+        },
+        "CosmosDbResourceGroup": {
+            "value": "dfc-dev-app-sharedresources-rg"
+        },
+        "pagesAppDatabaseNeedsCreation": {
+            "value": true
+        },
+        "pagesAppDatabaseThroughput": {
+            "value": 2
+        },
+        "enableAlerts": {
+            "value": false
+        },
+        "eventGridSubscriptionModelEndpoint": {
+            "value": "http://www.food.co.uk"
+        },
+        "apimCompositeApiKey": {
+            "value": "fake-key-mate"
+        },
+        "EventGridAegSasKey": {
+            "value": "a key"
+        },
+        "EventGridTopicUrl": {
+            "value": "a url"
+        },
+        "EventGridPublishClientOptionsApiEndpoint": {
+            "value": "a url"
+        },
+        "EventGridSubscriptionModelFilterIncludeEventTypes3": {
+            "value": "value"
+        },
+        "EventGridSubscriptionModelFilterIncludeEventTypes4": {
+            "value": "anothervalue"
+        },
+        "ApplicationName": {
+            "value": "anothervalue"
+        },
+        "EventGridSubjectPrefix": {
+            "value": "anothervalue"
+        },
+        "AppRegistryClientOptionsBaseAddress": {
+            "value": "anothervalue"
+        },
+        "SummaryEndpoint": {
+            "value": "anothervalue"
+        }
+    }
+}

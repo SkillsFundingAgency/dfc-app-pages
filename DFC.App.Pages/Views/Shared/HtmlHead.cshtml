@@ -1,0 +1,23 @@
+﻿@model HtmlHeadViewModel
+
+@if (!string.IsNullOrWhiteSpace(Model.Title))
+{
+    ViewData["Title"] = Model.Title;
+
+    <title>@ViewData["Title"]</title>
+}
+
+@if (Model.CanonicalUrl != null)
+{
+    <link rel="canonical" href="@Model.CanonicalUrl.ToString()">
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.Description))
+{
+    <meta name="description" content="@Model.Description">
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.Keywords))
+{
+    <meta name="keywords" content="@Model.Keywords">
+}

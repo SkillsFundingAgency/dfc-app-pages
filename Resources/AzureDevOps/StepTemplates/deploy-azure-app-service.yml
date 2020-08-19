@@ -1,0 +1,50 @@
+parameters:
+  AzureSubscription: ''
+  DfCDevopsPath: ''
+  WebAppName: ''
+  ResourceGroup: ''
+  PackageFile: ''
+
+steps:
+- checkout: dfc-devops
+  path: 's/dfc-devops/'
+
+- task: AzureAppServiceManage@0
+  displayName: 'Start Azure App Service:${{ parameters.WebAppName }}'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    Action: 'Start Azure App Service'
+    WebAppName: '${{ parameters.WebAppName }}'
+    SpecifySlotOrASE: true
+    ResourceGroupName: '${{ parameters.ResourceGroup }}'
+    Slot: staging
+
+- task: AzureRmWebAppDeployment@4
+  displayName: 'Azure App Service Deploy: ${{ parameters.WebAppName }}'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    appType: app
+    WebAppName: '${{ parameters.WebAppName }}'
+    Package: "${{ parameters.PackageFile }}"
+    deployToSlotOrASE: true
+    ResourceGroupName: '${{ parameters.ResourceGroup }}'
+    SlotName: staging
+
+- task: AzurePowerShell@4
+  displayName: 'Perform smoke test'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    ScriptPath: '${{ parameters.DfCDevopsPath }}/PSCoreScripts/Invoke-SmokeTestOnWebApp.ps1'
+    ScriptArguments: |
+     -ResourceGroup ${{ parameters.ResourceGroup }} -AppName ${{ parameters.WebAppName }} -Path '/health/ping' -Slot staging -TimeoutInSecs 20 -Verbose
+     
+    FailOnStandardError: true
+    azurePowerShellVersion: LatestVersion
+
+- task: AzureAppServiceManage@0
+  displayName: 'Swap Slots: ${{ parameters.WebAppName }}'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    WebAppName: '${{ parameters.WebAppName }}'
+    ResourceGroupName: '${{ parameters.ResourceGroup }}'
+    SourceSlot: staging

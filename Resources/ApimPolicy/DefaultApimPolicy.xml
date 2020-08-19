@@ -1,0 +1,26 @@
+<policies>
+  <inbound>
+    <set-header name="X-Forwarded-APIM-Url" exists-action="override">
+        <value>@{
+            var url = context.Request.OriginalUrl.ToString();
+            var sourceArray = url.Split('/');
+            var destArray = new String[4];
+            Array.Copy(sourceArray, destArray, 4);
+            var newUrl = String.Join("/", destArray);
+            return String.Format("{0}/", newUrl);
+        }</value>
+    </set-header>
+    <base />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <set-header name="X-Powered-By" exists-action="delete" />
+    <set-header name="X-ASPnet-Version" exists-action="delete" />
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

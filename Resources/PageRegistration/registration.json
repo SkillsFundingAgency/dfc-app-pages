@@ -1,0 +1,47 @@
+[
+  {
+    "Path": "pages",
+    "TopNavigationText": null,
+    "TopNavigationOrder": 3000,
+    "Layout": 1,
+    "IsOnline": true,
+    "OfflineHtml": "<div class=\"govuk-width-container\"><H2>Pages Service Unavailable</H2></div>",
+    "PhaseBannerHtml": "<div class=\"govuk-phase-banner\"><p class=\"govuk-phase-banner__content\"><strong class=\"govuk-tag govuk-phase-banner__content__tag \">beta</strong> <span class=\"govuk-phase-banner__text\">Complete <a target=\"_blank\" class=\"govuk-link\" href=\"https://surveys.ipsosinteractive.com/mrIWeb/mrIWeb.dll?I.Project=S1039833&amp;id=&amp;cf=ovl \">Ipsos MORI survey</a> to give us your feedback about the service.</span> </p></div>",
+    "SitemapUrl": "https://__AppServiceName__.__appServiceDomain__/sitemap.xml",
+    "RobotsUrl": "https://__AppServiceName__.__appServiceDomain__/robots.txt",
+    "ExternalURL": null,
+    "Regions": [
+      {
+        "PageRegion": 1,
+        "HealthCheckRequired": false,
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/htmlhead",
+        "IsHealthy": true
+      },
+      {
+        "PageRegion": 2,
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/breadcrumb",
+        "HealthCheckRequired": false,
+        "IsHealthy": true
+      },
+      {
+        "PageRegion": 3,
+        "HealthCheckRequired": false,
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/bodytop",
+        "IsHealthy": true
+      },
+      {
+        "PageRegion": 4,
+        "HealthCheckRequired": false,
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/body",
+        "OfflineHtml": "<div class=\"govuk-width-container\"><H3>Pages Service Unavailable</H3></div>",
+        "IsHealthy": true
+      },
+      {
+        "PageRegion": 7,
+        "HealthCheckRequired": false,
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/bodyfooter",
+        "IsHealthy": true
+      }
+    ]
+  }
+]

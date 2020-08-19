@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html lang="en-gb" class="govuk-template">
+<head>
+    <title>@ViewData["Title"]</title>
+
+    <partial name="_LocalCss" />
+</head>
+<body class="govuk-template__body ">
+    <partial name="_GovUkHeader" />
+
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <partial name="_ErrorSummary" />
+
+            @RenderBody()
+
+        </main>
+    </div>
+
+    <partial name="_GovUkFooter" />
+
+    <partial name="_LocalJs" />
+</body>
+</html>

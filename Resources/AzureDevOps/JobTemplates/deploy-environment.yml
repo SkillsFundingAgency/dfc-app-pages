@@ -1,0 +1,78 @@
+parameters:
+  AzureSubscription: ''
+  SetEsfaResourceGroupTagsScript: 'https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/PSScripts/Set-EsfaResourceGroupTags.ps1'
+  PackageFile:  ''
+  ArmTemplateFolder: ''
+  Location: 'West Europe'
+  ArmOutputVariableName: 'ARMOutputs'
+  EnvironmentTag: 'DEV/Test'
+  ParentBusiness: ''
+  ServiceOffering: ''
+  ResourceGroup: ''
+  DfCDevopsPath: ''
+  EnvironmentName: ''
+  AppSharedResourceGroup: ''
+  appSharedCosmosDBName: ''
+  PageRegistrationDirectory: ''
+  PageRegistrationPath: ''
+  PageRegistrationFile: ''
+  PathRegistrationApiUrl: ''
+  RegionRegistrationApiUrl: ''
+  ApimCompositeKey: ''
+  AppServiceName: ''
+
+jobs:
+- deployment: DeployTemplate
+  displayName: "Deploy arm templates"
+  environment: ${{ parameters.EnvironmentName }}
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - template: ../StepTemplates/deploy-arm-template.yml
+          parameters: 
+            AzureSubscription: '${{ parameters.AzureSubscription }}'
+            DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
+            SetEsfaResourceGroupTagsScript: '${{ parameters.SetEsfaResourceGroupTagsScript }}'
+            EnvironmentTag: '${{ parameters.EnvironmentTag }}'
+            ParentBusiness: '${{ parameters.ParentBusiness }}'
+            ServiceOffering: '${{ parameters.ServiceOffering }}'
+            ResourceGroup: '${{ parameters.ResourceGroup }}'
+            Location: '${{ parameters.Location }}'
+            ArmOutputVariableName: '${{ parameters.ArmOutputVariableName }}'
+            ArmTemplateFolder: '${{ parameters.ArmTemplateFolder }}'
+            AppSharedResourceGroup: '${{ parameters.AppSharedResourceGroup }}'
+            appSharedCosmosDBName: '${{ parameters.appSharedCosmosDBName }}'
+
+- deployment: DeployRegistration
+  displayName: "Deploy page registration"
+  environment: ${{ parameters.EnvironmentName }}
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - template: ../StepTemplates/deploy-page-registration.yml
+          parameters: 
+            AzureSubscription: '${{ parameters.AzureSubscription }}'
+            PageRegistrationPath: '${{ parameters.PageRegistrationPath }}'
+            PageRegistrationFile: '${{ parameters.PageRegistrationFile }}'
+            PathRegistrationApiUrl: '${{ parameters.PathRegistrationApiUrl }}'
+            RegionRegistrationApiUrl: '${{ parameters.RegionRegistrationApiUrl }}'
+            ApimCompositeKey: '${{ parameters.ApimCompositeKey }}'
+
+- deployment: DeployApplication
+  displayName: "Deploy Application"
+  environment: ${{ parameters.EnvironmentName }}
+  dependsOn: 
+  - DeployTemplate
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - template: ../StepTemplates/deploy-azure-app-service.yml
+          parameters:
+            WebAppName: '${{ parameters.AppServiceName }}'
+            AzureSubscription: '${{ parameters.AzureSubscription }}'
+            DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
+            PackageFile: '${{ parameters.PackageFile }}'
+            ResourceGroup: '${{ parameters.ResourceGroup }}'

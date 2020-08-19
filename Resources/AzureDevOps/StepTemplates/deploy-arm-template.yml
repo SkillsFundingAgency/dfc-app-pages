@@ -1,0 +1,60 @@
+parameters:
+  AzureSubscription: ''
+  SetEsfaResourceGroupTagsScript: 'https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/PSScripts/Set-EsfaResourceGroupTags.ps1'
+  EnvironmentTag: ''
+  ParentBusiness: ''
+  ServiceOffering: ''
+  ResourceGroup: ''
+  DfCDevopsPath: ''
+  Location: 'West Europe'
+  ArmTemplateFolder: ''
+  ArmOutputVariableName: 'ARMOutputs'
+  AppSharedResourceGroup: ''
+  appSharedCosmosDBName: ''
+
+steps:
+- checkout: dfc-devops
+  path: 's/dfc-devops/'
+  
+- powershell: |
+    Invoke-WebRequest -Uri "${{ parameters.SetEsfaResourceGroupTagsScript }}" -OutFile "${{ variables['System.DefaultWorkingDirectory']}}/Set-EsfaResourceGroupTags.ps1"
+  displayName: "Download scripts from dfc-devops repo"
+
+- task: AzurePowerShell@3
+  displayName:  "Create resource groups with tags"
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    ScriptPath: "${{ variables['System.DefaultWorkingDirectory'] }}/Set-EsfaResourceGroupTags.ps1"
+    ScriptArguments: '-ResourceGroupName "${{ parameters.ResourceGroup }}" -Environment "${{ parameters.EnvironmentTag }}" -ParentBusiness "${{ parameters.ParentBusiness }}" -ServiceOffering "${{ parameters.ServiceOffering }}" -Verbose'
+    azurePowerShellVersion: LatestVersion
+
+- task: AzurePowerShell@4
+  displayName: 'Test if cosmos database exists'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    ScriptPath: "${{ parameters.DfCDevopsPath }}/PSCoreScripts/Test-CosmosDbDatabaseDoesntExist.ps1"
+    ScriptArguments: '-ResourceGroup ${{ parameters.AppSharedResourceGroup }} -CosmosDbAccountName ${{ parameters.appSharedCosmosDBName }} -DatabaseName dfc-app-pages'
+    azurePowerShellVersion: LatestVersion
+
+- task: esfadevops.Tokenization.custom-build-task.Tokenization@0
+  displayName: 'Tokenization: Transform file parameters.json'
+  inputs:
+    SourcePath: '${{ parameters.ArmTemplateFolder }}'
+    TargetFileNames: parameters.json
+
+- task: AzureResourceGroupDeployment@2
+  displayName: 'Azure Deployment:Create Or Update Resource Group action on ${{ parameters.ResourceGroup }}'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    resourceGroupName: '${{ parameters.ResourceGroup }}'
+    location: '${{ parameters.Location }}'
+    csmFile: '${{ parameters.ArmTemplateFolder }}/template.json'
+    csmParametersFile: '${{ parameters.ArmTemplateFolder }}/parameters.json'
+    deploymentOutputs: '$(ArmOutputVariableName)'
+
+- task: DeleteFiles@1
+  displayName: 'Delete tokenised parameters.json file'
+  inputs:
+    SourceFolder: '${{ parameters.ArmTemplateFolder }}'
+    Contents: parameters.json
+  condition: always()

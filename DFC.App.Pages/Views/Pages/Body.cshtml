@@ -1,0 +1,11 @@
+﻿@model BodyViewModel
+
+
+@if (Model.Content != null)
+{
+    <div class="govuk-width-container">
+        <div class="govuk-grid-row">
+            @Html.Raw(Model.Content)
+        </div>
+    </div>
+}

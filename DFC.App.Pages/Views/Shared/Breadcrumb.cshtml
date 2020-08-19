@@ -1,0 +1,24 @@
+﻿@model BreadcrumbViewModel
+
+<div class="govuk-width-container">
+    <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+            @if (Model.Breadcrumbs != null && Model.Breadcrumbs.Any())
+            {
+                @foreach (var breadcrumb in Model.Breadcrumbs)
+                {
+                    if (breadcrumb.AddHyperlink)
+                    {
+                        <li class="govuk-breadcrumbs__list-item">
+                            <a name="BreadbrumbLink" class="govuk-breadcrumbs__link" href="@breadcrumb.Route">@breadcrumb.Title</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="govuk-breadcrumbs__list-item" aria-current="page">@breadcrumb.Title</li>
+                    }
+                }
+            }
+        </ol>
+    </div>
+</div>
