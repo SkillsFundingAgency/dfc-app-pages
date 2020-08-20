@@ -29,8 +29,7 @@
             "defaultValue": ""
         },
         "nonASETier": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "CosmosDbResourceGroup": {
             "type": "string"
