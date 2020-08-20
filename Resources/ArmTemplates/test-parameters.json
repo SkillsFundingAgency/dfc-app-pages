@@ -20,6 +20,9 @@
         "apimContentApiKey": {
             "value": "not-a-real-key"
         },
+        "nonASETier": {
+            "value": "Standard"
+        },
         "Environment": {
             "value": "FOO"
         },

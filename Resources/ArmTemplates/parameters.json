@@ -17,6 +17,9 @@
         "aspTier": {
             "value": "__aspTier__"
         },
+        "nonASETier": {
+            "value": "__nonASETier__"
+        },
         "cosmosDBName": {
             "value": "__appSharedCosmosDBName__"
         },
