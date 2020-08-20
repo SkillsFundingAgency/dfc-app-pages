@@ -14,11 +14,11 @@
         "aseResourceGroup": {
             "value": "__aseResourceGroup__"
         },
+        "aspInstances": {
+            "value": __aspInstances__
+        },
         "aspTier": {
             "value": "__aspTier__"
-        },
-        "nonASETier": {
-            "value": "__nonASETier__"
         },
         "aspSize": {
             "value": "__aspSize__"

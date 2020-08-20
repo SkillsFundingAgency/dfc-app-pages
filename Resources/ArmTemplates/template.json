@@ -17,18 +17,12 @@
             "defaultValue": ""
         },
         "aspInstances": {
-            "type": "int",
-            "defaultValue": 2
+            "type": "int"
         },
         "aspSize": {
-            "type": "string",
-            "defaultValue": "2"
+            "type": "string"
         },
         "aspTier": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "nonASETier": {
             "type": "string"
         },
         "CosmosDbResourceGroup": {
@@ -169,7 +163,7 @@
                         "value": "[parameters('aspInstances')]"
                     },
                     "nonASETier": {
-                        "value": "[parameters('nonASETier')]"
+                        "value": "[parameters('aspTier')]"
                     }
                 }
             }

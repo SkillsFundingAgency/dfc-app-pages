@@ -27,3 +27,9 @@ variables:
   value: $(ApimProxyAddress)/composite-ui-appRegistry/pages/
 - name: SummaryEndpoint
   value: content/getcontent/api/execute/page
+- name: aspTier
+  value: Standard
+- name: aspInstances
+  value: 3
+- name: aspSize
+  value: 2
