@@ -27,3 +27,5 @@ variables:
   value: $(ApimProxyAddress)/composite-ui-appRegistry/pages/
 - name: SummaryEndpoint
   value: content/getcontent/api/execute/page
+- name: nonASETier
+  value: Standard
