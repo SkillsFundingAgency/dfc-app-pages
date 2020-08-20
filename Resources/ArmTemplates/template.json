@@ -28,6 +28,10 @@
             "type": "string",
             "defaultValue": ""
         },
+        "nonASETier": {
+            "type": "string",
+            "defaultValue": ""
+        },
         "CosmosDbResourceGroup": {
             "type": "string"
         },
@@ -166,7 +170,7 @@
                         "value": "[parameters('aspInstances')]"
                     },
                     "nonASETier": {
-                        "value": "[parameters('aspTier')]"
+                        "value": "[parameters('nonASETier')]"
                     }
                 }
             }
