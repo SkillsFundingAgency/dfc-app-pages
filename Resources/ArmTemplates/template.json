@@ -21,8 +21,8 @@
             "defaultValue": 2
         },
         "aspSize": {
-            "type": "int",
-            "defaultValue": 2
+            "type": "string",
+            "defaultValue": "2"
         },
         "aspTier": {
             "type": "string",
