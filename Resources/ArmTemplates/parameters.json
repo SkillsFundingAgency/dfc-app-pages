@@ -20,6 +20,9 @@
         "nonASETier": {
             "value": "__nonASETier__"
         },
+        "aspSize": {
+            "value": "__aspSize__"
+        },
         "cosmosDBName": {
             "value": "__appSharedCosmosDBName__"
         },

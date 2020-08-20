@@ -22,7 +22,7 @@
         },
         "aspSize": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": 2
         },
         "aspTier": {
             "type": "string",

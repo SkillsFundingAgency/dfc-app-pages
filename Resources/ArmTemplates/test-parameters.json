@@ -23,6 +23,9 @@
         "nonASETier": {
             "value": "Standard"
         },
+        "aspSize": {
+            "value": 2
+        },
         "Environment": {
             "value": "FOO"
         },
