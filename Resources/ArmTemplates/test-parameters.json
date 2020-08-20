@@ -24,7 +24,7 @@
             "value": "Standard"
         },
         "aspSize": {
-            "value": 2
+            "value": "2"
         },
         "Environment": {
             "value": "FOO"
