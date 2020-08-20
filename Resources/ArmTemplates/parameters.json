@@ -9,7 +9,7 @@
             "value": "__appSharedStorageAccountName__"
         },
         "aseHostingEnvironmentName": {
-            "value": "__aseHostingEnvironmentName__"
+            "value": "__AseServiceName__"
         },
         "aseResourceGroup": {
             "value": "__aseResourceGroup__"
