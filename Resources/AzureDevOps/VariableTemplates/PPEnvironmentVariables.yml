@@ -32,4 +32,4 @@ variables:
 - name: aspInstances
   value: 3
 - name: aspSize
-  value: 2
+  value: 1
