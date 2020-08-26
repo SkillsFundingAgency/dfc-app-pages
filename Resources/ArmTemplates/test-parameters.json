@@ -53,7 +53,7 @@
         "enableAlerts": {
             "value": false
         },
-        "eventGridSubscriptionModelEndpoint": {
+        "SubscriptionSettingsEndpoint": {
             "value": "http://www.food.co.uk"
         },
         "apimCompositeApiKey": {
@@ -68,10 +68,10 @@
         "EventGridPublishClientOptionsApiEndpoint": {
             "value": "a url"
         },
-        "EventGridSubscriptionModelFilterIncludeEventTypes3": {
+        "SubscriptionSettingsFilterIncludeEventTypes3": {
             "value": "value"
         },
-        "EventGridSubscriptionModelFilterIncludeEventTypes4": {
+        "SubscriptionSettingsFilterIncludeEventTypes4": {
             "value": "anothervalue"
         },
         "ApplicationName": {
