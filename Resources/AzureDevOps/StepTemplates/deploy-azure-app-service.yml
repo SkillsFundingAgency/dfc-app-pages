@@ -48,3 +48,13 @@ steps:
     WebAppName: '${{ parameters.WebAppName }}'
     ResourceGroupName: '${{ parameters.ResourceGroup }}'
     SourceSlot: staging
+
+- task: AzureAppServiceManage@0
+  displayName: 'Stop Azure App Service Slots: ${{ parameters.WebAppName }}'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    Action: 'Stop Azure App Service'
+    WebAppName: '${{ parameters.WebAppName }}'
+    SpecifySlotOrASE: true
+    ResourceGroupName: '${{ parameters.ResourceGroup }}'
+    Slot: staging
