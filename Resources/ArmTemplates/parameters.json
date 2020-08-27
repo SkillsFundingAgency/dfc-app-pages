@@ -62,8 +62,8 @@
         "enableAlerts": {
             "value": __EnableAzureMonitorAlerting__
         },
-        "SubscriptionSettingsEndpoint": {
-            "value": "__SubscriptionSettingsEndpoint__"
+        "eventGridSubscriptionModelEndpoint": {
+            "value": "__eventGridSubscriptionModelEndpoint__"
         },
         "apimCompositeApiKey": {
             "value": "__apimCompositeKey__"
@@ -77,11 +77,11 @@
         "EventGridPublishClientOptionsApiEndpoint": {
             "value": "__EventGridPublishClientOptionsApiEndpoint__"
         },
-        "SubscriptionSettingsFilterIncludeEventTypes3": {
-            "value": "__SubscriptionSettingsFilterIncludeEventTypes3__"
+        "EventGridSubscriptionModelFilterIncludeEventTypes3": {
+            "value": "__EventGridSubscriptionModelFilterIncludeEventTypes3__"
         },
-        "SubscriptionSettingsFilterIncludeEventTypes4": {
-            "value": "__SubscriptionSettingsFilterIncludeEventTypes4__"
+        "EventGridSubscriptionModelFilterIncludeEventTypes4": {
+            "value": "__EventGridSubscriptionModelFilterIncludeEventTypes4__"
         },
         "ApplicationName": {
             "value": "__ApplicationName__"
