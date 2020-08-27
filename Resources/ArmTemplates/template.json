@@ -281,7 +281,7 @@
                             },
                             {
                                 "name": "SubscriptionSettings__SubscriptionServiceEndpoint",
-                                "value": "[concat(parameters('apimProxyAddress'),'/content/Subscription/api/Execute/')]"
+                                "value": "[concat(parameters('apimProxyAddress'),'/content/Subscription/')]"
                             },
                             {
                                 "name": "SubscriptionSettings__ApiKey",
