@@ -44,22 +44,6 @@ jobs:
             AppSharedResourceGroup: '${{ parameters.AppSharedResourceGroup }}'
             appSharedCosmosDBName: '${{ parameters.appSharedCosmosDBName }}'
 
-- deployment: DeployRegistration
-  displayName: "Deploy page registration"
-  environment: ${{ parameters.EnvironmentName }}
-  strategy:
-    runOnce:
-      deploy:
-        steps:
-        - template: ../StepTemplates/deploy-page-registration.yml
-          parameters: 
-            AzureSubscription: '${{ parameters.AzureSubscription }}'
-            PageRegistrationPath: '${{ parameters.PageRegistrationPath }}'
-            PageRegistrationFile: '${{ parameters.PageRegistrationFile }}'
-            PathRegistrationApiUrl: '${{ parameters.PathRegistrationApiUrl }}'
-            RegionRegistrationApiUrl: '${{ parameters.RegionRegistrationApiUrl }}'
-            ApimCompositeKey: '${{ parameters.ApimCompositeKey }}'
-
 - deployment: DeployApplication
   displayName: "Deploy Application"
   environment: ${{ parameters.EnvironmentName }}
@@ -76,3 +60,21 @@ jobs:
             DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
             PackageFile: '${{ parameters.PackageFile }}'
             ResourceGroup: '${{ parameters.ResourceGroup }}'
+
+- deployment: DeployRegistration
+  displayName: "Deploy page registration"
+  environment: ${{ parameters.EnvironmentName }}
+  dependsOn:
+  - DeployApplication
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - template: ../StepTemplates/deploy-page-registration.yml
+          parameters: 
+            AzureSubscription: '${{ parameters.AzureSubscription }}'
+            PageRegistrationPath: '${{ parameters.PageRegistrationPath }}'
+            PageRegistrationFile: '${{ parameters.PageRegistrationFile }}'
+            PathRegistrationApiUrl: '${{ parameters.PathRegistrationApiUrl }}'
+            RegionRegistrationApiUrl: '${{ parameters.RegionRegistrationApiUrl }}'
+            ApimCompositeKey: '${{ parameters.ApimCompositeKey }}'

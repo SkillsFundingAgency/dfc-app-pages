@@ -41,6 +41,12 @@
         "HealthCheckRequired": false,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/bodyfooter",
         "IsHealthy": true
+      },
+      {
+        "PageRegion": 8,
+        "HealthCheckRequired": false,
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/herobanner",
+        "IsHealthy": true
       }
     ]
   }

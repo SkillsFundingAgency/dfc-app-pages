@@ -1,4 +1,5 @@
-﻿using DFC.App.Pages.Data.Contracts;
+﻿using DFC.App.Pages.Data.Common;
+using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Enums;
 using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
@@ -126,6 +127,11 @@ namespace DFC.App.Pages.Services.CacheContentService
 
             var apiDataContentItemModel = await cmsApiService.GetContentItemAsync<PagesApiContentItemModel>(url).ConfigureAwait(false);
 
+            if (apiDataContentItemModel == null)
+            {
+                return HttpStatusCode.NoContent;
+            }
+
             foreach (var contentId in contentIds)
             {
                 var contentPageModel = await contentPageService.GetByIdAsync(contentId).ConfigureAwait(false);
@@ -136,11 +142,23 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                     if (contentItemModel != null)
                     {
-                        mapper.Map(apiDataContentItemModel, contentItemModel);
+                        if (contentItemModel.ContentType != null && contentItemModel.ContentType.Equals(Constants.ContentTypePageLocation, StringComparison.OrdinalIgnoreCase))
+                        {
+                            contentItemModel.BreadcrumbLinkSegment = apiDataContentItemModel.Title;
+                            contentItemModel.BreadcrumbText = apiDataContentItemModel.BreadcrumbText;
+                        }
+                        else
+                        {
+                            mapper.Map(apiDataContentItemModel, contentItemModel);
+                        }
 
                         contentItemModel.LastCached = DateTime.UtcNow;
 
+                        var existingContentPageModel = await contentPageService.GetByIdAsync(contentId).ConfigureAwait(false);
+
                         await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
+
+                        await eventGridService.CompareAndSendEventAsync(existingContentPageModel, contentPageModel).ConfigureAwait(false);
                     }
                 }
             }

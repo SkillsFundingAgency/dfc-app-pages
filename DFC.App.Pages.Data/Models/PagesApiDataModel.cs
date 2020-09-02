@@ -44,6 +44,8 @@ namespace DFC.App.Pages.Data.Models
 
         public string? Keywords { get; set; }
 
+        public string? Herobanner { get; set; }
+
         [JsonProperty("_links")]
         public JObject? Links { get; set; }
 

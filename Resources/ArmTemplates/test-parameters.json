@@ -20,6 +20,15 @@
         "apimContentApiKey": {
             "value": "not-a-real-key"
         },
+        "aspSize": {
+            "value": "2"
+        },
+        "aspTier": {
+            "value": "Standard"
+        },
+        "aspInstances": {
+            "value": 2
+        },
         "Environment": {
             "value": "FOO"
         },

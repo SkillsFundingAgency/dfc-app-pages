@@ -109,7 +109,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             return model;
         }
 
-        protected ContentPageModel BuildValidContentPageModel()
+        protected ContentPageModel BuildValidContentPageModel(string? contentType = null)
         {
             var model = new ContentPageModel()
             {
@@ -123,7 +123,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
                 ContentItems = new List<ContentItemModel>
                 {
                     BuildValidContentItemModel(ContentItemIdForCreate),
-                    BuildValidContentItemModel(ContentItemIdForUpdate),
+                    BuildValidContentItemModel(ContentItemIdForUpdate, contentType),
                     BuildValidContentItemModel(ContentItemIdForDelete),
                 },
                 LastReviewed = DateTime.UtcNow,
@@ -132,12 +132,13 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             return model;
         }
 
-        protected ContentItemModel BuildValidContentItemModel(Guid contentItemId)
+        protected ContentItemModel BuildValidContentItemModel(Guid contentItemId, string? contentType = null)
         {
             var model = new ContentItemModel()
             {
                 ItemId = contentItemId,
                 LastReviewed = DateTime.Now,
+                ContentType = contentType,
             };
 
             return model;
