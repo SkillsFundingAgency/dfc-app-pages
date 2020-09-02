@@ -4,6 +4,7 @@ using DFC.App.Pages.Data.Common;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models.Api;
 using DFC.App.Pages.ViewModels;
+using Microsoft.AspNetCore.Html;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -14,6 +15,9 @@ namespace DFC.App.Pages.AutoMapperProfiles
     {
         public ContentPageModelProfile()
         {
+            CreateMap<ContentPageModel, HeroBannerViewModel>()
+                .ForMember(d => d.Content, s => s.MapFrom(a => new HtmlString(a.HeroBanner)));
+
             CreateMap<ContentPageModel, BodyViewModel>()
                 .ForMember(d => d.Content, opt => opt.ConvertUsing(new MarkupContentConverter(), a => a.ContentItems.Where(w => !w.ContentType!.Equals(Constants.ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase)).ToList()));
 
@@ -23,7 +27,8 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.HtmlHead, s => s.MapFrom(a => a))
                 .ForMember(d => d.Breadcrumb, s => s.Ignore())
                 .ForMember(d => d.Content, opt => opt.ConvertUsing(new MarkupContentConverter(), a => a.ContentItems.Where(w => !w.ContentType!.Equals(Constants.ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase)).ToList()))
-                .ForMember(d => d.BodyViewModel, s => s.MapFrom(a => a));
+                .ForMember(d => d.BodyViewModel, s => s.MapFrom(a => a))
+                .ForMember(d => d.HeroBannerViewModel, s => s.MapFrom(a => a));
 
             CreateMap<ContentPageModel, HtmlHeadViewModel>()
                 .ForMember(d => d.CanonicalUrl, s => s.Ignore())

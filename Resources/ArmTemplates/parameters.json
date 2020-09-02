@@ -9,13 +9,19 @@
             "value": "__appSharedStorageAccountName__"
         },
         "aseHostingEnvironmentName": {
-            "value": "__aseHostingEnvironmentName__"
+            "value": "__AseServiceName__"
         },
         "aseResourceGroup": {
             "value": "__aseResourceGroup__"
         },
+        "aspInstances": {
+            "value": __aspInstances__
+        },
         "aspTier": {
             "value": "__aspTier__"
+        },
+        "aspSize": {
+            "value": "__aspSize__"
         },
         "cosmosDBName": {
             "value": "__appSharedCosmosDBName__"

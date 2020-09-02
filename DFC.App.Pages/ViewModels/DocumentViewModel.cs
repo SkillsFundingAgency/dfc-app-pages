@@ -53,6 +53,8 @@ namespace DFC.App.Pages.ViewModels
 
         public IList<string>? Redirects { get; set; }
 
+        public HeroBannerViewModel? HeroBannerViewModel { get; set; }
+
         public BodyViewModel? BodyViewModel { get; set; }
     }
 }
