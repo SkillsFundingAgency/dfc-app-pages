@@ -189,9 +189,21 @@ namespace DFC.App.Pages.Controllers
         [Route("pages/{location1}/{location2}/{location3}/herobanner")]
         [Route("pages/{location1}/{location2}/{location3}/{location4}/herobanner")]
         [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/herobanner")]
-        public IActionResult HeroBanner(PageRequestModel pageRequestModel)
+        public async Task<IActionResult> HeroBanner(PageRequestModel pageRequestModel)
         {
-            return NoContent();
+            var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
+            var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
+
+            if (contentPageModel == null)
+            {
+                return NoContent();
+            }
+
+            var viewModel = mapper.Map<HeroBannerViewModel>(contentPageModel);
+
+            logger.LogInformation($"{nameof(Breadcrumb)} has returned content for: /{location}/{article}");
+
+            return this.NegotiateContentResult(viewModel);
         }
 
         [HttpGet]
@@ -239,7 +251,7 @@ namespace DFC.App.Pages.Controllers
         [Route("pages/sidebarright")]
         [Route("pages/{location1}/sidebarright")]
         [Route("pages/{location1}/{location2}/sidebarright")]
-        [Route("pages/{location1}/{location2}/{location3}/bosidebarrightdy")]
+        [Route("pages/{location1}/{location2}/{location3}/sidebarright")]
         [Route("pages/{location1}/{location2}/{location3}/{location4}/sidebarright")]
         [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/sidebarright")]
         public IActionResult SidebarRight(PageRequestModel pageRequestModel)
