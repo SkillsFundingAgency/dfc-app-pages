@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FakeItEasy;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -14,7 +16,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             const bool expectedResult = true;
             var contentItemId = Guid.NewGuid();
 
-            var contentCacheService = new ContentCacheService();
+            var contentCacheService = new ContentCacheService(A.Fake<ILogger<ContentCacheService>>());
             contentCacheService.AddOrReplace(Guid.NewGuid(), new List<Guid> { Guid.NewGuid(), contentItemId, Guid.NewGuid(), });
 
             // act
@@ -31,7 +33,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             const bool expectedResult = false;
             var contentItemId = Guid.NewGuid();
 
-            var contentCacheService = new ContentCacheService();
+            var contentCacheService = new ContentCacheService(A.Fake<ILogger<ContentCacheService>>());
             contentCacheService.AddOrReplace(Guid.NewGuid(), new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), });
 
             // act
@@ -45,7 +47,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
         public void ContentCacheServiceClearNoReturns()
         {
             // arrange
-            var contentCacheService = new ContentCacheService();
+            var contentCacheService = new ContentCacheService(A.Fake<ILogger<ContentCacheService>>());
 
             // act
             contentCacheService.Clear();
@@ -63,7 +65,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             var contentItemId = Guid.NewGuid();
             List<Guid> expectedResult = new List<Guid> { contentId1, contentId2 };
 
-            var contentCacheService = new ContentCacheService();
+            var contentCacheService = new ContentCacheService(A.Fake<ILogger<ContentCacheService>>());
             contentCacheService.AddOrReplace(contentId1, new List<Guid> { Guid.NewGuid(), contentItemId, Guid.NewGuid(), });
             contentCacheService.AddOrReplace(contentId2, new List<Guid> { Guid.NewGuid(), contentItemId, Guid.NewGuid(), });
 
@@ -83,7 +85,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             var contentItemId = Guid.NewGuid();
             var expectedResult = new List<Guid>();
 
-            var contentCacheService = new ContentCacheService();
+            var contentCacheService = new ContentCacheService(A.Fake<ILogger<ContentCacheService>>());
             contentCacheService.AddOrReplace(contentId1, new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), });
             contentCacheService.AddOrReplace(contentId2, new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), });
 
@@ -102,7 +104,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             var contentId2 = Guid.NewGuid();
             var contentItemId = Guid.NewGuid();
 
-            var contentCacheService = new ContentCacheService();
+            var contentCacheService = new ContentCacheService(A.Fake<ILogger<ContentCacheService>>());
             contentCacheService.AddOrReplace(contentId1, new List<Guid> { Guid.NewGuid(), contentItemId, Guid.NewGuid(), });
             contentCacheService.AddOrReplace(contentId2, new List<Guid> { Guid.NewGuid(), contentItemId, Guid.NewGuid(), });
 
@@ -121,7 +123,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             var contentId2 = Guid.NewGuid();
             var contentItemId = Guid.NewGuid();
 
-            var contentCacheService = new ContentCacheService();
+            var contentCacheService = new ContentCacheService(A.Fake<ILogger<ContentCacheService>>());
             contentCacheService.AddOrReplace(contentId1, new List<Guid> { Guid.NewGuid(), contentItemId, Guid.NewGuid(), });
             contentCacheService.AddOrReplace(contentId2, new List<Guid> { Guid.NewGuid(), contentItemId, Guid.NewGuid(), });
 
@@ -139,7 +141,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             var contentId = Guid.NewGuid();
             var contentItemId = Guid.NewGuid();
 
-            var contentCacheService = new ContentCacheService();
+            var contentCacheService = new ContentCacheService(A.Fake<ILogger<ContentCacheService>>());
 
             // act
             contentCacheService.AddOrReplace(contentId, new List<Guid> { Guid.NewGuid(), contentItemId, Guid.NewGuid(), });
@@ -155,7 +157,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             var contentId = Guid.NewGuid();
             var contentItemId = Guid.NewGuid();
 
-            var contentCacheService = new ContentCacheService();
+            var contentCacheService = new ContentCacheService(A.Fake<ILogger<ContentCacheService>>());
             contentCacheService.AddOrReplace(contentId, new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), });
 
             // act
