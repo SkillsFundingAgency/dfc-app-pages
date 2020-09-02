@@ -1,0 +1,15 @@
+﻿@model HeroBannerViewModel
+
+
+@if (!string.IsNullOrWhiteSpace(Model.Content?.Value))
+{
+    <header class="job-profile-hero">
+        <div class="govuk-width-container">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    @Html.Raw(Model.Content)
+                </div>
+            </div>
+        </div>
+    </header>
+}

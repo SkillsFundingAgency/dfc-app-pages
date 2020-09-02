@@ -154,6 +154,13 @@
             </dl>
         </div>
 
+        @if (!string.IsNullOrWhiteSpace(Model.HeroBannerViewModel?.Content?.Value))
+        {
+            <hr />
+
+            <partial name="HeroBanner" model=@Model.HeroBannerViewModel />
+        }
+
         <hr />
 
         <partial name="Body" model=@Model.BodyViewModel />
