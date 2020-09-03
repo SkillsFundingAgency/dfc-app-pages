@@ -108,7 +108,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             {
                 await eventGridService.CompareAndSendEventAsync(existingContentPageModel, contentPageModel).ConfigureAwait(false);
 
-                var contentItemIds = (from a in contentPageModel.ContentItems select a.ItemId!.Value).ToList();
+                var contentItemIds = contentPageModel.AllContentItemIds;
 
                 contentCacheService.AddOrReplace(contentId, contentItemIds);
             }
