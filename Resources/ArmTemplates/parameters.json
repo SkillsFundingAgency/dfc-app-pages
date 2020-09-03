@@ -32,12 +32,6 @@
         "CosmosDbResourceGroup": {
             "value": "__appSharedResourceGroup__"
         },
-        "apimContentApiKey": {
-            "value": "__apimContentKey__"
-        },
-        "apimProxyAddress": {
-            "value": "__apimProxyAddress__"
-        },
         "environment": {
             "value": "__ReleaseEnvironmentName__",
             "metadata": {
@@ -94,6 +88,12 @@
         },
         "SummaryEndpoint": {
             "value": "__SummaryEndpoint__"
+        },
+        "contentUrl": {
+            "value": "__contentUrl__"
+        },
+        "subscriptionUrl": {
+            "value": "__subscriptionUrl__"
         }
     }
 }

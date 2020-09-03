@@ -34,12 +34,6 @@
         "cosmosDbKey": {
             "type": "securestring"
         },
-        "apimProxyAddress": {
-            "type": "string"
-        },
-        "apimContentApiKey": {
-            "type": "securestring"
-        },
         "environment": {
             "type": "string"
         },
@@ -100,6 +94,12 @@
             "type": "string"
         },
         "SummaryEndpoint": {
+            "type": "string"
+        },
+        "contentUrl": {
+            "type": "string"
+        },
+        "subscriptionUrl": {
             "type": "string"
         }
     },
@@ -236,12 +236,8 @@
                                 "value": "Information"
                             },
                             {
-                                "name": "CmsApiClientOptions__ApiKey",
-                                "value": "[parameters('apimContentApiKey')]"
-                            },
-                            {
                                 "name": "CmsApiClientOptions__BaseAddress",
-                                "value": "[parameters('apimProxyAddress')]"
+                                "value": "[parameters('contentUrl')]"
                             },
                             {
                                 "name": "CmsApiClientOptions__SummaryEndpoint",
@@ -281,11 +277,7 @@
                             },
                             {
                                 "name": "EventGridSubscriptionClientOptions__BaseAddress",
-                                "value": "[concat(parameters('apimProxyAddress'),'/content/Subscription/')]"
-                            },
-                            {
-                                "name": "EventGridSubscriptionClientOptions__ApiKey",
-                                "value": "[parameters('apimCompositeApiKey')]"
+                                "value": "[parameters('subscriptionUrl')]"
                             },
                             {
                                 "name": "EventGridPublishClientOptions__TopicKey",

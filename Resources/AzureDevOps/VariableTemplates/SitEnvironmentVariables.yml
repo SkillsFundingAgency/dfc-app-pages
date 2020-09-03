@@ -33,3 +33,7 @@ variables:
   value: 2
 - name: aspSize
   value: 2
+- name: contentUrl
+  value: https://dfc-sit-api-cont-fa.azurewebsites.net/api/execute
+- name: subscriptionUrl
+  value: https://dfc-sit-api-eventgridsubscriptions-fa.azurewebsites.net
