@@ -14,12 +14,6 @@
         "cosmosDbKey": {
             "value": "not-a-real-key"
         },
-        "apimProxyAddress": {
-            "value": "https://foo.api.nationalcareersservice.org.uk"
-        },
-        "apimContentApiKey": {
-            "value": "not-a-real-key"
-        },
         "aspSize": {
             "value": "2"
         },
@@ -84,6 +78,12 @@
             "value": "anothervalue"
         },
         "SummaryEndpoint": {
+            "value": "anothervalue"
+        },
+        "contentUrl": {
+            "value": "anothervalue"
+        },
+        "subscriptionUrl": {
             "value": "anothervalue"
         }
     }

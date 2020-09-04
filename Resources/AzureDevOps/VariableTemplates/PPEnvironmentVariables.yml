@@ -33,3 +33,7 @@ variables:
   value: 3
 - name: aspSize
   value: 1
+- name: contentUrl
+  value: https://dfc-pp-api-cont-fa.ase-01.dfc.preprodazure.sfa.bis.gov.uk/api/execute
+- name: subscriptionUrl
+  value: https://dfc-pp-api-eventgridsubscriptions-fa.ase-01.dfc.preprodazure.sfa.bis.gov.uk
