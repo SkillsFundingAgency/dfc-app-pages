@@ -149,7 +149,10 @@ namespace DFC.App.Pages.Services.CacheContentService
                         }
                         else
                         {
+                            //Ordinal gets wiped out, but can't ignore in the mapper as ordinal never applied
+                            var contentItemOrdinal = contentItemModel.Ordinal;
                             mapper.Map(apiDataContentItemModel, contentItemModel);
+                            contentItemModel.Ordinal = contentItemOrdinal;
                         }
 
                         contentItemModel.LastCached = DateTime.UtcNow;
