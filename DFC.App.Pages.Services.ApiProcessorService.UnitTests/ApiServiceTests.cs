@@ -1,4 +1,4 @@
-﻿using DFC.App.Pages.Data.Models.SubscriptionModels;
+﻿using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Services.ApiProcessorService.UnitTests.FakeHttpHandlers;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
@@ -236,7 +236,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
             // arrange
             const HttpStatusCode expectedResult = HttpStatusCode.OK;
             var httpResponse = new HttpResponseMessage { StatusCode = expectedResult };
-            var fakeEventGridSubscriptionModel = A.Fake<EventGridSubscriptionModel>();
+            var fakePagesApiDataModel = A.Fake<PagesApiDataModel>();
             var fakeHttpRequestSender = A.Fake<IFakeHttpRequestSender>();
             var fakeHttpMessageHandler = new FakeHttpMessageHandler(fakeHttpRequestSender);
             var httpClient = new HttpClient(fakeHttpMessageHandler);
@@ -246,7 +246,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Returns(httpResponse);
 
             // act
-            var result = await apiService.PostAsync(httpClient, url, fakeEventGridSubscriptionModel).ConfigureAwait(false);
+            var result = await apiService.PostAsync(httpClient, url, fakePagesApiDataModel).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).MustHaveHappenedOnceExactly();
@@ -263,7 +263,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
             // arrange
             const HttpStatusCode expectedResult = HttpStatusCode.NotFound;
             var httpResponse = new HttpResponseMessage { StatusCode = expectedResult };
-            var fakeEventGridSubscriptionModel = A.Fake<EventGridSubscriptionModel>();
+            var fakePagesApiDataModel = A.Fake<PagesApiDataModel>();
             var fakeHttpRequestSender = A.Fake<IFakeHttpRequestSender>();
             var fakeHttpMessageHandler = new FakeHttpMessageHandler(fakeHttpRequestSender);
             var httpClient = new HttpClient(fakeHttpMessageHandler);
@@ -273,7 +273,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Returns(httpResponse);
 
             // act
-            var result = await apiService.PostAsync(httpClient, url, fakeEventGridSubscriptionModel).ConfigureAwait(false);
+            var result = await apiService.PostAsync(httpClient, url, fakePagesApiDataModel).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).MustHaveHappenedOnceExactly();
@@ -288,7 +288,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
         public async Task ApiServicePostWithModelReturnsExceptionResult()
         {
             // arrange
-            var fakeEventGridSubscriptionModel = A.Fake<EventGridSubscriptionModel>();
+            var fakePagesApiDataModel = A.Fake<PagesApiDataModel>();
             var fakeHttpRequestSender = A.Fake<IFakeHttpRequestSender>();
             var fakeHttpMessageHandler = new FakeHttpMessageHandler(fakeHttpRequestSender);
             var httpClient = new HttpClient(fakeHttpMessageHandler);
@@ -298,7 +298,7 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).Throws(new ArgumentException("fake exception"));
 
             // act
-            var result = await apiService.PostAsync(httpClient, url, fakeEventGridSubscriptionModel).ConfigureAwait(false);
+            var result = await apiService.PostAsync(httpClient, url, fakePagesApiDataModel).ConfigureAwait(false);
 
             // assert
             A.CallTo(() => fakeHttpRequestSender.Send(A<HttpRequestMessage>.Ignored)).MustHaveHappenedOnceExactly();
@@ -312,12 +312,12 @@ namespace DFC.App.Pages.Services.ApiProcessorService.UnitTests
         public async Task ApiServicePostWithModelReturnsExceptionForNoHttpClient()
         {
             // arrange
-            var fakeEventGridSubscriptionModel = A.Fake<EventGridSubscriptionModel>();
+            var fakePagesApiDataModel = A.Fake<PagesApiDataModel>();
             var apiService = new ApiService(logger);
             var url = new Uri("https://www.somewhere.com", UriKind.Absolute);
 
             // act
-            var exceptionResult = await Assert.ThrowsAsync<ArgumentNullException>(async () => await apiService.PostAsync(null, url, fakeEventGridSubscriptionModel).ConfigureAwait(false)).ConfigureAwait(false);
+            var exceptionResult = await Assert.ThrowsAsync<ArgumentNullException>(async () => await apiService.PostAsync(null, url, fakePagesApiDataModel).ConfigureAwait(false)).ConfigureAwait(false);
 
             // assert
             Assert.Equal("Value cannot be null. (Parameter 'httpClient')", exceptionResult.Message);
