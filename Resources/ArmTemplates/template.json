@@ -63,7 +63,7 @@
                 "description": "Enable or disable alerting"
             }
         },
-        "eventGridSubscriptionModelEndpoint": {
+        "SubscriptionSettingsEndpoint": {
             "type": "string"
         },
         "apimCompositeApiKey": {
@@ -78,10 +78,10 @@
         "EventGridPublishClientOptionsApiEndpoint": {
             "type": "string"
         },
-        "EventGridSubscriptionModelFilterIncludeEventTypes3": {
+        "SubscriptionSettingsFilterIncludeEventTypes3": {
             "type": "string"
         },
-        "EventGridSubscriptionModelFilterIncludeEventTypes4": {
+        "SubscriptionSettingsFilterIncludeEventTypes4": {
             "type": "string"
         },
         "ApplicationName": {
@@ -248,36 +248,36 @@
                                 "value": "[parameters('ApplicationName')]"
                             },
                             {
-                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__0",
+                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__0",
                                 "value": "published"
                             },
                             {
-                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__1",
+                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__1",
                                 "value": "unpublished"
                             },
                             {
-                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__2",
+                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__2",
                                 "value": "deleted"
                             },
                             {
-                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__3",
-                                "value": "[parameters('EventGridSubscriptionModelFilterIncludeEventTypes3')]"
+                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__3",
+                                "value": "[parameters('SubscriptionSettingsFilterIncludeEventTypes3')]"
                             },
                             {
-                                "name": "EventGridSubscriptionModel__Filter__IncludeEventTypes__4",
-                                "value": "[parameters('EventGridSubscriptionModelFilterIncludeEventTypes4')]"
+                                "name": "SubscriptionSettings__Filter__IncludeEventTypes__4",
+                                "value": "[parameters('SubscriptionSettingsFilterIncludeEventTypes4')]"
                             },
                             {
-                                "name": "EventGridSubscriptionModel__Endpoint",
-                                "value": "[concat(parameters('eventGridSubscriptionModelEndpoint'),'/api/webhook/ReceiveEvents')]"
+                                "name": "SubscriptionSettings__Endpoint",
+                                "value": "[concat(parameters('SubscriptionSettingsEndpoint'),'/api/webhook/ReceiveEvents')]"
                             },
 							  {
-                                "name": "EventGridSubscriptionModel__SubscriptionRegistrationDelay",
+                                "name": "SubscriptionSettings__SubscriptionRegistrationDelay",
                                 "value": "00:02:00"
                             },
                             {
-                                "name": "EventGridSubscriptionClientOptions__BaseAddress",
-                                "value": "[parameters('subscriptionUrl')]"
+                                "name": "SubscriptionSettings__SubscriptionServiceEndpoint",
+                                "value": "[concat(parameters('subscriptionUrl'),'/api/Execute')]"
                             },
                             {
                                 "name": "EventGridPublishClientOptions__TopicKey",
@@ -304,19 +304,19 @@
                                 "value": "[parameters('AppRegistryClientOptionsBaseAddress')]"
                             },
                             {
-                                "name": "EventGridSubscriptionModel__Filter__PropertyContainsFilters__0__Key",
+                                "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Key",
                                 "value": "subject"
                             },
                             {
-                                "name": "EventGridSubscriptionModel__Filter__PropertyContainsFilters__0__Values__0",
+                                "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Values__0",
                                 "value": "/content/page/"
                             },
                             {
-                                "name": "EventGridSubscriptionModel__Filter__PropertyContainsFilters__0__Values__1",
+                                "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Values__1",
                                 "value": "/content/pagelocation/"
                             },
                             {
-                                "name": "EventGridSubscriptionModel__Filter__PropertyContainsFilters__0__Values__2",
+                                "name": "SubscriptionSettings__Filter__PropertyContainsFilters__0__Values__2",
                                 "value": "/content/sharedcontent/"
                             }
                         ]
