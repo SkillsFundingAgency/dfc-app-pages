@@ -40,4 +40,4 @@ variables:
 - name: contentUrl
   value: https://dfc-sit-draft-api-cont-fa.azurewebsites.net/api/execute
 - name: subscriptionUrl
-  value: https://dfc-sit-draft-api-eventgridsubscriptions-fa.azurewebsites.net
+  value: https://dfc-sit-api-eventgridsubscriptions-fa.azurewebsites.net
