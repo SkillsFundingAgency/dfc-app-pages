@@ -13,6 +13,7 @@ using DFC.App.Pages.Services.CmsApiProcessorService;
 using DFC.App.Pages.Services.EventProcessorService;
 using DFC.Compui.Cosmos;
 using DFC.Compui.Cosmos.Contracts;
+using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 using DFC.Compui.Telemetry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -85,6 +86,7 @@ namespace DFC.App.Pages
             services.AddSingleton(configuration.GetSection(nameof(EventGridPublishClientOptions)).Get<EventGridPublishClientOptions>() ?? new EventGridPublishClientOptions());
             services.AddSingleton(configuration.GetSection(nameof(AppRegistryClientOptions)).Get<AppRegistryClientOptions>() ?? new AppRegistryClientOptions());
             services.AddHostedServiceTelemetryWrapper();
+            services.AddSubscriptionBackgroundService(configuration);
             services.AddHostedService<CacheReloadBackgroundService>();
 
             const string AppSettingsPolicies = "Policies";
