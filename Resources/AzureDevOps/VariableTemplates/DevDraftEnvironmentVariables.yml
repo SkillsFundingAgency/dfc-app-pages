@@ -7,7 +7,7 @@ variables:
   value: pages-draft
 - name: EnableAzureMonitorAlerting
   value: true
-- name: EventGridSubscriptionModelEndpoint
+- name: SubscriptionSettingsEndpoint
   value: https://dfc-dev-draft-app-pages-as.azurewebsites.net
 - name: pagesAppDatabaseThroughput
   value: 400
@@ -19,9 +19,9 @@ variables:
   value: registration.json
 - name: EventGridPublishClientOptionsApiEndpoint
   value: https://dfc-dev-draft-app-pages-as.azurewebsites.net/api/pages
-- name: EventGridSubscriptionModelFilterIncludeEventTypes3
+- name: SubscriptionSettingsFilterIncludeEventTypes3
   value: draft
-- name: EventGridSubscriptionModelFilterIncludeEventTypes4
+- name: SubscriptionSettingsFilterIncludeEventTypes4
   value: draft-discarded
 - name: ApplicationName
   value: DFC-App-Pages-draft

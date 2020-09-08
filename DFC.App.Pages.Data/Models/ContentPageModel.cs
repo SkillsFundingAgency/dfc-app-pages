@@ -20,7 +20,7 @@ namespace DFC.App.Pages.Data.Models
 
         public new string? Content { get; set; }
 
-        public new string? HeroBanner { get; set; }
+        public string? HeroBanner { get; set; }
 
         public List<ContentItemModel> ContentItems { get; set; } = new List<ContentItemModel>();
 

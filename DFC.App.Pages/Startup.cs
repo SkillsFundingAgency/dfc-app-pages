@@ -2,7 +2,6 @@
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Data.Models.ClientOptions;
-using DFC.App.Pages.Data.Models.SubscriptionModels;
 using DFC.App.Pages.Extensions;
 using DFC.App.Pages.Helpers;
 using DFC.App.Pages.HostedServices;
@@ -12,6 +11,7 @@ using DFC.App.Pages.Services.CacheContentService;
 using DFC.App.Pages.Services.EventProcessorService;
 using DFC.Compui.Cosmos;
 using DFC.Compui.Cosmos.Contracts;
+using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 using DFC.Compui.Telemetry;
 using dfc_cmsapi_pkg_netcore.Extensions;
 using dfc_content_pkg_netcore.CmsApiProcessorService;
@@ -68,10 +68,6 @@ namespace DFC.App.Pages
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var eventGridSubscriptionModel = configuration.GetSection(nameof(EventGridSubscriptionModel)).Get<EventGridSubscriptionModel>() ?? new EventGridSubscriptionModel();
-            eventGridSubscriptionModel.Name = configuration.GetValue("Configuration:ApplicationName", typeof(Startup).Namespace!.Replace(".", "-", System.StringComparison.OrdinalIgnoreCase));
-            eventGridSubscriptionModel.Filter.IncludeEventTypes.RemoveAll(r => string.IsNullOrWhiteSpace(r));
-            services.AddSingleton(eventGridSubscriptionModel);
             var cosmosDbConnectionContentPages = configuration.GetSection(CosmosDbContentPagesConfigAppSettings).Get<CosmosDbConnection>();
             services.AddContentPageServices<ContentPageModel>(cosmosDbConnectionContentPages, env.IsDevelopment());
 
@@ -88,10 +84,10 @@ namespace DFC.App.Pages
             services.AddTransient<IEventGridClientService, EventGridClientService>();
             services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddSingleton(configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
-            services.AddSingleton(configuration.GetSection(nameof(EventGridSubscriptionClientOptions)).Get<EventGridSubscriptionClientOptions>() ?? new EventGridSubscriptionClientOptions());
             services.AddSingleton(configuration.GetSection(nameof(EventGridPublishClientOptions)).Get<EventGridPublishClientOptions>() ?? new EventGridPublishClientOptions());
             services.AddSingleton(configuration.GetSection(nameof(AppRegistryClientOptions)).Get<AppRegistryClientOptions>() ?? new AppRegistryClientOptions());
             services.AddHostedServiceTelemetryWrapper();
+            services.AddSubscriptionBackgroundService(configuration);
             services.AddHostedService<CacheReloadBackgroundService>();
             services.AddHostedService<CreateSubscriptionBackgroundService>();
             services.AddApiServices(configuration);
@@ -103,10 +99,6 @@ namespace DFC.App.Pages
             services
                 .AddPolicies(policyRegistry, nameof(CmsApiClientOptions), policyOptions)
                 .AddHttpClient<ICmsApiService, CmsApiService, CmsApiClientOptions>(configuration, nameof(CmsApiClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
-
-            services
-                .AddPolicies(policyRegistry, nameof(EventGridSubscriptionClientOptions), policyOptions)
-                .AddHttpClient<IEventGridSubscriptionService, EventGridSubscriptionService, EventGridSubscriptionClientOptions>(configuration, nameof(EventGridSubscriptionClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
 
             services
                 .AddPolicies(policyRegistry, nameof(AppRegistryClientOptions), policyOptions)
