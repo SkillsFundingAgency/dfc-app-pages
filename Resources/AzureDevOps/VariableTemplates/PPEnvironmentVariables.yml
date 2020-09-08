@@ -7,7 +7,7 @@ variables:
   value: pages
 - name: EnableAzureMonitorAlerting
   value: true
-- name: EventGridSubscriptionModelEndpoint
+- name: SubscriptionSettingsEndpoint
   value: https://dfc-pp-app-pages-as.ase-01.dfc.preprodazure.sfa.bis.gov.uk
 - name: pagesAppDatabaseThroughput
   value: 400
