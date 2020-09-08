@@ -30,7 +30,7 @@ variables:
 - name: AppRegistryClientOptionsBaseAddress
   value: $(ApimProxyAddress)/composite-ui-appRegistry-draft/pages/
 - name: SummaryEndpoint
-  value: api/execute/page
+  value: /page
 - name: aspTier
   value: Standard
 - name: aspInstances
