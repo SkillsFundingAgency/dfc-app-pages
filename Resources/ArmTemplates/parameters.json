@@ -32,12 +32,6 @@
         "CosmosDbResourceGroup": {
             "value": "__appSharedResourceGroup__"
         },
-        "apimContentApiKey": {
-            "value": "__apimContentKey__"
-        },
-        "apimProxyAddress": {
-            "value": "__apimProxyAddress__"
-        },
         "environment": {
             "value": "__ReleaseEnvironmentName__",
             "metadata": {
@@ -62,8 +56,8 @@
         "enableAlerts": {
             "value": __EnableAzureMonitorAlerting__
         },
-        "eventGridSubscriptionModelEndpoint": {
-            "value": "__eventGridSubscriptionModelEndpoint__"
+        "SubscriptionSettingsEndpoint": {
+            "value": "__SubscriptionSettingsEndpoint__"
         },
         "apimCompositeApiKey": {
             "value": "__apimCompositeKey__"
@@ -77,11 +71,11 @@
         "EventGridPublishClientOptionsApiEndpoint": {
             "value": "__EventGridPublishClientOptionsApiEndpoint__"
         },
-        "EventGridSubscriptionModelFilterIncludeEventTypes3": {
-            "value": "__EventGridSubscriptionModelFilterIncludeEventTypes3__"
+        "SubscriptionSettingsFilterIncludeEventTypes3": {
+            "value": "__SubscriptionSettingsFilterIncludeEventTypes3__"
         },
-        "EventGridSubscriptionModelFilterIncludeEventTypes4": {
-            "value": "__EventGridSubscriptionModelFilterIncludeEventTypes4__"
+        "SubscriptionSettingsFilterIncludeEventTypes4": {
+            "value": "__SubscriptionSettingsFilterIncludeEventTypes4__"
         },
         "ApplicationName": {
             "value": "__ApplicationName__"
@@ -94,6 +88,12 @@
         },
         "SummaryEndpoint": {
             "value": "__SummaryEndpoint__"
+        },
+        "contentUrl": {
+            "value": "__contentUrl__"
+        },
+        "subscriptionUrl": {
+            "value": "__subscriptionUrl__"
         }
     }
 }

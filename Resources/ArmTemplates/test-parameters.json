@@ -14,12 +14,6 @@
         "cosmosDbKey": {
             "value": "not-a-real-key"
         },
-        "apimProxyAddress": {
-            "value": "https://foo.api.nationalcareersservice.org.uk"
-        },
-        "apimContentApiKey": {
-            "value": "not-a-real-key"
-        },
         "aspSize": {
             "value": "2"
         },
@@ -53,7 +47,7 @@
         "enableAlerts": {
             "value": false
         },
-        "eventGridSubscriptionModelEndpoint": {
+        "SubscriptionSettingsEndpoint": {
             "value": "http://www.food.co.uk"
         },
         "apimCompositeApiKey": {
@@ -68,10 +62,10 @@
         "EventGridPublishClientOptionsApiEndpoint": {
             "value": "a url"
         },
-        "EventGridSubscriptionModelFilterIncludeEventTypes3": {
+        "SubscriptionSettingsFilterIncludeEventTypes3": {
             "value": "value"
         },
-        "EventGridSubscriptionModelFilterIncludeEventTypes4": {
+        "SubscriptionSettingsFilterIncludeEventTypes4": {
             "value": "anothervalue"
         },
         "ApplicationName": {
@@ -84,6 +78,12 @@
             "value": "anothervalue"
         },
         "SummaryEndpoint": {
+            "value": "anothervalue"
+        },
+        "contentUrl": {
+            "value": "anothervalue"
+        },
+        "subscriptionUrl": {
             "value": "anothervalue"
         }
     }
