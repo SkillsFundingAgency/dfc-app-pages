@@ -77,8 +77,6 @@ namespace DFC.App.Pages
             services.AddSingleton<IContentCacheService>(sp => new ContentCacheService(sp.GetRequiredService<ILogger<ContentCacheService>>()));
             services.AddTransient<IEventMessageService<ContentPageModel>, EventMessageService<ContentPageModel>>();
             services.AddTransient<ICacheReloadService, CacheReloadService>();
-            //services.AddTransient<IApiService, ApiService>();
-            //services.AddTransient<IApiDataProcessorService, ApiDataProcessorService>();
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddTransient<IEventGridService, EventGridService>();
             services.AddTransient<IEventGridClientService, EventGridClientService>();
@@ -89,7 +87,6 @@ namespace DFC.App.Pages
             services.AddHostedServiceTelemetryWrapper();
             services.AddSubscriptionBackgroundService(configuration);
             services.AddHostedService<CacheReloadBackgroundService>();
-            services.AddHostedService<CreateSubscriptionBackgroundService>();
             services.AddApiServices(configuration);
 
             const string AppSettingsPolicies = "Policies";
