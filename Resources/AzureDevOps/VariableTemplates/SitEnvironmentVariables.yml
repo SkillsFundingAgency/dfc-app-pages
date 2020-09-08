@@ -7,7 +7,7 @@ variables:
   value: pages
 - name: EnableAzureMonitorAlerting
   value: true
-- name: EventGridSubscriptionModelEndpoint
+- name: SubscriptionSettingsEndpoint
   value: https://dfc-sit-app-pages-as.azurewebsites.net
 - name: pagesAppDatabaseThroughput
   value: 400
@@ -26,10 +26,14 @@ variables:
 - name: AppRegistryClientOptionsBaseAddress
   value: $(ApimProxyAddress)/composite-ui-appRegistry/pages/
 - name: SummaryEndpoint
-  value: content/getcontent/api/execute/page
+  value: /page
 - name: aspTier
   value: Standard
 - name: aspInstances
   value: 2
 - name: aspSize
   value: 2
+- name: contentUrl
+  value: https://dfc-sit-api-cont-fa.azurewebsites.net/api/execute
+- name: subscriptionUrl
+  value: https://dfc-sit-api-eventgridsubscriptions-fa.azurewebsites.net
