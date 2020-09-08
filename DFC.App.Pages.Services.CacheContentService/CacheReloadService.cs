@@ -1,5 +1,6 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
+using dfc_content_pkg_netcore.contracts;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -109,7 +110,7 @@ namespace DFC.App.Pages.Services.CacheContentService
         {
             logger.LogInformation("Get summary list");
 
-            var summaryList = await cmsApiService.GetSummaryAsync().ConfigureAwait(false);
+            var summaryList = await cmsApiService.GetSummaryAsync<PagesSummaryItemModel>().ConfigureAwait(false);
 
             logger.LogInformation("Get summary list completed");
 
@@ -145,7 +146,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             {
                 logger.LogInformation($"Get details for {item.Title} - {item.Url}");
 
-                var apiDataModel = await cmsApiService.GetItemAsync(item.Url!).ConfigureAwait(false);
+                var apiDataModel = await cmsApiService.GetItemAsync< PagesApiDataModel>(item.Url!).ConfigureAwait(false);
 
                 if (apiDataModel == null)
                 {

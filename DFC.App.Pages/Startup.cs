@@ -7,14 +7,15 @@ using DFC.App.Pages.Extensions;
 using DFC.App.Pages.Helpers;
 using DFC.App.Pages.HostedServices;
 using DFC.App.Pages.HttpClientPolicies;
-using DFC.App.Pages.Services.ApiProcessorService;
 using DFC.App.Pages.Services.AppRegistryService;
 using DFC.App.Pages.Services.CacheContentService;
-using DFC.App.Pages.Services.CmsApiProcessorService;
 using DFC.App.Pages.Services.EventProcessorService;
 using DFC.Compui.Cosmos;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Compui.Telemetry;
+using dfc_cmsapi_pkg_netcore.Extensions;
+using dfc_content_pkg_netcore.CmsApiProcessorService;
+using dfc_content_pkg_netcore.contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -80,8 +81,8 @@ namespace DFC.App.Pages
             services.AddSingleton<IContentCacheService>(sp => new ContentCacheService(sp.GetRequiredService<ILogger<ContentCacheService>>()));
             services.AddTransient<IEventMessageService<ContentPageModel>, EventMessageService<ContentPageModel>>();
             services.AddTransient<ICacheReloadService, CacheReloadService>();
-            services.AddTransient<IApiService, ApiService>();
-            services.AddTransient<IApiDataProcessorService, ApiDataProcessorService>();
+            //services.AddTransient<IApiService, ApiService>();
+            //services.AddTransient<IApiDataProcessorService, ApiDataProcessorService>();
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddTransient<IEventGridService, EventGridService>();
             services.AddTransient<IEventGridClientService, EventGridClientService>();
@@ -93,6 +94,7 @@ namespace DFC.App.Pages
             services.AddHostedServiceTelemetryWrapper();
             services.AddHostedService<CacheReloadBackgroundService>();
             services.AddHostedService<CreateSubscriptionBackgroundService>();
+            services.AddApiServices(configuration);
 
             const string AppSettingsPolicies = "Policies";
             var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();

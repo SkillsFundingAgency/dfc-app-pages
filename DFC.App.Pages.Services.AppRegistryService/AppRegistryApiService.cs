@@ -1,5 +1,6 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models.ClientOptions;
+using dfc_content_pkg_netcore.contracts;
 using System.Net.Http;
 using System.Threading.Tasks;
 

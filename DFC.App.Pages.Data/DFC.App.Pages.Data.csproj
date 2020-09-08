@@ -8,7 +8,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Contracts\IApiDataModel.cs" />
+    <Compile Remove="Contracts\IApiDataProcessorService.cs" />
+    <Compile Remove="Contracts\IApiService.cs" />
+    <Compile Remove="Contracts\ICmsApiService.cs" />
+    <Compile Remove="Models\ContentLinksModel.cs" />
+    <Compile Remove="Models\LinkDetailModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Contracts\IApiDataModel.cs" />
+    <None Include="Contracts\IApiDataProcessorService.cs" />
+    <None Include="Contracts\IApiService.cs" />
+    <None Include="Contracts\ICmsApiService.cs" />
+    <None Include="Models\ContentLinksModel.cs" />
+    <None Include="Models\LinkDetailModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +42,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\dfc-content-pkg-netcore\dfc-content-pkg-netcore\dfc-content-pkg-netcore.csproj" />
   </ItemGroup>
 
 </Project>

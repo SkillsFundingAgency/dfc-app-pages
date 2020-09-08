@@ -1,6 +1,7 @@
-﻿using DFC.App.Pages.Data.Contracts;
-using DFC.App.Pages.Data.JsonConveerters;
+﻿using DFC.App.Pages.Data.JsonConveerters;
 using DFC.Compui.Cosmos.Enums;
+using dfc_content_pkg_netcore.contracts;
+using dfc_content_pkg_netcore.models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -57,7 +58,7 @@ namespace DFC.App.Pages.Data.Models
             set => PrivateLinksModel = value;
         }
 
-        public IList<PagesApiContentItemModel> ContentItems { get; set; } = new List<PagesApiContentItemModel>();
+        public IList<IApiDataModel>? ContentItems { get; set; }
 
         [JsonProperty(PropertyName = "ModifiedDate")]
         public DateTime Published { get; set; }

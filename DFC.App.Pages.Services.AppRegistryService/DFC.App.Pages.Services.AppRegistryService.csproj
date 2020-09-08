@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\dfc-content-pkg-netcore\dfc-content-pkg-netcore\dfc-content-pkg-netcore.csproj" />
     <ProjectReference Include="..\DFC.App.Pages.Data\DFC.App.Pages.Data.csproj" />
-    <ProjectReference Include="..\DFC.App.Pages.Services.ApiProcessorService\DFC.App.Pages.Services.ApiProcessorService.csproj" />
   </ItemGroup>
 
 </Project>

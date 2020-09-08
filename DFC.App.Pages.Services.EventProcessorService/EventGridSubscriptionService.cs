@@ -1,6 +1,7 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models.ClientOptions;
 using DFC.App.Pages.Data.Models.SubscriptionModels;
+using dfc_content_pkg_netcore.contracts;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net;

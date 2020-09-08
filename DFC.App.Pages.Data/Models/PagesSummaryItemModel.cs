@@ -1,10 +1,11 @@
 ﻿using DFC.App.Pages.Data.Contracts;
+using dfc_content_pkg_netcore.contracts;
 using Newtonsoft.Json;
 using System;
 
 namespace DFC.App.Pages.Data.Models
 {
-    public class PagesSummaryItemModel : IApiDataModel
+    public class PagesSummaryItemModel : IBaseApiDataModel
     {
         [JsonProperty(PropertyName = "uri")]
         public Uri? Url { get; set; }

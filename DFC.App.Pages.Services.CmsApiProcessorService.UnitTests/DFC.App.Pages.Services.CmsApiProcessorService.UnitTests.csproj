@@ -31,8 +31,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DFC.App.Pages.Services.CmsApiProcessorService\DFC.App.Pages.Services.CmsApiProcessorService.csproj" />
-  </ItemGroup>
-
 </Project>

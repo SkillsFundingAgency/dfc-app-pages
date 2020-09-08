@@ -25,12 +25,6 @@ namespace DFC.App.Pages.Data.Models
         public List<ContentItemModel> ContentItems { get; set; } = new List<ContentItemModel>();
 
         [JsonIgnore]
-        public List<Guid> AllContentItemIds
-        {
-            get
-            {
-                return ContentItems.Flatten(s => s.ContentItems).Where(w => w.ItemId != null).Select(s => s.ItemId!.Value).ToList();
-            }
-        }
+        public List<Guid> AllContentItemIds => ContentItems.Flatten(s => s.ContentItems).Where(w => w.ItemId != null).Select(s => s.ItemId!.Value).ToList();
     }
 }

@@ -1,4 +1,5 @@
-﻿using DFC.App.Pages.Data.Contracts;
+﻿using dfc_content_pkg_netcore.contracts;
+using dfc_content_pkg_netcore.models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -52,7 +53,7 @@ namespace DFC.App.Pages.Data.Models
         }
 
         [JsonIgnore]
-        public IList<PagesApiContentItemModel> ContentItems { get; set; } = new List<PagesApiContentItemModel>();
+        public IList<IApiDataModel>? ContentItems { get; set; }
 
         [JsonIgnore]
         private ContentLinksModel? PrivateLinksModel { get; set; }
