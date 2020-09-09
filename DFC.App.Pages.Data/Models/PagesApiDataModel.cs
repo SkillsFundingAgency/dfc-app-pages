@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace DFC.App.Pages.Data.Models
 {
-    public class PagesApiDataModel : IApiDataModel
+    public class PagesApiDataModel : IBaseContentItemModel<PagesApiContentItemModel>
     {
         [JsonProperty("id")]
         public Guid? ItemId { get; set; }
@@ -58,7 +58,7 @@ namespace DFC.App.Pages.Data.Models
             set => PrivateLinksModel = value;
         }
 
-        public IList<IApiDataModel>? ContentItems { get; set; }
+        public IList<PagesApiContentItemModel> ContentItems { get; set; } = new List<PagesApiContentItemModel>();
 
         [JsonProperty(PropertyName = "ModifiedDate")]
         public DateTime Published { get; set; }

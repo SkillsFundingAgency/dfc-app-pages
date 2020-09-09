@@ -146,7 +146,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             {
                 logger.LogInformation($"Get details for {item.Title} - {item.Url}");
 
-                var apiDataModel = await cmsApiService.GetItemAsync< PagesApiDataModel>(item.Url!).ConfigureAwait(false);
+                var apiDataModel = await cmsApiService.GetItemAsync<PagesApiDataModel>(item.Url!).ConfigureAwait(false);
 
                 if (apiDataModel == null)
                 {

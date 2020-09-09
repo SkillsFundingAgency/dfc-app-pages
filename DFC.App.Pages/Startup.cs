@@ -16,6 +16,7 @@ using DFC.Compui.Telemetry;
 using dfc_cmsapi_pkg_netcore.Extensions;
 using dfc_content_pkg_netcore.CmsApiProcessorService;
 using dfc_content_pkg_netcore.contracts;
+using dfc_content_pkg_netcore.models.clientOptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -87,15 +88,12 @@ namespace DFC.App.Pages
             services.AddHostedServiceTelemetryWrapper();
             services.AddSubscriptionBackgroundService(configuration);
             services.AddHostedService<CacheReloadBackgroundService>();
-            services.AddApiServices(configuration);
 
             const string AppSettingsPolicies = "Policies";
             var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
             var policyRegistry = services.AddPolicyRegistry();
 
-            services
-                .AddPolicies(policyRegistry, nameof(CmsApiClientOptions), policyOptions)
-                .AddHttpClient<ICmsApiService, CmsApiService, CmsApiClientOptions>(configuration, nameof(CmsApiClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
+            services.AddApiServices(configuration, policyRegistry);
 
             services
                 .AddPolicies(policyRegistry, nameof(AppRegistryClientOptions), policyOptions)

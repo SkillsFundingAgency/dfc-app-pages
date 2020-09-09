@@ -104,6 +104,5 @@ namespace DFC.App.Pages.Services.CacheContentService
         {
             logger.LogInformation($"Cache contents is: {JsonConvert.SerializeObject(ContentItems)}");
         }
-
     }
 }

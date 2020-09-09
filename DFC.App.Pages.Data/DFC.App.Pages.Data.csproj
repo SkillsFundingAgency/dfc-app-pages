@@ -8,12 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Contracts\IApiDataModel.cs" />
-    <Compile Remove="Contracts\IApiDataProcessorService.cs" />
-    <Compile Remove="Contracts\IApiService.cs" />
-    <Compile Remove="Contracts\ICmsApiService.cs" />
-    <Compile Remove="Models\ContentLinksModel.cs" />
-    <Compile Remove="Models\LinkDetailModel.cs" />
+    <Compile Remove="Models\PagesApiContentItemModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,12 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Contracts\IApiDataModel.cs" />
-    <None Include="Contracts\IApiDataProcessorService.cs" />
-    <None Include="Contracts\IApiService.cs" />
-    <None Include="Contracts\ICmsApiService.cs" />
-    <None Include="Models\ContentLinksModel.cs" />
-    <None Include="Models\LinkDetailModel.cs" />
+    <None Include="Models\PagesApiContentItemModel.cs" />
   </ItemGroup>
 
   <ItemGroup>

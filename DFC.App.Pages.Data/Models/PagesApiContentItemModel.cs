@@ -53,7 +53,7 @@ namespace DFC.App.Pages.Data.Models
         }
 
         [JsonIgnore]
-        public IList<IApiDataModel>? ContentItems { get; set; }
+        public IList<PagesApiContentItemModel> ContentItems { get; set; } = new List<PagesApiContentItemModel>();
 
         [JsonIgnore]
         private ContentLinksModel? PrivateLinksModel { get; set; }
