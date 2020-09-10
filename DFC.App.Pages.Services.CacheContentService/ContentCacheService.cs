@@ -1,4 +1,4 @@
-using DFC.App.Pages.Data.Contracts;
+﻿using DFC.App.Pages.Data.Contracts;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
