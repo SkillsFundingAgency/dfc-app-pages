@@ -8,15 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\PagesApiContentItemModel.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Models\PagesApiContentItemModel.cs" />
   </ItemGroup>
 
   <ItemGroup>

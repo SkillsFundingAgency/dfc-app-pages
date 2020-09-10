@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages.Data.Models
 {
+    [ExcludeFromCodeCoverage]
     public class ContentPageModel : Compui.Cosmos.Models.ContentPageModel
     {
         [Required]

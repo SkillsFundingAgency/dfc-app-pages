@@ -1,9 +1,11 @@
-﻿using dfc_content_pkg_netcore.contracts;
+﻿using DFC.Content.Pkg.Netcore.Data.Contracts;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages.Data.Models
 {
+    [ExcludeFromCodeCoverage]
     public class PagesSummaryItemModel : IApiDataModel
     {
         [JsonProperty(PropertyName = "uri")]

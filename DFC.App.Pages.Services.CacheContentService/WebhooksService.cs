@@ -3,8 +3,7 @@ using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Enums;
 using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
-using dfc_content_pkg_netcore.contracts;
-using dfc_content_pkg_netcore.models;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -84,7 +83,7 @@ namespace DFC.App.Pages.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessContentAsync(Uri url, Guid contentId)
         {
-            var apiDataModel = await cmsApiService.GetItemAsync<PagesApiDataModel>(url).ConfigureAwait(false);
+            var apiDataModel = await cmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(url).ConfigureAwait(false);
             var contentPageModel = mapper.Map<ContentPageModel>(apiDataModel);
 
             if (contentPageModel == null)

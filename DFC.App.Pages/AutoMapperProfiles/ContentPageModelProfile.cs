@@ -4,7 +4,7 @@ using DFC.App.Pages.Data.Common;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models.Api;
 using DFC.App.Pages.ViewModels;
-using dfc_content_pkg_netcore.models;
+using DFC.Content.Pkg.Netcore.Data.Models;
 using Microsoft.AspNetCore.Html;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
