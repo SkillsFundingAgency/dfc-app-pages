@@ -13,6 +13,8 @@ namespace DFC.App.Pages.AutoMapperProfiles
     [ExcludeFromCodeCoverage]
     public class ContentPageModelProfile : Profile
     {
+        private const string NcsPageTitle = "National Careers Service";
+
         public ContentPageModelProfile()
         {
             CreateMap<ContentPageModel, HeroBannerViewModel>()
@@ -32,7 +34,7 @@ namespace DFC.App.Pages.AutoMapperProfiles
 
             CreateMap<ContentPageModel, HtmlHeadViewModel>()
                 .ForMember(d => d.CanonicalUrl, s => s.Ignore())
-                .ForMember(d => d.Title, s => s.MapFrom(a => a.MetaTags != null && !string.IsNullOrWhiteSpace(a.MetaTags.Title) ? a.MetaTags.Title + " | Pages | National Careers Service" : "National Careers Service"))
+                .ForMember(d => d.Title, s => s.MapFrom(a => a.MetaTags != null && !string.IsNullOrWhiteSpace(a.MetaTags.Title) ? a.MetaTags.Title + " | " + NcsPageTitle : NcsPageTitle))
                 .ForMember(d => d.Description, s => s.MapFrom(a => a.MetaTags != null ? a.MetaTags.Description : null))
                 .ForMember(d => d.Keywords, s => s.MapFrom(a => a.MetaTags != null ? a.MetaTags.Keywords : null));
 
