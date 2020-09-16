@@ -23,7 +23,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             // arrange
             var expectedResult = A.CollectionOfFake<ContentPageModel>(2);
 
-            A.CallTo(() => fakeContentPageService.GetAllAsync()).Returns(expectedResult);
+            A.CallTo(() => fakeContentPageService.GetAllAsync(A<string>.Ignored)).Returns(expectedResult);
 
             var eventMessageService = new EventMessageService<ContentPageModel>(fakeLogger, fakeContentPageService);
 
@@ -31,7 +31,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var result = await eventMessageService.GetAllCachedItemsAsync().ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.GetAllAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
         }
 
@@ -43,7 +43,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var contentPageModel = A.Fake<ContentPageModel>();
             var expectedResult = HttpStatusCode.OK;
 
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(existingContentPageModel);
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).Returns(existingContentPageModel);
             A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).Returns(expectedResult);
 
             var eventMessageService = new EventMessageService<ContentPageModel>(fakeLogger, fakeContentPageService);
@@ -52,7 +52,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var result = await eventMessageService.CreateAsync(contentPageModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
         }
@@ -70,7 +70,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var result = await eventMessageService.CreateAsync(contentPageModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
             A.Equals(result, expectedResult);
         }
@@ -83,7 +83,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var contentPageModel = A.Fake<ContentPageModel>();
             var expectedResult = HttpStatusCode.AlreadyReported;
 
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(existingContentPageModel);
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).Returns(existingContentPageModel);
 
             var eventMessageService = new EventMessageService<ContentPageModel>(fakeLogger, fakeContentPageService);
 
@@ -91,7 +91,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var result = await eventMessageService.CreateAsync(contentPageModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
             A.Equals(result, expectedResult);
         }
@@ -109,7 +109,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             contentPageModel.PartitionKey = "a-partition-key";
             existingContentPageModel.PartitionKey = contentPageModel.PartitionKey;
 
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(existingContentPageModel);
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).Returns(existingContentPageModel);
             A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).Returns(expectedResult);
 
             var eventMessageService = new EventMessageService<ContentPageModel>(fakeLogger, fakeContentPageService);
@@ -118,7 +118,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeContentPageService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
@@ -137,7 +137,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             contentPageModel.PartitionKey = "a-partition-key";
             existingContentPageModel.PartitionKey = "a-different-partition-key";
 
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(existingContentPageModel);
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).Returns(existingContentPageModel);
             A.CallTo(() => fakeContentPageService.DeleteAsync(A<Guid>.Ignored)).Returns(true);
             A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).Returns(expectedResult);
 
@@ -147,7 +147,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeContentPageService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.Equals(result, expectedResult);
@@ -166,7 +166,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             contentPageModel.PartitionKey = "a-partition-key";
             existingContentPageModel.PartitionKey = "a-different-partition-key";
 
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(existingContentPageModel);
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).Returns(existingContentPageModel);
             A.CallTo(() => fakeContentPageService.DeleteAsync(A<Guid>.Ignored)).Returns(false);
             A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).Returns(expectedResult);
 
@@ -176,7 +176,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeContentPageService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
             A.Equals(result, expectedResult);
@@ -195,7 +195,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
             A.Equals(result, expectedResult);
         }
@@ -208,7 +208,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var contentPageModel = A.Fake<ContentPageModel>();
             var expectedResult = HttpStatusCode.NotFound;
 
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(existingContentPageModel);
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).Returns(existingContentPageModel);
 
             var eventMessageService = new EventMessageService<ContentPageModel>(fakeLogger, fakeContentPageService);
 
@@ -216,7 +216,7 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored,A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
             A.Equals(result, expectedResult);
         }

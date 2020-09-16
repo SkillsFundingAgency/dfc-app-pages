@@ -19,7 +19,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var expectedValidContentPageModel = BuildValidContentPageModel();
             var service = BuildWebhooksService();
 
-            A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(expectedValidContentPageModel);
+            A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(expectedValidContentPageModel);
             A.CallTo(() => FakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).Returns(expectedResponse);
             A.CallTo(() => FakeContentCacheService.Remove(A<Guid>.Ignored));
 
@@ -27,7 +27,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var result = await service.DeleteContentAsync(ContentIdForDelete).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeEventGridService.SendEventAsync(A<WebhookCacheOperation>.Ignored, A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeContentCacheService.Remove(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
@@ -43,7 +43,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             ContentPageModel? nullContentPageModel = null;
             var service = BuildWebhooksService();
 
-            A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(nullContentPageModel);
+            A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(nullContentPageModel);
             A.CallTo(() => FakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).Returns(expectedResponse);
             A.CallTo(() => FakeContentCacheService.Remove(A<Guid>.Ignored));
 
@@ -51,7 +51,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var result = await service.DeleteContentAsync(ContentIdForDelete).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeEventGridService.SendEventAsync(A<WebhookCacheOperation>.Ignored, A<ContentPageModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => FakeContentCacheService.Remove(A<Guid>.Ignored)).MustNotHaveHappened();

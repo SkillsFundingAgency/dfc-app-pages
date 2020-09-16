@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DFC.App.Pages.UnitTests.HelpersTests
@@ -86,7 +87,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
         }
 
         [Fact]
-        public async void PagesControlerHelpersTestsGetContentPageAsyncReturnsSuccess()
+        public async Task PagesControlerHelpersTestsGetContentPageAsyncReturnsSuccess()
         {
             // Arrange
             var expectedResults = A.CollectionOfDummy<ContentPageModel>(1);
@@ -106,7 +107,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
         }
 
         [Fact]
-        public async void PagesControlerHelpersTestsGetContentPageAsyncReturnsSuccessEmptyParameters()
+        public async Task PagesControlerHelpersTestsGetContentPageAsyncReturnsSuccessEmptyParameters()
         {
             // Arrange
             var expectedResults = A.CollectionOfDummy<ContentPageModel>(1);
@@ -126,7 +127,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
         }
 
         [Fact]
-        public async void PagesControlerHelpersTestsGetContentPageAsyncReturnsSuccessEmptyArticle()
+        public async Task PagesControlerHelpersTestsGetContentPageAsyncReturnsSuccessEmptyArticle()
         {
             // Arrange
             var expectedResults = A.CollectionOfDummy<ContentPageModel>(1);
@@ -146,7 +147,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
         }
 
         [Fact]
-        public async void PagesControlerHelpersTestsGetContentPageAsyncReturnsNull()
+        public async Task PagesControlerHelpersTestsGetContentPageAsyncReturnsNull()
         {
             // Arrange
             List<ContentPageModel>? expectedResults = null;
@@ -166,7 +167,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
         }
 
         [Fact]
-        public async void PagesControlerHelpersTestsGetRedirectedContentPageAsyncReturnsSuccess()
+        public async Task PagesControlerHelpersTestsGetRedirectedContentPageAsyncReturnsSuccess()
         {
             // Arrange
             var expectedResult = A.Dummy<ContentPageModel>();
@@ -186,7 +187,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
         }
 
         [Fact]
-        public async void PagesControlerHelpersTestsGetRedirectedContentPageAsyncReturnsSuccessWithMissingArticle()
+        public async Task PagesControlerHelpersTestsGetRedirectedContentPageAsyncReturnsSuccessWithMissingArticle()
         {
             // Arrange
             var expectedResult = A.Dummy<ContentPageModel>();
