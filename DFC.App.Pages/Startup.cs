@@ -6,6 +6,7 @@ using DFC.App.Pages.Extensions;
 using DFC.App.Pages.Helpers;
 using DFC.App.Pages.HostedServices;
 using DFC.App.Pages.HttpClientPolicies;
+using DFC.App.Pages.Models;
 using DFC.App.Pages.Services.AppRegistryService;
 using DFC.App.Pages.Services.CacheContentService;
 using DFC.App.Pages.Services.EventProcessorService;
