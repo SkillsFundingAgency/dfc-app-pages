@@ -143,14 +143,19 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                     if (contentItemModel != null)
                     {
-                        if (contentItemModel.ContentType != null && contentItemModel.ContentType.Equals(Constants.ContentTypePageLocation, StringComparison.OrdinalIgnoreCase))
+                        switch (contentItemModel.ContentType)
                         {
-                            contentItemModel.BreadcrumbLinkSegment = apiDataContentItemModel.Title;
-                            contentItemModel.BreadcrumbText = apiDataContentItemModel.BreadcrumbText;
-                        }
-                        else
-                        {
-                            mapper.Map(apiDataContentItemModel, contentItemModel);
+                            case Constants.ContentTypePageLocation:
+                                contentItemModel.BreadcrumbLinkSegment = apiDataContentItemModel.Title;
+                                contentItemModel.BreadcrumbText = apiDataContentItemModel.BreadcrumbText;
+                                break;
+                            case Constants.ContentTypeSharedContent:
+                                contentItemModel.Title = apiDataContentItemModel.Title;
+                                contentItemModel.Content = apiDataContentItemModel.Content;
+                                break;
+                            default:
+                                mapper.Map(apiDataContentItemModel, contentItemModel);
+                                break;
                         }
 
                         contentItemModel.LastCached = DateTime.UtcNow;

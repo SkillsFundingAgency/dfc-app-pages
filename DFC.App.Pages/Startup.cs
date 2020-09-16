@@ -83,9 +83,11 @@ namespace DFC.App.Pages
             services.AddSingleton(configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
             services.AddSingleton(configuration.GetSection(nameof(EventGridPublishClientOptions)).Get<EventGridPublishClientOptions>() ?? new EventGridPublishClientOptions());
             services.AddSingleton(configuration.GetSection(nameof(AppRegistryClientOptions)).Get<AppRegistryClientOptions>() ?? new AppRegistryClientOptions());
+            services.AddSingleton(configuration.GetSection(nameof(CacheReloadTimerOptions)).Get<CacheReloadTimerOptions>() ?? new CacheReloadTimerOptions());
             services.AddHostedServiceTelemetryWrapper();
             services.AddSubscriptionBackgroundService(configuration);
             services.AddHostedService<CacheReloadBackgroundService>();
+            services.AddHostedService<CacheReloadTimedHostedService>();
 
             const string AppSettingsPolicies = "Policies";
             var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
