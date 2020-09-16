@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages.Data.Models
 {
+    [ExcludeFromCodeCoverage]
     public class ContentPageModel : Compui.Cosmos.Models.ContentPageModel
     {
         [Required]
@@ -25,12 +27,6 @@ namespace DFC.App.Pages.Data.Models
         public List<ContentItemModel> ContentItems { get; set; } = new List<ContentItemModel>();
 
         [JsonIgnore]
-        public List<Guid> AllContentItemIds
-        {
-            get
-            {
-                return ContentItems.Flatten(s => s.ContentItems).Where(w => w.ItemId != null).Select(s => s.ItemId!.Value).ToList();
-            }
-        }
+        public List<Guid> AllContentItemIds => ContentItems.Flatten(s => s.ContentItems).Where(w => w.ItemId != null).Select(s => s.ItemId!.Value).ToList();
     }
 }

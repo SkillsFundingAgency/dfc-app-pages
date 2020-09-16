@@ -3,6 +3,7 @@ using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Enums;
 using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             this.eventGridService = eventGridService;
         }
 
-        public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndPoint)
+        public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint)
         {
             bool isContentItem = contentCacheService.CheckIsContentItem(contentId);
 
@@ -60,9 +61,9 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 case WebhookCacheOperation.CreateOrUpdate:
 
-                    if (!Uri.TryCreate(apiEndPoint, UriKind.Absolute, out Uri? url))
+                    if (!Uri.TryCreate(apiEndpoint, UriKind.Absolute, out Uri? url))
                     {
-                        throw new InvalidDataException($"Invalid Api url '{apiEndPoint}' received for Event Id: {eventId}");
+                        throw new InvalidDataException($"Invalid Api url '{apiEndpoint}' received for Event Id: {eventId}");
                     }
 
                     if (isContentItem)
@@ -82,7 +83,7 @@ namespace DFC.App.Pages.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessContentAsync(Uri url, Guid contentId)
         {
-            var apiDataModel = await cmsApiService.GetItemAsync(url).ConfigureAwait(false);
+            var apiDataModel = await cmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(url).ConfigureAwait(false);
             var contentPageModel = mapper.Map<ContentPageModel>(apiDataModel);
 
             if (contentPageModel == null)

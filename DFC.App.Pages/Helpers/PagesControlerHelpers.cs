@@ -20,6 +20,8 @@ namespace DFC.App.Pages.Helpers
 
         public static (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
         {
+            _ = pageRequestModel ?? throw new ArgumentNullException(nameof(pageRequestModel));
+
             var pageLocation = string.Join("/", new[] { pageRequestModel.Location1, pageRequestModel.Location2, pageRequestModel.Location3, pageRequestModel.Location4, pageRequestModel.Location5 });
             var pageLocations = pageLocation.Split("/", StringSplitOptions.RemoveEmptyEntries);
             var location = string.Empty;

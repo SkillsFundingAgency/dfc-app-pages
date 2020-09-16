@@ -20,7 +20,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var url = new Uri("https://somewhere.com");
             var service = BuildWebhooksService();
 
-            A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).Returns(expectedValidApiContentModel);
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(A<Uri>.Ignored)).Returns(expectedValidApiContentModel);
             A.CallTo(() => FakeMapper.Map<ContentPageModel>(A<PagesApiDataModel>.Ignored)).Returns(expectedValidContentPageModel);
             A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(expectedValidContentPageModel);
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).Returns(HttpStatusCode.NotFound);
@@ -30,7 +30,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var result = await service.ProcessContentAsync(url, ContentIdForCreate).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeMapper.Map<ContentPageModel>(A<PagesApiDataModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
@@ -51,7 +51,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var url = new Uri("https://somewhere.com");
             var service = BuildWebhooksService();
 
-            A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).Returns(expectedValidApiContentModel);
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(A<Uri>.Ignored)).Returns(expectedValidApiContentModel);
             A.CallTo(() => FakeMapper.Map<ContentPageModel>(A<PagesApiDataModel>.Ignored)).Returns(expectedValidContentPageModel);
             A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(expectedValidContentPageModel);
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).Returns(HttpStatusCode.OK);
@@ -60,7 +60,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var result = await service.ProcessContentAsync(url, ContentIdForCreate).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeMapper.Map<ContentPageModel>(A<PagesApiDataModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
@@ -81,14 +81,14 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var url = new Uri("https://somewhere.com");
             var service = BuildWebhooksService();
 
-            A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).Returns(expectedValidApiContentModel);
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(A<Uri>.Ignored)).Returns(expectedValidApiContentModel);
             A.CallTo(() => FakeMapper.Map<ContentPageModel?>(A<PagesApiDataModel>.Ignored)).Returns(expectedValidContentPageModel);
 
             // Act
             var result = await service.ProcessContentAsync(url, ContentIdForCreate).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeMapper.Map<ContentPageModel>(A<PagesApiDataModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
@@ -109,14 +109,14 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var url = new Uri("https://somewhere.com");
             var service = BuildWebhooksService();
 
-            A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).Returns(expectedValidApiContentModel);
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(A<Uri>.Ignored)).Returns(expectedValidApiContentModel);
             A.CallTo(() => FakeMapper.Map<ContentPageModel>(A<PagesApiDataModel>.Ignored)).Returns(expectedValidContentPageModel);
 
             // Act
             var result = await service.ProcessContentAsync(url, ContentIdForCreate).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeCmsApiService.GetItemAsync(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeCmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeMapper.Map<ContentPageModel>(A<PagesApiDataModel>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();

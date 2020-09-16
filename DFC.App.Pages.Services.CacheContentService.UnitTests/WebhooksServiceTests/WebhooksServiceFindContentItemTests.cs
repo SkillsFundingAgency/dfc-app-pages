@@ -27,7 +27,8 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             var result = service.FindContentItem(contentItemId, items);
 
             // Assert
-            Assert.Equal(expectedContentItemModel.ItemId, result.ItemId);
+            Assert.NotNull(result);
+            Assert.Equal(expectedContentItemModel.ItemId, result!.ItemId);
         }
 
         [Fact]

@@ -4,6 +4,7 @@ using DFC.App.Pages.Data.Common;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models.Api;
 using DFC.App.Pages.ViewModels;
+using DFC.Content.Pkg.Netcore.Data.Models;
 using Microsoft.AspNetCore.Html;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -76,7 +77,7 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.ContentItems, s => s.MapFrom(a => a.ContentItems != null && a.ContentItems.Any() ? a.ContentItems : null))
                 .ForMember(d => d.LastCached, s => s.Ignore());
 
-            CreateMap<LinkDetailModel, PagesApiContentItemModel>()
+            CreateMap<LinkDetails, PagesApiContentItemModel>()
                 .ForMember(d => d.Url, s => s.Ignore())
                 .ForMember(d => d.ItemId, s => s.Ignore())
                 .ForMember(d => d.Title, s => s.Ignore())
