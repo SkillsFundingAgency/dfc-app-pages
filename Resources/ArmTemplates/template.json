@@ -37,14 +37,6 @@
         "environment": {
             "type": "string"
         },
-        "sharedAppServicePlanName": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "sharedAppServicePlanResourceGroup": {
-            "type": "string",
-            "defaultValue": ""
-        },
         "cosmosDbCollectionName": {
             "type": "string",
             "metadata": {
@@ -101,9 +93,22 @@
         },
         "subscriptionUrl": {
             "type": "string"
+        },
+        "ApimResourceGroup": {
+            "type": "string"
+        },
+        "ApimLoggerName": {
+            "type": "string"
+        },
+        "ApimProductInstanceName": {
+            "type": "string"
+        },
+        "ApimServiceName": {
+            "type": "string"
         }
     },
     "variables": {
+        "ApiName": "[concat(parameters('ApimProductInstanceName'), '-', parameters('ApiName'))]",
         "appServicePlanName": "[concat(variables('resourcePrefix'), '-asp')]",
         "appServicePlanResourceGroup": "[concat(variables('resourcePrefix'),'-rg')]",
         "buildingBlocksDfcBaseUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
@@ -117,6 +122,35 @@
     },
     "resources": [
         {
+      "name": "[variables('ApiName')]",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('ApimResourceGroup')]",
+      "apiVersion": "2017-05-10",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'APIM/apim-api.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apimLoggerName": {
+            "value": "[parameters('ApimLoggerName')]"
+          },
+          "apimProductInstanceName": {
+            "value": "[parameters('ApimProductInstanceName')]"
+          },
+          "apimServiceName": {
+            "value": "[parameters('ApimServiceName')]"
+          },
+          "apiName": {
+            "value": "[variables('ApiName')]"
+          }
+        }
+      },
+      "dependsOn": [
+      ]
+    },
+    {
             "apiVersion": "2017-05-10",
             "name": "[variables('webAppInsightsName')]",
             "type": "Microsoft.Resources/deployments",

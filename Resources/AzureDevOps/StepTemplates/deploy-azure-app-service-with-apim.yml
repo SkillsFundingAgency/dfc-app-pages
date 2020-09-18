@@ -1,0 +1,113 @@
+parameters:
+  AzureSubscription: ''
+  DfCDevopsPath: ''
+  WebAppName: ''
+  ResourceGroup: ''
+  PackageFile: ''
+  SharedResourceGroupName: ''
+  ApimServiceName: ''
+  ApimProductInstanceName: ''
+  ApiName: ''
+  AppServiceName: ''
+  FunctionAppDomain: ''
+  ApiDefinitionPath: ''
+  APIMPolicyPath: ''
+
+steps:
+- checkout: dfc-devops
+  path: 's/dfc-devops/'
+
+- task: AzureAppServiceManage@0
+  displayName: 'Start Azure App Service:${{ parameters.WebAppName }}'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    Action: 'Start Azure App Service'
+    WebAppName: '${{ parameters.WebAppName }}'
+    SpecifySlotOrASE: true
+    ResourceGroupName: '${{ parameters.ResourceGroup }}'
+    Slot: staging
+
+- task: AzureRmWebAppDeployment@4
+  displayName: 'Azure App Service Deploy: ${{ parameters.WebAppName }}'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    appType: app
+    WebAppName: '${{ parameters.WebAppName }}'
+    Package: "${{ parameters.PackageFile }}"
+    deployToSlotOrASE: true
+    ResourceGroupName: '${{ parameters.ResourceGroup }}'
+    SlotName: staging
+
+- task: AzurePowerShell@4
+  displayName: 'Perform smoke test'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    ScriptPath: '${{ parameters.DfCDevopsPath }}/PSCoreScripts/Invoke-SmokeTestOnWebApp.ps1'
+    ScriptArguments: |
+     -ResourceGroup ${{ parameters.ResourceGroup }} -AppName ${{ parameters.WebAppName }} -Path '/health/ping' -Slot staging -TimeoutInSecs 20 -Verbose
+     
+    FailOnStandardError: true
+    azurePowerShellVersion: LatestVersion
+
+- task: AzureAppServiceManage@0
+  displayName: 'Swap Slots: ${{ parameters.WebAppName }}'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    WebAppName: '${{ parameters.WebAppName }}'
+    ResourceGroupName: '${{ parameters.ResourceGroup }}'
+    SourceSlot: staging
+
+- task: AzureAppServiceManage@0
+  displayName: 'Stop Azure App Service Slots: ${{ parameters.WebAppName }}'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    Action: 'Stop Azure App Service'
+    WebAppName: '${{ parameters.WebAppName }}'
+    SpecifySlotOrASE: true
+    ResourceGroupName: '${{ parameters.ResourceGroup }}'
+    Slot: staging
+
+- task: AzurePowerShell@4
+  displayName: 'Azure PowerShell script: Import Swagger File'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    ScriptPath: '${{ parameters.DfCDevopsPath }}/PSCoreScripts/Import-ApimSwaggerApiDefinition.ps1'
+    ScriptArguments: ' -ApimResourceGroup "$(SharedResourceGroupName)" -InstanceName "$(ApimServiceName)" -ApiName "$(ApimProductInstanceName)-$(ApiName)" -SwaggerSpecificationUrl "https://$(AppServiceName).$(FunctionAppDomain)/$(ApiDefinitionPath)" -SwaggerSpecificationFile -OutputFilePath $(System.DefaultWorkingDirectory)/SwaggerFile -Verbose'
+    azurePowerShellVersion: LatestVersion
+
+- task: esfadevops.Tokenization.custom-build-task.Tokenization@0
+  displayName: 'Tokenization: Transform file APIM Policy File'
+  inputs:
+    SourcePath: '${{ parameters.APIMPolicyPath }}'
+    TargetFileNames: 'ApimPolicy-IsolatedAppServiceAsEventGridWebhookEndpoint.xml'
+
+- task: AzurePowerShell@5
+  displayName: 'Apply EventGrid APIM Policy'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    ScriptType: InlineScript
+    Inline: |
+      $context = New-AzApiManagementContext -ResourceGroupName "$(SharedResourceGroupName)" -ServiceName "$(ApimServiceName)"
+      
+      $policyFilePath = "$(System.DefaultWorkingDirectory)/_dfc-api-appRegistry/DFC.Api.AppRegistry.Resources.ApimPolicies/ApimPolicy-IsolatedAzureFunctionAsEventGridWebhookEndpoint.xml"
+      
+      $apiNames = 'App Registry API'
+      
+      $apiOperationNames = 'Pages Webhook'
+      
+      foreach ($apiName in $apiNames) {
+          $api = ""
+      
+          $api = Get-AzApiManagementApi -Context $Context -Name $apiName
+      
+          foreach ($apiOperationName in $apiOperationNames) {
+              $operation = ""
+      
+              $operation = Get-AzApiManagementOperation -Context $Context -ApiId $api.ApiId | where {$_.Name -eq $apiOperationName}
+      
+              Write-Output "Applying policy to API: $($api.name) Operation: $($operation.name)"
+      
+              Set-AzApiManagementPolicy -Context $Context -Format application/vnd.ms-azure-apim.policy.raw+xml -ApiId $api.ApiId -OperationId $operation.OperationId -PolicyFilePath $PolicyFilePath -Verbose
+          }
+      }
+    azurePowerShellVersion: LatestVersion

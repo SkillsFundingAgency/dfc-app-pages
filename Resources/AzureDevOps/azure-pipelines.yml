@@ -3,6 +3,8 @@ variables:
   SolutionBaseName: 'DFC.App.Pages'
   BuildPlatform: 'any cpu'
   BuildConfiguration: 'release'
+  ApiName: 'Pages'
+  ApiDefinitionPath: 'swagger/json'
 
 resources:
   repositories:
@@ -45,6 +47,12 @@ stages:
         ArmTemplateRoot: '${{ variables.ArmTemplateRoot }}'
         SolutionBaseName: '${{ variables.SolutionBaseName }}'
 
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Apim Policy
+      inputs:
+        targetPath: "$(Build.SourcesDirectory)/Resources/ApimPolicy"
+        artifactName: ${{ variables.SolutionBaseName }}.ApimPolicies
+
     - task: PublishPipelineArtifact@0
       displayName: Publish Page Registration artifact
       inputs:
@@ -74,6 +82,7 @@ stages:
   - group: dfc-app-shared-dev
   - group: dfc-app-shared-registration
   - group: dfc-stax-shared-dev
+  - group: dfc-compositeui-all
   - template: VariableTemplates\DevEnvironmentVariables.yml
   
   jobs:
@@ -97,6 +106,13 @@ stages:
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+      SharedResourceGroupName: $(SharedResourceGroupName)
+      ApimServiceName: $(ApimServiceName)
+      ApimProductInstanceName: $(ApimProductInstanceName)
+      ApiName: $(ApiName)
+      FunctionAppDomain: $(FunctionAppDomain)
+      ApiDefinitionPath: $(ApiDefinitionPath)
+      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
 
 - stage: DeployToDevDraftAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
@@ -109,6 +125,7 @@ stages:
   - group: dfc-app-draft
   - group: dfc-app-shared-registration-draft
   - group: dfc-stax-shared-dev
+  - group: dfc-compositeui-all
   - template: VariableTemplates\DevDraftEnvironmentVariables.yml
   
   jobs:
@@ -132,6 +149,13 @@ stages:
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+      SharedResourceGroupName: $(SharedResourceGroupName)
+      ApimServiceName: $(ApimServiceName)
+      ApimProductInstanceName: $(ApimProductInstanceName)
+      ApiName: $(ApiName)
+      FunctionAppDomain: $(FunctionAppDomain)
+      ApiDefinitionPath: $(ApiDefinitionPath)
+      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
 
 - stage: DeployToSITAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
@@ -143,6 +167,7 @@ stages:
   - group: dfc-app-shared-sit
   - group: dfc-app-shared-registration
   - group: dfc-stax-shared-sit
+  - group: dfc-compositeui-all
   - template: VariableTemplates\SitEnvironmentVariables.yml
   
   jobs:
@@ -166,6 +191,13 @@ stages:
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+      SharedResourceGroupName: $(SharedResourceGroupName)
+      ApimServiceName: $(ApimServiceName)
+      ApimProductInstanceName: $(ApimProductInstanceName)
+      ApiName: $(ApiName)
+      FunctionAppDomain: $(FunctionAppDomain)
+      ApiDefinitionPath: $(ApiDefinitionPath)
+      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
 
 - stage: DeployToSITDraftAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
@@ -178,6 +210,7 @@ stages:
   - group: dfc-app-draft
   - group: dfc-app-shared-registration-draft
   - group: dfc-stax-shared-sit
+  - group: dfc-compositeui-all
   - template: VariableTemplates\SitDraftEnvironmentVariables.yml
   
   jobs:
@@ -201,6 +234,13 @@ stages:
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+      SharedResourceGroupName: $(SharedResourceGroupName)
+      ApimServiceName: $(ApimServiceName)
+      ApimProductInstanceName: $(ApimProductInstanceName)
+      ApiName: $(ApiName)
+      FunctionAppDomain: $(FunctionAppDomain)
+      ApiDefinitionPath: $(ApiDefinitionPath)
+      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
 
 - stage: DeployToPPAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
@@ -212,6 +252,7 @@ stages:
   - group: dfc-app-shared-pp
   - group: dfc-app-shared-registration
   - group: dfc-stax-shared-pp
+  - group: dfc-compositeui-all
   - template: VariableTemplates\PPEnvironmentVariables.yml
   
   jobs:
@@ -235,3 +276,10 @@ stages:
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+      SharedResourceGroupName: $(SharedResourceGroupName)
+      ApimServiceName: $(ApimServiceName)
+      ApimProductInstanceName: $(ApimProductInstanceName)
+      ApiName: $(ApiName)
+      FunctionAppDomain: $(FunctionAppDomain)
+      ApiDefinitionPath: $(ApiDefinitionPath)
+      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
