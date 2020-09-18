@@ -105,6 +105,9 @@
         },
         "ApimServiceName": {
             "type": "string"
+        },
+        "ApiName": {
+            "type": "string"
         }
     },
     "variables": {
