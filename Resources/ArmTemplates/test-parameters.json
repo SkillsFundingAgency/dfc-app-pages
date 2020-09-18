@@ -81,19 +81,19 @@
             "value": "anothervalue"
         },
         "ApimResourceGroup": {
-            "value": "anothervalue"
+            "value": "dfc-dev-shared-rg"
         },
         "ApimLoggerName": {
-            "value": "anothervalue"
+            "value": "composite-ui-logger"
         },
         "ApimProductInstanceName": {
-            "value": "anothervalue"
+            "value": "composite-ui"
         },
         "ApimServiceName": {
-            "value": "anothervalue"
+            "value": "dfc-dev-shared-apim"
         },
         "ApiName": {
-            "value": "anothervalue"
+            "value": "pages"
         }
     }
 }
