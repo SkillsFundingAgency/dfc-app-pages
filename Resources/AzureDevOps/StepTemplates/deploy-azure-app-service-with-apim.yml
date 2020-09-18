@@ -89,11 +89,11 @@ steps:
     Inline: |
       $context = New-AzApiManagementContext -ResourceGroupName "$(SharedResourceGroupName)" -ServiceName "$(ApimServiceName)"
       
-      $policyFilePath = "$(System.DefaultWorkingDirectory)/_dfc-api-appRegistry/DFC.Api.AppRegistry.Resources.ApimPolicies/ApimPolicy-IsolatedAzureFunctionAsEventGridWebhookEndpoint.xml"
+      $policyFilePath = "$(System.DefaultWorkingDirectory)/dfc.app.pages.apimpolicies/ApimPolicy-IsolatedAppServiceAsEventGridWebhookEndpoint.xml"
       
-      $apiNames = 'App Registry API'
+      $apiNames = 'tbc'
       
-      $apiOperationNames = 'Pages Webhook'
+      $apiOperationNames = 'tbc'
       
       foreach ($apiName in $apiNames) {
           $api = ""
