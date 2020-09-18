@@ -24,7 +24,6 @@ parameters:
   ApimServiceName: ''
   ApimProductInstanceName: ''
   ApiName: ''
-  AppServiceName: ''
   FunctionAppDomain: ''
   ApiDefinitionPath: ''
   APIMPolicyPath: ''
