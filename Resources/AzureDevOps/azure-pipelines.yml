@@ -4,7 +4,6 @@ variables:
   BuildPlatform: 'any cpu'
   BuildConfiguration: 'release'
   ApiName: 'Pages'
-  ApiDefinitionPath: 'swagger/json'
 
 resources:
   repositories:
@@ -113,6 +112,7 @@ stages:
       FunctionAppDomain: $(FunctionAppDomain)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
 
 - stage: DeployToDevDraftAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
@@ -156,6 +156,7 @@ stages:
       FunctionAppDomain: $(FunctionAppDomain)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
 
 - stage: DeployToSITAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
@@ -198,6 +199,7 @@ stages:
       FunctionAppDomain: $(FunctionAppDomain)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
 
 - stage: DeployToSITDraftAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
@@ -241,6 +243,7 @@ stages:
       FunctionAppDomain: $(FunctionAppDomain)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
 
 - stage: DeployToPPAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
@@ -283,6 +286,7 @@ stages:
       FunctionAppDomain: $(FunctionAppDomain)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
 
 - stage: DeployToPRDAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
@@ -322,6 +326,7 @@ stages:
       ApimServiceName: $(ApimServiceName)
       ApimProductInstanceName: $(ApimProductInstanceName)
       ApiName: $(ApiName)
-      FunctionAppDomain: $(FunctionAppDomain)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"

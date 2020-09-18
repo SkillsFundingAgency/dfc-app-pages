@@ -8,10 +8,9 @@ parameters:
   ApimServiceName: ''
   ApimProductInstanceName: ''
   ApiName: ''
-  AppServiceName: ''
-  FunctionAppDomain: ''
-  ApiDefinitionPath: ''
   APIMPolicyPath: ''
+  ApimImportScript: ''
+  SpecificationPath: ''
 
 steps:
 - checkout: dfc-devops
@@ -67,12 +66,12 @@ steps:
     ResourceGroupName: '${{ parameters.ResourceGroup }}'
     Slot: staging
 
-- task: AzurePowerShell@4
-  displayName: 'Azure PowerShell script: Import Swagger File'
-  inputs:
-    azureSubscription: '${{ parameters.AzureSubscription }}'
-    ScriptPath: '${{ parameters.DfCDevopsPath }}/PSCoreScripts/Import-ApimSwaggerApiDefinition.ps1'
-    ScriptArguments: ' -ApimResourceGroup "$(SharedResourceGroupName)" -InstanceName "$(ApimServiceName)" -ApiName "$(ApimProductInstanceName)-$(ApiName)" -SwaggerSpecificationUrl "https://$(AppServiceName).$(FunctionAppDomain)/$(ApiDefinitionPath)" -SwaggerSpecificationFile -OutputFilePath $(System.DefaultWorkingDirectory)/SwaggerFile -Verbose'
+- task: AzurePowerShell@4	
+  displayName: 'Import OpenAPI specification'	
+  inputs:	
+    azureSubscription: '${{ parameters.AzureSubscription }}'	
+    ScriptPath: '${{ parameters.ApimImportScript }}'	
+    ScriptArguments: "-ApimResourceGroup '${{ parameters.SharedResourceGroupName }}' -InstanceName '${{ parameters.ApimServiceName }}' -ApiName '${{ parameters.ApimProductInstanceName }}-${{ parameters.ApiName }}' -OpenApiSpecificationFile '${{ parameters.SpecificationPath }}/${{ parameters.ApiName }}.txt' -ApiPath 'content/${{ parameters.ApiName }}'"	
     azurePowerShellVersion: LatestVersion
 
 - task: esfadevops.Tokenization.custom-build-task.Tokenization@0

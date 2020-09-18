@@ -24,9 +24,9 @@ parameters:
   ApimServiceName: ''
   ApimProductInstanceName: ''
   ApiName: ''
-  FunctionAppDomain: ''
-  ApiDefinitionPath: ''
   APIMPolicyPath: ''
+  ApimImportScript: ''
+  SpecificationPath: ''
 
 jobs:
 - deployment: DeployTemplate
@@ -71,10 +71,9 @@ jobs:
             ApimServiceName: '${{ parameters.ApimServiceName }}'
             ApimProductInstanceName: '${{ parameters.ApimProductInstanceName }}'
             ApiName: '${{ parameters.ApiName }}'
-            AppServiceName: '${{ parameters.AppServiceName }}'
-            FunctionAppDomain: '${{ parameters.FunctionAppDomain }}'
-            ApiDefinitionPath: '${{ parameters.ApiDefinitionPath }}'
             APIMPolicyPath: '${{ parameters.APIMPolicyPath }}'
+            ApimImportScript: '${{ parameters.ApimImportScript }}'
+            SpecificationPath:  '${{ parameters.SpecificationPath }}'
 
 - deployment: DeployRegistration
   displayName: "Deploy page registration"
