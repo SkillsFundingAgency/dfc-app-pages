@@ -60,7 +60,7 @@ jobs:
     runOnce:
       deploy:
         steps:
-        - template: ../StepTemplates/deploy-azure-app-service.yml
+        - template: ../StepTemplates/deploy-azure-app-service-with-apim.yml
           parameters:
             WebAppName: '${{ parameters.AppServiceName }}'
             AzureSubscription: '${{ parameters.AzureSubscription }}'
