@@ -52,6 +52,18 @@ stages:
         targetPath: "$(Build.SourcesDirectory)/Resources/ApimPolicy"
         artifactName: ${{ variables.SolutionBaseName }}.ApimPolicies
 
+    - task: PublishPipelineArtifact@1
+      displayName: Publish OpenAPI docs to Pipeline Artifact
+      inputs:
+        targetPath: "$(System.DefaultWorkingDirectory)/DFC.EventGridSubscriptions.ApiFunction/OpenAPIDocs"
+        artifactName: ${{ variables.SolutionBaseName }}.OpenAPIDocs
+
+    - task: PublishPipelineArtifact@1
+      displayName: Publish API import script to Pipeline Artifact
+      inputs:
+        targetPath: "$(System.DefaultWorkingDirectory)/Resources/Scripts"
+        artifactName: ${{ variables.SolutionBaseName }}.Scripts
+
     - task: PublishPipelineArtifact@0
       displayName: Publish Page Registration artifact
       inputs:
@@ -113,6 +125,7 @@ stages:
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToDevDraftAppPages
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
