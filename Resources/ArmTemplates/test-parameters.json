@@ -26,12 +26,6 @@
         "Environment": {
             "value": "FOO"
         },
-        "sharedAppServicePlanName": {
-            "value": "dfc-dev-app-shared-asp"
-        },
-        "sharedAppServicePlanResourceGroup": {
-            "value": "dfc-dev-app-sharedresources-rg"
-        },
         "cosmosDbCollectionName": {
             "value": "a-test-collection"
         },
@@ -85,6 +79,21 @@
         },
         "subscriptionUrl": {
             "value": "anothervalue"
+        },
+        "ApimResourceGroup": {
+            "value": "dfc-dev-shared-rg"
+        },
+        "ApimLoggerName": {
+            "value": "composite-ui-logger"
+        },
+        "ApimProductInstanceName": {
+            "value": "composite-ui"
+        },
+        "ApimServiceName": {
+            "value": "dfc-dev-shared-apim"
+        },
+        "ApiName": {
+            "value": "pages"
         }
     }
 }
