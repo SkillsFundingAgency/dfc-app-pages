@@ -71,7 +71,7 @@ steps:
   inputs:	
     azureSubscription: '${{ parameters.AzureSubscription }}'	
     ScriptPath: '${{ parameters.ApimImportScript }}'	
-    ScriptArguments: "-ApimResourceGroup '${{ parameters.SharedResourceGroupName }}' -InstanceName '${{ parameters.ApimServiceName }}' -ApiName '${{ parameters.ApimProductInstanceName }}-${{ parameters.ApiName }}' -OpenApiSpecificationFile '${{ parameters.SpecificationPath }}/${{ parameters.ApiName }}.txt' -ApiPath '${{ parameters.ApimProductInstanceName }}/${{ parameters.ApiName }}'"	
+    ScriptArguments: "-ApimResourceGroup '${{ parameters.SharedResourceGroupName }}' -InstanceName '${{ parameters.ApimServiceName }}' -ApiName '${{ parameters.ApimProductInstanceName }}-${{ parameters.ApiName }}' -OpenApiSpecificationFile '${{ parameters.SpecificationPath }}/GetAllPages.txt' -ApiPath '${{ parameters.ApimProductInstanceName }}/${{ parameters.ApiName }}'"	
     azurePowerShellVersion: LatestVersion
 
 - task: esfadevops.Tokenization.custom-build-task.Tokenization@0
