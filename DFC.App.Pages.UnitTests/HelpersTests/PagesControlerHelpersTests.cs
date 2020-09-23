@@ -161,7 +161,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             var result = await helper.GetContentPageAsync(location, article).ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).MustHaveHappenedTwiceExactly();
 
             Assert.Null(result);
         }
