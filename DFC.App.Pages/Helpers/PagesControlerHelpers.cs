@@ -5,7 +5,6 @@ using DFC.Compui.Cosmos.Contracts;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 
 namespace DFC.App.Pages.Helpers

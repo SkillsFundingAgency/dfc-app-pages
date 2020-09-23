@@ -33,10 +33,10 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
                 pageLocation = sourceMember.PageLocation;
             }
 
+            result.Add($"{delimiter}{pageLocation}");
+
             if (sourceMember.IsDefaultForPageLocation)
             {
-                result.Add($"{delimiter}{pageLocation}");
-
                 if (string.IsNullOrWhiteSpace(pageLocation))
                 {
                     result.Add($"{delimiter}{sourceMember.CanonicalName}");
@@ -63,6 +63,8 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             {
                 result.AddRange(sourceMember.RedirectLocations);
             }
+
+            result = result.Distinct().ToList();
 
             return result;
         }
