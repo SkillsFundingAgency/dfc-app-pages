@@ -1,6 +1,8 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
+using DFC.Content.Pkg.Netcore.Data.Models;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
@@ -65,21 +67,21 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
                 Url = new Uri("https://localhost"),
                 ContentLinks = new ContentLinksModel(new JObject())
                 {
-                    ContentLinks = new List<KeyValuePair<string, List<LinkDetailModel>>>()
+                    ContentLinks = new List<KeyValuePair<string, List<LinkDetails>>>()
                     {
-                        new KeyValuePair<string, List<LinkDetailModel>>(
+                        new KeyValuePair<string, List<LinkDetails>>(
                             "test",
-                            new List<LinkDetailModel>
+                            new List<LinkDetails>
                             {
-                                new LinkDetailModel
+                                new LinkDetails
                                 {
                                     Uri = new Uri("http://www.one.com"),
                                 },
-                                new LinkDetailModel
+                                new LinkDetails
                                 {
                                     Uri = new Uri("http://www.two.com"),
                                 },
-                                new LinkDetailModel
+                                new LinkDetails
                                 {
                                     Uri = new Uri("http://www.three.com"),
                                 },

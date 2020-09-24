@@ -48,6 +48,9 @@ namespace DFC.App.Pages.ViewModels
         [Display(Name = "Last Reviewed")]
         public DateTime LastReviewed { get; set; }
 
+        [Display(Name = "Created Date")]
+        public DateTime CreatedDate { get; set; }
+
         [Display(Name = "Last Cached")]
         public DateTime LastCached { get; set; }
 

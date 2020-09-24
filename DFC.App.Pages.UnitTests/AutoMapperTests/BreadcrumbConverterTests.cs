@@ -92,6 +92,50 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
             Assert.Equal(expectedResult.Last().Route, result.Last().Route);
         }
 
+        [Fact]
+        public void BreadcrumbConverterReturnsSuccessForContentItemsWithNoPageTitle()
+        {
+            // Arrange
+            var converter = new BreadcrumbConverter();
+            var sourceMember = BuildContentPageModel();
+            var context = new ResolutionContext(null, null);
+            var expectedResult = new List<BreadcrumbItemViewModel>
+            {
+                new BreadcrumbItemViewModel
+                {
+                    Route = "/",
+                    Title = "Home",
+                    AddHyperlink = true,
+                },
+                new BreadcrumbItemViewModel
+                {
+                    Route = "/segment-1",
+                    Title = "Segment #1",
+                    AddHyperlink = true,
+                },
+                new BreadcrumbItemViewModel
+                {
+                    Route = "/segment-1/segment-2",
+                    Title = "Segment #2",
+                    AddHyperlink = true,
+                },
+                new BreadcrumbItemViewModel
+                {
+                    Route = "/segment-1/segment-2/segment-3",
+                    Title = "Segment #3",
+                    AddHyperlink = true,
+                },
+            };
+
+            sourceMember.MetaTags.Title = null;
+
+            // Act
+            var result = converter.Convert(sourceMember, context);
+
+            // Assert
+            Assert.Equal(expectedResult.Last().Route, result.Last().Route);
+        }
+
         private ContentPageModel BuildContentPageModel()
         {
             var item = new ContentPageModel

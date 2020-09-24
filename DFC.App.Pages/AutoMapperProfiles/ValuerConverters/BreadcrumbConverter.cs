@@ -32,14 +32,17 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
 
             result.Reverse();
 
-            var articlePathViewModel = new BreadcrumbItemViewModel
+            if (!string.IsNullOrWhiteSpace(sourceMember.MetaTags?.Title))
             {
-                Route = $"{sourceMember.CanonicalName}",
-                Title = sourceMember.MetaTags?.Title,
-                AddHyperlink = false,
-            };
+                var articlePathViewModel = new BreadcrumbItemViewModel
+                {
+                    Route = $"{sourceMember.CanonicalName}",
+                    Title = sourceMember.MetaTags?.Title,
+                    AddHyperlink = false,
+                };
 
-            result.Add(articlePathViewModel);
+                result.Add(articlePathViewModel);
+            }
 
             string segmentRoute = string.Empty;
 
