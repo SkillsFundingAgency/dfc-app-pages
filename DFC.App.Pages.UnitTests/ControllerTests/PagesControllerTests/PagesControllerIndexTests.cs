@@ -21,14 +21,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResults = A.CollectionOfFake<ContentPageModel>(resultsCount);
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeContentPageService.GetAllAsync()).Returns(expectedResults);
+            A.CallTo(() => FakeContentPageService.GetAllAsync(A<string>.Ignored)).Returns(expectedResults);
             A.CallTo(() => FakeMapper.Map<IndexDocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(A.Fake<IndexDocumentViewModel>());
 
             // Act
             var result = await controller.Index().ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetAllAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeMapper.Map<IndexDocumentViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappened(resultsCount, Times.Exactly);
 
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -48,14 +48,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResults = A.CollectionOfFake<ContentPageModel>(resultsCount);
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeContentPageService.GetAllAsync()).Returns(expectedResults);
+            A.CallTo(() => FakeContentPageService.GetAllAsync(A<string>.Ignored)).Returns(expectedResults);
             A.CallTo(() => FakeMapper.Map<IndexDocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(A.Fake<IndexDocumentViewModel>());
 
             // Act
             var result = await controller.Index().ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetAllAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeMapper.Map<IndexDocumentViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappened(resultsCount, Times.Exactly);
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
@@ -75,14 +75,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             IEnumerable<ContentPageModel>? expectedResults = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeContentPageService.GetAllAsync()).Returns(expectedResults);
+            A.CallTo(() => FakeContentPageService.GetAllAsync(A<string>.Ignored)).Returns(expectedResults);
             A.CallTo(() => FakeMapper.Map<IndexDocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(A.Fake<IndexDocumentViewModel>());
 
             // Act
             var result = await controller.Index().ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetAllAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeMapper.Map<IndexDocumentViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappened(resultsCount, Times.Exactly);
 
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -102,14 +102,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             IEnumerable<ContentPageModel>? expectedResults = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeContentPageService.GetAllAsync()).Returns(expectedResults);
+            A.CallTo(() => FakeContentPageService.GetAllAsync(A<string>.Ignored)).Returns(expectedResults);
             A.CallTo(() => FakeMapper.Map<IndexDocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(A.Fake<IndexDocumentViewModel>());
 
             // Act
             var result = await controller.Index().ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetAllAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeMapper.Map<IndexDocumentViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappened(resultsCount, Times.Exactly);
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
@@ -129,14 +129,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             IEnumerable<ContentPageModel>? expectedResults = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeContentPageService.GetAllAsync()).Returns(expectedResults);
+            A.CallTo(() => FakeContentPageService.GetAllAsync(A<string>.Ignored)).Returns(expectedResults);
             A.CallTo(() => FakeMapper.Map<IndexDocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(A.Fake<IndexDocumentViewModel>());
 
             // Act
             var result = await controller.Index().ConfigureAwait(false);
 
             // Assert
-            A.CallTo(() => FakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeContentPageService.GetAllAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeMapper.Map<IndexDocumentViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappened(resultsCount, Times.Exactly);
 
             var statusResult = Assert.IsType<StatusCodeResult>(result);

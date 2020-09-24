@@ -5,6 +5,7 @@ using DFC.Compui.Cosmos.Contracts;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 
 namespace DFC.App.Pages.Helpers
@@ -20,6 +21,8 @@ namespace DFC.App.Pages.Helpers
 
         public static (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
         {
+            _ = pageRequestModel ?? throw new ArgumentNullException(nameof(pageRequestModel));
+
             var pageLocation = string.Join("/", new[] { pageRequestModel.Location1, pageRequestModel.Location2, pageRequestModel.Location3, pageRequestModel.Location4, pageRequestModel.Location5 });
             var pageLocations = pageLocation.Split("/", StringSplitOptions.RemoveEmptyEntries);
             var location = string.Empty;
@@ -57,9 +60,17 @@ namespace DFC.App.Pages.Helpers
 
             var contentPageModels = await contentPageService.GetAsync(where).ConfigureAwait(false);
 
+            if (contentPageModels == null || !contentPageModels.Any())
+            {
+                var searchLocation = string.IsNullOrWhiteSpace(article) ? $"/{location}" : $"/{location}/{article}";
+                where = p => p.PageLocation == searchLocation && !p.IsDefaultForPageLocation;
+
+                contentPageModels = await contentPageService.GetAsync(where).ConfigureAwait(false);
+            }
+
             if (contentPageModels != null && contentPageModels.Any())
             {
-                return contentPageModels.First();
+                return contentPageModels.OrderBy(o => o.CreatedDate).First();
             }
 
             return default;

@@ -3,16 +3,20 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace DFC.App.Pages.Data.Models
 {
+    [ExcludeFromCodeCoverage]
     public class ContentPageModel : Compui.Cosmos.Models.ContentPageModel
     {
         [Required]
         public override string? PartitionKey => PageLocation;
 
         public override string? PageLocation { get; set; } = "/missing-location";
+
+        public DateTime? CreatedDate { get; set; }
 
         public DateTime LastCached { get; set; } = DateTime.UtcNow;
 
@@ -25,12 +29,6 @@ namespace DFC.App.Pages.Data.Models
         public List<ContentItemModel> ContentItems { get; set; } = new List<ContentItemModel>();
 
         [JsonIgnore]
-        public List<Guid> AllContentItemIds
-        {
-            get
-            {
-                return ContentItems.Flatten(s => s.ContentItems).Where(w => w.ItemId != null).Select(s => s.ItemId!.Value).ToList();
-            }
-        }
+        public List<Guid> AllContentItemIds => ContentItems.Flatten(s => s.ContentItems).Where(w => w.ItemId != null).Select(s => s.ItemId!.Value).ToList();
     }
 }

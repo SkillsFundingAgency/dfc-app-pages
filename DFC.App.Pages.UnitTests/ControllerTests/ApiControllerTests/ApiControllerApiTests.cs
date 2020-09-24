@@ -32,7 +32,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
         {
             // arrange
             List<ContentPageModel>? nullContentPageModels = null;
-            A.CallTo(() => fakeContentPageService.GetAllAsync()).Returns(nullContentPageModels);
+            A.CallTo(() => fakeContentPageService.GetAllAsync(A<string>.Ignored)).Returns(nullContentPageModels);
 
             using var controller = new ApiController(logger, fakeContentPageService, fakeMapper);
 
@@ -40,7 +40,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             var result = await controller.Index().ConfigureAwait(false) as OkObjectResult;
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.GetAllAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeMapper.Map<GetIndexModel>(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
 
             Assert.NotNull(result);
@@ -86,7 +86,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
                 Id = expectedContentPageModel2.Id,
                 Locations = expectedContentPageModel2.RedirectLocations,
             };
-            A.CallTo(() => fakeContentPageService.GetAllAsync()).Returns(expectedContentPageModels);
+            A.CallTo(() => fakeContentPageService.GetAllAsync(A<string>.Ignored)).Returns(expectedContentPageModels);
 
             using var controller = new ApiController(logger, fakeContentPageService, fakeMapper);
 
@@ -97,7 +97,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             var result = await controller.Index().ConfigureAwait(false) as OkObjectResult;
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetAllAsync()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.GetAllAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeMapper.Map<GetIndexModel>(expectedContentPageModel1)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeMapper.Map<GetIndexModel>(expectedContentPageModel2)).MustHaveHappenedOnceExactly();
 
@@ -125,7 +125,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             {
                 Locations = expectedContentPageModel.RedirectLocations,
             };
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(expectedContentPageModel);
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(expectedContentPageModel);
             A.CallTo(() => fakeMapper.Map<GetIndexModel>(expectedContentPageModel)).Returns(expectedGetIndexModel);
 
             using var controller = new ApiController(logger, fakeContentPageService, fakeMapper);
@@ -134,7 +134,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             var result = await controller.Document(expectedContentPageModel.Id).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeMapper.Map<GetIndexModel>(expectedContentPageModel)).MustHaveHappenedOnceExactly();
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
@@ -149,7 +149,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             // arrange
             const HttpStatusCode expectedStatusCode = HttpStatusCode.NoContent;
             ContentPageModel? nullContentPageModel = null;
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).Returns(nullContentPageModel);
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(nullContentPageModel);
 
             using var controller = new ApiController(logger, fakeContentPageService, fakeMapper);
 
@@ -157,7 +157,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             var result = await controller.Document(Guid.NewGuid()).ConfigureAwait(false);
 
             // assert
-            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeMapper.Map<GetIndexModel>(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
 
             var jsonResult = Assert.IsType<NoContentResult>(result);
