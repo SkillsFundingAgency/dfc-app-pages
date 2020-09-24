@@ -7,15 +7,15 @@ using DFC.App.Pages.Helpers;
 using DFC.App.Pages.HostedServices;
 using DFC.App.Pages.HttpClientPolicies;
 using DFC.App.Pages.Models;
-using DFC.App.Pages.Services.ApiProcessorService;
 using DFC.App.Pages.Services.AppRegistryService;
 using DFC.App.Pages.Services.CacheContentService;
-using DFC.App.Pages.Services.CmsApiProcessorService;
 using DFC.App.Pages.Services.EventProcessorService;
 using DFC.Compui.Cosmos;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 using DFC.Compui.Telemetry;
+using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
+using DFC.Content.Pkg.Netcore.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -77,8 +77,6 @@ namespace DFC.App.Pages
             services.AddSingleton<IContentCacheService>(sp => new ContentCacheService(sp.GetRequiredService<ILogger<ContentCacheService>>()));
             services.AddTransient<IEventMessageService<ContentPageModel>, EventMessageService<ContentPageModel>>();
             services.AddTransient<ICacheReloadService, CacheReloadService>();
-            services.AddTransient<IApiService, ApiService>();
-            services.AddTransient<IApiDataProcessorService, ApiDataProcessorService>();
             services.AddTransient<IWebhooksService, WebhooksService>();
             services.AddTransient<IEventGridService, EventGridService>();
             services.AddTransient<IEventGridClientService, EventGridClientService>();
@@ -96,9 +94,7 @@ namespace DFC.App.Pages
             var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
             var policyRegistry = services.AddPolicyRegistry();
 
-            services
-                .AddPolicies(policyRegistry, nameof(CmsApiClientOptions), policyOptions)
-                .AddHttpClient<ICmsApiService, CmsApiService, CmsApiClientOptions>(configuration, nameof(CmsApiClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
+            services.AddApiServices(configuration, policyRegistry);
 
             services
                 .AddPolicies(policyRegistry, nameof(AppRegistryClientOptions), policyOptions)

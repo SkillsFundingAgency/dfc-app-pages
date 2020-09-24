@@ -20,6 +20,13 @@ parameters:
   RegionRegistrationApiUrl: ''
   ApimCompositeKey: ''
   AppServiceName: ''
+  SharedResourceGroupName: ''
+  ApimServiceName: ''
+  ApimProductInstanceName: ''
+  ApiName: ''
+  APIMPolicyPath: ''
+  ApimImportScript: ''
+  SpecificationPath: ''
 
 jobs:
 - deployment: DeployTemplate
@@ -53,13 +60,20 @@ jobs:
     runOnce:
       deploy:
         steps:
-        - template: ../StepTemplates/deploy-azure-app-service.yml
+        - template: ../StepTemplates/deploy-azure-app-service-with-apim.yml
           parameters:
             WebAppName: '${{ parameters.AppServiceName }}'
             AzureSubscription: '${{ parameters.AzureSubscription }}'
             DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
             PackageFile: '${{ parameters.PackageFile }}'
             ResourceGroup: '${{ parameters.ResourceGroup }}'
+            SharedResourceGroupName: '${{ parameters.SharedResourceGroupName }}'
+            ApimServiceName: '${{ parameters.ApimServiceName }}'
+            ApimProductInstanceName: '${{ parameters.ApimProductInstanceName }}'
+            ApiName: '${{ parameters.ApiName }}'
+            APIMPolicyPath: '${{ parameters.APIMPolicyPath }}'
+            ApimImportScript: '${{ parameters.ApimImportScript }}'
+            SpecificationPath:  '${{ parameters.SpecificationPath }}'
 
 - deployment: DeployRegistration
   displayName: "Deploy page registration"

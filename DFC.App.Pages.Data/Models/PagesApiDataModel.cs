@@ -1,14 +1,17 @@
-﻿using DFC.App.Pages.Data.Contracts;
-using DFC.App.Pages.Data.JsonConveerters;
+﻿using DFC.App.Pages.Data.JsonConveerters;
 using DFC.Compui.Cosmos.Enums;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
+using DFC.Content.Pkg.Netcore.Data.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages.Data.Models
 {
-    public class PagesApiDataModel : IApiDataModel
+    [ExcludeFromCodeCoverage]
+    public class PagesApiDataModel : IBaseContentItemModel<PagesApiContentItemModel>
     {
         [JsonProperty("id")]
         public Guid? ItemId { get; set; }

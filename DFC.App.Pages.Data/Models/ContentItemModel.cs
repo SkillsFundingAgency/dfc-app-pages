@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages.Data.Models
 {
+    [ExcludeFromCodeCoverage]
     public class ContentItemModel
     {
         public Uri? Url { get; set; }

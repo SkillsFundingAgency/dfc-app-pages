@@ -1,5 +1,5 @@
-using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models.ClientOptions;
+using DFC.Content.Pkg.Netcore.Data.Contracts;
 using FakeItEasy;
 using System;
 using System.Net.Http;

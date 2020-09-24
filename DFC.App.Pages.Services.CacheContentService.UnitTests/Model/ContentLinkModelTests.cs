@@ -1,4 +1,4 @@
-﻿using DFC.App.Pages.Data.Models;
+﻿using DFC.Content.Pkg.Netcore.Data.Models;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Linq;
@@ -14,8 +14,10 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.Model
         public void WhenContentLinksIsNotNullThenReturnLinks(bool excludePageLocation, int epresctedResultsCount)
         {
             var jsonData = File.ReadAllText(Directory.GetCurrentDirectory() + "/Model/LinksData.json");
-            var model = new ContentLinksModel(JObject.Parse(jsonData));
-            model.ExcludePageLocation = excludePageLocation;
+            var model = new ContentLinksModel(JObject.Parse(jsonData))
+            {
+                ExcludePageLocation = excludePageLocation,
+            };
             var links = model.ContentLinks;
             Assert.Equal(epresctedResultsCount, links.SelectMany(x => x.Value).Count());
         }

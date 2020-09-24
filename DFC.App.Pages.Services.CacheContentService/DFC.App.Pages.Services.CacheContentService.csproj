@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DFC.App.Pages.Data\DFC.App.Pages.Data.csproj" />
-    <ProjectReference Include="..\DFC.App.Pages.Services.CmsApiProcessorService\DFC.App.Pages.Services.CmsApiProcessorService.csproj" />
     <ProjectReference Include="..\DFC.App.Pages.Services.EventProcessorService\DFC.App.Pages.Services.EventProcessorService.csproj" />
   </ItemGroup>
 
