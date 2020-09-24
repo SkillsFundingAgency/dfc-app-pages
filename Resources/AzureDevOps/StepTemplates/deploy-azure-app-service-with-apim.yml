@@ -66,12 +66,18 @@ steps:
     ResourceGroupName: '${{ parameters.ResourceGroup }}'
     Slot: staging
 
-- task: AzurePowerShell@4	
-  displayName: 'Import OpenAPI specification'	
-  inputs:	
-    azureSubscription: '${{ parameters.AzureSubscription }}'	
-    ScriptPath: '${{ parameters.ApimImportScript }}'	
-    ScriptArguments: "-ApimResourceGroup '${{ parameters.SharedResourceGroupName }}' -InstanceName '${{ parameters.ApimServiceName }}' -ApiName '${{ parameters.ApimProductInstanceName }}-${{ parameters.ApiName }}' -OpenApiSpecificationFile '${{ parameters.SpecificationPath }}/GetAllPages.txt' -ApiPath '${{ parameters.ApimProductInstanceName }}/${{ parameters.ApiName }}'"	
+- task: esfadevops.Tokenization.custom-build-task.Tokenization@0
+  displayName: 'Tokenization: Transform file ${{ parameters.FunctionType }}OpenApi.txt'
+  inputs:
+    SourcePath: '${{ parameters.SpecificationPath }}'
+    TargetFileNames: 'GetAllPages.txt'
+
+- task: AzurePowerShell@4
+  displayName: 'Import OpenAPI specification'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    ScriptPath: '${{ parameters.ApimImportScript }}'
+    ScriptArguments: "-ApimResourceGroup '${{ parameters.SharedResourceGroupName }}' -InstanceName '${{ parameters.ApimServiceName }}' -ApiName '${{ parameters.ApimProductInstanceName }}-${{ parameters.ApiName }}' -OpenApiSpecificationFile '${{ parameters.SpecificationPath }}/GetAllPages.txt' -ApiPath '${{ parameters.ApimProductInstanceName }}/${{ parameters.ApiName }}'"
     azurePowerShellVersion: LatestVersion
 
 - task: esfadevops.Tokenization.custom-build-task.Tokenization@0
