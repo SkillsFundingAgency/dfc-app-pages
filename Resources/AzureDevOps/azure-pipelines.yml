@@ -3,7 +3,6 @@ variables:
   SolutionBaseName: 'DFC.App.Pages'
   BuildPlatform: 'any cpu'
   BuildConfiguration: 'release'
-  ApiName: 'Pages'
 
 resources:
   repositories:
