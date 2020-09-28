@@ -306,7 +306,7 @@
                             },
                             {
                                 "name": "SubscriptionSettings__Endpoint",
-                                "value": "[concat(parameters('SubscriptionSettingsEndpoint'),'/api/webhook/ReceiveEvents')]"
+                                "value": "[concat(parameters('SubscriptionSettingsEndpoint'),'/api/webhook/ReceiveEvents?subscription-key=',parameters('apimCompositeApiKey'))]"
                             },
 							  {
                                 "name": "SubscriptionSettings__SubscriptionRegistrationDelay",
