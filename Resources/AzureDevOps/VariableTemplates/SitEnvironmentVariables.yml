@@ -39,3 +39,5 @@ variables:
   value: https://dfc-sit-api-eventgridsubscriptions-fa.azurewebsites.net
 - name: apiName
   value: pages
+- name: applicationUrl
+  value: https://dfc-sit-app-pages-as.azurewebsites.net

@@ -43,3 +43,5 @@ variables:
   value: https://dfc-dev-api-eventgridsubscriptions-fa.azurewebsites.net
 - name: apiName
   value: pages-draft
+- name: applicationUrl
+  value: https://dfc-dev-draft-app-pages-as.azurewebsites.net
