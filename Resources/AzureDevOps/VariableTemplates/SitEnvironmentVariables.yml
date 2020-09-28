@@ -8,7 +8,7 @@ variables:
 - name: EnableAzureMonitorAlerting
   value: true
 - name: SubscriptionSettingsEndpoint
-  value: https://dfc-sit-app-pages-as.azurewebsites.net
+  value: $(ApimProxyAddress)/composite-ui/Pages
 - name: pagesAppDatabaseThroughput
   value: 400
 - name: ResourceGroup
