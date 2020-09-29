@@ -54,7 +54,7 @@
                         </set-header>
                         <set-body>@(context.Variables.GetValueOrDefault<JObject>("Event")["data"].ToString())</set-body>
 
-                        <set-backend-service base-url="__SubscriptionSettingsEndpoint__" />
+                        <set-backend-service base-url="__applicationUrl__" />
                     </otherwise>
                 </choose>
             </otherwise>

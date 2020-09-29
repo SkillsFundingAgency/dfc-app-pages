@@ -39,3 +39,5 @@ variables:
   value: https://dfc-pp-api-eventgridsubscriptions-fa.ase-01.dfc.preprodazure.sfa.bis.gov.uk
 - name: apiName
   value: pages
+- name: applicationUrl
+  value: https://dfc-pp-app-pages-as.ase-01.dfc.preprodazure.sfa.bis.gov.uk

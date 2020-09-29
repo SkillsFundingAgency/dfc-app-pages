@@ -66,6 +66,12 @@ steps:
     ResourceGroupName: '${{ parameters.ResourceGroup }}'
     Slot: staging
 
+- task: esfadevops.Tokenization.custom-build-task.Tokenization@0
+  displayName: 'Tokenization: Transform OpenAPI specification'
+  inputs:
+    SourcePath: '${{ parameters.SpecificationPath }}'
+    TargetFileNames: 'GetAllPages.txt'
+    
 - task: AzurePowerShell@4	
   displayName: 'Import OpenAPI specification'	
   inputs:	
@@ -90,7 +96,7 @@ steps:
       
       $policyFilePath = "$(Pipeline.Workspace)/dfc.app.pages.apimpolicies/ApimPolicy-IsolatedAppServiceAsEventGridWebhookEndpoint.xml"
       
-      $apiNames = 'DFC Pages API'
+      $apiNames = "$(apiName)"
       
       $apiOperationNames = '/api/webhook/ReceiveEvents - POST'
       
