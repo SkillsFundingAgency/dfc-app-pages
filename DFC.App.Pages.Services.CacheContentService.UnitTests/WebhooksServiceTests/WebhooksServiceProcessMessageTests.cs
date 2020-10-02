@@ -64,7 +64,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
         public async Task WebhooksServiceProcessMessageAsyncContentCreateReturnsSuccess()
         {
             // Arrange
-            const ContentCacheStatus isContentItem = ContentCacheStatus.ContentItem;
+            const ContentCacheStatus isContentItem = ContentCacheStatus.Content;
             const HttpStatusCode expectedResponse = HttpStatusCode.Created;
             var expectedValidApiContentModel = BuildValidPagesApiContentModel();
             var expectedValidContentPageModel = BuildValidContentPageModel();
@@ -95,7 +95,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
         public async Task WebhooksServiceProcessMessageAsyncContentUpdateReturnsSuccess()
         {
             // Arrange
-            const ContentCacheStatus isContentItem = ContentCacheStatus.ContentItem;
+            const ContentCacheStatus isContentItem = ContentCacheStatus.Content;
             const HttpStatusCode expectedResponse = HttpStatusCode.OK;
             var expectedValidApiContentModel = BuildValidPagesApiContentModel();
             var expectedValidContentPageModel = BuildValidContentPageModel();
@@ -125,7 +125,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
         public async Task WebhooksServiceProcessMessageAsyncContentDeleteReturnsSuccess()
         {
             // Arrange
-            const ContentCacheStatus isContentItem = ContentCacheStatus.ContentItem;
+            const ContentCacheStatus isContentItem = ContentCacheStatus.Content;
             const HttpStatusCode expectedResponse = HttpStatusCode.OK;
             var url = "https://somewhere.com";
             var service = BuildWebhooksService();
