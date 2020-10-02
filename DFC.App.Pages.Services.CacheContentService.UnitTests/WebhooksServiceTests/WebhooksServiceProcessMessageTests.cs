@@ -147,34 +147,34 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
         }
 
         [Fact]
-        public async Task WebhooksServiceProcessMessageAsyncContentItemCreateReturnsSuccess()
+        public async Task WebhooksServiceProcessMessageAsyncPageLocationCreateReturnsSuccess()
         {
             // Arrange
             const ContentCacheStatus isContentItem = ContentCacheStatus.ContentItem;
             const HttpStatusCode expectedResponse = HttpStatusCode.OK;
-            var expectedValidApiContentItemModel = BuildValidPagesApiContentItemDataModel();
+            var expectedValidApiPageLocationModel = BuildValidPagesApiPageLocationModel(PageLocationIdForCreate);
             var expectedValidContentPageModel = BuildValidContentPageModel();
-            var expectedValidContentItemModel = BuildValidContentItemModel(ContentItemIdForCreate);
             var url = "https://somewhere.com";
             var service = BuildWebhooksService();
 
             A.CallTo(() => FakeContentCacheService.CheckIsContentItem(A<Guid>.Ignored)).Returns(isContentItem);
-            A.CallTo(() => FakeContentCacheService.GetContentIdsContainingContentItemId(A<Guid>.Ignored)).Returns(new List<Guid> { ContentIdForCreate, Guid.NewGuid() });
-            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiHtmlModel>(A<Uri>.Ignored)).Returns(expectedValidApiContentItemModel);
+            A.CallTo(() => FakeContentCacheService.GetContentIdsContainingContentItemId(A<Guid>.Ignored)).Returns(new List<Guid> { PageLocationIdForCreate, Guid.NewGuid() });
+            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiPageLocationModel>(A<Uri>.Ignored)).Returns(expectedValidApiPageLocationModel);
             A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(expectedValidContentPageModel);
-            A.CallTo(() => FakeMapper.Map(A<CmsApiHtmlModel>.Ignored, A<ContentItemModel>.Ignored)).Returns(expectedValidContentItemModel);
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).Returns(HttpStatusCode.NotFound);
             A.CallTo(() => FakeEventMessageService.CreateAsync(A<ContentPageModel>.Ignored)).Returns(HttpStatusCode.Created);
 
             // Act
-            var result = await service.ProcessMessageAsync(WebhookCacheOperation.CreateOrUpdate, Guid.NewGuid(), ContentItemIdForCreate, url).ConfigureAwait(false);
+            var result = await service.ProcessMessageAsync(WebhookCacheOperation.CreateOrUpdate, Guid.NewGuid(), PageLocationIdForCreate, url).ConfigureAwait(false);
 
             // Assert
             A.CallTo(() => FakeContentCacheService.CheckIsContentItem(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeContentCacheService.GetContentIdsContainingContentItemId(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiHtmlModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiPageLocationModel>(A<Uri>.Ignored)).MustHaveHappenedOnceOrMore();
+            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiHtmlModel>(A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiHtmlSharedModel>(A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiSharedContentModel>(A<Uri>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceOrMore();
-            A.CallTo(() => FakeMapper.Map(A<CmsApiHtmlModel>.Ignored, A<ContentItemModel>.Ignored)).MustHaveHappenedOnceOrMore();
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceOrMore();
             A.CallTo(() => FakeEventMessageService.CreateAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => FakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
@@ -183,33 +183,33 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
         }
 
         [Fact]
-        public async Task WebhooksServiceProcessMessageAsyncContentItemUpdateReturnsSuccess()
+        public async Task WebhooksServiceProcessMessageAsyncPageLocationUpdateReturnsSuccess()
         {
             // Arrange
             const ContentCacheStatus isContentItem = ContentCacheStatus.ContentItem;
             const HttpStatusCode expectedResponse = HttpStatusCode.OK;
-            var expectedValidApiContentItemModel = BuildValidPagesApiContentItemDataModel();
+            var expectedValidApiPageLocationModel = BuildValidPagesApiPageLocationModel(PageLocationIdForUpdate);
             var expectedValidContentPageModel = BuildValidContentPageModel();
-            var expectedValidContentItemModel = BuildValidContentItemModel(ContentItemIdForUpdate);
             var url = "https://somewhere.com";
             var service = BuildWebhooksService();
 
             A.CallTo(() => FakeContentCacheService.CheckIsContentItem(A<Guid>.Ignored)).Returns(isContentItem);
-            A.CallTo(() => FakeContentCacheService.GetContentIdsContainingContentItemId(A<Guid>.Ignored)).Returns(new List<Guid> { ContentIdForUpdate, Guid.NewGuid() });
-            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiHtmlModel>(A<Uri>.Ignored)).Returns(expectedValidApiContentItemModel);
+            A.CallTo(() => FakeContentCacheService.GetContentIdsContainingContentItemId(A<Guid>.Ignored)).Returns(new List<Guid> { PageLocationIdForUpdate, Guid.NewGuid() });
+            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiPageLocationModel>(A<Uri>.Ignored)).Returns(expectedValidApiPageLocationModel);
             A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(expectedValidContentPageModel);
-            A.CallTo(() => FakeMapper.Map(A<CmsApiHtmlModel>.Ignored, A<ContentItemModel>.Ignored)).Returns(expectedValidContentItemModel);
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).Returns(HttpStatusCode.OK);
 
             // Act
-            var result = await service.ProcessMessageAsync(WebhookCacheOperation.CreateOrUpdate, Guid.NewGuid(), ContentItemIdForUpdate, url).ConfigureAwait(false);
+            var result = await service.ProcessMessageAsync(WebhookCacheOperation.CreateOrUpdate, Guid.NewGuid(), PageLocationIdForUpdate, url).ConfigureAwait(false);
 
             // Assert
             A.CallTo(() => FakeContentCacheService.CheckIsContentItem(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => FakeContentCacheService.GetContentIdsContainingContentItemId(A<Guid>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiHtmlModel>(A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiPageLocationModel>(A<Uri>.Ignored)).MustHaveHappenedOnceOrMore();
+            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiHtmlModel>(A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiHtmlSharedModel>(A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => FakeCmsApiService.GetContentItemAsync<CmsApiSharedContentModel>(A<Uri>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceOrMore();
-            A.CallTo(() => FakeMapper.Map(A<CmsApiHtmlModel>.Ignored, A<ContentItemModel>.Ignored)).MustHaveHappenedOnceOrMore();
             A.CallTo(() => FakeEventMessageService.UpdateAsync(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceOrMore();
             A.CallTo(() => FakeEventMessageService.CreateAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => FakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();

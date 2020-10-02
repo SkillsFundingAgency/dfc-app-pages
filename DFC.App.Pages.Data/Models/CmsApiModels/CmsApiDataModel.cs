@@ -31,8 +31,6 @@ namespace DFC.App.Pages.Data.Models.CmsApiModels
         [JsonIgnore]
         public bool IncludeInSitemap => !ExcludeFromSitemap;
 
-        //   public string? Content { get; set; }
-
         public string? Description { get; set; }
 
         public string? Keywords { get; set; }

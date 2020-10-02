@@ -37,6 +37,10 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
 
         protected Guid ContentIdForDelete { get; } = Guid.NewGuid();
 
+        protected Guid PageLocationIdForCreate { get; } = Guid.NewGuid();
+
+        protected Guid PageLocationIdForUpdate { get; } = Guid.NewGuid();
+
         protected Guid ContentItemIdForCreate { get; } = Guid.NewGuid();
 
         protected Guid ContentItemIdForUpdate { get; } = Guid.NewGuid();
@@ -57,7 +61,43 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
 
         protected IEventGridService FakeEventGridService { get; }
 
-        protected static CmsApiDataModel BuildValidPagesApiContentModel()
+        protected static CmsApiPageLocationModel BuildValidPagesApiPageLocationModel(Guid contentItemId)
+        {
+            var model = new CmsApiPageLocationModel
+            {
+                ItemId = contentItemId,
+                Title = "breadcrump-link",
+                BreadcrumbText = "Breadcrumb Text",
+            };
+
+            return model;
+        }
+
+        protected static ContentItemModel BuildValidContentItemModel(Guid contentItemId, string? contentType = null)
+        {
+            var model = new ContentItemModel()
+            {
+                ItemId = contentItemId,
+                LastReviewed = DateTime.Now,
+                ContentType = contentType,
+            };
+
+            return model;
+        }
+
+        protected static PageLocationModel BuildValidPagesPageLocationModel(Guid contentItemId)
+        {
+            var model = new PageLocationModel
+            {
+                ItemId = contentItemId,
+                BreadcrumbLinkSegment = "breadcrump-link",
+                BreadcrumbText = "Breadcrumb Text",
+            };
+
+            return model;
+        }
+
+        protected CmsApiDataModel BuildValidPagesApiContentModel()
         {
             var model = new CmsApiDataModel
             {
@@ -91,22 +131,9 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
                 },
                 ContentItems = new List<IBaseContentItemModel>
                 {
-                    BuildValidPagesApiContentItemDataModel(),
+                    BuildValidPagesApiPageLocationModel(PageLocationIdForUpdate),
                 },
                 Published = DateTime.UtcNow,
-            };
-
-            return model;
-        }
-
-        protected static CmsApiHtmlModel BuildValidPagesApiContentItemDataModel()
-        {
-            var model = new CmsApiHtmlModel
-            {
-                Alignment = "Left",
-                Ordinal = 1,
-                Size = 50,
-                Content = "<h1>A document</h1>",
             };
 
             return model;
@@ -129,19 +156,12 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
                     BuildValidContentItemModel(ContentItemIdForUpdate, contentType),
                     BuildValidContentItemModel(ContentItemIdForDelete),
                 },
+                PageLocations = new List<PageLocationModel>
+                {
+                    BuildValidPagesPageLocationModel(PageLocationIdForCreate),
+                    BuildValidPagesPageLocationModel(PageLocationIdForUpdate),
+                },
                 LastReviewed = DateTime.UtcNow,
-            };
-
-            return model;
-        }
-
-        protected ContentItemModel BuildValidContentItemModel(Guid contentItemId, string? contentType = null)
-        {
-            var model = new ContentItemModel()
-            {
-                ItemId = contentItemId,
-                LastReviewed = DateTime.Now,
-                ContentType = contentType,
             };
 
             return model;

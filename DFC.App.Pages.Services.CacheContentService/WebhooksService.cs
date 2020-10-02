@@ -121,16 +121,10 @@ namespace DFC.App.Pages.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessContentItemAsync(Uri url, Guid contentItemId)
         {
+            HttpStatusCode result = HttpStatusCode.NoContent;
             var contentIds = contentCacheService.GetContentIdsContainingContentItemId(contentItemId);
 
             if (!contentIds.Any())
-            {
-                return HttpStatusCode.NoContent;
-            }
-
-            var apiDataContentItemModel = await cmsApiService.GetContentItemAsync<CmsApiHtmlModel>(url).ConfigureAwait(false);
-
-            if (apiDataContentItemModel == null)
             {
                 return HttpStatusCode.NoContent;
             }
@@ -145,9 +139,15 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                     if (pageLocationModel != null)
                     {
-                        pageLocationModel.BreadcrumbLinkSegment = apiDataContentItemModel.Title;
-                        //TODO: ian: where to get the following from?
-                        // pageLocationModel.BreadcrumbText = apiDataContentItemModel.BreadcrumbText;
+                        var cmsApiPageLocationModel = await cmsApiService.GetContentItemAsync<CmsApiPageLocationModel>(url).ConfigureAwait(false);
+
+                        if (cmsApiPageLocationModel == null)
+                        {
+                            return HttpStatusCode.NoContent;
+                        }
+
+                        pageLocationModel.BreadcrumbLinkSegment = cmsApiPageLocationModel.Title;
+                        pageLocationModel.BreadcrumbText = cmsApiPageLocationModel.BreadcrumbText;
                         pageLocationModel.LastCached = DateTime.UtcNow;
                     }
 
@@ -158,14 +158,40 @@ namespace DFC.App.Pages.Services.CacheContentService
                         switch (contentItemModel.ContentType)
                         {
                             case Constants.ContentTypeHtml:
-                            case Constants.ContentTypeHtmlShared:
-                            case Constants.ContentTypeSharedContent:
-                                contentItemModel.Title = apiDataContentItemModel.Title;
-                                contentItemModel.Content = apiDataContentItemModel.Content;
-                                contentItemModel.HtmlBody = apiDataContentItemModel.HtmlBody;
+                                var cmsApiHtmlModel = await cmsApiService.GetContentItemAsync<CmsApiHtmlModel>(url).ConfigureAwait(false);
+
+                                if (cmsApiHtmlModel == null)
+                                {
+                                    return HttpStatusCode.NoContent;
+                                }
+
+                                contentItemModel.Title = cmsApiHtmlModel.Title;
+                                contentItemModel.Content = cmsApiHtmlModel.Content;
+                                contentItemModel.HtmlBody = cmsApiHtmlModel.HtmlBody;
                                 break;
-                            default:
-                                mapper.Map(apiDataContentItemModel, contentItemModel);
+                            case Constants.ContentTypeHtmlShared:
+                                var cmsApiHtmlSharedModel = await cmsApiService.GetContentItemAsync<CmsApiHtmlSharedModel>(url).ConfigureAwait(false);
+
+                                if (cmsApiHtmlSharedModel == null)
+                                {
+                                    return HttpStatusCode.NoContent;
+                                }
+
+                                contentItemModel.Title = cmsApiHtmlSharedModel.Title;
+                                contentItemModel.Content = cmsApiHtmlSharedModel.Content;
+                                contentItemModel.HtmlBody = cmsApiHtmlSharedModel.HtmlBody;
+                                break;
+                            case Constants.ContentTypeSharedContent:
+                                var cmsApiSharedContentModel = await cmsApiService.GetContentItemAsync<CmsApiSharedContentModel>(url).ConfigureAwait(false);
+
+                                if (cmsApiSharedContentModel == null)
+                                {
+                                    return HttpStatusCode.NoContent;
+                                }
+
+                                contentItemModel.Title = cmsApiSharedContentModel.Title;
+                                contentItemModel.Content = cmsApiSharedContentModel.Content;
+                                contentItemModel.HtmlBody = cmsApiSharedContentModel.HtmlBody;
                                 break;
                         }
 
@@ -179,11 +205,12 @@ namespace DFC.App.Pages.Services.CacheContentService
                         await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 
                         await eventGridService.CompareAndSendEventAsync(existingContentPageModel, contentPageModel).ConfigureAwait(false);
+                        result = HttpStatusCode.OK;
                     }
                 }
             }
 
-            return HttpStatusCode.OK;
+            return result;
         }
 
         public async Task<HttpStatusCode> DeleteContentAsync(Guid contentId)

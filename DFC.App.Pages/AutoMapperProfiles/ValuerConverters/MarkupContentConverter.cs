@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using Microsoft.AspNetCore.Html;
 using System.Collections.Generic;

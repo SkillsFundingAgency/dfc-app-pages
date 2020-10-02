@@ -134,17 +134,14 @@ namespace DFC.App.Pages.Services.EventProcessorService
 
             foreach (var item in parentPageLocations)
             {
-                if (item is PageLocationModel pageLocation)
+                if (!string.IsNullOrWhiteSpace(item.BreadcrumbLinkSegment))
                 {
-                    if (!string.IsNullOrWhiteSpace(pageLocation.BreadcrumbLinkSegment))
-                    {
-                        pagelocations.Add(pageLocation.BreadcrumbLinkSegment);
-                    }
+                    pagelocations.Add(item.BreadcrumbLinkSegment);
+                }
 
-                    if (pageLocation.PageLocations != null && pageLocation.PageLocations.Any())
-                    {
-                        pagelocations.AddRange(ExtractPageLocationItem(item.PageLocations));
-                    }
+                if (item.PageLocations != null && item.PageLocations.Any())
+                {
+                    pagelocations.AddRange(ExtractPageLocationItem(item.PageLocations));
                 }
             }
 
