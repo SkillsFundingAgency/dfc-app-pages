@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
 {
-    public class PageLocationsConverter : IValueConverter<IList<IBaseContentItemModel>?, List<CmsApiPageLocationModel>?>
+    public class PageLocationsConverter : IValueConverter<IList<IBaseContentItemModel>?, List<PageLocationModel>?>
     {
-        public List<CmsApiPageLocationModel>? Convert(IList<IBaseContentItemModel>? sourceMember, ResolutionContext context)
+        public List<PageLocationModel>? Convert(IList<IBaseContentItemModel>? sourceMember, ResolutionContext context)
         {
             _ = context ?? throw new ArgumentNullException(nameof(context));
 
@@ -20,7 +20,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
                 return default;
             }
 
-            var result = new List<CmsApiPageLocationModel>();
+            var result = new List<PageLocationModel>();
 
             foreach (var item in sourceMember)
             {
