@@ -19,7 +19,9 @@ namespace DFC.App.Pages.Data.Contracts
 
         Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint);
 
-        ContentItemModel? FindContentItem(Guid contentItemId, List<ContentItemModel>? items);
+        ContentItemModel? FindContentItem(Guid itemId, List<ContentItemModel>? items);
+
+        PageLocationModel? FindPageLocatonItem(Guid itemId, List<PageLocationModel>? items);
 
         bool RemoveContentItem(Guid contentItemId, List<ContentItemModel>? items);
     }

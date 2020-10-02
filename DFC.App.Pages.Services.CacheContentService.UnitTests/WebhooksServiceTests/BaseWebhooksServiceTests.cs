@@ -1,5 +1,6 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models.CmsApiModels;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Models;
@@ -56,9 +57,9 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
 
         protected IEventGridService FakeEventGridService { get; }
 
-        protected static PagesApiDataModel BuildValidPagesApiContentModel()
+        protected static CmsApiDataModel BuildValidPagesApiContentModel()
         {
-            var model = new PagesApiDataModel
+            var model = new CmsApiDataModel
             {
                 ItemId = Guid.NewGuid(),
                 CanonicalName = "an-article",
@@ -88,7 +89,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
                             }),
                     },
                 },
-                ContentItems = new List<PagesApiContentItemModel>
+                ContentItems = new List<IBaseContentItemModel>
                 {
                     BuildValidPagesApiContentItemDataModel(),
                 },
@@ -98,9 +99,9 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
             return model;
         }
 
-        protected static PagesApiContentItemModel BuildValidPagesApiContentItemDataModel()
+        protected static CmsApiHtmlModel BuildValidPagesApiContentItemDataModel()
         {
-            var model = new PagesApiContentItemModel
+            var model = new CmsApiHtmlModel
             {
                 Alignment = "Left",
                 Ordinal = 1,

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DFC.App.Pages.Data.Common;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.ViewModels;
 using System.Collections.Generic;
@@ -11,21 +10,14 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
     {
         public List<BreadcrumbItemViewModel>? Convert(ContentPageModel? sourceMember, ResolutionContext context)
         {
-            if (sourceMember == null)
-            {
-                return null;
-            }
-
-            var contentItems = sourceMember.ContentItems.Where(w => w.ContentType!.Equals(Constants.ContentTypePageLocation, System.StringComparison.OrdinalIgnoreCase)).ToList();
-
-            if (contentItems == null || !contentItems.Any())
+            if (sourceMember?.PageLocations == null || !sourceMember.PageLocations.Any())
             {
                 return null;
             }
 
             var result = new List<BreadcrumbItemViewModel>();
 
-            foreach (var item in contentItems)
+            foreach (var item in sourceMember.PageLocations)
             {
                 result.AddRange(IterateChilderen(item));
             }
@@ -59,24 +51,27 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             return result;
         }
 
-        private static List<BreadcrumbItemViewModel> IterateChilderen(ContentItemModel item)
+        private static List<BreadcrumbItemViewModel> IterateChilderen(PageLocationModel pageLocationModel)
         {
             var result = new List<BreadcrumbItemViewModel>();
 
-            if (!string.IsNullOrWhiteSpace(item.BreadcrumbText))
+            if (!string.IsNullOrWhiteSpace(pageLocationModel.BreadcrumbText))
             {
                 var breadcrumbItemModel = new BreadcrumbItemViewModel
                 {
-                    Title = item.BreadcrumbText,
-                    Route = item.BreadcrumbLinkSegment,
+                    Title = pageLocationModel.BreadcrumbText,
+                    Route = pageLocationModel.BreadcrumbLinkSegment,
                 };
 
                 result.Add(breadcrumbItemModel);
             }
 
-            foreach (var sharedContentItemModel in item.ContentItems.Where(w => !string.IsNullOrWhiteSpace(w.BreadcrumbText)))
+            foreach (var sharedContentItemModel in pageLocationModel.PageLocations.Where(w => !string.IsNullOrWhiteSpace(w?.BreadcrumbText)))
             {
-                result.AddRange(IterateChilderen(sharedContentItemModel));
+                if (sharedContentItemModel != null)
+                {
+                    result.AddRange(IterateChilderen(sharedContentItemModel));
+                }
             }
 
             return result;

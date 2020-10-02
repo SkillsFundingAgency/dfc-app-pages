@@ -22,7 +22,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages
@@ -74,7 +73,6 @@ namespace DFC.App.Pages
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
             services.AddTransient<IPagesControlerHelpers, PagesControlerHelpers>();
-            services.AddSingleton<IContentCacheService>(sp => new ContentCacheService(sp.GetRequiredService<ILogger<ContentCacheService>>()));
             services.AddTransient<IEventMessageService<ContentPageModel>, EventMessageService<ContentPageModel>>();
             services.AddTransient<ICacheReloadService, CacheReloadService>();
             services.AddTransient<IWebhooksService, WebhooksService>();

@@ -2,8 +2,10 @@
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Enums;
 using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models.CmsApiModels;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
+using DFC.Content.Pkg.Netcore.Data.Enums;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -45,12 +47,12 @@ namespace DFC.App.Pages.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessMessageAsync(WebhookCacheOperation webhookCacheOperation, Guid eventId, Guid contentId, string apiEndpoint)
         {
-            bool isContentItem = contentCacheService.CheckIsContentItem(contentId);
+            var contentCacheStatus = contentCacheService.CheckIsContentItem(contentId);
 
             switch (webhookCacheOperation)
             {
                 case WebhookCacheOperation.Delete:
-                    if (isContentItem)
+                    if (contentCacheStatus == ContentCacheStatus.ContentItem || contentCacheStatus == ContentCacheStatus.Both)
                     {
                         return await DeleteContentItemAsync(contentId).ConfigureAwait(false);
                     }
@@ -66,7 +68,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                         throw new InvalidDataException($"Invalid Api url '{apiEndpoint}' received for Event Id: {eventId}");
                     }
 
-                    if (isContentItem)
+                    if (contentCacheStatus == ContentCacheStatus.ContentItem || contentCacheStatus == ContentCacheStatus.Both)
                     {
                         return await ProcessContentItemAsync(url, contentId).ConfigureAwait(false);
                     }
@@ -83,7 +85,7 @@ namespace DFC.App.Pages.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessContentAsync(Uri url, Guid contentId)
         {
-            var apiDataModel = await cmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(url).ConfigureAwait(false);
+            var apiDataModel = await cmsApiService.GetItemAsync<CmsApiDataModel>(url).ConfigureAwait(false);
             var contentPageModel = mapper.Map<ContentPageModel>(apiDataModel);
 
             if (contentPageModel == null)
@@ -126,7 +128,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                 return HttpStatusCode.NoContent;
             }
 
-            var apiDataContentItemModel = await cmsApiService.GetContentItemAsync<PagesApiContentItemModel>(url).ConfigureAwait(false);
+            var apiDataContentItemModel = await cmsApiService.GetContentItemAsync<CmsApiHtmlModel>(url).ConfigureAwait(false);
 
             if (apiDataContentItemModel == null)
             {
@@ -139,19 +141,28 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 if (contentPageModel != null)
                 {
+                    var pageLocationModel = FindPageLocatonItem(contentItemId, contentPageModel.PageLocations);
+
+                    if (pageLocationModel != null)
+                    {
+                        pageLocationModel.BreadcrumbLinkSegment = apiDataContentItemModel.Title;
+                        //TODO: ian: where to get the following from?
+                        // pageLocationModel.BreadcrumbText = apiDataContentItemModel.BreadcrumbText;
+                        pageLocationModel.LastCached = DateTime.UtcNow;
+                    }
+
                     var contentItemModel = FindContentItem(contentItemId, contentPageModel.ContentItems);
 
                     if (contentItemModel != null)
                     {
                         switch (contentItemModel.ContentType)
                         {
-                            case Constants.ContentTypePageLocation:
-                                contentItemModel.BreadcrumbLinkSegment = apiDataContentItemModel.Title;
-                                contentItemModel.BreadcrumbText = apiDataContentItemModel.BreadcrumbText;
-                                break;
+                            case Constants.ContentTypeHtml:
+                            case Constants.ContentTypeHtmlShared:
                             case Constants.ContentTypeSharedContent:
                                 contentItemModel.Title = apiDataContentItemModel.Title;
                                 contentItemModel.Content = apiDataContentItemModel.Content;
+                                contentItemModel.HtmlBody = apiDataContentItemModel.HtmlBody;
                                 break;
                             default:
                                 mapper.Map(apiDataContentItemModel, contentItemModel);
@@ -159,7 +170,10 @@ namespace DFC.App.Pages.Services.CacheContentService
                         }
 
                         contentItemModel.LastCached = DateTime.UtcNow;
+                    }
 
+                    if (contentItemModel != null || pageLocationModel != null)
+                    {
                         var existingContentPageModel = await contentPageService.GetByIdAsync(contentId).ConfigureAwait(false);
 
                         await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
@@ -219,7 +233,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             return HttpStatusCode.OK;
         }
 
-        public ContentItemModel? FindContentItem(Guid contentItemId, List<ContentItemModel>? items)
+        public ContentItemModel? FindContentItem(Guid itemId, List<ContentItemModel>? items)
         {
             if (items == null || !items.Any())
             {
@@ -228,12 +242,37 @@ namespace DFC.App.Pages.Services.CacheContentService
 
             foreach (var contentItemModel in items)
             {
-                if (contentItemModel.ItemId == contentItemId)
+                if (contentItemModel.ItemId == itemId)
                 {
                     return contentItemModel;
                 }
 
-                var childContentItemModel = FindContentItem(contentItemId, contentItemModel.ContentItems);
+                var childContentItemModel = FindContentItem(itemId, contentItemModel.ContentItems);
+
+                if (childContentItemModel != null)
+                {
+                    return childContentItemModel;
+                }
+            }
+
+            return default;
+        }
+
+        public PageLocationModel? FindPageLocatonItem(Guid itemId, List<PageLocationModel>? items)
+        {
+            if (items == null || !items.Any())
+            {
+                return default;
+            }
+
+            foreach (var pageLocationModel in items)
+            {
+                if (pageLocationModel.ItemId == itemId)
+                {
+                    return pageLocationModel;
+                }
+
+                var childContentItemModel = FindPageLocatonItem(itemId, pageLocationModel.PageLocations);
 
                 if (childContentItemModel != null)
                 {

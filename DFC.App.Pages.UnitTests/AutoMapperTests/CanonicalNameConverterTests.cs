@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.AutoMapperProfiles.ValuerConverters;
-using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models.CmsApiModels;
 using Xunit;
 
 namespace DFC.App.Pages.UnitTests.AutoMapperTests
@@ -13,7 +13,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         {
             // Arrange
             var converter = new CanonicalNameConverter();
-            PagesApiDataModel? sourceMember = null;
+            CmsApiDataModel? sourceMember = null;
             var context = new ResolutionContext(null, null);
 
             // Act
@@ -29,7 +29,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
             // Arrange
             const string expectedResult = "a-canonical-name";
             var converter = new CanonicalNameConverter();
-            var sourceMember = new PagesApiDataModel { CanonicalName = expectedResult };
+            var sourceMember = new CmsApiDataModel { CanonicalName = expectedResult };
             var context = new ResolutionContext(null, null);
 
             // Act
@@ -44,7 +44,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         {
             // Arrange
             var converter = new CanonicalNameConverter();
-            var sourceMember = new PagesApiDataModel { PageLocation = "root" };
+            var sourceMember = new CmsApiDataModel { PageLocation = "root" };
             var context = new ResolutionContext(null, null);
 
             // Act
@@ -59,7 +59,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         {
             // Arrange
             var converter = new CanonicalNameConverter();
-            var sourceMember = new PagesApiDataModel();
+            var sourceMember = new CmsApiDataModel();
             var context = new ResolutionContext(null, null);
 
             // Act
@@ -75,7 +75,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
             // Arrange
             const string expectedResult = "leaf";
             var converter = new CanonicalNameConverter();
-            var sourceMember = new PagesApiDataModel { PageLocation = "/root/branch/leaf" };
+            var sourceMember = new CmsApiDataModel { PageLocation = "/root/branch/leaf" };
             var context = new ResolutionContext(null, null);
 
             // Act
@@ -91,7 +91,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
             // Arrange
             const string expectedResult = "root";
             var converter = new CanonicalNameConverter();
-            var sourceMember = new PagesApiDataModel { PageLocation = "/root" };
+            var sourceMember = new CmsApiDataModel { PageLocation = "/root" };
             var context = new ResolutionContext(null, null);
 
             // Act
