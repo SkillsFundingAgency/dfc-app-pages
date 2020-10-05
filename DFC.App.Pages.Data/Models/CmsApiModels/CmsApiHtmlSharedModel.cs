@@ -1,11 +1,12 @@
-﻿using DFC.Content.Pkg.Netcore.Data.Models;
+﻿using DFC.App.Pages.Data.Contracts;
+using DFC.Content.Pkg.Netcore.Data.Models;
 using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages.Data.Models.CmsApiModels
 {
     [ExcludeFromCodeCoverage]
-    public class CmsApiHtmlSharedModel : BaseContentItemModel
+    public class CmsApiHtmlSharedModel : BaseContentItemModel, ICmsApiMarkupContentItem
     {
         public int? Justify { get; set; }
 

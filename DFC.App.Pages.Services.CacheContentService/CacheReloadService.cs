@@ -206,7 +206,11 @@ namespace DFC.App.Pages.Services.CacheContentService
                     logger.LogInformation($"Updated cache with {item.Title} - {item.Url}");
                 }
 
-                contentCacheService.AddOrReplace(contentPageModel.Id, contentPageModel.AllContentItemIds);
+                var contentItemIds = contentPageModel.AllContentItemIds;
+
+                contentItemIds.AddRange(contentPageModel.AllPageLocationIds);
+
+                contentCacheService.AddOrReplace(contentPageModel.Id, contentItemIds);
             }
             catch (Exception ex)
             {

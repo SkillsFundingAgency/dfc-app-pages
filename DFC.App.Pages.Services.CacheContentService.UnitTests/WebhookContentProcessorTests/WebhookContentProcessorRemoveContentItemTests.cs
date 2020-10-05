@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTests
+namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhookContentProcessorTests
 {
-    [Trait("Category", "Webhooks Service FindContentItems Unit Tests")]
-    public class WebhooksServiceFindContentItemTests : BaseWebhooksServiceTests
+    [Trait("Category", "WebhookContentProcessor - RemoveContentItem Unit Tests")]
+    public class WebhookContentProcessorRemoveContentItemTests : BaseWebhookContentProcessor
     {
         [Fact]
-        public void WebhooksServiceFindContentItemTestsReturnsSuccess()
+        public void WebhooksServiceRemoveContentItemTestsReturnsSuccess()
         {
             // Arrange
             var contentItemId = Guid.NewGuid();
@@ -19,61 +19,60 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
                 ItemId = contentItemId,
             };
             var items = BuildContentItemSet();
-            var service = BuildWebhooksService();
+            var service = BuildWebhookContentProcessor();
 
-            items.First().ContentItems.First().ContentItems.Add(expectedContentItemModel);
+            items.First().ContentItems.First().ContentItems!.Add(expectedContentItemModel);
 
             // Act
-            var result = service.FindContentItem(contentItemId, items);
+            var result = service.RemoveContentItem(contentItemId, items);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(expectedContentItemModel.ItemId, result!.ItemId);
+            Assert.True(result);
         }
 
         [Fact]
-        public void WebhooksServiceFindContentItemTestsReturnsNullforNotFound()
+        public void WebhooksServiceRemoveContentItemTestsReturnsFalseforNotFound()
         {
             // Arrange
             var contentItemId = Guid.NewGuid();
             var items = BuildContentItemSet();
-            var service = BuildWebhooksService();
+            var service = BuildWebhookContentProcessor();
 
             // Act
-            var result = service.FindContentItem(contentItemId, items);
+            var result = service.RemoveContentItem(contentItemId, items);
 
             // Assert
-            Assert.Null(result);
+            Assert.False(result);
         }
 
         [Fact]
-        public void WebhooksServiceFindContentItemTestsReturnsNullForNullContentItems()
+        public void WebhooksServiceRemoveContentItemTestsReturnsFalseForNullContentItems()
         {
             // Arrange
             var contentItemId = Guid.NewGuid();
             List<ContentItemModel>? items = null;
-            var service = BuildWebhooksService();
+            var service = BuildWebhookContentProcessor();
 
             // Act
-            var result = service.FindContentItem(contentItemId, items);
+            var result = service.RemoveContentItem(contentItemId, items);
 
             // Assert
-            Assert.Null(result);
+            Assert.False(result);
         }
 
         [Fact]
-        public void WebhooksServiceFindContentItemTestsReturnsNullForNNoContentItems()
+        public void WebhooksServiceRemoveContentItemTestsReturnsFalseForNoContentItems()
         {
             // Arrange
             var contentItemId = Guid.NewGuid();
             var items = new List<ContentItemModel>();
-            var service = BuildWebhooksService();
+            var service = BuildWebhookContentProcessor();
 
             // Act
-            var result = service.FindContentItem(contentItemId, items);
+            var result = service.RemoveContentItem(contentItemId, items);
 
             // Assert
-            Assert.Null(result);
+            Assert.False(result);
         }
 
         private List<ContentItemModel> BuildContentItemSet()

@@ -61,6 +61,7 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.Content, s => s.Ignore())
                 .ForMember(d => d.LastCached, s => s.Ignore())
                 .ForMember(d => d.AllContentItemIds, s => s.Ignore())
+                .ForMember(d => d.AllPageLocationIds, s => s.Ignore())
                 .ForMember(d => d.SiteMapPriority, s => s.MapFrom(a => a.SiteMapPriority / 10))
                 .ForMember(d => d.ContentItems, opt => opt.ConvertUsing(new MarkupContentItemsConverter(), a => a.ContentItems))
                 .ForMember(d => d.PageLocations, opt => opt.ConvertUsing(new PageLocationsConverter(), a => a.ContentItems))

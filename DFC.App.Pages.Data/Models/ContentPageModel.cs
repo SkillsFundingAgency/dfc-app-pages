@@ -44,6 +44,17 @@ namespace DFC.App.Pages.Data.Models
                     result.AddRange(ContentItems.Flatten(s => s.ContentItems).Where(w => w.ItemId != null).Select(s => s.ItemId!.Value));
                 }
 
+                return result;
+            }
+        }
+
+        [JsonIgnore]
+        public List<Guid> AllPageLocationIds
+        {
+            get
+            {
+                var result = new List<Guid>();
+
                 if (PageLocations != null)
                 {
                     result.AddRange(PageLocations.Flatten(s => s.PageLocations).Where(w => w.ItemId != null).Select(s => s.ItemId!.Value));
