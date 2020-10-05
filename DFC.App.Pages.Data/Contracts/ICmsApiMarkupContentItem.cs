@@ -1,6 +1,4 @@
-﻿using DFC.Content.Pkg.Netcore.Data.Contracts;
-
-namespace DFC.App.Pages.Data.Contracts
+﻿namespace DFC.App.Pages.Data.Contracts
 {
     public interface ICmsApiMarkupContentItem
     {
