@@ -2,18 +2,18 @@
 using System;
 using Xunit;
 
-namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTests
+namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhookContentProcessorTests
 {
-    [Trait("Category", "Webhooks Service TryValidateModel Unit Tests")]
-    public class WebhooksServiceTryValidateModelTests : BaseWebhooksServiceTests
+    [Trait("Category", "WebhookContentProcessor - TryValidateModel Unit Tests")]
+    public class WebhookContentProcessorTryValidateModelTests : BaseWebhookContentProcessor
     {
         [Fact]
-        public void WebhooksServiceTryValidateModelForCreateReturnsSuccess()
+        public void WebhookContentProcessorTryValidateModelForCreateReturnsSuccess()
         {
             // Arrange
             const bool expectedResponse = true;
             var expectedValidContentPageModel = BuildValidContentPageModel();
-            var service = BuildWebhooksService();
+            var service = BuildWebhookContentProcessor();
 
             // Act
             var result = service.TryValidateModel(expectedValidContentPageModel);
@@ -23,12 +23,12 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
         }
 
         [Fact]
-        public void WebhooksServiceTryValidateModelForUpdateReturnsFailure()
+        public void WebhookContentProcessorTryValidateModelForUpdateReturnsFailure()
         {
             // Arrange
             const bool expectedResponse = false;
             var expectedInvalidContentPageModel = new ContentPageModel();
-            var service = BuildWebhooksService();
+            var service = BuildWebhookContentProcessor();
 
             // Act
             var result = service.TryValidateModel(expectedInvalidContentPageModel);
@@ -38,11 +38,11 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
         }
 
         [Fact]
-        public void WebhooksServiceTryValidateModelRaisesExceptionForNullContentPageModel()
+        public void WebhookContentProcessorTryValidateModelRaisesExceptionForNullContentPageModel()
         {
             // Arrange
             ContentPageModel? nullContentPageModel = null;
-            var service = BuildWebhooksService();
+            var service = BuildWebhookContentProcessor();
 
             // Act
             var exceptionResult = Assert.Throws<ArgumentNullException>(() => service.TryValidateModel(nullContentPageModel));

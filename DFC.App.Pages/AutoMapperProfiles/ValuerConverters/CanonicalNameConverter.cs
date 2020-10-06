@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models.CmsApiModels;
 using System;
 
 namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
 {
-    public class CanonicalNameConverter : IValueConverter<PagesApiDataModel?, string?>
+    public class CanonicalNameConverter : IValueConverter<CmsApiDataModel?, string?>
     {
-        public string? Convert(PagesApiDataModel? sourceMember, ResolutionContext context)
+        public string? Convert(CmsApiDataModel? sourceMember, ResolutionContext context)
         {
             const string delimiter = "/";
 
