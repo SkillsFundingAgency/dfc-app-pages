@@ -148,6 +148,7 @@ namespace DFC.App.Pages.Data.UnitTests.ValidationTests
                 Content = content,
                 RedirectLocations = redirectLocations.ToArray(),
                 LastReviewed = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow,
             };
 
             return model;

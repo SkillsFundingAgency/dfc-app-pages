@@ -123,6 +123,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhookContentPro
                     BuildValidPagesPageLocationModel(PageLocationIdForDelete),
                 },
                 LastReviewed = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow,
             };
 
             return model;

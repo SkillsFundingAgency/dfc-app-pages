@@ -482,6 +482,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                     },
                 },
                 LastReviewed = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow,
             };
 
             return model;
