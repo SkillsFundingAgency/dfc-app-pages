@@ -4,12 +4,24 @@
     Layout = "_LocalLayout";
 
     ViewData["Title"] = "Health";
+
+    var breadcrumbViewModel = new BreadcrumbViewModel
+    {
+        Breadcrumbs = new List<BreadcrumbItemViewModel>
+{
+            new BreadcrumbItemViewModel
+            {
+                 Route = "/",
+                 Title = "[ Index ]",
+            },
+        },
+    };
 }
+
+<partial name="Breadcrumb" model=@breadcrumbViewModel />
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <partial name="Health" model="@Model" />
-
-        <a asp-controller="Pages" asp-action="Index">Back to List</a>
     </div>
 </div>

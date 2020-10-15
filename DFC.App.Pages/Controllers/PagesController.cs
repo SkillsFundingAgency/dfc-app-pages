@@ -42,10 +42,10 @@ namespace DFC.App.Pages.Controllers
                 LocalPath = LocalPath,
                 Documents = new List<IndexDocumentViewModel>
                 {
-                    new IndexDocumentViewModel { CanonicalName = HomeController.HomeViewCanonicalName, PageLocation = "/" },
                     new IndexDocumentViewModel { CanonicalName = HealthController.HealthViewCanonicalName },
                     new IndexDocumentViewModel { CanonicalName = SitemapController.SitemapViewCanonicalName },
                     new IndexDocumentViewModel { CanonicalName = RobotController.RobotsViewCanonicalName },
+                    new IndexDocumentViewModel { CanonicalName = HomeController.HomeViewCanonicalName, PageLocation = "/" },
                 },
             };
             var contentPageModels = await contentPageService.GetAllAsync().ConfigureAwait(false);

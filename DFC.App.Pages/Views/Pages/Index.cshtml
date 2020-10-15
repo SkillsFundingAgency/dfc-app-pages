@@ -16,7 +16,7 @@
                     <li>
                         @if (string.IsNullOrWhiteSpace(@document.PageLocation))
                         {
-                            <a href="/@Model.LocalPath/@document.CanonicalName/document">/@document.CanonicalName</a>
+                            <a href="/@Model.LocalPath/@document.CanonicalName">/@document.CanonicalName</a>
                         }
                         else if (@document.PageLocation == "/")
                         {
