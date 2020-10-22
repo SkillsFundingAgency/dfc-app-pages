@@ -30,9 +30,8 @@ steps:
   displayName: 'Azure App Service Deploy: ${{ parameters.WebAppName }}'
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
-    appType: app
     WebAppName: '${{ parameters.WebAppName }}'
-    Package: "${{ parameters.PackageFile }}"
+    PackageForLinux: "${{ parameters.PackageFile }}"
     deployToSlotOrASE: true
     ResourceGroupName: '${{ parameters.ResourceGroup }}'
     SlotName: staging
