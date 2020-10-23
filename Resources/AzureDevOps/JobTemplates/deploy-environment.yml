@@ -54,8 +54,8 @@ jobs:
 - deployment: DeployApplication
   displayName: "Deploy Application"
   environment: ${{ parameters.EnvironmentName }}
-  dependsOn: 
-  - DeployTemplate
+ # dependsOn: 
+  #- DeployTemplate
   strategy:
     runOnce:
       deploy:
