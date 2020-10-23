@@ -29,27 +29,27 @@ parameters:
   SpecificationPath: ''
 
 jobs:
-- deployment: DeployTemplate
-  displayName: "Deploy arm templates"
-  environment: ${{ parameters.EnvironmentName }}
-  strategy:
-    runOnce:
-      deploy:
-        steps:
-        - template: ../StepTemplates/deploy-arm-template.yml
-          parameters: 
-            AzureSubscription: '${{ parameters.AzureSubscription }}'
-            DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
-            SetEsfaResourceGroupTagsScript: '${{ parameters.SetEsfaResourceGroupTagsScript }}'
-            EnvironmentTag: '${{ parameters.EnvironmentTag }}'
-            ParentBusiness: '${{ parameters.ParentBusiness }}'
-            ServiceOffering: '${{ parameters.ServiceOffering }}'
-            ResourceGroup: '${{ parameters.ResourceGroup }}'
-            Location: '${{ parameters.Location }}'
-            ArmOutputVariableName: '${{ parameters.ArmOutputVariableName }}'
-            ArmTemplateFolder: '${{ parameters.ArmTemplateFolder }}'
-            AppSharedResourceGroup: '${{ parameters.AppSharedResourceGroup }}'
-            appSharedCosmosDBName: '${{ parameters.appSharedCosmosDBName }}'
+#- deployment: DeployTemplate
+#  displayName: "Deploy arm templates"
+#  environment: ${{ parameters.EnvironmentName }}
+#  strategy:
+#    runOnce:
+#      deploy:
+#        steps:
+#        - template: ../StepTemplates/deploy-arm-template.yml
+#          parameters: 
+#            AzureSubscription: '${{ parameters.AzureSubscription }}'
+#            DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
+#            SetEsfaResourceGroupTagsScript: '${{ parameters.SetEsfaResourceGroupTagsScript }}'
+#            EnvironmentTag: '${{ parameters.EnvironmentTag }}'
+#            ParentBusiness: '${{ parameters.ParentBusiness }}'
+#            ServiceOffering: '${{ parameters.ServiceOffering }}'
+#            ResourceGroup: '${{ parameters.ResourceGroup }}'
+#            Location: '${{ parameters.Location }}'
+#            ArmOutputVariableName: '${{ parameters.ArmOutputVariableName }}'
+#            ArmTemplateFolder: '${{ parameters.ArmTemplateFolder }}'
+#            AppSharedResourceGroup: '${{ parameters.AppSharedResourceGroup }}'
+#            appSharedCosmosDBName: '${{ parameters.appSharedCosmosDBName }}'
 
 - deployment: DeployApplication
   displayName: "Deploy Application"
