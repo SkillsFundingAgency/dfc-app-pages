@@ -29,66 +29,66 @@ parameters:
   SpecificationPath: ''
 
 jobs:
-#- deployment: DeployTemplate
-#  displayName: "Deploy arm templates"
+- deployment: DeployTemplate
+  displayName: "Deploy arm templates"
+  environment: ${{ parameters.EnvironmentName }}
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - template: ../StepTemplates/deploy-arm-template.yml
+          parameters: 
+            AzureSubscription: '${{ parameters.AzureSubscription }}'
+            DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
+            SetEsfaResourceGroupTagsScript: '${{ parameters.SetEsfaResourceGroupTagsScript }}'
+            EnvironmentTag: '${{ parameters.EnvironmentTag }}'
+            ParentBusiness: '${{ parameters.ParentBusiness }}'
+            ServiceOffering: '${{ parameters.ServiceOffering }}'
+            ResourceGroup: '${{ parameters.ResourceGroup }}'
+            Location: '${{ parameters.Location }}'
+            ArmOutputVariableName: '${{ parameters.ArmOutputVariableName }}'
+            ArmTemplateFolder: '${{ parameters.ArmTemplateFolder }}'
+            AppSharedResourceGroup: '${{ parameters.AppSharedResourceGroup }}'
+            appSharedCosmosDBName: '${{ parameters.appSharedCosmosDBName }}'
+
+#- deployment: DeployApplication
+#  displayName: "Deploy Application"
 #  environment: ${{ parameters.EnvironmentName }}
+ # dependsOn: 
+  #- DeployTemplate
 #  strategy:
 #    runOnce:
 #      deploy:
 #        steps:
-#        - template: ../StepTemplates/deploy-arm-template.yml
-#          parameters: 
+#        - template: ../StepTemplates/deploy-azure-app-service-with-apim.yml
+#          parameters:
+#            WebAppName: '${{ parameters.AppServiceName }}'
 #            AzureSubscription: '${{ parameters.AzureSubscription }}'
 #            DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
-#            SetEsfaResourceGroupTagsScript: '${{ parameters.SetEsfaResourceGroupTagsScript }}'
-#            EnvironmentTag: '${{ parameters.EnvironmentTag }}'
-#            ParentBusiness: '${{ parameters.ParentBusiness }}'
-#            ServiceOffering: '${{ parameters.ServiceOffering }}'
+#            PackageFile: '${{ parameters.PackageFile }}'
 #            ResourceGroup: '${{ parameters.ResourceGroup }}'
-#            Location: '${{ parameters.Location }}'
-#            ArmOutputVariableName: '${{ parameters.ArmOutputVariableName }}'
-#            ArmTemplateFolder: '${{ parameters.ArmTemplateFolder }}'
-#            AppSharedResourceGroup: '${{ parameters.AppSharedResourceGroup }}'
-#            appSharedCosmosDBName: '${{ parameters.appSharedCosmosDBName }}'
+#            SharedResourceGroupName: '${{ parameters.SharedResourceGroupName }}'
+#            ApimServiceName: '${{ parameters.ApimServiceName }}'
+#            ApimProductInstanceName: '${{ parameters.ApimProductInstanceName }}'
+#            ApiName: '${{ parameters.ApiName }}'
+#            APIMPolicyPath: '${{ parameters.APIMPolicyPath }}'
+#            ApimImportScript: '${{ parameters.ApimImportScript }}'
+#            SpecificationPath:  '${{ parameters.SpecificationPath }}'
 
-- deployment: DeployApplication
-  displayName: "Deploy Application"
-  environment: ${{ parameters.EnvironmentName }}
- # dependsOn: 
-  #- DeployTemplate
-  strategy:
-    runOnce:
-      deploy:
-        steps:
-        - template: ../StepTemplates/deploy-azure-app-service-with-apim.yml
-          parameters:
-            WebAppName: '${{ parameters.AppServiceName }}'
-            AzureSubscription: '${{ parameters.AzureSubscription }}'
-            DfCDevopsPath: '${{ parameters.DfCDevopsPath }}'
-            PackageFile: '${{ parameters.PackageFile }}'
-            ResourceGroup: '${{ parameters.ResourceGroup }}'
-            SharedResourceGroupName: '${{ parameters.SharedResourceGroupName }}'
-            ApimServiceName: '${{ parameters.ApimServiceName }}'
-            ApimProductInstanceName: '${{ parameters.ApimProductInstanceName }}'
-            ApiName: '${{ parameters.ApiName }}'
-            APIMPolicyPath: '${{ parameters.APIMPolicyPath }}'
-            ApimImportScript: '${{ parameters.ApimImportScript }}'
-            SpecificationPath:  '${{ parameters.SpecificationPath }}'
-
-- deployment: DeployRegistration
-  displayName: "Deploy page registration"
-  environment: ${{ parameters.EnvironmentName }}
-  dependsOn:
-  - DeployApplication
-  strategy:
-    runOnce:
-      deploy:
-        steps:
-        - template: ../StepTemplates/deploy-page-registration.yml
-          parameters: 
-            AzureSubscription: '${{ parameters.AzureSubscription }}'
-            PageRegistrationPath: '${{ parameters.PageRegistrationPath }}'
-            PageRegistrationFile: '${{ parameters.PageRegistrationFile }}'
-            PathRegistrationApiUrl: '${{ parameters.PathRegistrationApiUrl }}'
-            RegionRegistrationApiUrl: '${{ parameters.RegionRegistrationApiUrl }}'
-            ApimCompositeKey: '${{ parameters.ApimCompositeKey }}'
+#- deployment: DeployRegistration
+#  displayName: "Deploy page registration"
+#  environment: ${{ parameters.EnvironmentName }}
+#  dependsOn:
+#  - DeployApplication
+#  strategy:
+#    runOnce:
+#      deploy:
+#        steps:
+#        - template: ../StepTemplates/deploy-page-registration.yml
+#          parameters: 
+#            AzureSubscription: '${{ parameters.AzureSubscription }}'
+#            PageRegistrationPath: '${{ parameters.PageRegistrationPath }}'
+#            PageRegistrationFile: '${{ parameters.PageRegistrationFile }}'
+#            PathRegistrationApiUrl: '${{ parameters.PathRegistrationApiUrl }}'
+#            RegionRegistrationApiUrl: '${{ parameters.RegionRegistrationApiUrl }}'
+#            ApimCompositeKey: '${{ parameters.ApimCompositeKey }}'

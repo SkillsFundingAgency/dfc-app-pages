@@ -359,6 +359,10 @@
                             {
                                 "name": "WEBSITE_RUN_FROM_PACKAGE",
                                 "value": "1"
+                            },
+                            {
+                                "name": "WEBSITE_ADD_SITENAME_BINDINGS_IN_APPHOST_CONFIG",
+                                "value": "1"
                             }
                         ]
                     }
