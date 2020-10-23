@@ -30,9 +30,9 @@ variables:
 - name: aspTier
   value: Standard
 - name: aspInstances
-  value: 4
+  value: 2
 - name: aspSize
-  value: 3
+  value: 2
 - name: contentUrl
   value: https://dfc-dev-api-cont-fa.azurewebsites.net/api/execute
 - name: subscriptionUrl
