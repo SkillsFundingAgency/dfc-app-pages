@@ -8,7 +8,7 @@ variables:
 - name: EnableAzureMonitorAlerting
   value: true
 - name: SubscriptionSettingsEndpoint
-  value: https://dfc-sit-draft-app-pages-as.azurewebsites.net
+  value: $(ApimProxyAddress)/composite-ui/pages-draft
 - name: pagesAppDatabaseThroughput
   value: 400
 - name: ResourceGroup
@@ -41,3 +41,7 @@ variables:
   value: https://dfc-sit-draft-api-cont-fa.azurewebsites.net/api/execute
 - name: subscriptionUrl
   value: https://dfc-sit-api-eventgridsubscriptions-fa.azurewebsites.net
+- name: apiName
+  value: pages-draft
+- name: applicationUrl
+  value: https://dfc-sit-draft-app-pages-as.azurewebsites.net

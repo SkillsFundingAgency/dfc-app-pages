@@ -11,137 +11,174 @@
 
 <partial name="Breadcrumb" model=@Model.Breadcrumb />
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        <div>
-            <dl class="row">
-                <dt class="col-sm-2">
+<div class="govuk-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">
+        Contents
+    </h2>
+    <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+            <a class="govuk-tabs__tab" href="#tab-content">
+                Content
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#tab-metadata">
+                Metadata
+            </a>
+        </li>
+    </ul>
+    <div class="govuk-tabs__panel" id="tab-content">
+        @if (!string.IsNullOrWhiteSpace(Model.HeroBannerViewModel?.Content?.Value))
+        {
+            <partial name="HeroBanner" model=@Model.HeroBannerViewModel />
+        }
+
+        <partial name="Body" model=@Model.BodyViewModel />
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tab-metadata">
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.DocumentId)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.DocumentId)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.PartitionKey)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.PartitionKey)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.PageLocation)
                 </dt>
 
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.PageLocation)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.IsDefaultForPageLocation)
                 </dt>
 
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.IsDefaultForPageLocation)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.CanonicalName)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.CanonicalName)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.Version)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.Version)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.HtmlHead!.Description)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.HtmlHead!.Description)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.HtmlHead!.Keywords)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.HtmlHead!.Keywords)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.HtmlHead!.Title)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.HtmlHead!.Title)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.HtmlHead!.CanonicalUrl)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.HtmlHead!.CanonicalUrl)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.IncludeInSitemap)
                 </dt>
-
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.IncludeInSitemap)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.SiteMapChangeFrequency)
                 </dt>
-
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.SiteMapChangeFrequency)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.SiteMapPriority)
                 </dt>
-
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.SiteMapPriority)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.Url)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.Url)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.CreatedDate)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.CreatedDate)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.LastCached)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.LastCached)
                 </dd>
-
-                <dt class="col-sm-2">
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.LastReviewed)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.LastReviewed)
                 </dd>
-
-                @if (Model.Redirects.Any())
-                {
-                    <dt class="col-sm-2">
+            </div>
+            @if (Model.Redirects.Any())
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
                         @Html.DisplayNameFor(model => model.Redirects)
                     </dt>
                     <dd class="col-sm-10">
@@ -157,19 +194,8 @@
                             </ol>
                         }
                     </dd>
-                }
-            </dl>
-        </div>
-
-        @if (!string.IsNullOrWhiteSpace(Model.HeroBannerViewModel?.Content?.Value))
-        {
-            <hr />
-
-            <partial name="HeroBanner" model=@Model.HeroBannerViewModel />
-        }
-
-        <hr />
-
-        <partial name="Body" model=@Model.BodyViewModel />
+                </div>
+            }
+        </dl>
     </div>
 </div>

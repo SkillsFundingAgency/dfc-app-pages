@@ -2,6 +2,7 @@
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Data.Models.ClientOptions;
+using DFC.App.Pages.Data.Models.CmsApiModels;
 using DFC.App.Pages.Extensions;
 using DFC.App.Pages.Helpers;
 using DFC.App.Pages.HostedServices;
@@ -9,6 +10,7 @@ using DFC.App.Pages.HttpClientPolicies;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.Services.AppRegistryService;
 using DFC.App.Pages.Services.CacheContentService;
+using DFC.App.Pages.Services.CacheContentService.ContentItemUpdaters;
 using DFC.App.Pages.Services.EventProcessorService;
 using DFC.Compui.Cosmos;
 using DFC.Compui.Cosmos.Contracts;
@@ -22,7 +24,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages
@@ -74,10 +75,15 @@ namespace DFC.App.Pages
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
             services.AddTransient<IPagesControlerHelpers, PagesControlerHelpers>();
-            services.AddSingleton<IContentCacheService>(sp => new ContentCacheService(sp.GetRequiredService<ILogger<ContentCacheService>>()));
             services.AddTransient<IEventMessageService<ContentPageModel>, EventMessageService<ContentPageModel>>();
             services.AddTransient<ICacheReloadService, CacheReloadService>();
             services.AddTransient<IWebhooksService, WebhooksService>();
+            services.AddTransient<IWebhookContentProcessor, WebhookContentProcessor>();
+            services.AddTransient<IPageLocatonUpdater, PageLocatonUpdater>();
+            services.AddTransient<IContentItemUpdater, ContentItemUpdater>();
+            services.AddTransient<IMarkupContentItemUpdater<CmsApiHtmlModel>, MarkupContentItemUpdater<CmsApiHtmlModel>>();
+            services.AddTransient<IMarkupContentItemUpdater<CmsApiHtmlSharedModel>, MarkupContentItemUpdater<CmsApiHtmlSharedModel>>();
+            services.AddTransient<IMarkupContentItemUpdater<CmsApiSharedContentModel>, MarkupContentItemUpdater<CmsApiSharedContentModel>>();
             services.AddTransient<IEventGridService, EventGridService>();
             services.AddTransient<IEventGridClientService, EventGridClientService>();
             services.AddAutoMapper(typeof(Startup).Assembly);
