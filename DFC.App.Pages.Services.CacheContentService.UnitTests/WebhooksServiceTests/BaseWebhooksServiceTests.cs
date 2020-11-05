@@ -1,13 +1,8 @@
 ﻿using DFC.App.Pages.Data.Contracts;
-using DFC.App.Pages.Data.Models;
-using DFC.Compui.Cosmos.Contracts;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
-using DFC.Content.Pkg.Netcore.Data.Models;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 
 namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTests
 {
@@ -22,12 +17,8 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
         protected BaseWebhooksServiceTests()
         {
             Logger = A.Fake<ILogger<WebhooksService>>();
-            FakeMapper = A.Fake<AutoMapper.IMapper>();
-            FakeEventMessageService = A.Fake<IEventMessageService<ContentPageModel>>();
-            FakeCmsApiService = A.Fake<ICmsApiService>();
-            FakeContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
             FakeContentCacheService = A.Fake<IContentCacheService>();
-            FakeEventGridService = A.Fake<IEventGridService>();
+            FakeWebhookContentProcessor = A.Fake<IWebhookContentProcessor>();
         }
 
         protected Guid ContentIdForCreate { get; } = Guid.NewGuid();
@@ -36,119 +27,17 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
 
         protected Guid ContentIdForDelete { get; } = Guid.NewGuid();
 
-        protected Guid ContentItemIdForCreate { get; } = Guid.NewGuid();
-
-        protected Guid ContentItemIdForUpdate { get; } = Guid.NewGuid();
-
         protected Guid ContentItemIdForDelete { get; } = Guid.NewGuid();
 
         protected ILogger<WebhooksService> Logger { get; }
 
-        protected AutoMapper.IMapper FakeMapper { get; }
-
-        protected IEventMessageService<ContentPageModel> FakeEventMessageService { get; }
-
-        protected ICmsApiService FakeCmsApiService { get; }
-
-        protected IContentPageService<ContentPageModel> FakeContentPageService { get; }
-
         protected IContentCacheService FakeContentCacheService { get; }
 
-        protected IEventGridService FakeEventGridService { get; }
-
-        protected static PagesApiDataModel BuildValidPagesApiContentModel()
-        {
-            var model = new PagesApiDataModel
-            {
-                ItemId = Guid.NewGuid(),
-                CanonicalName = "an-article",
-                ExcludeFromSitemap = true,
-                Version = Guid.NewGuid(),
-                Url = new Uri("https://localhost"),
-                ContentLinks = new ContentLinksModel(new JObject())
-                {
-                    ContentLinks = new List<KeyValuePair<string, List<LinkDetails>>>()
-                    {
-                        new KeyValuePair<string, List<LinkDetails>>(
-                            "test",
-                            new List<LinkDetails>
-                            {
-                                new LinkDetails
-                                {
-                                    Uri = new Uri("http://www.one.com"),
-                                },
-                                new LinkDetails
-                                {
-                                    Uri = new Uri("http://www.two.com"),
-                                },
-                                new LinkDetails
-                                {
-                                    Uri = new Uri("http://www.three.com"),
-                                },
-                            }),
-                    },
-                },
-                ContentItems = new List<PagesApiContentItemModel>
-                {
-                    BuildValidPagesApiContentItemDataModel(),
-                },
-                Published = DateTime.UtcNow,
-            };
-
-            return model;
-        }
-
-        protected static PagesApiContentItemModel BuildValidPagesApiContentItemDataModel()
-        {
-            var model = new PagesApiContentItemModel
-            {
-                Alignment = "Left",
-                Ordinal = 1,
-                Size = 50,
-                Content = "<h1>A document</h1>",
-            };
-
-            return model;
-        }
-
-        protected ContentPageModel BuildValidContentPageModel(string? contentType = null)
-        {
-            var model = new ContentPageModel()
-            {
-                Id = ContentIdForUpdate,
-                Etag = Guid.NewGuid().ToString(),
-                CanonicalName = "an-article",
-                IncludeInSitemap = true,
-                Version = Guid.NewGuid(),
-                Url = new Uri("https://localhost"),
-                Content = null,
-                ContentItems = new List<ContentItemModel>
-                {
-                    BuildValidContentItemModel(ContentItemIdForCreate),
-                    BuildValidContentItemModel(ContentItemIdForUpdate, contentType),
-                    BuildValidContentItemModel(ContentItemIdForDelete),
-                },
-                LastReviewed = DateTime.UtcNow,
-            };
-
-            return model;
-        }
-
-        protected ContentItemModel BuildValidContentItemModel(Guid contentItemId, string? contentType = null)
-        {
-            var model = new ContentItemModel()
-            {
-                ItemId = contentItemId,
-                LastReviewed = DateTime.Now,
-                ContentType = contentType,
-            };
-
-            return model;
-        }
+        protected IWebhookContentProcessor FakeWebhookContentProcessor { get; }
 
         protected WebhooksService BuildWebhooksService()
         {
-            var service = new WebhooksService(Logger, FakeMapper, FakeEventMessageService, FakeCmsApiService, FakeContentPageService, FakeContentCacheService, FakeEventGridService);
+            var service = new WebhooksService(Logger, FakeContentCacheService, FakeWebhookContentProcessor);
 
             return service;
         }

@@ -1,6 +1,6 @@
 ﻿openapi: 3.0.1
 info:
-  title: DFC Pages API
+  title: __apiName__
   description: 'Retrieves pages and their redirects' 
   version: 1.0.0
 servers:

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DFC.App.Pages.AutoMapperProfiles;
 using DFC.App.Pages.AutoMapperProfiles.ValuerConverters;
 using DFC.App.Pages.Data.Common;
 using DFC.App.Pages.Data.Models;
@@ -146,33 +145,33 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
                 {
                     Title = "A page title",
                 },
-                ContentItems = new List<ContentItemModel>
+                PageLocations = new List<PageLocationModel>
                 {
-                    new ContentItemModel
+                    new PageLocationModel
                     {
                         ItemId = Guid.NewGuid(),
                         ContentType = Constants.ContentTypePageLocation,
                         BreadcrumbLinkSegment = "segment-3",
                         BreadcrumbText = "Segment #3",
-                        ContentItems = new List<ContentItemModel>
+                        PageLocations = new List<PageLocationModel>
                         {
-                            new ContentItemModel
+                            new PageLocationModel
                             {
                                 ItemId = Guid.NewGuid(),
                                 ContentType = Constants.ContentTypePageLocation,
                                 BreadcrumbLinkSegment = "segment-2",
                                 BreadcrumbText = "Segment #2",
-                                ContentItems = new List<ContentItemModel>
+                                PageLocations = new List<PageLocationModel>
                                 {
-                                    new ContentItemModel
+                                    new PageLocationModel
                                     {
                                         ItemId = Guid.NewGuid(),
                                         ContentType = Constants.ContentTypePageLocation,
                                         BreadcrumbLinkSegment = "segment-1",
                                         BreadcrumbText = "Segment #1",
-                                        ContentItems = new List<ContentItemModel>
+                                        PageLocations = new List<PageLocationModel>
                                         {
-                                            new ContentItemModel
+                                            new PageLocationModel
                                             {
                                                 ItemId = Guid.NewGuid(),
                                                 ContentType = Constants.ContentTypePageLocation,

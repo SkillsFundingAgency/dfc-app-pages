@@ -8,7 +8,7 @@ variables:
 - name: EnableAzureMonitorAlerting
   value: true
 - name: SubscriptionSettingsEndpoint
-  value: https://dfc-pp-app-pages-as.ase-01.dfc.preprodazure.sfa.bis.gov.uk
+  value: $(ApimProxyAddress)/composite-ui/pages
 - name: pagesAppDatabaseThroughput
   value: 400
 - name: ResourceGroup
@@ -37,3 +37,7 @@ variables:
   value: https://dfc-pp-api-cont-fa.ase-01.dfc.preprodazure.sfa.bis.gov.uk/api/execute
 - name: subscriptionUrl
   value: https://dfc-pp-api-eventgridsubscriptions-fa.ase-01.dfc.preprodazure.sfa.bis.gov.uk
+- name: apiName
+  value: pages
+- name: applicationUrl
+  value: https://dfc-pp-app-pages-as.ase-01.dfc.preprodazure.sfa.bis.gov.uk
