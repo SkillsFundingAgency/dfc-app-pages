@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace DFC.App.Pages.Data.Models
+namespace DFC.App.Pages.Data.Models.CmsApiModels
 {
     [ExcludeFromCodeCoverage]
-    public class PagesSummaryItemModel : IApiDataModel
+    public class CmsApiSummaryItemModel : IApiDataModel
     {
         [JsonProperty(PropertyName = "uri")]
         public Uri? Url { get; set; }

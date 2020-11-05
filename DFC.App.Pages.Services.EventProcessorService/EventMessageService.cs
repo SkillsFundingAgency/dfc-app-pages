@@ -1,5 +1,4 @@
-﻿using DFC.App.Pages.Data.Common;
-using DFC.App.Pages.Data.Contracts;
+﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
@@ -113,11 +112,10 @@ namespace DFC.App.Pages.Services.EventProcessorService
         {
             string? result = null;
             var contentPageModel = model as ContentPageModel;
-            var contentItems = contentPageModel?.ContentItems.Where(w => w.ContentType == Constants.ContentTypePageLocation).ToList();
 
-            if (contentItems != null && contentItems.Any())
+            if (contentPageModel?.PageLocations != null && contentPageModel.PageLocations.Any())
             {
-                var pageLocations = ExtractPageLocationItem(contentItems);
+                var pageLocations = ExtractPageLocationItem(contentPageModel.PageLocations);
 
                 pageLocations.RemoveAll(r => string.IsNullOrWhiteSpace(r));
                 pageLocations.RemoveAll(r => r.Equals("/", StringComparison.Ordinal));
@@ -130,26 +128,24 @@ namespace DFC.App.Pages.Services.EventProcessorService
             return result;
         }
 
-        private List<string> ExtractPageLocationItem(List<ContentItemModel> contentItems)
+        private List<string> ExtractPageLocationItem(List<PageLocationModel> parentPageLocations)
         {
-            var pageLocations = new List<string>();
+            var pagelocations = new List<string>();
 
-            foreach (var contentItem in contentItems)
+            foreach (var item in parentPageLocations)
             {
-                if (!string.IsNullOrWhiteSpace(contentItem.BreadcrumbLinkSegment))
+                if (!string.IsNullOrWhiteSpace(item.BreadcrumbLinkSegment))
                 {
-                    pageLocations.Add(contentItem.BreadcrumbLinkSegment);
+                    pagelocations.Add(item.BreadcrumbLinkSegment);
                 }
 
-                var children = contentItem.ContentItems.Where(w => w.ContentType == Constants.ContentTypePageLocation).ToList();
-
-                if (children != null && children.Any())
+                if (item.PageLocations != null && item.PageLocations.Any())
                 {
-                    pageLocations.AddRange(ExtractPageLocationItem(children));
+                    pagelocations.AddRange(ExtractPageLocationItem(item.PageLocations));
                 }
             }
 
-            return pageLocations;
+            return pagelocations;
         }
     }
 }

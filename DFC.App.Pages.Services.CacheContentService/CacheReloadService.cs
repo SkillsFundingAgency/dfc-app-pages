@@ -1,5 +1,7 @@
-﻿using DFC.App.Pages.Data.Contracts;
+﻿using DFC.App.Pages.Data.Common;
+using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models.CmsApiModels;
 using DFC.Content.Pkg.Netcore.Data.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,6 +22,7 @@ namespace DFC.App.Pages.Services.CacheContentService
         private readonly ICmsApiService cmsApiService;
         private readonly IContentCacheService contentCacheService;
         private readonly IAppRegistryApiService appRegistryService;
+        private readonly IContentTypeMappingService contentTypeMappingService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
@@ -27,7 +30,8 @@ namespace DFC.App.Pages.Services.CacheContentService
             IEventMessageService<ContentPageModel> eventMessageService,
             ICmsApiService cmsApiService,
             IContentCacheService contentCacheService,
-            IAppRegistryApiService appRegistryService)
+            IAppRegistryApiService appRegistryService,
+            IContentTypeMappingService contentTypeMappingService)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -35,6 +39,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             this.cmsApiService = cmsApiService;
             this.contentCacheService = contentCacheService;
             this.appRegistryService = appRegistryService;
+            this.contentTypeMappingService = contentTypeMappingService;
         }
 
         public async Task Reload(CancellationToken stoppingToken)
@@ -42,6 +47,12 @@ namespace DFC.App.Pages.Services.CacheContentService
             try
             {
                 logger.LogInformation("Reload cache started");
+
+                contentTypeMappingService.AddMapping(Constants.ContentTypeHtml, typeof(CmsApiHtmlModel));
+                contentTypeMappingService.AddMapping(Constants.ContentTypeHtmlShared, typeof(CmsApiHtmlSharedModel));
+                contentTypeMappingService.AddMapping(Constants.ContentTypeSharedContent, typeof(CmsApiSharedContentModel));
+                contentTypeMappingService.AddMapping(Constants.ContentTypePageLocation, typeof(CmsApiPageLocationModel));
+                contentTypeMappingService.AddMapping(Constants.ContentTypePageLocationParent, typeof(CmsApiPageLocationParentModel));
 
                 await RemoveDuplicateCacheItems().ConfigureAwait(false);
 
@@ -106,18 +117,18 @@ namespace DFC.App.Pages.Services.CacheContentService
             }
         }
 
-        public async Task<IList<PagesSummaryItemModel>?> GetSummaryListAsync()
+        public async Task<IList<CmsApiSummaryItemModel>?> GetSummaryListAsync()
         {
             logger.LogInformation("Get summary list");
 
-            var summaryList = await cmsApiService.GetSummaryAsync<PagesSummaryItemModel>().ConfigureAwait(false);
+            var summaryList = await cmsApiService.GetSummaryAsync<CmsApiSummaryItemModel>().ConfigureAwait(false);
 
             logger.LogInformation("Get summary list completed");
 
             return summaryList;
         }
 
-        public async Task ProcessSummaryListAsync(IList<PagesSummaryItemModel>? summaryList, CancellationToken stoppingToken)
+        public async Task ProcessSummaryListAsync(IList<CmsApiSummaryItemModel>? summaryList, CancellationToken stoppingToken)
         {
             logger.LogInformation("Process summary list started");
 
@@ -138,7 +149,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             logger.LogInformation("Process summary list completed");
         }
 
-        public async Task GetAndSaveItemAsync(PagesSummaryItemModel item, CancellationToken stoppingToken)
+        public async Task GetAndSaveItemAsync(CmsApiSummaryItemModel item, CancellationToken stoppingToken)
         {
             _ = item ?? throw new ArgumentNullException(nameof(item));
 
@@ -146,7 +157,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             {
                 logger.LogInformation($"Get details for {item.Title} - {item.Url}");
 
-                var apiDataModel = await cmsApiService.GetItemAsync<PagesApiDataModel, PagesApiContentItemModel>(item.Url!).ConfigureAwait(false);
+                var apiDataModel = await cmsApiService.GetItemAsync<CmsApiDataModel>(item.Url!).ConfigureAwait(false);
 
                 if (apiDataModel == null)
                 {
@@ -195,7 +206,11 @@ namespace DFC.App.Pages.Services.CacheContentService
                     logger.LogInformation($"Updated cache with {item.Title} - {item.Url}");
                 }
 
-                contentCacheService.AddOrReplace(contentPageModel.Id, contentPageModel.AllContentItemIds);
+                var contentItemIds = contentPageModel.AllContentItemIds;
+
+                contentItemIds.AddRange(contentPageModel.AllPageLocationIds);
+
+                contentCacheService.AddOrReplace(contentPageModel.Id, contentItemIds);
             }
             catch (Exception ex)
             {
@@ -203,7 +218,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             }
         }
 
-        public async Task DeleteStaleCacheEntriesAsync(IList<PagesSummaryItemModel> summaryList, CancellationToken stoppingToken)
+        public async Task DeleteStaleCacheEntriesAsync(IList<CmsApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
         {
             logger.LogInformation("Delete stale cache items started");
 

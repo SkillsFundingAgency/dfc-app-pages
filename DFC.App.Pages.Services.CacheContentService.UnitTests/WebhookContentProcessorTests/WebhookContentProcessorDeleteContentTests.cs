@@ -6,18 +6,18 @@ using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTests
+namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhookContentProcessorTests
 {
-    [Trait("Category", "Webhooks Service DeleteContentAsync Unit Tests")]
-    public class WebhooksServiceDeleteContentAsyncTests : BaseWebhooksServiceTests
+    [Trait("Category", "WebhookContentProcessor - DeleteContent Unit Tests")]
+    public class WebhookContentProcessorDeleteContentTests : BaseWebhookContentProcessor
     {
         [Fact]
-        public async Task WebhooksServiceDeleteContentAsyncForCreateReturnsSuccess()
+        public async Task WebhookContentProcessorDeleteContentAsyncReturnsSuccess()
         {
             // Arrange
             const HttpStatusCode expectedResponse = HttpStatusCode.OK;
             var expectedValidContentPageModel = BuildValidContentPageModel();
-            var service = BuildWebhooksService();
+            var service = BuildWebhookContentProcessor();
 
             A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(expectedValidContentPageModel);
             A.CallTo(() => FakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).Returns(expectedResponse);
@@ -36,12 +36,12 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhooksServiceTe
         }
 
         [Fact]
-        public async Task WebhooksServiceDeleteContentAsyncForCreateReturnsNoContent()
+        public async Task WebhookContentProcessorDeleteContentAsyncForCreateReturnsNoContent()
         {
             // Arrange
             const HttpStatusCode expectedResponse = HttpStatusCode.NoContent;
             ContentPageModel? nullContentPageModel = null;
-            var service = BuildWebhooksService();
+            var service = BuildWebhookContentProcessor();
 
             A.CallTo(() => FakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(nullContentPageModel);
             A.CallTo(() => FakeEventMessageService.DeleteAsync(A<Guid>.Ignored)).Returns(expectedResponse);

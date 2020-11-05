@@ -3,7 +3,6 @@ variables:
   SolutionBaseName: 'DFC.App.Pages'
   BuildPlatform: 'any cpu'
   BuildConfiguration: 'release'
-  ApiName: 'Pages'
 
 resources:
   repositories:
@@ -12,7 +11,7 @@ resources:
     type: github
     name: SkillsFundingAgency/dfc-devops
     ref: refs/tags/v1.11.2
-    endpoint: 'GitHub (ESFA)'
+    endpoint: 'SkillsFundingAgency'
 
 pool:
   name: NCS - CI and CD
