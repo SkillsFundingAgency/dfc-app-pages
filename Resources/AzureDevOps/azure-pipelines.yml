@@ -111,8 +111,7 @@ stages:
       appSharedCosmosDBName: $(appSharedCosmosDBName)
       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
       PageRegistrationFile: "$(PageRegistrationFile)"
-      PathRegistrationApiUrl: "$(PathRegistrationApiUrl)"
-      RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
+      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
@@ -156,8 +155,7 @@ stages:
       appSharedCosmosDBName: $(appSharedCosmosDBName)
       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
       PageRegistrationFile: "$(PageRegistrationFile)"
-      PathRegistrationApiUrl: "$(PathRegistrationApiUrl)"
-      RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
+      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
@@ -200,8 +198,7 @@ stages:
       appSharedCosmosDBName: $(appSharedCosmosDBName)
       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
       PageRegistrationFile: "$(PageRegistrationFile)"
-      PathRegistrationApiUrl: "$(PathRegistrationApiUrl)"
-      RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
+      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
@@ -245,8 +242,7 @@ stages:
       appSharedCosmosDBName: $(appSharedCosmosDBName)
       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
       PageRegistrationFile: "$(PageRegistrationFile)"
-      PathRegistrationApiUrl: "$(PathRegistrationApiUrl)"
-      RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
+      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
@@ -289,8 +285,7 @@ stages:
       appSharedCosmosDBName: $(appSharedCosmosDBName)
       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
       PageRegistrationFile: "$(PageRegistrationFile)"
-      PathRegistrationApiUrl: "$(PathRegistrationApiUrl)"
-      RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
+      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
@@ -333,8 +328,7 @@ stages:
       appSharedCosmosDBName: $(appSharedCosmosDBName)
       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
       PageRegistrationFile: "$(PageRegistrationFile)"
-      PathRegistrationApiUrl: "$(PathRegistrationApiUrl)"
-      RegionRegistrationApiUrl: "$(RegionRegistrationApiUrl)"
+      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
       ApimCompositeKey: "$(ApimCompositeKey)"
       AppServiceName: '$(AppServiceName)'
       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)

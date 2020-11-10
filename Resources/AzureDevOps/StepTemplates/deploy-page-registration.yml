@@ -2,8 +2,7 @@ parameters:
   azureSubscription: ''
   PageRegistrationPath: ''
   PageRegistrationFile: ''
-  PathRegistrationApiUrl: ''
-  RegionRegistrationApiUrl: ''
+  AppRegistryApiUrl: ''
   ApimCompositeKey: ''
 
 steps:
@@ -21,8 +20,8 @@ steps:
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
     targetType: filePath
-    filePath: './PSScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
-    arguments: '-PathApiUrl ${{ parameters.PathRegistrationApiUrl }}  -RegionApiUrl ${{ parameters.RegionRegistrationApiUrl }} -RegistrationFile ${{ parameters.PageRegistrationPath }}/${{ parameters.PageRegistrationFile }} -ApiKey ${{ parameters.ApimCompositeKey }} -Verbose'
+    filePath: './PSCoreScripts/Invoke-AddOrUpdateCompositeRegistrations.ps1'
+    arguments: '-AppRegistryApiUrl ${{ parameters.AppRegistryApiUrl }} -RegistrationFile ${{ parameters.PageRegistrationPath }}/${{ parameters.PageRegistrationFile }} -AppRegistryApiKey ${{ parameters.ApimCompositeKey }} -Verbose'
     workingDirectory: './PSScripts'
 
 - task: DeleteFiles@1
