@@ -2,9 +2,9 @@ variables:
 - name: ReleaseEnvironmentName
   value: PP
 - name: AppServiceName
-  value: dfc-pp-app-pages-as
+  value: $(WebAppPrefix)-as
 - name: cosmosDbCollectionName
-  value: pages
+  value: $(apiName)
 - name: EnableAzureMonitorAlerting
   value: true
 - name: SubscriptionSettingsEndpoint
@@ -12,17 +12,17 @@ variables:
 - name: pagesAppDatabaseThroughput
   value: 400
 - name: ResourceGroup
-  value: dfc-pp-app-pages-rg
+  value: $(WebAppPrefix)-rg
 - name: WebAppProjectName
   value: DFC.App.Pages
 - name: PageRegistrationFile
   value: registration.json
 - name: EventGridPublishClientOptionsApiEndpoint
-  value: https://dfc-pp-app-pages-as.ase-01.dfc.preprodazure.sfa.bis.gov.uk/api/pages
+  value: https://$(AppServiceName).$(appServiceDomain)/api/pages
 - name: ApplicationName
   value: DFC-App-Pages
 - name: EventGridSubjectPrefix
-  value: /dfc-app-pages/
+  value: /$(ApplicationName)/
 - name: AppRegistryClientOptionsBaseAddress
   value: $(ApimProxyAddress)/composite-ui-appRegistry/pages/
 - name: SummaryEndpoint
@@ -34,10 +34,12 @@ variables:
 - name: aspSize
   value: 1
 - name: contentUrl
-  value: https://dfc-pp-api-cont-fa.ase-01.dfc.preprodazure.sfa.bis.gov.uk/api/execute
+  value: https://$(ContentApiAddress)/api/execute
 - name: subscriptionUrl
-  value: https://dfc-pp-api-eventgridsubscriptions-fa.ase-01.dfc.preprodazure.sfa.bis.gov.uk
+  value: https://dfc-pp-api-eventgridsubscriptions-fa.$(appServiceDomain)
 - name: apiName
   value: pages
 - name: applicationUrl
-  value: https://dfc-pp-app-pages-as.ase-01.dfc.preprodazure.sfa.bis.gov.uk
+  value: https://$(AppServiceName).$(appServiceDomain)
+- name: WebAppPrefix
+  value: dfc-pp-app-pages
