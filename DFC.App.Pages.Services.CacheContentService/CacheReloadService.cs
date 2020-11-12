@@ -23,6 +23,7 @@ namespace DFC.App.Pages.Services.CacheContentService
         private readonly IContentCacheService contentCacheService;
         private readonly IAppRegistryApiService appRegistryService;
         private readonly IContentTypeMappingService contentTypeMappingService;
+        private readonly IApiCacheService apiCacheService;
 
         public CacheReloadService(
             ILogger<CacheReloadService> logger,
@@ -31,7 +32,8 @@ namespace DFC.App.Pages.Services.CacheContentService
             ICmsApiService cmsApiService,
             IContentCacheService contentCacheService,
             IAppRegistryApiService appRegistryService,
-            IContentTypeMappingService contentTypeMappingService)
+            IContentTypeMappingService contentTypeMappingService,
+            IApiCacheService apiCacheService)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -40,6 +42,7 @@ namespace DFC.App.Pages.Services.CacheContentService
             this.contentCacheService = contentCacheService;
             this.appRegistryService = appRegistryService;
             this.contentTypeMappingService = contentTypeMappingService;
+            this.apiCacheService = apiCacheService;
         }
 
         public async Task Reload(CancellationToken stoppingToken)
@@ -47,6 +50,8 @@ namespace DFC.App.Pages.Services.CacheContentService
             try
             {
                 logger.LogInformation("Reload cache started");
+
+                apiCacheService.StartCache();
 
                 contentTypeMappingService.AddMapping(Constants.ContentTypeHtml, typeof(CmsApiHtmlModel));
                 contentTypeMappingService.AddMapping(Constants.ContentTypeHtmlShared, typeof(CmsApiHtmlSharedModel));
@@ -86,6 +91,10 @@ namespace DFC.App.Pages.Services.CacheContentService
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error in cache reload");
+            }
+            finally
+            {
+                apiCacheService.StopCache();
             }
         }
 
