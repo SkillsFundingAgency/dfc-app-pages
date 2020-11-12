@@ -2,9 +2,9 @@ variables:
 - name: ReleaseEnvironmentName
   value: SIT-DRAFT
 - name: AppServiceName
-  value: dfc-sit-draft-app-pages-as
+  value: $(WebAppPrefix)-as
 - name: cosmosDbCollectionName
-  value: pages-draft
+  value: $(apiName)
 - name: EnableAzureMonitorAlerting
   value: true
 - name: SubscriptionSettingsEndpoint
@@ -12,13 +12,13 @@ variables:
 - name: pagesAppDatabaseThroughput
   value: 400
 - name: ResourceGroup
-  value: dfc-sit-draft-app-pages-rg
+  value: $(WebAppPrefix)-rg
 - name: WebAppProjectName
   value: DFC.App.Pages
 - name: PageRegistrationFile
   value: registration.json
 - name: EventGridPublishClientOptionsApiEndpoint
-  value: https://dfc-sit-draft-app-pages-as.azurewebsites.net/api/pages
+  value: https://$(AppServiceName).$(appServiceDomain)/api/pages
 - name: SubscriptionSettingsFilterIncludeEventTypes3
   value: draft
 - name: SubscriptionSettingsFilterIncludeEventTypes4
@@ -26,7 +26,7 @@ variables:
 - name: ApplicationName
   value: DFC-App-Pages-draft
 - name: EventGridSubjectPrefix
-  value: /dfc-app-pages-draft/
+  value: /$(ApplicationName)/
 - name: AppRegistryClientOptionsBaseAddress
   value: $(ApimProxyAddress)/composite-ui-appRegistry-draft/pages/
 - name: SummaryEndpoint
@@ -38,10 +38,12 @@ variables:
 - name: aspSize
   value: 2
 - name: contentUrl
-  value: https://dfc-sit-draft-api-cont-fa.azurewebsites.net/api/execute
+  value: https://$(ContentApiDraftAddress)/api/execute
 - name: subscriptionUrl
-  value: https://dfc-sit-api-eventgridsubscriptions-fa.azurewebsites.net
+  value: https://dfc-sit-api-eventgridsubscriptions-fa.$(appServiceDomain)
 - name: apiName
   value: pages-draft
 - name: applicationUrl
-  value: https://dfc-sit-draft-app-pages-as.azurewebsites.net
+  value: https://$(AppServiceName).$(appServiceDomain)
+- name: WebAppPrefix
+  value: dfc-sit-draft-app-pages
