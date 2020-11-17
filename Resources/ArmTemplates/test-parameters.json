@@ -23,6 +23,9 @@
         "aspInstances": {
             "value": 2
         },
+        "clientAffinity": {
+            "value": false
+        },
         "Environment": {
             "value": "FOO"
         },

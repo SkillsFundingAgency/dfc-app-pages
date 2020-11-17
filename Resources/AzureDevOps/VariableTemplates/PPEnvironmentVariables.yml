@@ -33,6 +33,8 @@ variables:
   value: 3
 - name: aspSize
   value: 1
+- name: clientAffinity
+  value: true
 - name: contentUrl
   value: https://$(ContentApiAddress)/api/execute
 - name: subscriptionUrl
