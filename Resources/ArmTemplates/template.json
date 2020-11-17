@@ -25,6 +25,9 @@
         "aspTier": {
             "type": "string"
         },
+        "clientAffinity": {
+            "type": "bool"
+        },
         "CosmosDbResourceGroup": {
             "type": "string"
         },
@@ -232,7 +235,7 @@
                         "value": true
                     },
                     "clientAffinity": {
-                        "value": true
+                        "value": "[parameters('clientAffinity')]"
                     },
                     "appServiceAppSettings": {
                         "value": [
