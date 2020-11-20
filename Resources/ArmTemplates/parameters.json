@@ -17,6 +17,9 @@
         "aspInstances": {
             "value": __aspInstances__
         },
+        "clientAffinity": {
+            "value": __clientAffinity__
+        },
         "aspTier": {
             "value": "__aspTier__"
         },
