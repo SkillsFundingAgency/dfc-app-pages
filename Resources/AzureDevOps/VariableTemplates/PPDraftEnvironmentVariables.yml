@@ -19,6 +19,10 @@ variables:
   value: registration.json
 - name: EventGridPublishClientOptionsApiEndpoint
   value: https://$(AppServiceName).$(appServiceDomain)/api/pages
+- name: SubscriptionSettingsFilterIncludeEventTypes3
+  value: draft
+- name: SubscriptionSettingsFilterIncludeEventTypes4
+  value: draft-discarded
 - name: ApplicationName
   value: DFC-App-Pages-draft
 - name: EventGridSubjectPrefix
