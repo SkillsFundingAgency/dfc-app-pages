@@ -83,7 +83,7 @@ stages:
         TestSuffix: UnitTests
 
 - stage: DeployToDevAppPages
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Deploy to DEV_AppPages
   variables:
   - group: dfc-shared-all
@@ -126,7 +126,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToDevDraftAppPages
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Deploy to DEV-DRAFT_AppPages
   variables:
   - group: dfc-shared-all
@@ -170,7 +170,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToSITAppPages
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Deploy to SIT_AppPages
   variables:
   - group: dfc-shared-all
@@ -213,7 +213,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToSITDraftAppPages
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Deploy to SIT-DRAFT_AppPages
   variables:
   - group: dfc-shared-all
@@ -257,7 +257,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToPPAppPages
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Deploy to PP_AppPages
   variables:
   - group: dfc-shared-all
@@ -300,7 +300,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToPPDraftAppPages
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Deploy to PP-Draft_AppPages
   variables:
   - group: dfc-shared-all
@@ -344,7 +344,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToPRDAppPages
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Deploy to PRD_AppPages
   variables:
   - group: dfc-shared-all

@@ -40,7 +40,7 @@ variables:
 - name: clientAffinity
   value: true
 - name: contentUrl
-  value: https://$(ContentApiDraftAddress)/api/execute
+  value: $(ContentApiDraftAddress)/api/execute
 - name: subscriptionUrl
   value: https://dfc-pp-api-eventgridsubscriptions-fa.$(appServiceDomain)
 - name: apiName
