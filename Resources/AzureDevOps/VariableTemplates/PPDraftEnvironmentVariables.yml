@@ -38,7 +38,7 @@ variables:
 - name: aspSize
   value: 1
 - name: clientAffinity
-  value: true
+  value: false
 - name: contentUrl
   value: $(ContentApiDraftAddress)/api/execute
 - name: subscriptionUrl
