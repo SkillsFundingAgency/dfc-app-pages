@@ -83,7 +83,7 @@ stages:
         TestSuffix: UnitTests
 
 - stage: DeployToDevAppPages
-  condition: and(eq(dependencies.Build.result,'Succeeded'), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'),eq(variables['Build.SourceBranch'], 'refs/heads/master')))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
   displayName: Deploy to DEV_AppPages
   variables:
   - group: dfc-shared-all
@@ -126,7 +126,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToDevDraftAppPages
-  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'),eq(variables['Build.SourceBranch'], 'refs/heads/master')))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
   displayName: Deploy to DEV-DRAFT_AppPages
   variables:
   - group: dfc-shared-all
@@ -170,7 +170,8 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToSITAppPages
-  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'),eq(variables['Build.SourceBranch'], 'refs/heads/master')))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  displayName: Deploy to SIT_AppPages
   variables:
   - group: dfc-shared-all
   - group: dfc-shared-sit
@@ -212,7 +213,7 @@ stages:
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
 
 - stage: DeployToSITDraftAppPages
-  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'),eq(variables['Build.SourceBranch'], 'refs/heads/master')))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
   displayName: Deploy to SIT-DRAFT_AppPages
   variables:
   - group: dfc-shared-all
