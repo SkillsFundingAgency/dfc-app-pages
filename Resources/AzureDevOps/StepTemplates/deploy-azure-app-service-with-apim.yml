@@ -8,6 +8,7 @@ parameters:
   ApimServiceName: ''
   ApimProductInstanceName: ''
   ApiName: ''
+  ApiId: ''
   APIMPolicyPath: ''
   ApimImportScript: ''
   SpecificationPath: ''
@@ -89,29 +90,6 @@ steps:
   displayName: 'Apply EventGrid APIM Policy'
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
-    ScriptType: InlineScript
-    Inline: |
-      $context = New-AzApiManagementContext -ResourceGroupName "$(SharedResourceGroupName)" -ServiceName "$(ApimServiceName)"
-      
-      $policyFilePath = "$(Pipeline.Workspace)/dfc.app.pages.apimpolicies/ApimPolicy-IsolatedAppServiceAsEventGridWebhookEndpoint.xml"
-      
-      $apiNames = "$(apiName)"
-      
-      $apiOperationNames = '/api/webhook/ReceiveEvents - POST'
-      
-      foreach ($apiName in $apiNames) {
-          $api = ""
-      
-          $api = Get-AzApiManagementApi -Context $Context -Name $apiName
-      
-          foreach ($apiOperationName in $apiOperationNames) {
-              $operation = ""
-      
-              $operation = Get-AzApiManagementOperation -Context $Context -ApiId $api.ApiId | where {$_.Name -eq $apiOperationName}
-      
-              Write-Output "Applying policy to API: $($api.name) Operation: $($operation.name)"
-      
-              Set-AzApiManagementPolicy -Context $Context -Format application/vnd.ms-azure-apim.policy.raw+xml -ApiId $api.ApiId -OperationId $operation.OperationId -PolicyFilePath $PolicyFilePath -Verbose
-          }
-      }
+    ScriptPath: '$(Agent.BuildDirectory)/s/dfc-devops/PSCoreScripts/Set-ApimPolicy.ps1'
+    ScriptArguments: '-PolicyScope operation -ApimResourceGroup ${{ parameters.SharedResourceGroupName }} -ApimServiceName ${{ parameters.ApimServiceName }} -PolicyFilePath "$(Agent.BuildDirectory)/dfc.app.pages.apimpolicies/ApimPolicy-IsolatedAppServiceAsEventGridWebhookEndpoint.xml" -ApiId ${{ parameters.ApiId }} -OperationId post-api-webhook-receiveevents'
     azurePowerShellVersion: LatestVersion

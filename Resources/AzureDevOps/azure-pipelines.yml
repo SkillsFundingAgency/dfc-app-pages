@@ -119,6 +119,7 @@ stages:
       ApimServiceName: $(ApimServiceName)
       ApimProductInstanceName: $(ApimProductInstanceName)
       ApiName: $(ApiName)
+      ApiId: $(ApiId)
       FunctionAppDomain: $(FunctionAppDomain)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
@@ -163,6 +164,7 @@ stages:
       ApimServiceName: $(ApimServiceName)
       ApimProductInstanceName: $(ApimProductInstanceName)
       ApiName: $(ApiName)
+      ApiId: $(ApiId)
       FunctionAppDomain: $(FunctionAppDomain)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
@@ -206,6 +208,7 @@ stages:
       ApimServiceName: $(ApimServiceName)
       ApimProductInstanceName: $(ApimProductInstanceName)
       ApiName: $(ApiName)
+      ApiId: $(ApiId)
       FunctionAppDomain: $(FunctionAppDomain)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
@@ -250,6 +253,7 @@ stages:
       ApimServiceName: $(ApimServiceName)
       ApimProductInstanceName: $(ApimProductInstanceName)
       ApiName: $(ApiName)
+      ApiId: $(ApiId)
       FunctionAppDomain: $(FunctionAppDomain)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
@@ -293,6 +297,7 @@ stages:
       ApimServiceName: $(ApimServiceName)
       ApimProductInstanceName: $(ApimProductInstanceName)
       ApiName: $(ApiName)
+      ApiId: $(ApiId)
       FunctionAppDomain: $(FunctionAppDomain)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
@@ -337,6 +342,7 @@ stages:
       ApimServiceName: $(ApimServiceName)
       ApimProductInstanceName: $(ApimProductInstanceName)
       ApiName: $(ApiName)
+      ApiId: $(ApiId)
       FunctionAppDomain: $(FunctionAppDomain)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
@@ -380,6 +386,7 @@ stages:
       ApimServiceName: $(ApimServiceName)
       ApimProductInstanceName: $(ApimProductInstanceName)
       ApiName: $(ApiName)
+      ApiId: $(ApiId)
       ApiDefinitionPath: $(ApiDefinitionPath)
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
