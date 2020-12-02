@@ -19,17 +19,17 @@ pool:
   - msbuild
   - visualstudio
 
-# trigger: 
-#   branches:
-#     include: 
-#     - dev
-#     - master
+trigger: 
+  branches:
+    include: 
+    - dev
+    - master
 
-# pr:
-#   branches:
-#     include: 
-#     - dev
-#     - master
+pr:
+  branches:
+    include: 
+    - dev
+    - master
     
 
 stages:
@@ -83,7 +83,7 @@ stages:
         TestSuffix: UnitTests
 
 - stage: DeployToDevAppPages
-  #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
   displayName: Deploy to DEV_AppPages
   variables:
   - group: dfc-shared-all
