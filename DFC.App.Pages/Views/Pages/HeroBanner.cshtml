@@ -1,7 +1,7 @@
 ﻿@model HeroBannerViewModel
 
 
-@if (!string.IsNullOrWhiteSpace(Model.Content?.Value))
+@if (Model.ShowHeroBanner && !string.IsNullOrWhiteSpace(Model.Content?.Value))
 {
     <header class="ncs-hero">
         <div class="govuk-width-container">

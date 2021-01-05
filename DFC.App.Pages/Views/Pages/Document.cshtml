@@ -151,6 +151,18 @@
                     @Html.DisplayFor(model => model.Url)
                 </dd>
             </div>
+            @if (Model.HeroBannerViewModel != null)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        @Html.DisplayNameFor(model => model.HeroBannerViewModel!.ShowHeroBanner)
+                    </dt>
+
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.HeroBannerViewModel!.ShowHeroBanner)
+                    </dd>
+                </div>
+            }
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.CreatedDate)

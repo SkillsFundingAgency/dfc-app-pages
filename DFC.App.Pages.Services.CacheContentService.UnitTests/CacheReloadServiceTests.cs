@@ -416,11 +416,11 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
                 Keywords = "some keywords",
                 ContentLinks = new ContentLinksModel(new JObject())
                 {
-                    ContentLinks = new List<KeyValuePair<string, List<LinkDetails>>>()
+                    ContentLinks = new List<KeyValuePair<string, List<ILinkDetails>>>()
                     {
-                        new KeyValuePair<string, List<LinkDetails>>(
+                        new KeyValuePair<string, List<ILinkDetails>>(
                             "test",
-                            new List<LinkDetails>
+                            new List<ILinkDetails>
                             {
                                 new LinkDetails
                                 {
