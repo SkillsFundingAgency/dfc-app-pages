@@ -1,5 +1,4 @@
-﻿
-using DFC.App.Pages.Data.Models;
+﻿using DFC.App.Pages.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
