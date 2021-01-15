@@ -34,13 +34,15 @@ variables:
 - name: aspSize
   value: 1
 - name: clientAffinity
-  value: true
+  value: false
 - name: contentUrl
   value: $(ContentApiAddress)/api/execute
 - name: subscriptionUrl
   value: https://dfc-prd-api-eventgridsubscriptions-fa.$(appServiceDomain)
 - name: apiName
   value: pages
+- name: apiId
+  value: composite-ui-pages
 - name: applicationUrl
   value: https://$(AppServiceName).$(appServiceDomain)
 - name: WebAppPrefix

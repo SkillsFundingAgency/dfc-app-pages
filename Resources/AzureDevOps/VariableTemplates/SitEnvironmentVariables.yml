@@ -41,6 +41,8 @@ variables:
   value: https://dfc-sit-api-eventgridsubscriptions-fa.$(appServiceDomain)
 - name: apiName
   value: pages
+- name: apiId
+  value: composite-ui-pages
 - name: applicationUrl
   value: https://$(AppServiceName).$(appServiceDomain)
 - name: WebAppPrefix

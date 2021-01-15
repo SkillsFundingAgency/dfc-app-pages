@@ -1,6 +1,6 @@
 variables:
 - name: ReleaseEnvironmentName
-  value: PP
+  value: PRD-DRAFT
 - name: AppServiceName
   value: $(WebAppPrefix)-as
 - name: cosmosDbCollectionName
@@ -8,7 +8,7 @@ variables:
 - name: EnableAzureMonitorAlerting
   value: true
 - name: SubscriptionSettingsEndpoint
-  value: $(ApimProxyAddress)/composite-ui/pages
+  value: $(ApimProxyAddress)/composite-ui/pages-draft
 - name: pagesAppDatabaseThroughput
   value: 400
 - name: ResourceGroup
@@ -19,12 +19,16 @@ variables:
   value: registration.json
 - name: EventGridPublishClientOptionsApiEndpoint
   value: https://$(AppServiceName).$(appServiceDomain)/api/pages
+- name: SubscriptionSettingsFilterIncludeEventTypes3
+  value: draft
+- name: SubscriptionSettingsFilterIncludeEventTypes4
+  value: draft-discarded
 - name: ApplicationName
-  value: DFC-App-Pages
+  value: DFC-App-Pages-draft
 - name: EventGridSubjectPrefix
   value: /$(ApplicationName)/
 - name: AppRegistryClientOptionsBaseAddress
-  value: $(ApimProxyAddress)/composite-ui-appRegistry/pages/
+  value: $(ApimProxyAddress)/composite-ui-appRegistry-draft/pages/
 - name: SummaryEndpoint
   value: /page
 - name: aspTier
@@ -36,14 +40,14 @@ variables:
 - name: clientAffinity
   value: false
 - name: contentUrl
-  value: $(ContentApiAddress)/api/execute
+  value: $(ContentApiDraftAddress)/api/execute
 - name: subscriptionUrl
-  value: https://dfc-pp-api-eventgridsubscriptions-fa.$(appServiceDomain)
+  value: https://dfc-prd-api-eventgridsubscriptions-fa.$(appServiceDomain)
 - name: apiName
-  value: pages
+  value: pages-draft
 - name: apiId
-  value: composite-ui-pages
+  value: composite-ui-pages-draft
 - name: applicationUrl
   value: https://$(AppServiceName).$(appServiceDomain)
 - name: WebAppPrefix
-  value: dfc-pp-app-pages
+  value: dfc-prd-draft-app-pages
