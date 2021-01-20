@@ -111,6 +111,15 @@
         },
         "ApiName": {
             "type": "string"
+        },
+        "ExceptionCountThreshold": {
+            "type": "string"
+        },
+        "CPUPercentageThreshold": {
+            "type": "string"
+        },
+        "MemoryPercentageThreshold": {
+            "type": "string"
         }
     },
     "variables": {
@@ -128,35 +137,35 @@
     },
     "resources": [
         {
-      "name": "[variables('ApiName')]",
-      "type": "Microsoft.Resources/deployments",
-      "resourceGroup": "[parameters('ApimResourceGroup')]",
-      "apiVersion": "2017-05-10",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'APIM/apim-api.json')]",
-          "contentVersion": "1.0.0.0"
+            "name": "[variables('ApiName')]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('ApimResourceGroup')]",
+            "apiVersion": "2017-05-10",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'APIM/apim-api.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "apimLoggerName": {
+                        "value": "[parameters('ApimLoggerName')]"
+                    },
+                    "apimProductInstanceName": {
+                        "value": "[parameters('ApimProductInstanceName')]"
+                    },
+                    "apimServiceName": {
+                        "value": "[parameters('ApimServiceName')]"
+                    },
+                    "apiName": {
+                        "value": "[variables('ApiName')]"
+                    }
+                }
+            },
+            "dependsOn": [
+            ]
         },
-        "parameters": {
-          "apimLoggerName": {
-            "value": "[parameters('ApimLoggerName')]"
-          },
-          "apimProductInstanceName": {
-            "value": "[parameters('ApimProductInstanceName')]"
-          },
-          "apimServiceName": {
-            "value": "[parameters('ApimServiceName')]"
-          },
-          "apiName": {
-            "value": "[variables('ApiName')]"
-          }
-        }
-      },
-      "dependsOn": [
-      ]
-    },
-    {
+        {
             "apiVersion": "2017-05-10",
             "name": "[variables('webAppInsightsName')]",
             "type": "Microsoft.Resources/deployments",
@@ -311,7 +320,7 @@
                                 "name": "SubscriptionSettings__Endpoint",
                                 "value": "[concat(parameters('SubscriptionSettingsEndpoint'),'/api/webhook/ReceiveEvents?subscription-key=',parameters('apimCompositeApiKey'))]"
                             },
-							  {
+                            {
                                 "name": "SubscriptionSettings__SubscriptionRegistrationDelay",
                                 "value": "00:02:00"
                             },
@@ -468,7 +477,7 @@
                         "value": "GreaterThan"
                     },
                     "threshold": {
-                        "value": "0"
+                        "value": "[parameters('ExceptionCountThreshold')]"
                     },
                     "aggregation": {
                         "value": "Count"
@@ -519,6 +528,108 @@
                     }
                 }
             }
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "[concat(variables('AppServicePlanName'), '-CPUPercentage')]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'Application-Insights/metric-alerts.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "enabled": {
+                        "value": "[parameters('enableAlerts')]"
+                    },
+                    "alertName": {
+                        "value": "[concat(variables('AppServicePlanName'), '-metric-CPUPercentage')]"
+                    },
+                    "alertSeverity": {
+                        "value": 3
+                    },
+                    "metricName": {
+                        "value": "CpuPercentage"
+                    },
+                    "operator": {
+                        "value": "GreaterThanOrEqual"
+                    },
+                    "threshold": {
+                        "value": "[parameters('CPUPercentageThreshold')]"
+                    },
+                    "aggregation": {
+                        "value": "Average"
+                    },
+                    "windowSize": {
+                        "value": "PT5M"
+                    },
+                    "evaluationFrequency": {
+                        "value": "PT1M"
+                    },
+                    "actionGroupName": {
+                        "value": "[variables('ActionGroupName')]"
+                    },
+                    "resourceId": {
+                        "value": "[resourceId('Microsoft.Web/serverFarms', variables('AppServicePlanName'))]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[variables('ActionGroupName')]",
+                "[variables('AppServicePlanName')]"
+            ]
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "[concat(variables('AppServicePlanName'), '-MemoryPercentage')]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'Application-Insights/metric-alerts.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "enabled": {
+                        "value": "[parameters('enableAlerts')]"
+                    },
+                    "alertName": {
+                        "value": "[concat(variables('AppServicePlanName'), '-metric-MemoryPercentage')]"
+                    },
+                    "alertSeverity": {
+                        "value": 3
+                    },
+                    "metricName": {
+                        "value": "MemoryPercentage"
+                    },
+                    "operator": {
+                        "value": "GreaterThanOrEqual"
+                    },
+                    "threshold": {
+                        "value": "[parameters('MemoryPercentageThreshold')]"
+                    },
+                    "aggregation": {
+                        "value": "Average"
+                    },
+                    "windowSize": {
+                        "value": "PT5M"
+                    },
+                    "evaluationFrequency": {
+                        "value": "PT1M"
+                    },
+                    "actionGroupName": {
+                        "value": "[variables('ActionGroupName')]"
+                    },
+                    "resourceId": {
+                        "value": "[resourceId('Microsoft.Web/serverFarms', variables('AppServicePlanName'))]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[variables('ActionGroupName')]",
+                "[variables('AppServicePlanName')]"
+            ]
         }
     ],
     "outputs": {
