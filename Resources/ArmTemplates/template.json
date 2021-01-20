@@ -579,7 +579,6 @@
                 }
             },
             "dependsOn": [
-                "[variables('ActionGroupName')]",
                 "[variables('AppServicePlanName')]"
             ]
         },
@@ -633,7 +632,6 @@
                 }
             },
             "dependsOn": [
-                "[variables('ActionGroupName')]",
                 "[variables('AppServicePlanName')]"
             ]
         }
