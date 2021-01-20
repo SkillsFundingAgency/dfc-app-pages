@@ -570,6 +570,9 @@
                     "actionGroupName": {
                         "value": "[variables('ActionGroupName')]"
                     },
+                    "actionGroupResourceGroup": {
+                        "value": "[parameters('appSharedResourceGroup')]"
+                    },
                     "resourceId": {
                         "value": "[resourceId('Microsoft.Web/serverFarms', variables('AppServicePlanName'))]"
                     }
@@ -620,6 +623,9 @@
                     },
                     "actionGroupName": {
                         "value": "[variables('ActionGroupName')]"
+                    },
+                    "actionGroupResourceGroup": {
+                        "value": "[parameters('appSharedResourceGroup')]"
                     },
                     "resourceId": {
                         "value": "[resourceId('Microsoft.Web/serverFarms', variables('AppServicePlanName'))]"
