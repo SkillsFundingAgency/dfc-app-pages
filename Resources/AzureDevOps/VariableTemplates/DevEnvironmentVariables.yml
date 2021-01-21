@@ -48,7 +48,7 @@ variables:
 - name: WebAppPrefix
   value: dfc-dev-app-pages
 - name: ExceptionCountThreshold
-  value: 10
+  value: 20
 - name: MemoryPercentageThreshold
   value: 75
 - name: CPUPercentageThreshold
