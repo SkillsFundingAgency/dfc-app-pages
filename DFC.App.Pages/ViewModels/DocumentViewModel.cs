@@ -46,12 +46,15 @@ namespace DFC.App.Pages.ViewModels
         public HtmlString? Content { get; set; }
 
         [Display(Name = "Last Reviewed")]
+        [DisplayFormat(DataFormatString = "{0:dd MMM yyyy HH:mm:ss}")]
         public DateTime LastReviewed { get; set; }
 
         [Display(Name = "Created Date")]
+        [DisplayFormat(DataFormatString = "{0:dd MMM yyyy HH:mm:ss}")]
         public DateTime CreatedDate { get; set; }
 
         [Display(Name = "Last Cached")]
+        [DisplayFormat(DataFormatString = "{0:dd MMM yyyy HH:mm:ss}")]
         public DateTime LastCached { get; set; }
 
         public IList<string>? Redirects { get; set; }
