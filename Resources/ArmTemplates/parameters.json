@@ -106,6 +106,15 @@
         },
         "ApiName": {
             "value": "__ApiName__"
+        },
+        "ExceptionCountThreshold": {
+            "value": "__ExceptionCountThreshold__"
+        },
+        "MemoryPercentageThreshold": {
+            "value": "__MemoryPercentageThreshold__"
+        },
+        "CPUPercentageThreshold": {
+            "value": "__CPUPercentageThreshold__"
         }
     }
 }

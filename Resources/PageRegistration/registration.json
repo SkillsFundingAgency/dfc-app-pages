@@ -13,38 +13,38 @@
     "Regions": [
       {
         "PageRegion": 1,
-        "HealthCheckRequired": false,
+        "HealthCheckRequired": true,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/htmlhead",
         "IsHealthy": true
       },
       {
         "PageRegion": 2,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/breadcrumb",
-        "HealthCheckRequired": false,
+        "HealthCheckRequired": true,
         "IsHealthy": true
       },
       {
         "PageRegion": 3,
-        "HealthCheckRequired": false,
+        "HealthCheckRequired": true,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/bodytop",
         "IsHealthy": true
       },
       {
         "PageRegion": 4,
-        "HealthCheckRequired": false,
+        "HealthCheckRequired": true,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/body",
         "OfflineHtml": "<div class=\"govuk-width-container\"><H3>Pages Service Unavailable</H3></div>",
         "IsHealthy": true
       },
       {
         "PageRegion": 7,
-        "HealthCheckRequired": false,
+        "HealthCheckRequired": true,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/bodyfooter",
         "IsHealthy": true
       },
       {
         "PageRegion": 8,
-        "HealthCheckRequired": false,
+        "HealthCheckRequired": true,
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/herobanner",
         "IsHealthy": true
       }
