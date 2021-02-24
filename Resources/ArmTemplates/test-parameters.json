@@ -97,6 +97,15 @@
         },
         "ApiName": {
             "value": "pages"
+        },
+        "ExceptionCountThreshold": {
+            "value": "0"
+        },
+        "MemoryPercentageThreshold": {
+            "value": "0"
+        },
+        "CPUPercentageThreshold": {
+            "value": "0"
         }
     }
 }

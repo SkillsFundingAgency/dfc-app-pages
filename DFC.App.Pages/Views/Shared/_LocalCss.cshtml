@@ -1,10 +1,6 @@
 ﻿@{
     var cdnLocation = "https://dev-cdn.nationalcareersservice.org.uk/nationalcareers_toolkit";
+    var queryStringVersion = @DateTime.Today.ToString("yyyy-mm-dd");
 }
 
-<link href="@cdnLocation/css/all.min.css" rel="stylesheet" type="text/css" />
-
-@*<link href="~/css/dfc-composite-shell.css" rel="stylesheet" type="text/css" asp-append-version="true" />
-    <link href="~/css/dfc-app-pages.css" rel="stylesheet" type="text/css" asp-append-version="true" />*@
-
-@*<link href="~/css/experimental.css" rel="stylesheet" type="text/css" asp-append-version="true" />*@
+<link href="@cdnLocation/css/all.min.css?@queryStringVersion" rel="stylesheet" type="text/css" />

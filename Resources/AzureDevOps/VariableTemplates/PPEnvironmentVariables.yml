@@ -47,3 +47,9 @@ variables:
   value: https://$(AppServiceName).$(appServiceDomain)
 - name: WebAppPrefix
   value: dfc-pp-app-pages
+- name: ExceptionCountThreshold
+  value: 10
+- name: MemoryPercentageThreshold
+  value: 75
+- name: CPUPercentageThreshold
+  value: 75
