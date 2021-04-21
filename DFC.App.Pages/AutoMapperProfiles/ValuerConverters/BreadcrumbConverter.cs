@@ -24,7 +24,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
 
             result.Reverse();
 
-            if (!string.IsNullOrWhiteSpace(sourceMember.MetaTags?.Title))
+            if (!sourceMember.IsDefaultForPageLocation && !string.IsNullOrWhiteSpace(sourceMember.MetaTags?.Title))
             {
                 var articlePathViewModel = new BreadcrumbItemViewModel
                 {
