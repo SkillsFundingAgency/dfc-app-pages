@@ -77,16 +77,35 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.LastCached, s => s.Ignore());
 
             CreateMap<CmsApiHtmlModel, ContentItemModel>()
+                .ForMember(d => d.Action, s => s.Ignore())
+                .ForMember(d => d.EnableAntiForgeryToken, s => s.Ignore())
+                .ForMember(d => d.Method, s => s.Ignore())
+                .ForMember(d => d.EncType, s => s.Ignore())
                 .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published))
                 .ForMember(d => d.ContentItems, opt => opt.ConvertUsing(new MarkupContentItemsConverter(), a => a.ContentItems))
                 .ForMember(d => d.LastCached, s => s.Ignore());
 
             CreateMap<CmsApiHtmlSharedModel, ContentItemModel>()
+                .ForMember(d => d.Action, s => s.Ignore())
+                .ForMember(d => d.EnableAntiForgeryToken, s => s.Ignore())
+                .ForMember(d => d.Method, s => s.Ignore())
+                .ForMember(d => d.EncType, s => s.Ignore())
                 .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published))
                 .ForMember(d => d.ContentItems, opt => opt.ConvertUsing(new MarkupContentItemsConverter(), a => a.ContentItems))
                 .ForMember(d => d.LastCached, s => s.Ignore());
 
             CreateMap<CmsApiSharedContentModel, ContentItemModel>()
+                .ForMember(d => d.Action, s => s.Ignore())
+                .ForMember(d => d.EnableAntiForgeryToken, s => s.Ignore())
+                .ForMember(d => d.Method, s => s.Ignore())
+                .ForMember(d => d.EncType, s => s.Ignore())
+                .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published))
+                .ForMember(d => d.ContentItems, opt => opt.ConvertUsing(new MarkupContentItemsConverter(), a => a.ContentItems))
+                .ForMember(d => d.LastCached, s => s.Ignore());
+
+            CreateMap<CmsApiFormModel, ContentItemModel>()
+                .ForMember(d => d.Content, s => s.Ignore())
+                .ForMember(d => d.HtmlBody, s => s.Ignore())
                 .ForMember(d => d.LastReviewed, s => s.MapFrom(a => a.Published))
                 .ForMember(d => d.ContentItems, opt => opt.ConvertUsing(new MarkupContentItemsConverter(), a => a.ContentItems))
                 .ForMember(d => d.LastCached, s => s.Ignore());
@@ -96,7 +115,6 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.ItemId, s => s.Ignore())
                 .ForMember(d => d.Title, s => s.Ignore())
                 .ForMember(d => d.Content, s => s.Ignore())
-                .ForMember(d => d.Justify, s => s.Ignore())
                 .ForMember(d => d.Published, s => s.Ignore())
                 .ForMember(d => d.CreatedDate, s => s.Ignore())
                 .ForMember(d => d.HtmlBody, s => s.Ignore())
@@ -109,7 +127,6 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.ItemId, s => s.Ignore())
                 .ForMember(d => d.Title, s => s.Ignore())
                 .ForMember(d => d.Content, s => s.Ignore())
-                .ForMember(d => d.Justify, s => s.Ignore())
                 .ForMember(d => d.Published, s => s.Ignore())
                 .ForMember(d => d.CreatedDate, s => s.Ignore())
                 .ForMember(d => d.HtmlBody, s => s.Ignore())
@@ -122,7 +139,6 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.ItemId, s => s.Ignore())
                 .ForMember(d => d.Title, s => s.Ignore())
                 .ForMember(d => d.Content, s => s.Ignore())
-                .ForMember(d => d.Justify, s => s.Ignore())
                 .ForMember(d => d.Published, s => s.Ignore())
                 .ForMember(d => d.CreatedDate, s => s.Ignore())
                 .ForMember(d => d.HtmlBody, s => s.Ignore())
@@ -135,6 +151,20 @@ namespace DFC.App.Pages.AutoMapperProfiles
                 .ForMember(d => d.ItemId, s => s.Ignore())
                 .ForMember(d => d.Title, s => s.Ignore())
                 .ForMember(d => d.BreadcrumbText, s => s.Ignore())
+                .ForMember(d => d.Published, s => s.Ignore())
+                .ForMember(d => d.CreatedDate, s => s.Ignore())
+                .ForMember(d => d.Links, s => s.Ignore())
+                .ForMember(d => d.ContentLinks, s => s.Ignore())
+                .ForMember(d => d.ContentItems, s => s.Ignore());
+
+            CreateMap<LinkDetails, CmsApiFormModel>()
+                .ForMember(d => d.Url, s => s.Ignore())
+                .ForMember(d => d.ItemId, s => s.Ignore())
+                .ForMember(d => d.Title, s => s.Ignore())
+                .ForMember(d => d.Action, s => s.Ignore())
+                .ForMember(d => d.EnableAntiForgeryToken, s => s.Ignore())
+                .ForMember(d => d.Method, s => s.Ignore())
+                .ForMember(d => d.EncType, s => s.Ignore())
                 .ForMember(d => d.Published, s => s.Ignore())
                 .ForMember(d => d.CreatedDate, s => s.Ignore())
                 .ForMember(d => d.Links, s => s.Ignore())

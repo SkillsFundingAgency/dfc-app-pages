@@ -8,8 +8,6 @@ namespace DFC.App.Pages.Data.Models.CmsApiModels
     [ExcludeFromCodeCoverage]
     public class CmsApiHtmlModel : BaseContentItemModel, ICmsApiMarkupContentItem
     {
-        public int? Justify { get; set; }
-
         public string? Alignment { get; set; }
 
         public int? Ordinal { get; set; }

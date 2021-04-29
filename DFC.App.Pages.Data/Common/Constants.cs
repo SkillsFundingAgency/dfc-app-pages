@@ -7,5 +7,6 @@
         public const string ContentTypeSharedContent = "SharedContent";
         public const string ContentTypePageLocation = "PageLocation";
         public const string ContentTypePageLocationParent = "PageLocationParent";
+        public const string ContentTypeForm = "Form";
     }
 }
