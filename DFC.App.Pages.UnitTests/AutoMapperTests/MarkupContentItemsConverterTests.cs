@@ -170,5 +170,46 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
             Assert.Equal(expectedResult.First().HtmlBody, result.First().HtmlBody);
             Assert.Equal(expectedResult.First().Title, result.First().Title);
         }
+
+        [Fact]
+        public void MarkupContentFormItemsConverterReturnsSuccessForContentItems()
+        {
+            // Arrange
+            var converter = new MarkupContentItemsConverter();
+            var sourceMember = new List<IBaseContentItemModel>
+            {
+                new CmsApiFormModel
+                {
+                    ContentType = Constants.ContentTypeForm,
+                    Action = "some action",
+                    EnableAntiForgeryToken = true,
+                    Method = "a method",
+                    EncType = "an EncType",
+                },
+            };
+            var expectedResult = new List<ContentItemModel>
+            {
+                new ContentItemModel
+                {
+                    ContentType = Constants.ContentTypeForm,
+                    Action = "some action",
+                    EnableAntiForgeryToken = true,
+                    Method = "a method",
+                    EncType = "an EncType",
+                },
+            };
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<ContentPageModelProfile>());
+            var context = new Mapper(configuration);
+
+            // Act
+            var result = converter.Convert(sourceMember, context.DefaultContext);
+
+            // Assert
+            Assert.Equal(expectedResult.First().ContentType, result.First().ContentType);
+            Assert.Equal(expectedResult.First().Action, result.First().Action);
+            Assert.Equal(expectedResult.First().EnableAntiForgeryToken, result.First().EnableAntiForgeryToken);
+            Assert.Equal(expectedResult.First().Method, result.First().Method);
+            Assert.Equal(expectedResult.First().EncType, result.First().EncType);
+        }
     }
 }

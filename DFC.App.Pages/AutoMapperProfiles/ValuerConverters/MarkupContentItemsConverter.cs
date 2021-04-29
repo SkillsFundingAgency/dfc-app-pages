@@ -47,6 +47,13 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
                         }
 
                         break;
+                    case Constants.ContentTypeForm:
+                        if (item is CmsApiFormModel cmsApiFormModel)
+                        {
+                            result.Add(context.Mapper.Map<ContentItemModel>(cmsApiFormModel));
+                        }
+
+                        break;
                 }
             }
 
