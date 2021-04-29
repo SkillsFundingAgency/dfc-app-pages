@@ -2,10 +2,10 @@
 {
     public interface ICmsApiMarkupContentItem
     {
-        string? Title { get; set; }
+        public string? Alignment { get; set; }
 
-        public string? Content { get; set; }
+        public int? Ordinal { get; set; }
 
-        public string? HtmlBody { get; set; }
+        public int? Size { get; set; }
     }
 }

@@ -17,6 +17,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
         private readonly IMarkupContentItemUpdater<CmsApiHtmlModel> fakeHtmlMarkupContentItemUpdater = A.Fake<IMarkupContentItemUpdater<CmsApiHtmlModel>>();
         private readonly IMarkupContentItemUpdater<CmsApiHtmlSharedModel> fakeHtmlSharedMarkupContentItemUpdater = A.Fake<IMarkupContentItemUpdater<CmsApiHtmlSharedModel>>();
         private readonly IMarkupContentItemUpdater<CmsApiSharedContentModel> fakeSharedContentMarkupContentItemUpdater = A.Fake<IMarkupContentItemUpdater<CmsApiSharedContentModel>>();
+        private readonly IMarkupContentItemUpdater<CmsApiFormModel> fakeFormMarkupContentItemUpdater = A.Fake<IMarkupContentItemUpdater<CmsApiFormModel>>();
 
         [Fact]
         public async Task ContentItemUpdaterFindAndUpdateAsyncHtmlReturnsSuccess()
@@ -26,7 +27,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
             var url = new Uri("https://www.somewhere.com", UriKind.Absolute);
             var contentItemId = Guid.NewGuid();
             var validContentItems = BuildValidContentItems(contentItemId, Constants.ContentTypeHtml);
-            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater);
+            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater, fakeFormMarkupContentItemUpdater);
 
             A.CallTo(() => fakeHtmlMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).Returns(expectedResult);
 
@@ -37,6 +38,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
             A.CallTo(() => fakeHtmlMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeHtmlSharedMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeSharedContentMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeFormMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
 
             Assert.Equal(expectedResult, result);
         }
@@ -49,7 +51,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
             var url = new Uri("https://www.somewhere.com", UriKind.Absolute);
             var contentItemId = Guid.NewGuid();
             var validContentItems = BuildValidContentItems(contentItemId, Constants.ContentTypeHtmlShared);
-            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater);
+            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater, fakeFormMarkupContentItemUpdater);
 
             A.CallTo(() => fakeHtmlSharedMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).Returns(expectedResult);
 
@@ -60,6 +62,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
             A.CallTo(() => fakeHtmlMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeHtmlSharedMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fakeSharedContentMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeFormMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
 
             Assert.Equal(expectedResult, result);
         }
@@ -72,7 +75,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
             var url = new Uri("https://www.somewhere.com", UriKind.Absolute);
             var contentItemId = Guid.NewGuid();
             var validContentItems = BuildValidContentItems(contentItemId, Constants.ContentTypeSharedContent);
-            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater);
+            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater, fakeFormMarkupContentItemUpdater);
 
             A.CallTo(() => fakeSharedContentMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).Returns(expectedResult);
 
@@ -83,6 +86,31 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
             A.CallTo(() => fakeHtmlMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeHtmlSharedMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeSharedContentMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeFormMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
+
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public async Task ContentItemUpdaterFindAndUpdateAsyncFormReturnsSuccess()
+        {
+            // Arrange
+            const bool expectedResult = true;
+            var url = new Uri("https://www.somewhere.com", UriKind.Absolute);
+            var contentItemId = Guid.NewGuid();
+            var validContentItems = BuildValidContentItems(contentItemId, Constants.ContentTypeForm);
+            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater, fakeFormMarkupContentItemUpdater);
+
+            A.CallTo(() => fakeFormMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).Returns(expectedResult);
+
+            // Act
+            var result = await service.FindAndUpdateAsync(url, contentItemId, validContentItems).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => fakeHtmlMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeHtmlSharedMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeSharedContentMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeFormMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(expectedResult, result);
         }
@@ -95,7 +123,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
             var url = new Uri("https://www.somewhere.com", UriKind.Absolute);
             var contentItemId = Guid.NewGuid();
             var validContentItems = BuildValidContentItems(Guid.NewGuid(), Constants.ContentTypeHtml);
-            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater);
+            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater, fakeFormMarkupContentItemUpdater);
 
             // Act
             var result = await service.FindAndUpdateAsync(url, contentItemId, validContentItems).ConfigureAwait(false);
@@ -104,6 +132,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
             A.CallTo(() => fakeHtmlMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeHtmlSharedMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => fakeSharedContentMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeFormMarkupContentItemUpdater.FindAndUpdateAsync(A<ContentItemModel>.Ignored, A<Uri>.Ignored)).MustNotHaveHappened();
 
             Assert.Equal(expectedResult, result);
         }
@@ -115,7 +144,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
             var contentItemId = Guid.NewGuid();
             var expectedResult = BuildValidContentItem(contentItemId, Constants.ContentTypeHtml);
             var validContentItems = BuildValidContentItems(contentItemId, Constants.ContentTypeHtml);
-            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater);
+            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater, fakeFormMarkupContentItemUpdater);
 
             // Act
             var result = service.FindItem(contentItemId, validContentItems);
@@ -132,7 +161,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
             // Arrange
             var contentItemId = Guid.NewGuid();
             var validContentItems = BuildValidContentItems(Guid.NewGuid(), Constants.ContentTypeHtml);
-            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater);
+            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater, fakeFormMarkupContentItemUpdater);
 
             // Act
             var result = service.FindItem(contentItemId, validContentItems);
@@ -147,7 +176,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
             // Arrange
             var contentItemId = Guid.NewGuid();
             List<ContentItemModel>? nullContentItems = null;
-            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater);
+            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater, fakeFormMarkupContentItemUpdater);
 
             // Act
             var result = service.FindItem(contentItemId, nullContentItems);
@@ -162,7 +191,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
             // Arrange
             var contentItemId = Guid.NewGuid();
             var emptyContentItems = new List<ContentItemModel>();
-            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater);
+            var service = new ContentItemUpdater(fakeHtmlMarkupContentItemUpdater, fakeHtmlSharedMarkupContentItemUpdater, fakeSharedContentMarkupContentItemUpdater, fakeFormMarkupContentItemUpdater);
 
             // Act
             var result = service.FindItem(contentItemId, emptyContentItems);
@@ -187,22 +216,33 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.ContentItemUpdate
                         new ContentItemModel
                         {
                             ItemId = Guid.NewGuid(),
-                            ContentType = Constants.ContentTypeHtmlShared,
+                            ContentType = Constants.ContentTypeForm,
                             Title = "Title-2",
-                            Content = "Content #2",
-                            HtmlBody = "HtmlBody #2",
+                            Action = "Action #2",
+                            Method = "method #2",
                             ContentItems = new List<ContentItemModel>
                             {
                                 new ContentItemModel
                                 {
                                     ItemId = Guid.NewGuid(),
-                                    ContentType = Constants.ContentTypeSharedContent,
+                                    ContentType = Constants.ContentTypeHtmlShared,
                                     Title = "Title-3",
                                     Content = "Content #3",
                                     HtmlBody = "HtmlBody #3",
                                     ContentItems = new List<ContentItemModel>
                                     {
-                                        BuildValidContentItem(contentItemId, contentType),
+                                        new ContentItemModel
+                                        {
+                                            ItemId = Guid.NewGuid(),
+                                            ContentType = Constants.ContentTypeSharedContent,
+                                            Title = "Title-3",
+                                            Content = "Content #3",
+                                            HtmlBody = "HtmlBody #3",
+                                            ContentItems = new List<ContentItemModel>
+                                            {
+                                                BuildValidContentItem(contentItemId, contentType),
+                                            },
+                                        },
                                     },
                                 },
                             },
