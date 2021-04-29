@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DFC.App.Pages.Services.CacheContentService.ContentItemUpdaters
 {
     public class MarkupContentItemUpdater<T> : IMarkupContentItemUpdater<T>
-        where T : class, IBaseContentItemModel, ICmsApiMarkupContentItem
+        where T : class, IBaseContentItemModel
     {
         private readonly ICmsApiService cmsApiService;
 
@@ -58,17 +58,15 @@ namespace DFC.App.Pages.Services.CacheContentService.ContentItemUpdaters
                     case Constants.ContentTypeForm:
                         if (cmsApiModel is CmsApiFormModel cmsApiFormModel)
                         {
-                            contentItemModel.Alignment = cmsApiFormModel.Alignment;
-                            contentItemModel.Ordinal = cmsApiFormModel.Ordinal;
-                            contentItemModel.Size = cmsApiFormModel.Size;
+                            contentItemModel.Action = cmsApiFormModel.Action;
+                            contentItemModel.EnableAntiForgeryToken = cmsApiFormModel.EnableAntiForgeryToken;
+                            contentItemModel.Method = cmsApiFormModel.Method;
+                            contentItemModel.EncType = cmsApiFormModel.EncType;
                         }
 
                         break;
                 }
 
-                contentItemModel.Alignment = cmsApiModel.Alignment;
-                contentItemModel.Ordinal = cmsApiModel.Ordinal;
-                contentItemModel.Size = cmsApiModel.Size;
                 contentItemModel.LastCached = DateTime.UtcNow;
 
                 return true;

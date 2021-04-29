@@ -1,12 +1,11 @@
-﻿using DFC.App.Pages.Data.Contracts;
-using DFC.Content.Pkg.Netcore.Data.Models;
+﻿using DFC.Content.Pkg.Netcore.Data.Models;
 using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages.Data.Models.CmsApiModels
 {
     [ExcludeFromCodeCoverage]
-    public class CmsApiSharedContentModel : BaseContentItemModel, ICmsApiMarkupContentItem
+    public class CmsApiSharedContentModel : BaseContentItemModel
     {
         public string? Alignment { get; set; }
 
