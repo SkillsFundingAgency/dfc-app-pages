@@ -27,9 +27,11 @@ parameters:
   APIMPolicyPath: ''
   ApimImportScript: ''
   SpecificationPath: ''
+  RunInfrastructureDeployment: ''
 
 jobs:
 - deployment: DeployTemplate
+  condition: "and(succeeded(), eq(variables['RunInfrastructureDeployment'], 'true'))"
   displayName: "Deploy arm templates"
   environment: ${{ parameters.EnvironmentName }}
   strategy:
