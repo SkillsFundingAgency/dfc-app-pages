@@ -1,12 +1,11 @@
-﻿using DFC.App.Pages.Data.Contracts;
-using DFC.Content.Pkg.Netcore.Data.Models;
+﻿using DFC.Content.Pkg.Netcore.Data.Models;
 using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DFC.App.Pages.Data.Models.CmsApiModels
 {
     [ExcludeFromCodeCoverage]
-    public class CmsApiFormModel : BaseContentItemModel, ICmsApiMarkupContentItem
+    public class CmsApiFormModel : BaseContentItemModel
     {
         [JsonProperty("form_Action")]
         public string? Action { get; set; }
