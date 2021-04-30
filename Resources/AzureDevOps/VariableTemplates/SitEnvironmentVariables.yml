@@ -53,5 +53,7 @@ variables:
   value: 75
 - name: CPUPercentageThreshold
   value: 75
-- name: RunInfrastructureDeployment
-  value: false
+- name: SubscriptionSettingsFilterIncludeEventTypes3
+  value:
+- name: SubscriptionSettingsFilterIncludeEventTypes4
+  value:
