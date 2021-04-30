@@ -53,5 +53,3 @@ variables:
   value: 75
 - name: CPUPercentageThreshold
   value: 75
-- name: RunInfrastructureDeployment
-  value: false

@@ -4,6 +4,14 @@ variables:
   BuildPlatform: 'any cpu'
   BuildConfiguration: 'release'
 
+parameters:
+  - name: RunInfrastructureDeployment
+    type: string
+    default: false
+    values:
+      - true
+      - false
+
 resources:
   repositories:
   - repository: self

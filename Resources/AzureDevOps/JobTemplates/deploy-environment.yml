@@ -31,7 +31,7 @@ parameters:
 
 jobs:
 - deployment: DeployTemplate
-  condition: and(succeeded(), eq(variables['RunInfrastructureDeployment'], 'true'))
+  condition: and(succeeded(), eq(parameters['RunInfrastructureDeployment'], 'true'))
   displayName: "Deploy arm templates"
   environment: ${{ parameters.EnvironmentName }}
   strategy:
