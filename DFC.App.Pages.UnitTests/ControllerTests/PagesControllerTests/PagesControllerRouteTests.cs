@@ -102,7 +102,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location5 = location5,
             };
             var controller = BuildController(route);
-            var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>" };
+            var expectedResult = new ContentPageModel() { ShowBreadcrumb = true, Content = "<h1>A document</h1>" };
 
             A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 

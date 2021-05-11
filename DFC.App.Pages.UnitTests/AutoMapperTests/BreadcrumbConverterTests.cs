@@ -92,6 +92,49 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
         }
 
         [Fact]
+        public void BreadcrumbConverterReturnsSuccessForDefaultPageLocation()
+        {
+            // Arrange
+            var converter = new BreadcrumbConverter();
+            var sourceMember = BuildContentPageModel();
+            var context = new ResolutionContext(null, null);
+            var expectedResult = new List<BreadcrumbItemViewModel>
+            {
+                new BreadcrumbItemViewModel
+                {
+                    Route = "/",
+                    Title = "Home",
+                    AddHyperlink = true,
+                },
+                new BreadcrumbItemViewModel
+                {
+                    Route = "/segment-1",
+                    Title = "Segment #1",
+                    AddHyperlink = true,
+                },
+                new BreadcrumbItemViewModel
+                {
+                    Route = "/segment-1/segment-2",
+                    Title = "Segment #2",
+                    AddHyperlink = true,
+                },
+                new BreadcrumbItemViewModel
+                {
+                    Route = "/segment-1/segment-2/segment-3",
+                    Title = "Segment #3",
+                    AddHyperlink = false,
+                },
+            };
+            sourceMember.IsDefaultForPageLocation = true;
+
+            // Act
+            var result = converter.Convert(sourceMember, context);
+
+            // Assert
+            Assert.Equal(expectedResult.Last().Route, result.Last().Route);
+        }
+
+        [Fact]
         public void BreadcrumbConverterReturnsSuccessForContentItemsWithNoPageTitle()
         {
             // Arrange
@@ -145,6 +188,7 @@ namespace DFC.App.Pages.UnitTests.AutoMapperTests
                 {
                     Title = "A page title",
                 },
+                IsDefaultForPageLocation = false,
                 PageLocations = new List<PageLocationModel>
                 {
                     new PageLocationModel
