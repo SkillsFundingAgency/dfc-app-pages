@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -24,7 +25,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
+            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2, ShowBreadcrumb = true };
             var expectedBreadcrumb = new BreadcrumbViewModel { Breadcrumbs = new List<BreadcrumbItemViewModel> { new BreadcrumbItemViewModel { Route = "a-route", Title = "A title", }, }, };
             var controller = BuildPagesController(mediaTypeName);
 
@@ -56,7 +57,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
+            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2, ShowBreadcrumb = true };
             var expectedBreadcrumb = new BreadcrumbViewModel { Breadcrumbs = new List<BreadcrumbItemViewModel> { new BreadcrumbItemViewModel { Route = "a-route", Title = "A title", }, }, };
             var controller = BuildPagesController(mediaTypeName);
 
@@ -146,7 +147,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
+            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2, ShowBreadcrumb = true, };
             var controller = BuildPagesController(mediaTypeName);
 
             A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
@@ -160,6 +161,34 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var statusResult = Assert.IsType<StatusCodeResult>(result);
 
             A.Equals((int)HttpStatusCode.NotAcceptable, statusResult.StatusCode);
+
+            controller.Dispose();
+        }
+
+        [Fact]
+        public async Task PagesControllerBreadcrumbHtmlReturnsBoContentForDoNotShwoBradcrumb()
+        {
+            // Arrange
+            var pageRequestModel = new PageRequestModel
+            {
+                Location1 = "a-location-name",
+                Location2 = "an-article-name",
+            };
+            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2, ShowBreadcrumb = false };
+            var controller = BuildPagesController(MediaTypeNames.Text.Html);
+
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+
+            // Act
+            var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
+
+            var statusResult = Assert.IsType<NoContentResult>(result);
+
+            A.Equals((int)HttpStatusCode.NoContent, statusResult.StatusCode);
 
             controller.Dispose();
         }
