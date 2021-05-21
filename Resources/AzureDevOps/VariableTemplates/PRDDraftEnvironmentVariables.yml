@@ -58,6 +58,6 @@ variables:
 - name: CPUPercentageThreshold
   value: 75
 - name: SubscriptionSettingsFilterIncludeEventTypes3
-  value:
+  value: draft
 - name: SubscriptionSettingsFilterIncludeEventTypes4
-  value:
+  value: draft-discarded
