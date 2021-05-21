@@ -48,6 +48,9 @@
         "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/herobanner",
         "IsHealthy": true
       }
-    ]
+    ],
+    "JavaScriptNames": {
+      "/js/dfc-app-pages.min.js": null
+    }
   }
 ]

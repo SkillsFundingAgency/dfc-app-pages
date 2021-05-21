@@ -30,7 +30,7 @@ variables:
 - name: aspTier
   value: Standard
 - name: aspInstances
-  value: 3
+  value: 2
 - name: aspSize
   value: 1
 - name: clientAffinity
@@ -53,3 +53,7 @@ variables:
   value: 75
 - name: CPUPercentageThreshold
   value: 75
+- name: SubscriptionSettingsFilterIncludeEventTypes3
+  value:
+- name: SubscriptionSettingsFilterIncludeEventTypes4
+  value:

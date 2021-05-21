@@ -82,18 +82,29 @@ namespace DFC.App.Pages.Controllers
             if (contentPageModel != null)
             {
                 var viewModel = mapper.Map<DocumentViewModel>(contentPageModel);
-                viewModel.Breadcrumb = mapper.Map<BreadcrumbViewModel>(contentPageModel);
 
-                if (viewModel.Breadcrumb?.Breadcrumbs != null && viewModel.Breadcrumb.Breadcrumbs.Any())
+                if (contentPageModel.ShowBreadcrumb)
                 {
-                    foreach (var breadcrumb in viewModel.Breadcrumb.Breadcrumbs)
-                    {
-                        var route = breadcrumb.Route == "/" ? string.Empty : breadcrumb.Route;
-                        breadcrumb.Route = $"/pages{route}/document";
-                    }
+                    viewModel.Breadcrumb = mapper.Map<BreadcrumbViewModel>(contentPageModel);
 
-                    viewModel.Breadcrumb.Breadcrumbs.Insert(0, new BreadcrumbItemViewModel { Route = "/", Title = "[ Index ]" });
+                    if (viewModel.Breadcrumb?.Breadcrumbs != null && viewModel.Breadcrumb.Breadcrumbs.Any())
+                    {
+                        foreach (var breadcrumb in viewModel.Breadcrumb.Breadcrumbs)
+                        {
+                            var route = breadcrumb.Route == "/" ? string.Empty : breadcrumb.Route;
+                            breadcrumb.Route = $"/pages{route}/document";
+                        }
+                    }
                 }
+                else
+                {
+                    viewModel.Breadcrumb = new BreadcrumbViewModel
+                    {
+                        Breadcrumbs = new List<BreadcrumbItemViewModel>(),
+                    };
+                }
+
+                viewModel.Breadcrumb.Breadcrumbs.Insert(0, new BreadcrumbItemViewModel { Route = "/", Title = "[ Index ]" });
 
                 logger.LogInformation($"{nameof(Document)} has succeeded for: /{location}/{article}");
 
@@ -158,7 +169,7 @@ namespace DFC.App.Pages.Controllers
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
 
-            if (contentPageModel == null)
+            if (contentPageModel == null || !contentPageModel.ShowBreadcrumb)
             {
                 return NoContent();
             }
@@ -201,7 +212,7 @@ namespace DFC.App.Pages.Controllers
 
             var viewModel = mapper.Map<HeroBannerViewModel>(contentPageModel);
 
-            logger.LogInformation($"{nameof(Breadcrumb)} has returned content for: /{location}/{article}");
+            logger.LogInformation($"{nameof(HeroBanner)} has returned content for: /{location}/{article}");
 
             return this.NegotiateContentResult(viewModel);
         }

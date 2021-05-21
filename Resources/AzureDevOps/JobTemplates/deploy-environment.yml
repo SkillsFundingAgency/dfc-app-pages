@@ -27,9 +27,11 @@ parameters:
   APIMPolicyPath: ''
   ApimImportScript: ''
   SpecificationPath: ''
+  RunInfrastructureDeployment: ''
 
 jobs:
 - deployment: DeployTemplate
+  condition: and(succeeded(), eq('${{ parameters.RunInfrastructureDeployment }}', true))
   displayName: "Deploy arm templates"
   environment: ${{ parameters.EnvironmentName }}
   strategy:
@@ -52,10 +54,9 @@ jobs:
             appSharedCosmosDBName: '${{ parameters.appSharedCosmosDBName }}'
 
 - deployment: DeployApplication
+  condition: succeeded()
   displayName: "Deploy Application"
   environment: ${{ parameters.EnvironmentName }}
-  dependsOn: 
-  - DeployTemplate
   strategy:
     runOnce:
       deploy:
