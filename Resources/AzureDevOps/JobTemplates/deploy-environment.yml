@@ -54,10 +54,9 @@ jobs:
             appSharedCosmosDBName: '${{ parameters.appSharedCosmosDBName }}'
 
 - deployment: DeployApplication
+  condition: succeeded()
   displayName: "Deploy Application"
-  environment: ${{ parameters.EnvironmentName }}
-  dependsOn:
-  - DeployTemplate  
+  environment: ${{ parameters.EnvironmentName }} 
   strategy:
     runOnce:
       deploy:
