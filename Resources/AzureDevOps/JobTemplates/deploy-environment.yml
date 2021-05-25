@@ -57,6 +57,8 @@ jobs:
   condition: succeeded()
   displayName: "Deploy Application"
   environment: ${{ parameters.EnvironmentName }}
+  dependsOn:
+  - DeployTemplate  
   strategy:
     runOnce:
       deploy:
