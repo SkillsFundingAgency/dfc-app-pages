@@ -31,7 +31,6 @@ parameters:
 
 jobs:
 - deployment: DeployTemplate
-  condition: and(succeeded(), eq('${{ parameters.RunInfrastructureDeployment }}', true))
   displayName: "Deploy arm templates"
   environment: ${{ parameters.EnvironmentName }}
   strategy:
@@ -52,9 +51,10 @@ jobs:
             ArmTemplateFolder: '${{ parameters.ArmTemplateFolder }}'
             AppSharedResourceGroup: '${{ parameters.AppSharedResourceGroup }}'
             appSharedCosmosDBName: '${{ parameters.appSharedCosmosDBName }}'
+            RunInfrastructureDeployment: '${{ parameters.RunInfrastructureDeployment }}'
 
 - deployment: DeployApplication
-  condition: succeeded('DeployTemplate')
+  dependsOn: DeployTemplate
   displayName: "Deploy Application"
   environment: ${{ parameters.EnvironmentName }} 
   strategy:
@@ -80,8 +80,7 @@ jobs:
 - deployment: DeployRegistration
   displayName: "Deploy page registration"
   environment: ${{ parameters.EnvironmentName }}
-  dependsOn:
-  - DeployApplication
+  dependsOn: DeployApplication
   strategy:
     runOnce:
       deploy:
