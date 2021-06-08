@@ -1,14 +1,17 @@
 @model BodyViewModel
 
-@{ 
-    var containerClass = Model.UseBrowserWidth ? "ncs-full-width-container" : "govuk-width-container";
-}
-
 @if (Model.Content != null)
 {
-    <div class="@containerClass">
-        <div class="govuk-grid-row">
-            @Html.Raw(Model.Content)
+    @if (Model.UseBrowserWidth)
+    {
+        @Html.Raw(Model.Content)
+    }
+    else
+    {
+        <div class="govuk-width-container">
+            <div class="govuk-grid-row">
+                @Html.Raw(Model.Content)
+            </div>
         </div>
-    </div>
+    }
 }
