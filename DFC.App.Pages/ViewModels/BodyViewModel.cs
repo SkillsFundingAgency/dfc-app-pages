@@ -7,5 +7,7 @@ namespace DFC.App.Pages.ViewModels
     public class BodyViewModel
     {
         public HtmlString? Content { get; set; } = new HtmlString("Unknown content");
+
+        public bool UseBrowserWidth { get; set; }
     }
 }

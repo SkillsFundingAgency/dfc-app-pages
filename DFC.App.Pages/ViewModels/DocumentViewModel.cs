@@ -32,6 +32,12 @@ namespace DFC.App.Pages.ViewModels
         [Display(Name = "Page Location")]
         public string? PageLocation { get; set; }
 
+        [Display(Name = "Use Browser Width")]
+        public bool UseBrowserWidth { get; set; }
+
+        [Display(Name = "Show Breadcrumb")]
+        public bool ShowBreadcrumb { get; set; }
+
         [Display(Name = "Include In SiteMap")]
         public bool IncludeInSitemap { get; set; }
 

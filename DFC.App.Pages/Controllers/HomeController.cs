@@ -6,8 +6,6 @@ namespace DFC.App.Pages.Controllers
 {
     public class HomeController : Controller
     {
-        public const string HomeViewCanonicalName = "home";
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

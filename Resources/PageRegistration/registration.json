@@ -3,7 +3,7 @@
     "Path": "pages",
     "TopNavigationText": null,
     "TopNavigationOrder": 3000,
-    "Layout": 1,
+    "Layout": 5,
     "IsOnline": true,
     "OfflineHtml": "<div class=\"govuk-width-container\"><H2>Pages Service Unavailable</H2></div>",
     "PhaseBannerHtml": "<div class=\"govuk-phase-banner\"><p class=\"govuk-phase-banner__content\"><strong class=\"govuk-tag govuk-phase-banner__content__tag \">beta</strong> <span class=\"govuk-phase-banner__text\">Complete <a target=\"_blank\" class=\"govuk-link\" href=\"https://surveys.ipsosinteractive.com/mrIWeb/mrIWeb.dll?I.Project=S1039833&amp;id=&amp;cf=ovl \">Ipsos MORI survey</a> to give us your feedback about the service.</span> </p></div>",
