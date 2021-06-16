@@ -91,8 +91,7 @@ stages:
         TestSuffix: UnitTests
 
 - stage: DeployToLabAppPages
-  condition: succeeded()
-  #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
   displayName: Deploy to LAB_AppPages
   variables:
   - group: dfc-shared-all
