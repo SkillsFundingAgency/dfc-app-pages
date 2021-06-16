@@ -1,16 +1,16 @@
+parameters:
+- name: RunInfrastructureDeployment
+  type: string
+  default: false
+  values:
+    - true
+    - false
+
 variables:
   ArmTemplateRoot: '$(Build.SourcesDirectory)\Resources\ArmTemplates'
   SolutionBaseName: 'DFC.App.Pages'
   BuildPlatform: 'any cpu'
   BuildConfiguration: 'release'
-
-parameters:
-  - name: RunInfrastructureDeployment
-    type: string
-    default: false
-    values:
-      - true
-      - false
 
 resources:
   repositories:
@@ -90,8 +90,99 @@ stages:
         PublishWebApp: true
         TestSuffix: UnitTests
 
-- stage: DeployToDevAppPages
+- stage: DeployToLabAppPages
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  displayName: Deploy to LAB_AppPages
+  variables:
+  - group: dfc-shared-all
+  - group: dfc-shared-lab
+  - group: dfc-app-shared-all
+  - group: dfc-app-shared-lab
+  - group: dfc-app-shared-registration
+  - group: dfc-stax-shared-lab
+  - group: dfc-compositeui-all
+  - template: VariableTemplates\LabEnvironmentVariables.yml
+  
+  jobs:
+  - template: JobTemplates/deploy-environment.yml
+    parameters:
+      AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
+      EnvironmentTag: '$(EnvironmentTag)'
+      ParentBusiness: '$(ParentBusiness)'
+      ServiceOffering: '$(ServiceOffering)'
+      ResourceGroup: $(ResourceGroup)
+      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+      EnvironmentName: LAB_AppPages
+      AppSharedResourceGroup: $(AppSharedResourceGroup)
+      appSharedCosmosDBName: $(appSharedCosmosDBName)
+      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+      PageRegistrationFile: "$(PageRegistrationFile)"
+      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
+      ApimCompositeKey: "$(ApimCompositeKey)"
+      AppServiceName: '$(AppServiceName)'
+      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+      SharedResourceGroupName: $(SharedResourceGroupName)
+      ApimServiceName: $(ApimServiceName)
+      ApimProductInstanceName: $(ApimProductInstanceName)
+      ApiName: $(ApiName)
+      ApiId: $(ApiId)
+      FunctionAppDomain: $(FunctionAppDomain)
+      ApiDefinitionPath: $(ApiDefinitionPath)
+      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+
+- stage: DeployToLabDraftAppPages
+  condition: succeeded()
+  displayName: Deploy to LAB-DRAFT_AppPages
+  variables:
+  - group: dfc-shared-all
+  - group: dfc-shared-lab
+  - group: dfc-app-shared-all
+  - group: dfc-app-shared-lab
+  - group: dfc-app-draft
+  - group: dfc-app-shared-registration-draft
+  - group: dfc-stax-shared-lab
+  - group: dfc-compositeui-all
+  - template: VariableTemplates\LabDraftEnvironmentVariables.yml
+  
+  jobs:
+  - template: JobTemplates/deploy-environment.yml
+    parameters:
+      AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
+      EnvironmentTag: '$(EnvironmentTag)'
+      ParentBusiness: '$(ParentBusiness)'
+      ServiceOffering: '$(ServiceOffering)'
+      ResourceGroup: $(ResourceGroup)
+      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+      EnvironmentName: LAB-DRAFT_AppPages
+      AppSharedResourceGroup: $(AppSharedResourceGroup)
+      appSharedCosmosDBName: $(appSharedCosmosDBName)
+      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+      PageRegistrationFile: "$(PageRegistrationFile)"
+      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
+      ApimCompositeKey: "$(ApimCompositeKey)"
+      AppServiceName: '$(AppServiceName)'
+      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+      SharedResourceGroupName: $(SharedResourceGroupName)
+      ApimServiceName: $(ApimServiceName)
+      ApimProductInstanceName: $(ApimProductInstanceName)
+      ApiName: $(ApiName)
+      ApiId: $(ApiId)
+      FunctionAppDomain: $(FunctionAppDomain)
+      ApiDefinitionPath: $(ApiDefinitionPath)
+      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+
+- stage: DeployToDevAppPages
+  condition: succeeded()
   displayName: Deploy to DEV_AppPages
   variables:
   - group: dfc-shared-all
@@ -133,7 +224,7 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: $(RunInfrastructureDeployment)
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
 
 - stage: DeployToDevDraftAppPages
   condition: succeeded()
@@ -179,7 +270,7 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: $(RunInfrastructureDeployment)
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
 
 - stage: DeployToSITAppPages
   condition: succeeded()
@@ -224,7 +315,7 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: $(RunInfrastructureDeployment)
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
 
 - stage: DeployToSITDraftAppPages
   condition: succeeded()
@@ -270,7 +361,7 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: $(RunInfrastructureDeployment)
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
 
 - stage: DeployToPPAppPages
   condition: and(eq(dependencies.Build.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -315,7 +406,7 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: $(RunInfrastructureDeployment)
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
 
 - stage: DeployToPPDraftAppPages
   condition: and(eq(dependencies.DeployToPPAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -361,7 +452,7 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: $(RunInfrastructureDeployment)
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
 
 - stage: DeployToPRDAppPages
   condition: and(eq(dependencies.DeployToPPDraftAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -405,7 +496,7 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: $(RunInfrastructureDeployment)
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
 
 - stage: DeployToPRDDraftAppPages
   condition: and(eq(dependencies.DeployToPRDAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -451,4 +542,4 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: $(RunInfrastructureDeployment)
+      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}

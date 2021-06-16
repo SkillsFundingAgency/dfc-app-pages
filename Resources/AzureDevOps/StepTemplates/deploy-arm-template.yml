@@ -11,16 +11,20 @@ parameters:
   ArmOutputVariableName: 'ARMOutputs'
   AppSharedResourceGroup: ''
   appSharedCosmosDBName: ''
+  RunInfrastructureDeployment: ''
 
 steps:
 - checkout: dfc-devops
   path: 's/dfc-devops/'
+  condition: eq('${{ parameters.RunInfrastructureDeployment }}', true)
   
 - powershell: |
     Invoke-WebRequest -Uri "${{ parameters.SetEsfaResourceGroupTagsScript }}" -OutFile "${{ variables['System.DefaultWorkingDirectory']}}/Set-EsfaResourceGroupTags.ps1"
+  condition: eq('${{ parameters.RunInfrastructureDeployment }}', true)
   displayName: "Download scripts from dfc-devops repo"
 
 - task: AzurePowerShell@3
+  condition: eq('${{ parameters.RunInfrastructureDeployment }}', true)
   displayName:  "Create resource groups with tags"
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
@@ -29,6 +33,7 @@ steps:
     azurePowerShellVersion: LatestVersion
 
 - task: AzurePowerShell@4
+  condition: eq('${{ parameters.RunInfrastructureDeployment }}', true)
   displayName: 'Test if cosmos database exists'
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
@@ -37,12 +42,14 @@ steps:
     azurePowerShellVersion: LatestVersion
 
 - task: esfadevops.Tokenization.custom-build-task.Tokenization@0
+  condition: eq('${{ parameters.RunInfrastructureDeployment }}', true)
   displayName: 'Tokenization: Transform file parameters.json'
   inputs:
     SourcePath: '${{ parameters.ArmTemplateFolder }}'
     TargetFileNames: parameters.json
 
 - task: AzureResourceGroupDeployment@2
+  condition: eq('${{ parameters.RunInfrastructureDeployment }}', true)
   displayName: 'Azure Deployment:Create Or Update Resource Group action on ${{ parameters.ResourceGroup }}'
   inputs:
     azureSubscription: '${{ parameters.AzureSubscription }}'
