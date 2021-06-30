@@ -1,0 +1,14 @@
+{
+  "bindingCulture": {
+    "feature": "en-GB"
+  },
+  "language": {
+    "feature": "en-GB"
+  },
+  "stepAssemblies": [
+    { "assembly": "DFC.TestAutomation.UI" }
+  ],
+  "generator": {
+    "allowRowTests" : false
+  }
+}
