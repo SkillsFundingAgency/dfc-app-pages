@@ -28,6 +28,10 @@ parameters:
   ApimImportScript: ''
   SpecificationPath: ''
   RunInfrastructureDeployment: ''
+  UIFunctionalTestEnabled: ''
+  UIFunctionalTestPackage: ''
+  UIFunctionalTestProjectFolder: ''
+  UIFunctionalTestCategory: ''
 
 jobs:
 - deployment: DeployTemplate
@@ -92,3 +96,20 @@ jobs:
             PageRegistrationFile: '${{ parameters.PageRegistrationFile }}'
             AppRegistryApiUrl: '${{ parameters.AppRegistryApiUrl }}'
             ApimCompositeKey: '${{ parameters.ApimCompositeKey }}'
+
+- deployment: DeployUIFunctionalTests
+  displayName: "Deploy ui functional tests"
+  environment: ${{ parameters.EnvironmentName }}
+  dependsOn:
+  - DeployApplication
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - template: ../StepTemplates/run-functional-tests.yml
+          parameters:
+            environment: ${{ parameters.EnvironmentName }}
+            UIFunctionalTestEnabled: '${{ parameters.UIFunctionalTestEnabled }}'
+            UIFunctionalTestPackage: '${{ parameters.UIFunctionalTestPackage }}'
+            UIFunctionalTestProjectFolder: '${{ parameters.UIFunctionalTestProjectFolder }}'
+            UIFunctionalTestCategory: '${{ parameters.UIFunctionalTestCategory }}'

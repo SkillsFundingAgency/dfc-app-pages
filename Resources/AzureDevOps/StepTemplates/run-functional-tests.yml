@@ -1,0 +1,53 @@
+parameters:
+  EnvironmentName: ''
+  UIFunctionalTestEnabled: ''
+  UIFunctionalTestPackage: ''
+  UIFunctionalTestProjectFolder: ''
+  UIFunctionalTestCategory: ''
+
+steps:
+- task: ExtractFiles@1
+  condition: eq('${{ parameters.UIFunctionalTestEnabled }}', true)
+  displayName: Extract files
+  inputs:
+    archiveFilePatterns: '${{ parameters.UIFunctionalTestPackage }}'
+    destinationFolder: '${{ parameters.UIFunctionalTestProjectFolder }}'
+
+- powershell: |
+   Copy-Item -Path $(Pipeline.Workspace)/DFC.APP.Pages.UI.FunctionalTests/appsettings.template.json -Destination $(Pipeline.Workspace)/DFC.APP.Pages.UI.FunctionalTests/appsettings.json
+  condition: eq('${{ parameters.UIFunctionalTestEnabled }}', true)
+  displayName: 'Copy and convert appsettings.template.json to appsettings.json'
+
+- task: esfadevops.Tokenization.custom-build-task.Tokenization@0
+  condition: eq('${{ parameters.UIFunctionalTestEnabled }}', true)
+  displayName: 'Tokenization: Transform file appsettings.json'
+  inputs:
+    SourcePath: '${{ parameters.UIFunctionalTestProjectFolder }}'
+    TargetFileNames: appsettings.json
+
+- task: esfadevops.Tokenization.custom-build-task.Tokenization@0
+  condition: eq('${{ parameters.UIFunctionalTestEnabled }}', true)
+  displayName: 'Tokenization: Transform file appsettings.json'
+  inputs:
+    SourcePath: '${{ parameters.UIFunctionalTestProjectFolder }}'
+    TargetFileNames: appsettings.json
+
+- task: VSTest@2
+  condition: eq('${{ parameters.UIFunctionalTestEnabled }}', true)
+  displayName: 'VsTest - testAssemblies  (dfc-api-ui-functionaltests-pages)'
+  inputs:
+    testAssemblyVer2: |
+     **\*Tests.dll
+     !**\*TestAdapter.dll
+     !**\obj\**
+    searchFolder: '${{ parameters.UIFunctionalTestProjectFolder }}'
+    testFiltercriteria: 'Category=${{ parameters.UIFunctionalTestCategory }}'
+    otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'
+  continueOnError: true
+
+- task: DeleteFiles@1
+  displayName: 'Delete appsettings.json'
+  inputs:
+    SourceFolder: '${{ parameters.UIFunctionalTestProjectFolder }}'
+    Contents: appsettings.json
+  condition: always()

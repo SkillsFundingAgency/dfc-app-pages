@@ -90,6 +90,17 @@ stages:
         PublishWebApp: true
         TestSuffix: UnitTests
 
+  # Build all UI Functional Tests that ends with UI.FunctionalTests
+  - job: Builduifunctionaltests
+    displayName: Build UI functional tests
+    steps:
+    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
+      parameters:
+        SolutionBaseName: $(SolutionBaseName).UI.FunctionalTests
+        BuildPlatform: $(BuildPlatform)
+        BuildConfiguration: $(BuildConfiguration)
+        DotNetCoreVersion: '3.1.100'
+
 - stage: DeployToLabAppPages
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
   displayName: Deploy to LAB_AppPages
@@ -102,7 +113,7 @@ stages:
   - group: dfc-stax-shared-lab
   - group: dfc-compositeui-all
   - template: VariableTemplates\LabEnvironmentVariables.yml
-  
+
   jobs:
   - template: JobTemplates/deploy-environment.yml
     parameters:
@@ -134,6 +145,10 @@ stages:
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Pages
 
 - stage: DeployToLabDraftAppPages
   condition: succeeded()
@@ -180,6 +195,10 @@ stages:
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Pages
 
 - stage: DeployToDevAppPages
   condition: succeeded()
@@ -225,6 +244,10 @@ stages:
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Pages
 
 - stage: DeployToDevDraftAppPages
   condition: succeeded()
@@ -271,6 +294,10 @@ stages:
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: false
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Pages
 
 - stage: DeployToSITAppPages
   condition: succeeded()
@@ -316,6 +343,10 @@ stages:
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: true
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Pages
 
 - stage: DeployToSITDraftAppPages
   condition: succeeded()
@@ -362,6 +393,10 @@ stages:
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: true
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Pages
 
 - stage: DeployToPPAppPages
   condition: and(eq(dependencies.Build.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -407,6 +442,10 @@ stages:
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: true
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Pages
 
 - stage: DeployToPPDraftAppPages
   condition: and(eq(dependencies.DeployToPPAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -453,6 +492,10 @@ stages:
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: true
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Pages
 
 - stage: DeployToPRDAppPages
   condition: and(eq(dependencies.DeployToPPDraftAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -497,6 +540,10 @@ stages:
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: true
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Pages
 
 - stage: DeployToPRDDraftAppPages
   condition: and(eq(dependencies.DeployToPRDAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -543,3 +590,7 @@ stages:
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+      UIFunctionalTestEnabled: true
+      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+      UIFunctionalTestCategory: Pages
