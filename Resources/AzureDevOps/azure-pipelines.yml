@@ -112,6 +112,14 @@ stages:
   - group: dfc-app-shared-registration
   - group: dfc-stax-shared-lab
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-lab
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-lab
   - template: VariableTemplates\LabEnvironmentVariables.yml
 
   jobs:
@@ -162,6 +170,14 @@ stages:
   - group: dfc-app-shared-registration-draft
   - group: dfc-stax-shared-lab
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-lab
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-lab
   - template: VariableTemplates\LabDraftEnvironmentVariables.yml
   
   jobs:
@@ -211,6 +227,14 @@ stages:
   - group: dfc-app-shared-registration
   - group: dfc-stax-shared-dev
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-dev
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-dev
   - template: VariableTemplates\DevEnvironmentVariables.yml
   
   jobs:
@@ -261,6 +285,14 @@ stages:
   - group: dfc-app-shared-registration-draft
   - group: dfc-stax-shared-dev
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-dev
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-dev
   - template: VariableTemplates\DevDraftEnvironmentVariables.yml
   
   jobs:
@@ -310,6 +342,14 @@ stages:
   - group: dfc-app-shared-registration
   - group: dfc-stax-shared-sit
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-sit
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-sit
   - template: VariableTemplates\SitEnvironmentVariables.yml
   
   jobs:
@@ -360,6 +400,14 @@ stages:
   - group: dfc-app-shared-registration-draft
   - group: dfc-stax-shared-sit
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-sit
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-sit
   - template: VariableTemplates\SitDraftEnvironmentVariables.yml
   
   jobs:
@@ -409,6 +457,14 @@ stages:
   - group: dfc-app-shared-registration
   - group: dfc-stax-shared-pp
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-pp
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-pp
   - template: VariableTemplates\PPEnvironmentVariables.yml
   
   jobs:
@@ -459,6 +515,14 @@ stages:
   - group: dfc-app-shared-registration-draft
   - group: dfc-stax-shared-pp
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-pp
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-pp
   - template: VariableTemplates\PPDraftEnvironmentVariables.yml
   
   jobs:
@@ -508,6 +572,14 @@ stages:
   - group: dfc-app-shared-registration
   - group: dfc-stax-shared-prd
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-prd
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-prd
   - template: VariableTemplates\PRDEnvironmentVariables.yml
   
   jobs:
@@ -557,6 +629,14 @@ stages:
   - group: dfc-app-shared-registration-draft
   - group: dfc-stax-shared-prd
   - group: dfc-compositeui-all
+  - group: dfc-app-uiautomation-browser-all
+  - group: dfc-app-uiautomation-browser-arguments-all
+  - group: dfc-app-uiautomation-browserstack-all
+  - group: dfc-app-uiautomation-browserstack-prd
+  - group: dfc-app-uiautomation-testexecution-timeout-all
+  - group: dfc-app-uiautomation-testexecution-retry-all
+  - group: dfc-browserstack
+  - group: dfc-app-uiautomation-prd
   - template: VariableTemplates\PRDDraftEnvironmentVariables.yml
   
   jobs:
