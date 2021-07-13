@@ -27,6 +27,8 @@ namespace DFC.App.Pages.Extensions
                 $"{keyPrefix}_{nameof(PolicyOptions.HttpRetry)}",
                 HttpPolicyExtensions
                     .HandleTransientHttpError()
+                    .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+                    .OrResult(r => r?.Headers?.RetryAfter != null)
                     .WaitAndRetryAsync(
                         policyOptions.HttpRetry.Count,
                         retryAttempt => TimeSpan.FromSeconds(Math.Pow(policyOptions.HttpRetry.BackoffPower, retryAttempt))));

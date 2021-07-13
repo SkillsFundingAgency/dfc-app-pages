@@ -14,15 +14,18 @@ namespace DFC.App.Pages.Services.CacheContentService.ContentItemUpdaters
         private readonly IMarkupContentItemUpdater<CmsApiHtmlModel> htmlMarkupContentItemUpdater;
         private readonly IMarkupContentItemUpdater<CmsApiHtmlSharedModel> htmlSharedMarkupContentItemUpdater;
         private readonly IMarkupContentItemUpdater<CmsApiSharedContentModel> sharedContentMarkupContentItemUpdater;
+        private readonly IMarkupContentItemUpdater<CmsApiFormModel> formMarkupContentItemUpdater;
 
         public ContentItemUpdater(
             IMarkupContentItemUpdater<CmsApiHtmlModel> htmlMarkupContentItemUpdater,
             IMarkupContentItemUpdater<CmsApiHtmlSharedModel> htmlSharedMarkupContentItemUpdater,
-            IMarkupContentItemUpdater<CmsApiSharedContentModel> sharedContentMarkupContentItemUpdater)
+            IMarkupContentItemUpdater<CmsApiSharedContentModel> sharedContentMarkupContentItemUpdater,
+            IMarkupContentItemUpdater<CmsApiFormModel> formMarkupContentItemUpdater)
         {
             this.htmlMarkupContentItemUpdater = htmlMarkupContentItemUpdater;
             this.htmlSharedMarkupContentItemUpdater = htmlSharedMarkupContentItemUpdater;
             this.sharedContentMarkupContentItemUpdater = sharedContentMarkupContentItemUpdater;
+            this.formMarkupContentItemUpdater = formMarkupContentItemUpdater;
         }
 
         public async Task<bool> FindAndUpdateAsync(Uri url, Guid contentItemId, List<ContentItemModel>? contentItems)
@@ -39,6 +42,8 @@ namespace DFC.App.Pages.Services.CacheContentService.ContentItemUpdaters
                         return await htmlSharedMarkupContentItemUpdater.FindAndUpdateAsync(contentItemModel, url).ConfigureAwait(false);
                     case Constants.ContentTypeSharedContent:
                         return await sharedContentMarkupContentItemUpdater.FindAndUpdateAsync(contentItemModel, url).ConfigureAwait(false);
+                    case Constants.ContentTypeForm:
+                        return await formMarkupContentItemUpdater.FindAndUpdateAsync(contentItemModel, url).ConfigureAwait(false);
                 }
             }
 

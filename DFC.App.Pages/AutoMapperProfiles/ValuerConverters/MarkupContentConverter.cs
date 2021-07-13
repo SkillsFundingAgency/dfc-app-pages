@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFC.App.Pages.Data.Common;
 using DFC.App.Pages.Data.Models;
 using Microsoft.AspNetCore.Html;
 using System.Collections.Generic;
@@ -34,6 +35,8 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             }
 
             var result = new StringBuilder();
+            result.Append("<div class=\"govuk-grid-row\">");
+
             foreach (var contentItemModel in sourceMember.OrderBy(o => o.Ordinal))
             {
                 var sizeClass = "govuk-grid-column-full";
@@ -66,20 +69,52 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
                 result.Append("</div>");
             }
 
+            result.Append("</div>");
+
             return new HtmlString(result.ToString());
         }
 
         private static string GetContentFromItem(ContentItemModel model)
         {
             var content = new StringBuilder();
-            content.Append(string.IsNullOrEmpty(model.Content) ? model.HtmlBody : model.Content);
+
+            if (model.ContentType == Constants.ContentTypeForm)
+            {
+                content.Append($"<form");
+
+                if (!string.IsNullOrWhiteSpace(model.EncType))
+                {
+                    content.Append($" action=\"{model.Action}\"");
+                }
+
+                if (!string.IsNullOrWhiteSpace(model.EncType))
+                {
+                    content.Append($" method=\"{model.Method}\"");
+                }
+
+                if (!string.IsNullOrWhiteSpace(model.EncType))
+                {
+                    content.Append($" enctype=\"{model.EncType}\"");
+                }
+
+                content.Append('>');
+            }
+            else
+            {
+                content.Append(string.IsNullOrEmpty(model.Content) ? model.HtmlBody : model.Content);
+            }
 
             if (model.ContentItems != null && model.ContentItems.Any())
             {
                 foreach (var item in model.ContentItems.OrderBy(x => x.Ordinal))
                 {
-                    content.Append(item.Content);
+                    content.Append(string.IsNullOrEmpty(item.Content) ? item.HtmlBody : item.Content);
                 }
+            }
+
+            if (model.ContentType == Constants.ContentTypeForm)
+            {
+                content.Append("</form>");
             }
 
             return content.ToString();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.AutoMapperProfiles.ValuerConverters;
+using DFC.App.Pages.Data.Common;
 using DFC.App.Pages.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -10,22 +11,30 @@ namespace DFC.App.Pages.UnitTests
     [Trait("Category", "AutoMapper")]
     public class MarkupContentConverterTests
     {
-        [Fact]
-        public void ContentItemsConverterTestsWithAlignmentReturnsSuccess()
+        [Theory]
+        [InlineData(Constants.ContentTypeHtml, "<div class=\"govuk-grid-row\"><div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">this is content</div></div></div>")]
+        [InlineData(Constants.ContentTypeHtmlShared, "<div class=\"govuk-grid-row\"><div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">this is content</div></div></div>")]
+        [InlineData(Constants.ContentTypeSharedContent, "<div class=\"govuk-grid-row\"><div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">this is content</div></div></div>")]
+        [InlineData(Constants.ContentTypeForm, "<div class=\"govuk-grid-row\"><div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\"><form action=\"an action\" method=\"a method\" enctype=\"an enc type\"></form></div></div></div>")]
+        public void ContentItemsConverterTestsWithAlignmentReturnsSuccess(string contentType, string expectedResult)
         {
             // Arrange
-            var expectedResult = "<div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">this is content</div></div>";
             var converter = new MarkupContentConverter();
             IList<ContentItemModel> sourceMember = new List<ContentItemModel>
             {
                 new ContentItemModel
                 {
                     ItemId = Guid.NewGuid(),
+                    ContentType = contentType,
                     Url = new Uri("https://somewhere.com/some-item"),
                     Ordinal = 1,
                     Alignment = "Centre",
                     Size = 50,
                     Content = "this is content",
+                    HtmlBody = "this is html body",
+                    Action = "an action",
+                    Method = "a method",
+                    EncType = "an enc type",
                 },
             };
             var context = new ResolutionContext(null, null);
@@ -42,13 +51,14 @@ namespace DFC.App.Pages.UnitTests
         public void ContentItemsConverterTestsWithoutAlignmentReturnsSuccess()
         {
             // Arrange
-            var expectedResult = "<div class=\"govuk-grid-column-one-half\">this is content</div>";
+            var expectedResult = "<div class=\"govuk-grid-row\"><div class=\"govuk-grid-column-one-half\">this is content</div></div>";
             var converter = new MarkupContentConverter();
             IList<ContentItemModel> sourceMember = new List<ContentItemModel>
             {
                 new ContentItemModel
                 {
                     ItemId = Guid.NewGuid(),
+                    ContentType = Constants.ContentTypeHtml,
                     Url = new Uri("https://somewhere.com/some-item"),
                     Ordinal = 1,
                     Size = 50,
@@ -84,13 +94,14 @@ namespace DFC.App.Pages.UnitTests
         public void ContentItemsConverterTestsWithChildReturnsSuccess()
         {
             // Arrange
-            var expectedResult = "<div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">Test</div></div>";
+            var expectedResult = "<div class=\"govuk-grid-row\"><div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">some contentsome more html body</div></div></div>";
             var converter = new MarkupContentConverter();
             IList<ContentItemModel> sourceMember = new List<ContentItemModel>
             {
                 new ContentItemModel
                 {
                     ItemId = Guid.NewGuid(),
+                    ContentType = Constants.ContentTypeHtml,
                     Url = new Uri("https://somewhere.com/some-item"),
                     Ordinal = 1,
                     Alignment = "Centre",
@@ -100,7 +111,15 @@ namespace DFC.App.Pages.UnitTests
                     {
                         new ContentItemModel
                         {
-                            Content = "Test",
+                            ContentType = Constants.ContentTypeHtml,
+                            Content = "some content",
+                            HtmlBody = "some html body",
+                        },
+                        new ContentItemModel
+                        {
+                            ContentType = Constants.ContentTypeHtmlShared,
+                            Content = null,
+                            HtmlBody = "some more html body",
                         },
                     },
                 },
