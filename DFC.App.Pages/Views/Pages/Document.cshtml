@@ -41,7 +41,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.DocumentId)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.DocumentId)
                 </dd>
             </div>
@@ -49,7 +49,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.PartitionKey)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.PartitionKey)
                 </dd>
             </div>
@@ -58,7 +58,7 @@
                     @Html.DisplayNameFor(model => model.PageLocation)
                 </dt>
 
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.PageLocation)
                 </dd>
             </div>
@@ -67,7 +67,7 @@
                     @Html.DisplayNameFor(model => model.IsDefaultForPageLocation)
                 </dt>
 
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.IsDefaultForPageLocation)
                 </dd>
             </div>
@@ -75,7 +75,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.CanonicalName)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.CanonicalName)
                 </dd>
             </div>
@@ -83,7 +83,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.Version)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.Version)
                 </dd>
             </div>
@@ -91,7 +91,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.HtmlHead!.Description)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.HtmlHead!.Description)
                 </dd>
             </div>
@@ -99,7 +99,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.HtmlHead!.Keywords)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.HtmlHead!.Keywords)
                 </dd>
             </div>
@@ -107,7 +107,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.HtmlHead!.Title)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.HtmlHead!.Title)
                 </dd>
             </div>
@@ -115,15 +115,31 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.HtmlHead!.CanonicalUrl)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.HtmlHead!.CanonicalUrl)
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(model => model.UseBrowserWidth)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayFor(model => model.UseBrowserWidth)
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(model => model.ShowBreadcrumb)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayFor(model => model.ShowBreadcrumb)
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.IncludeInSitemap)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.IncludeInSitemap)
                 </dd>
             </div>
@@ -131,7 +147,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.SiteMapChangeFrequency)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.SiteMapChangeFrequency)
                 </dd>
             </div>
@@ -139,7 +155,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.SiteMapPriority)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.SiteMapPriority)
                 </dd>
             </div>
@@ -147,7 +163,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.Url)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.Url)
                 </dd>
             </div>
@@ -158,7 +174,7 @@
                         @Html.DisplayNameFor(model => model.HeroBannerViewModel!.ShowHeroBanner)
                     </dt>
 
-                    <dd class="col-sm-10">
+                    <dd class="govuk-summary-list__value">
                         @Html.DisplayFor(model => model.HeroBannerViewModel!.ShowHeroBanner)
                     </dd>
                 </div>
@@ -167,7 +183,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.CreatedDate)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.CreatedDate)
                 </dd>
             </div>
@@ -175,7 +191,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.LastCached)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.LastCached)
                 </dd>
             </div>
@@ -183,7 +199,7 @@
                 <dt class="govuk-summary-list__key">
                     @Html.DisplayNameFor(model => model.LastReviewed)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="govuk-summary-list__value">
                     @Html.DisplayFor(model => model.LastReviewed)
                 </dd>
             </div>
@@ -193,7 +209,7 @@
                     <dt class="govuk-summary-list__key">
                         @Html.DisplayNameFor(model => model.Redirects)
                     </dt>
-                    <dd class="col-sm-10">
+                    <dd class="govuk-summary-list__value">
                         @if (Model.Redirects != null)
                         {
                             <ol>

@@ -30,6 +30,18 @@ namespace DFC.App.Pages.Data.Models
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? Size { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string? Action { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool EnableAntiForgeryToken { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string? Method { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string? EncType { get; set; }
+
         public DateTime LastCached { get; set; } = DateTime.UtcNow;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

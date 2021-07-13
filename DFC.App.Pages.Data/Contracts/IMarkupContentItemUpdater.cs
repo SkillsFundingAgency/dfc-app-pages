@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace DFC.App.Pages.Data.Contracts
 {
     public interface IMarkupContentItemUpdater<T>
-        where T : class, IBaseContentItemModel, ICmsApiMarkupContentItem
+        where T : class, IBaseContentItemModel
     {
         Task<bool> FindAndUpdateAsync(ContentItemModel contentItemModel, Uri url);
     }

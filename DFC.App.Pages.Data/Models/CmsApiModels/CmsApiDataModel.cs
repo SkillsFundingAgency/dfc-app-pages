@@ -35,6 +35,8 @@ namespace DFC.App.Pages.Data.Models.CmsApiModels
 
         public string? Keywords { get; set; }
 
+        public bool UseBrowserWidth { get; set; }
+
         public bool ShowBreadcrumb { get; set; } = true;
 
         public bool ShowHeroBanner { get; set; }

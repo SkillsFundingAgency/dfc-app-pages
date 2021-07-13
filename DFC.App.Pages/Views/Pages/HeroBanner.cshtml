@@ -4,11 +4,9 @@
 @if (Model.ShowHeroBanner && !string.IsNullOrWhiteSpace(Model.Content?.Value))
 {
     <header class="ncs-hero">
-        <div class="govuk-width-container">
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
-                    @Html.Raw(Model.Content)
-                </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                @Html.Raw(Model.Content)
             </div>
         </div>
     </header>

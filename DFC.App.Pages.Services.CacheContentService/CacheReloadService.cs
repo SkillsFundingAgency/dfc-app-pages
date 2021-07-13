@@ -58,6 +58,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                 contentTypeMappingService.AddMapping(Constants.ContentTypeSharedContent, typeof(CmsApiSharedContentModel));
                 contentTypeMappingService.AddMapping(Constants.ContentTypePageLocation, typeof(CmsApiPageLocationModel));
                 contentTypeMappingService.AddMapping(Constants.ContentTypePageLocationParent, typeof(CmsApiPageLocationParentModel));
+                contentTypeMappingService.AddMapping(Constants.ContentTypeForm, typeof(CmsApiFormModel));
 
                 await RemoveDuplicateCacheItems().ConfigureAwait(false);
 
