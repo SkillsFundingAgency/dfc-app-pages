@@ -2,12 +2,18 @@
 using DFC.App.Pages.Helpers;
 using DFC.App.Pages.Models;
 using DFC.Compui.Cosmos.Contracts;
+
 using FakeItEasy;
+
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+
 using Xunit;
 
 namespace DFC.App.Pages.UnitTests.HelpersTests
@@ -16,6 +22,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
     public class PagesControlerHelpersTests
     {
         private readonly IContentPageService<ContentPageModel> fakeContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
+        private readonly IMemoryCache memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
 
         [Fact]
         public void PagesControlerHelpersTestsExtractPageLocationReturnsSuccessForFiveLocations()
@@ -93,7 +100,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             var expectedResults = A.CollectionOfDummy<ContentPageModel>(1);
             const string location = "a-location";
             const string article = "an-article";
-            var helper = new PagesControlerHelpers(fakeContentPageService);
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
 
             A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
 
@@ -113,7 +120,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             var expectedResults = A.CollectionOfDummy<ContentPageModel>(1);
             string location = string.Empty;
             const string? article = null;
-            var helper = new PagesControlerHelpers(fakeContentPageService);
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
 
             A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
 
@@ -133,7 +140,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             var expectedResults = A.CollectionOfDummy<ContentPageModel>(1);
             const string location = "a-location";
             string article = string.Empty;
-            var helper = new PagesControlerHelpers(fakeContentPageService);
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
 
             A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
 
@@ -153,7 +160,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             List<ContentPageModel>? expectedResults = null;
             const string location = "a-location";
             const string article = "an-article";
-            var helper = new PagesControlerHelpers(fakeContentPageService);
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
 
             A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
 
@@ -173,7 +180,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             var expectedResult = A.Dummy<ContentPageModel>();
             const string location = "a-location";
             const string article = "an-article";
-            var helper = new PagesControlerHelpers(fakeContentPageService);
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
 
             A.CallTo(() => fakeContentPageService.GetByRedirectLocationAsync(A<string>.Ignored)).Returns(expectedResult);
 
@@ -193,7 +200,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             var expectedResult = A.Dummy<ContentPageModel>();
             const string location = "a-location";
             const string? article = null;
-            var helper = new PagesControlerHelpers(fakeContentPageService);
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
 
             A.CallTo(() => fakeContentPageService.GetByRedirectLocationAsync(A<string>.Ignored)).Returns(expectedResult);
 
