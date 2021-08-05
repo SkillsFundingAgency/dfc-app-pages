@@ -14,6 +14,7 @@ namespace DFC.App.Pages.Helpers
 {
     public class PagesControlerHelpers : IPagesControlerHelpers
     {
+        private const int CacheDurationInSeconds = 30;
         private readonly IContentPageService<ContentPageModel> contentPageService;
         private readonly IMemoryCache memoryCache;
 
@@ -54,14 +55,18 @@ namespace DFC.App.Pages.Helpers
                 redirectLocation += $"/{article}";
             }
 
-            var contentPageModel = await contentPageService.GetByRedirectLocationAsync(redirectLocation).ConfigureAwait(false);
+            if (!memoryCache.TryGetValue(redirectLocation, out ContentPageModel? content))
+            {
+                content = await contentPageService.GetByRedirectLocationAsync(redirectLocation);
 
-            return contentPageModel;
+                memoryCache.Set(redirectLocation, content, TimeSpan.FromSeconds(CacheDurationInSeconds));
+            }
+
+            return content;
         }
 
         public async Task<ContentPageModel?> GetContentPageAsync(string? location, string? article)
         {
-            const int CacheDurationInSeconds = 30;
             var cacheKey = BuildCacheKey(location, article);
 
             if (!memoryCache.TryGetValue(cacheKey, out ContentPageModel? content))
