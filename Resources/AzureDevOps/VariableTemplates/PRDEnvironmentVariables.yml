@@ -30,9 +30,9 @@ variables:
 - name: aspTier
   value: Standard
 - name: aspInstances
-  value: 3
+  value: 2
 - name: aspSize
-  value: 1
+  value: 2
 - name: clientAffinity
   value: false
 - name: contentUrl
