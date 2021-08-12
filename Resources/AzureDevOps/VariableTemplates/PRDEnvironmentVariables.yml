@@ -10,7 +10,7 @@ variables:
 - name: SubscriptionSettingsEndpoint
   value: $(ApimProxyAddress)/composite-ui/pages
 - name: pagesAppDatabaseThroughput
-  value: 2500
+  value: 7500
 - name: ResourceGroup
   value: $(WebAppPrefix)-rg
 - name: WebAppProjectName
