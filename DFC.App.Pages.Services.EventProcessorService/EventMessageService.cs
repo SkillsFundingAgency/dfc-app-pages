@@ -73,16 +73,18 @@ namespace DFC.App.Pages.Services.EventProcessorService
 
             upsertDocumentModel.PageLocation = ExtractPageLocation(upsertDocumentModel);
 
-            if (string.IsNullOrEmpty(upsertDocumentModel.PageLocation))
+            if (string.IsNullOrEmpty(upsertDocumentModel.PageLocation) || string.IsNullOrEmpty(upsertDocumentModel.PartitionKey))
             {
                 logger.LogError(
-                    "PageLocation (and thus PartitionKey) are empty or null. Document = {SerialisedDocument}",
+                    "PageLocation ({PageLocation}) and/or PartitionKey ({PartitionKey}) is empty or null. Document = {SerialisedDocument}",
+                    upsertDocumentModel.PageLocation,
+                    upsertDocumentModel.PartitionKey,
                     JsonConvert.SerializeObject(upsertDocumentModel));
 
                 return HttpStatusCode.BadRequest;
             }
 
-            if (existingDocument.PartitionKey != null && existingDocument.PartitionKey.Equals(upsertDocumentModel.PartitionKey, StringComparison.Ordinal))
+            if (existingDocument.PartitionKey?.Equals(upsertDocumentModel.PartitionKey, StringComparison.Ordinal) == true)
             {
                 upsertDocumentModel.Etag = existingDocument.Etag;
             }
@@ -131,7 +133,7 @@ namespace DFC.App.Pages.Services.EventProcessorService
             if (contentPageModel?.PageLocations?.Any() != true)
             {
                 logger.LogInformation(
-                    "{MethodName} - ExtractPageLocation is null. Is ContentPageModel = {ContentPageModelCastable}. {PageLocationCount} page locations",
+                    "{MethodName} returns null. Is ContentPageModel = {ContentPageModelCastable}. {PageLocationCount} page locations",
                     nameof(ExtractPageLocation),
                     contentPageModel != null,
                     contentPageModel?.PageLocations?.Count);
