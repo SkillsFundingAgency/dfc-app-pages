@@ -1,4 +1,5 @@
-﻿using DFC.App.Pages.Data.Contracts;
+﻿using AutoMapper;
+using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.IntegrationTests.Fakes;
 using DFC.Compui.Cosmos.Contracts;
@@ -21,6 +22,8 @@ namespace DFC.App.Pages.IntegrationTests.Extensions
                 services.AddTransient(sp => contentPageService);
                 services.AddTransient<ICacheReloadService, FakeCacheReloadService>();
                 services.AddHostedService<FakeCacheReloadBackgroundService>();
+                services.AddTransient<IWebhooksService, FakeWebhooksService>();
+                services.AddAutoMapper(typeof(Startup).Assembly);
             });
         }
     }

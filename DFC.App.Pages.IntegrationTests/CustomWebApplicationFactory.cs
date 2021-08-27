@@ -111,9 +111,6 @@ namespace DFC.App.Pages.IntegrationTests
                     .Build();
 
                 services.AddSingleton<IConfiguration>(configuration);
-                //services.AddTransient<ICacheReloadService, FakeCacheReloadService>();
-                //services.AddTransient(sp => MockCosmosRepo);
-                //services.AddTransient(sp => MockContentPageService);
             });
         }
     }
