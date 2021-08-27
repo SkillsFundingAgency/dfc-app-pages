@@ -14,14 +14,12 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.RobotControllerTests
         public RobotControllerRouteTests(CustomWebApplicationFactory<DFC.App.Pages.Startup> factory)
         {
             this.factory = factory;
-
-            DataSeeding.SeedDefaultArticles(factory);
         }
 
         public static IEnumerable<object[]> RobotRouteData => new List<object[]>
         {
             new object[] { "/robots.txt" },
-            new object[] { "/pages/robots/document" },
+            new object[] { "/pages/robots" },
         };
 
         [Theory]
@@ -30,7 +28,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.RobotControllerTests
         {
             // Arrange
             var uri = new Uri(url, UriKind.Relative);
-            var client = factory.CreateClient();
+            var client = factory.CreateClientWithWebHostBuilder();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Plain));
 

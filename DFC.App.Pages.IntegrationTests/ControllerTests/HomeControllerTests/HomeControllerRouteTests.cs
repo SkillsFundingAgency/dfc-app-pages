@@ -15,8 +15,6 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.HomeControllerTests
         public HomeControllerRouteTests(CustomWebApplicationFactory<DFC.App.Pages.Startup> factory)
         {
             this.factory = factory;
-
-            DataSeeding.SeedDefaultArticles(factory);
         }
 
         public static IEnumerable<object[]> HomeContentRouteData => new List<object[]>
@@ -30,7 +28,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.HomeControllerTests
         {
             // Arrange
             var uri = new Uri(url, UriKind.Relative);
-            var client = factory.CreateClient();
+            var client = factory.CreateClientWithWebHostBuilder();
             client.DefaultRequestHeaders.Accept.Clear();
 
             // Act
