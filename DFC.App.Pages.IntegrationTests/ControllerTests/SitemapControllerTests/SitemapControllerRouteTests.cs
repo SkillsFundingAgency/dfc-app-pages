@@ -1,5 +1,9 @@
-﻿using System;
+﻿using DFC.App.Pages.Data.Models;
+using FakeItEasy;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Xunit;
@@ -14,14 +18,12 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.SitemapControllerTests
         public SitemapControllerRouteTests(CustomWebApplicationFactory<DFC.App.Pages.Startup> factory)
         {
             this.factory = factory;
-
-            DataSeeding.SeedDefaultArticles(factory);
         }
 
         public static IEnumerable<object[]> SitemapRouteData => new List<object[]>
         {
             new object[] { $"/sitemap.xml" },
-            new object[] { $"/pages/sitemap/document" },
+            new object[] { $"/pages/sitemap" },
         };
 
         [Theory]
@@ -29,17 +31,19 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.SitemapControllerTests
         public async Task GetSitemapXmlContentEndpointsReturnSuccessAndCorrectContentType(string url)
         {
             // Arrange
+            var contentPageModel = factory.GetContentPageModels().Where(x => x.CanonicalName == "an-article");
             var uri = new Uri(url, UriKind.Relative);
-            var client = factory.CreateClient();
+            var client = factory.CreateClientWithWebHostBuilder();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Xml));
+            A.CallTo(() => factory.MockCosmosRepo.GetAllAsync(A<string>.Ignored)).Returns(factory.GetContentPageModels());
+            A.CallTo(() => factory.MockCosmosRepo.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(contentPageModel);
 
             // Act
             var response = await client.GetAsync(uri).ConfigureAwait(false);
 
             // Assert
             response.EnsureSuccessStatusCode();
-            Assert.Equal(MediaTypeNames.Application.Xml, response.Content.Headers.ContentType.ToString());
         }
     }
 }

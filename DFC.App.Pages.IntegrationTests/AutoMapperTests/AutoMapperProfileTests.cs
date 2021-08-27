@@ -19,7 +19,7 @@ namespace DFC.App.Pages.IntegrationTests.AutoMapperTests
         public void AutoMapperProfileConfigurationForContentPageModelProfileReturnSuccess()
         {
             // Arrange
-            factory.CreateClient();
+            factory.CreateClientWithWebHostBuilder();
             var mapper = factory.Server.Host.Services.GetRequiredService<IMapper>();
 
             // Act
@@ -33,7 +33,7 @@ namespace DFC.App.Pages.IntegrationTests.AutoMapperTests
         public void AutoMapperProfileConfigurationForAllProfilesReturnSuccess()
         {
             // Arrange
-            factory.CreateClient();
+            factory.CreateClientWithWebHostBuilder();
             var mapper = factory.Server.Host.Services.GetRequiredService<IMapper>();
 
             // Act
