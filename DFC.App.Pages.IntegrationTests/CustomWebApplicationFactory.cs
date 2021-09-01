@@ -1,8 +1,12 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models.ClientOptions;
+using DFC.App.Pages.Extensions;
+using DFC.App.Pages.HttpClientPolicies;
 using DFC.App.Pages.IntegrationTests.Extensions;
 using DFC.App.Pages.IntegrationTests.Fakes;
 using DFC.Compui.Cosmos.Contracts;
+using DFC.Content.Pkg.Netcore.Extensions;
 using FakeItEasy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -111,6 +115,20 @@ namespace DFC.App.Pages.IntegrationTests
                     .Build();
 
                 services.AddSingleton<IConfiguration>(configuration);
+
+                const string AppSettingsPolicies = "Policies";
+                var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
+                var policyRegistry = services.AddPolicyRegistry();
+
+                services.AddApiServices(configuration, policyRegistry);
+
+                services
+                    .AddPolicies(policyRegistry, nameof(AppRegistryClientOptions), policyOptions)
+                    .AddHttpClient<IAppRegistryApiService, FakeAppRegistryApiService, AppRegistryClientOptions>(configuration, nameof(AppRegistryClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
+
+                services.AddTransient<ICacheReloadService, FakeCacheReloadService>();
+                services.AddHostedService<FakeCacheReloadBackgroundService>();
+
             });
         }
     }
