@@ -27,19 +27,18 @@ pool:
   - msbuild
   - visualstudio
 
-trigger: 
-  branches:
-    include: 
-    - dev
-    - master
+# trigger: 
+#   branches:
+#     include: 
+#     - dev
+#     - master
 
-pr:
-  branches:
-    include: 
-    - dev
-    - master
+# pr:
+#   branches:
+#     include: 
+#     - dev
+#     - master
     
-
 stages:
 - stage: Build
   displayName: Build, Test and Analyze
@@ -101,120 +100,130 @@ stages:
         BuildConfiguration: $(BuildConfiguration)
         DotNetCoreVersion: '3.1.100'
 
-- stage: DeployToLabAppPages
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
-  displayName: Deploy to LAB_AppPages
-  variables:
-  - group: dfc-shared-all
-  - group: dfc-shared-lab
-  - group: dfc-app-shared-all
-  - group: dfc-app-shared-lab
-  - group: dfc-app-shared-registration
-  - group: dfc-stax-shared-lab
-  - group: dfc-compositeui-all
-  - group: dfc-app-uiautomation-browser-all
-  - group: dfc-app-uiautomation-browser-arguments-all
-  - group: dfc-app-uiautomation-browserstack-all
-  - group: dfc-app-uiautomation-browserstack-lab
-  - group: dfc-app-uiautomation-testexecution-timeout-all
-  - group: dfc-app-uiautomation-testexecution-retry-all
-  - group: dfc-browserstack
-  - group: dfc-app-uiautomation-lab
-  - template: VariableTemplates\LabEnvironmentVariables.yml
+  - job: Buildintegrationtests
+    displayName: Build integration tests
+    steps:
+    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
+      parameters:
+        SolutionBaseName: $(SolutionBaseName).IntegrationTests
+        BuildPlatform: $(BuildPlatform)
+        BuildConfiguration: $(BuildConfiguration)
+        DotNetCoreVersion: '3.1.100'
 
-  jobs:
-  - template: JobTemplates/deploy-environment.yml
-    parameters:
-      AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
-      EnvironmentTag: '$(EnvironmentTag)'
-      ParentBusiness: '$(ParentBusiness)'
-      ServiceOffering: '$(ServiceOffering)'
-      ResourceGroup: $(ResourceGroup)
-      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
-      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
-      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: LAB_PagesApp
-      AppSharedResourceGroup: $(AppSharedResourceGroup)
-      appSharedCosmosDBName: $(appSharedCosmosDBName)
-      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
-      PageRegistrationFile: "$(PageRegistrationFile)"
-      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
-      ApimCompositeKey: "$(ApimCompositeKey)"
-      AppServiceName: '$(AppServiceName)'
-      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
-      SharedResourceGroupName: $(SharedResourceGroupName)
-      ApimServiceName: $(ApimServiceName)
-      ApimProductInstanceName: $(ApimProductInstanceName)
-      ApiName: $(ApiName)
-      ApiId: $(ApiId)
-      FunctionAppDomain: $(FunctionAppDomain)
-      ApiDefinitionPath: $(ApiDefinitionPath)
-      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
-      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
-      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
-      UIFunctionalTestEnabled: false
-      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
-      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
-      UIFunctionalTestCategory: Pages
+# - stage: DeployToLabAppPages
+#   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+#   displayName: Deploy to LAB_AppPages
+#   variables:
+#   - group: dfc-shared-all
+#   - group: dfc-shared-lab
+#   - group: dfc-app-shared-all
+#   - group: dfc-app-shared-lab
+#   - group: dfc-app-shared-registration
+#   - group: dfc-stax-shared-lab
+#   - group: dfc-compositeui-all
+#   - group: dfc-app-uiautomation-browser-all
+#   - group: dfc-app-uiautomation-browser-arguments-all
+#   - group: dfc-app-uiautomation-browserstack-all
+#   - group: dfc-app-uiautomation-browserstack-lab
+#   - group: dfc-app-uiautomation-testexecution-timeout-all
+#   - group: dfc-app-uiautomation-testexecution-retry-all
+#   - group: dfc-browserstack
+#   - group: dfc-app-uiautomation-lab
+#   - template: VariableTemplates\LabEnvironmentVariables.yml
 
-- stage: DeployToLabDraftAppPages
-  condition: succeeded()
-  displayName: Deploy to LAB-DRAFT_AppPages
-  variables:
-  - group: dfc-shared-all
-  - group: dfc-shared-lab
-  - group: dfc-app-shared-all
-  - group: dfc-app-shared-lab
-  - group: dfc-app-draft
-  - group: dfc-app-shared-registration-draft
-  - group: dfc-stax-shared-lab
-  - group: dfc-compositeui-all
-  - group: dfc-app-uiautomation-browser-all
-  - group: dfc-app-uiautomation-browser-arguments-all
-  - group: dfc-app-uiautomation-browserstack-all
-  - group: dfc-app-uiautomation-browserstack-lab
-  - group: dfc-app-uiautomation-testexecution-timeout-all
-  - group: dfc-app-uiautomation-testexecution-retry-all
-  - group: dfc-browserstack
-  - group: dfc-app-uiautomation-lab
-  - template: VariableTemplates\LabDraftEnvironmentVariables.yml
+#   jobs:
+#   - template: JobTemplates/deploy-environment.yml
+#     parameters:
+#       AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
+#       EnvironmentTag: '$(EnvironmentTag)'
+#       ParentBusiness: '$(ParentBusiness)'
+#       ServiceOffering: '$(ServiceOffering)'
+#       ResourceGroup: $(ResourceGroup)
+#       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+#       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+#       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+#       EnvironmentName: LAB_PagesApp
+#       AppSharedResourceGroup: $(AppSharedResourceGroup)
+#       appSharedCosmosDBName: $(appSharedCosmosDBName)
+#       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+#       PageRegistrationFile: "$(PageRegistrationFile)"
+#       AppRegistryApiUrl: "$(AppRegistryApiUrl)"
+#       ApimCompositeKey: "$(ApimCompositeKey)"
+#       AppServiceName: '$(AppServiceName)'
+#       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+#       SharedResourceGroupName: $(SharedResourceGroupName)
+#       ApimServiceName: $(ApimServiceName)
+#       ApimProductInstanceName: $(ApimProductInstanceName)
+#       ApiName: $(ApiName)
+#       ApiId: $(ApiId)
+#       FunctionAppDomain: $(FunctionAppDomain)
+#       ApiDefinitionPath: $(ApiDefinitionPath)
+#       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+#       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+#       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+#       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+#       UIFunctionalTestEnabled: false
+#       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+#       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+#       UIFunctionalTestCategory: Pages
+
+# - stage: DeployToLabDraftAppPages
+#   condition: succeeded()
+#   displayName: Deploy to LAB-DRAFT_AppPages
+#   variables:
+#   - group: dfc-shared-all
+#   - group: dfc-shared-lab
+#   - group: dfc-app-shared-all
+#   - group: dfc-app-shared-lab
+#   - group: dfc-app-draft
+#   - group: dfc-app-shared-registration-draft
+#   - group: dfc-stax-shared-lab
+#   - group: dfc-compositeui-all
+#   - group: dfc-app-uiautomation-browser-all
+#   - group: dfc-app-uiautomation-browser-arguments-all
+#   - group: dfc-app-uiautomation-browserstack-all
+#   - group: dfc-app-uiautomation-browserstack-lab
+#   - group: dfc-app-uiautomation-testexecution-timeout-all
+#   - group: dfc-app-uiautomation-testexecution-retry-all
+#   - group: dfc-browserstack
+#   - group: dfc-app-uiautomation-lab
+#   - template: VariableTemplates\LabDraftEnvironmentVariables.yml
   
-  jobs:
-  - template: JobTemplates/deploy-environment.yml
-    parameters:
-      AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
-      EnvironmentTag: '$(EnvironmentTag)'
-      ParentBusiness: '$(ParentBusiness)'
-      ServiceOffering: '$(ServiceOffering)'
-      ResourceGroup: $(ResourceGroup)
-      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
-      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
-      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: LAB-DRAFT_PagesApp
-      AppSharedResourceGroup: $(AppSharedResourceGroup)
-      appSharedCosmosDBName: $(appSharedCosmosDBName)
-      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
-      PageRegistrationFile: "$(PageRegistrationFile)"
-      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
-      ApimCompositeKey: "$(ApimCompositeKey)"
-      AppServiceName: '$(AppServiceName)'
-      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
-      SharedResourceGroupName: $(SharedResourceGroupName)
-      ApimServiceName: $(ApimServiceName)
-      ApimProductInstanceName: $(ApimProductInstanceName)
-      ApiName: $(ApiName)
-      ApiId: $(ApiId)
-      FunctionAppDomain: $(FunctionAppDomain)
-      ApiDefinitionPath: $(ApiDefinitionPath)
-      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
-      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
-      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
-      UIFunctionalTestEnabled: false
-      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
-      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
-      UIFunctionalTestCategory: Pages
+#   jobs:
+#   - template: JobTemplates/deploy-environment.yml
+#     parameters:
+#       AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
+#       EnvironmentTag: '$(EnvironmentTag)'
+#       ParentBusiness: '$(ParentBusiness)'
+#       ServiceOffering: '$(ServiceOffering)'
+#       ResourceGroup: $(ResourceGroup)
+#       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+#       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+#       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+#       EnvironmentName: LAB-DRAFT_PagesApp
+#       AppSharedResourceGroup: $(AppSharedResourceGroup)
+#       appSharedCosmosDBName: $(appSharedCosmosDBName)
+#       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+#       PageRegistrationFile: "$(PageRegistrationFile)"
+#       AppRegistryApiUrl: "$(AppRegistryApiUrl)"
+#       ApimCompositeKey: "$(ApimCompositeKey)"
+#       AppServiceName: '$(AppServiceName)'
+#       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+#       SharedResourceGroupName: $(SharedResourceGroupName)
+#       ApimServiceName: $(ApimServiceName)
+#       ApimProductInstanceName: $(ApimProductInstanceName)
+#       ApiName: $(ApiName)
+#       ApiId: $(ApiId)
+#       FunctionAppDomain: $(FunctionAppDomain)
+#       ApiDefinitionPath: $(ApiDefinitionPath)
+#       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+#       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+#       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+#       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+#       UIFunctionalTestEnabled: false
+#       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+#       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+#       UIFunctionalTestCategory: Pages
 
 - stage: DeployToDevAppPages
   condition: succeeded()
@@ -272,405 +281,408 @@ stages:
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
       UIFunctionalTestCategory: Pages
+      IntegrationTestEnabled: true
+      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Pages.zip"
+      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
-- stage: DeployToDevDraftAppPages
-  condition: succeeded()
-  displayName: Deploy to DEV-DRAFT_AppPages
-  variables:
-  - group: dfc-shared-all
-  - group: dfc-shared-dev
-  - group: dfc-app-shared-all
-  - group: dfc-app-shared-dev
-  - group: dfc-app-draft
-  - group: dfc-app-shared-registration-draft
-  - group: dfc-stax-shared-dev
-  - group: dfc-compositeui-all
-  - group: dfc-app-uiautomation-browser-all
-  - group: dfc-app-uiautomation-browser-arguments-all
-  - group: dfc-app-uiautomation-browserstack-all
-  - group: dfc-app-uiautomation-browserstack-dev
-  - group: dfc-app-uiautomation-testexecution-timeout-all
-  - group: dfc-app-uiautomation-testexecution-retry-all
-  - group: dfc-browserstack
-  - group: dfc-app-uiautomation-dev
-  - template: VariableTemplates\DevDraftEnvironmentVariables.yml
+# - stage: DeployToDevDraftAppPages
+#   condition: succeeded()
+#   displayName: Deploy to DEV-DRAFT_AppPages
+#   variables:
+#   - group: dfc-shared-all
+#   - group: dfc-shared-dev
+#   - group: dfc-app-shared-all
+#   - group: dfc-app-shared-dev
+#   - group: dfc-app-draft
+#   - group: dfc-app-shared-registration-draft
+#   - group: dfc-stax-shared-dev
+#   - group: dfc-compositeui-all
+#   - group: dfc-app-uiautomation-browser-all
+#   - group: dfc-app-uiautomation-browser-arguments-all
+#   - group: dfc-app-uiautomation-browserstack-all
+#   - group: dfc-app-uiautomation-browserstack-dev
+#   - group: dfc-app-uiautomation-testexecution-timeout-all
+#   - group: dfc-app-uiautomation-testexecution-retry-all
+#   - group: dfc-browserstack
+#   - group: dfc-app-uiautomation-dev
+#   - template: VariableTemplates\DevDraftEnvironmentVariables.yml
   
-  jobs:
-  - template: JobTemplates/deploy-environment.yml
-    parameters:
-      AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
-      EnvironmentTag: '$(EnvironmentTag)'
-      ParentBusiness: '$(ParentBusiness)'
-      ServiceOffering: '$(ServiceOffering)'
-      ResourceGroup: $(ResourceGroup)
-      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
-      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
-      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: DEV-DRAFT_AppPages
-      AppSharedResourceGroup: $(AppSharedResourceGroup)
-      appSharedCosmosDBName: $(appSharedCosmosDBName)
-      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
-      PageRegistrationFile: "$(PageRegistrationFile)"
-      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
-      ApimCompositeKey: "$(ApimCompositeKey)"
-      AppServiceName: '$(AppServiceName)'
-      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
-      SharedResourceGroupName: $(SharedResourceGroupName)
-      ApimServiceName: $(ApimServiceName)
-      ApimProductInstanceName: $(ApimProductInstanceName)
-      ApiName: $(ApiName)
-      ApiId: $(ApiId)
-      FunctionAppDomain: $(FunctionAppDomain)
-      ApiDefinitionPath: $(ApiDefinitionPath)
-      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
-      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
-      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
-      UIFunctionalTestEnabled: false
-      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
-      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
-      UIFunctionalTestCategory: Pages
+#   jobs:
+#   - template: JobTemplates/deploy-environment.yml
+#     parameters:
+#       AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
+#       EnvironmentTag: '$(EnvironmentTag)'
+#       ParentBusiness: '$(ParentBusiness)'
+#       ServiceOffering: '$(ServiceOffering)'
+#       ResourceGroup: $(ResourceGroup)
+#       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+#       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+#       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+#       EnvironmentName: DEV-DRAFT_AppPages
+#       AppSharedResourceGroup: $(AppSharedResourceGroup)
+#       appSharedCosmosDBName: $(appSharedCosmosDBName)
+#       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+#       PageRegistrationFile: "$(PageRegistrationFile)"
+#       AppRegistryApiUrl: "$(AppRegistryApiUrl)"
+#       ApimCompositeKey: "$(ApimCompositeKey)"
+#       AppServiceName: '$(AppServiceName)'
+#       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+#       SharedResourceGroupName: $(SharedResourceGroupName)
+#       ApimServiceName: $(ApimServiceName)
+#       ApimProductInstanceName: $(ApimProductInstanceName)
+#       ApiName: $(ApiName)
+#       ApiId: $(ApiId)
+#       FunctionAppDomain: $(FunctionAppDomain)
+#       ApiDefinitionPath: $(ApiDefinitionPath)
+#       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+#       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+#       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+#       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+#       UIFunctionalTestEnabled: false
+#       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+#       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+#       UIFunctionalTestCategory: Pages
 
-- stage: DeployToSITAppPages
-  condition: succeeded()
-  displayName: Deploy to SIT_AppPages
-  variables:
-  - group: dfc-shared-all
-  - group: dfc-shared-sit
-  - group: dfc-app-shared-all
-  - group: dfc-app-shared-sit
-  - group: dfc-app-shared-registration
-  - group: dfc-stax-shared-sit
-  - group: dfc-compositeui-all
-  - group: dfc-app-uiautomation-browser-all
-  - group: dfc-app-uiautomation-browser-arguments-all
-  - group: dfc-app-uiautomation-browserstack-all
-  - group: dfc-app-uiautomation-browserstack-sit
-  - group: dfc-app-uiautomation-testexecution-timeout-all
-  - group: dfc-app-uiautomation-testexecution-retry-all
-  - group: dfc-browserstack
-  - group: dfc-app-uiautomation-sit
-  - template: VariableTemplates\SitEnvironmentVariables.yml
+# - stage: DeployToSITAppPages
+#   condition: succeeded()
+#   displayName: Deploy to SIT_AppPages
+#   variables:
+#   - group: dfc-shared-all
+#   - group: dfc-shared-sit
+#   - group: dfc-app-shared-all
+#   - group: dfc-app-shared-sit
+#   - group: dfc-app-shared-registration
+#   - group: dfc-stax-shared-sit
+#   - group: dfc-compositeui-all
+#   - group: dfc-app-uiautomation-browser-all
+#   - group: dfc-app-uiautomation-browser-arguments-all
+#   - group: dfc-app-uiautomation-browserstack-all
+#   - group: dfc-app-uiautomation-browserstack-sit
+#   - group: dfc-app-uiautomation-testexecution-timeout-all
+#   - group: dfc-app-uiautomation-testexecution-retry-all
+#   - group: dfc-browserstack
+#   - group: dfc-app-uiautomation-sit
+#   - template: VariableTemplates\SitEnvironmentVariables.yml
   
-  jobs:
-  - template: JobTemplates/deploy-environment.yml
-    parameters:
-      AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
-      EnvironmentTag: '$(EnvironmentTag)'
-      ParentBusiness: '$(ParentBusiness)'
-      ServiceOffering: '$(ServiceOffering)'
-      ResourceGroup: $(ResourceGroup)
-      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
-      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
-      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: SIT_AppPages
-      AppSharedResourceGroup: $(AppSharedResourceGroup)
-      appSharedCosmosDBName: $(appSharedCosmosDBName)
-      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
-      PageRegistrationFile: "$(PageRegistrationFile)"
-      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
-      ApimCompositeKey: "$(ApimCompositeKey)"
-      AppServiceName: '$(AppServiceName)'
-      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
-      SharedResourceGroupName: $(SharedResourceGroupName)
-      ApimServiceName: $(ApimServiceName)
-      ApimProductInstanceName: $(ApimProductInstanceName)
-      ApiName: $(ApiName)
-      ApiId: $(ApiId)
-      FunctionAppDomain: $(FunctionAppDomain)
-      ApiDefinitionPath: $(ApiDefinitionPath)
-      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
-      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
-      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
-      UIFunctionalTestEnabled: true
-      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
-      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
-      UIFunctionalTestCategory: Pages
+#   jobs:
+#   - template: JobTemplates/deploy-environment.yml
+#     parameters:
+#       AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
+#       EnvironmentTag: '$(EnvironmentTag)'
+#       ParentBusiness: '$(ParentBusiness)'
+#       ServiceOffering: '$(ServiceOffering)'
+#       ResourceGroup: $(ResourceGroup)
+#       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+#       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+#       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+#       EnvironmentName: SIT_AppPages
+#       AppSharedResourceGroup: $(AppSharedResourceGroup)
+#       appSharedCosmosDBName: $(appSharedCosmosDBName)
+#       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+#       PageRegistrationFile: "$(PageRegistrationFile)"
+#       AppRegistryApiUrl: "$(AppRegistryApiUrl)"
+#       ApimCompositeKey: "$(ApimCompositeKey)"
+#       AppServiceName: '$(AppServiceName)'
+#       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+#       SharedResourceGroupName: $(SharedResourceGroupName)
+#       ApimServiceName: $(ApimServiceName)
+#       ApimProductInstanceName: $(ApimProductInstanceName)
+#       ApiName: $(ApiName)
+#       ApiId: $(ApiId)
+#       FunctionAppDomain: $(FunctionAppDomain)
+#       ApiDefinitionPath: $(ApiDefinitionPath)
+#       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+#       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+#       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+#       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+#       UIFunctionalTestEnabled: true
+#       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+#       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+#       UIFunctionalTestCategory: Pages
 
-- stage: DeployToSITDraftAppPages
-  condition: succeeded()
-  displayName: Deploy to SIT-DRAFT_AppPages
-  variables:
-  - group: dfc-shared-all
-  - group: dfc-shared-sit
-  - group: dfc-app-shared-all
-  - group: dfc-app-shared-sit
-  - group: dfc-app-draft
-  - group: dfc-app-shared-registration-draft
-  - group: dfc-stax-shared-sit
-  - group: dfc-compositeui-all
-  - group: dfc-app-uiautomation-browser-all
-  - group: dfc-app-uiautomation-browser-arguments-all
-  - group: dfc-app-uiautomation-browserstack-all
-  - group: dfc-app-uiautomation-browserstack-sit
-  - group: dfc-app-uiautomation-testexecution-timeout-all
-  - group: dfc-app-uiautomation-testexecution-retry-all
-  - group: dfc-browserstack
-  - group: dfc-app-uiautomation-sit
-  - template: VariableTemplates\SitDraftEnvironmentVariables.yml
+# - stage: DeployToSITDraftAppPages
+#   condition: succeeded()
+#   displayName: Deploy to SIT-DRAFT_AppPages
+#   variables:
+#   - group: dfc-shared-all
+#   - group: dfc-shared-sit
+#   - group: dfc-app-shared-all
+#   - group: dfc-app-shared-sit
+#   - group: dfc-app-draft
+#   - group: dfc-app-shared-registration-draft
+#   - group: dfc-stax-shared-sit
+#   - group: dfc-compositeui-all
+#   - group: dfc-app-uiautomation-browser-all
+#   - group: dfc-app-uiautomation-browser-arguments-all
+#   - group: dfc-app-uiautomation-browserstack-all
+#   - group: dfc-app-uiautomation-browserstack-sit
+#   - group: dfc-app-uiautomation-testexecution-timeout-all
+#   - group: dfc-app-uiautomation-testexecution-retry-all
+#   - group: dfc-browserstack
+#   - group: dfc-app-uiautomation-sit
+#   - template: VariableTemplates\SitDraftEnvironmentVariables.yml
   
-  jobs:
-  - template: JobTemplates/deploy-environment.yml
-    parameters:
-      AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
-      EnvironmentTag: '$(EnvironmentTag)'
-      ParentBusiness: '$(ParentBusiness)'
-      ServiceOffering: '$(ServiceOffering)'
-      ResourceGroup: $(ResourceGroup)
-      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
-      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
-      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: SIT-DRAFT_AppPages
-      AppSharedResourceGroup: $(AppSharedResourceGroup)
-      appSharedCosmosDBName: $(appSharedCosmosDBName)
-      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
-      PageRegistrationFile: "$(PageRegistrationFile)"
-      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
-      ApimCompositeKey: "$(ApimCompositeKey)"
-      AppServiceName: '$(AppServiceName)'
-      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
-      SharedResourceGroupName: $(SharedResourceGroupName)
-      ApimServiceName: $(ApimServiceName)
-      ApimProductInstanceName: $(ApimProductInstanceName)
-      ApiName: $(ApiName)
-      ApiId: $(ApiId)
-      FunctionAppDomain: $(FunctionAppDomain)
-      ApiDefinitionPath: $(ApiDefinitionPath)
-      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
-      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
-      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
-      UIFunctionalTestEnabled: true
-      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
-      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
-      UIFunctionalTestCategory: Pages
+#   jobs:
+#   - template: JobTemplates/deploy-environment.yml
+#     parameters:
+#       AzureSubscription: 'SFA-CDH-Dev/Test (962cae10-2950-412a-93e3-d8ae92b17896)'
+#       EnvironmentTag: '$(EnvironmentTag)'
+#       ParentBusiness: '$(ParentBusiness)'
+#       ServiceOffering: '$(ServiceOffering)'
+#       ResourceGroup: $(ResourceGroup)
+#       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+#       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+#       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+#       EnvironmentName: SIT-DRAFT_AppPages
+#       AppSharedResourceGroup: $(AppSharedResourceGroup)
+#       appSharedCosmosDBName: $(appSharedCosmosDBName)
+#       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+#       PageRegistrationFile: "$(PageRegistrationFile)"
+#       AppRegistryApiUrl: "$(AppRegistryApiUrl)"
+#       ApimCompositeKey: "$(ApimCompositeKey)"
+#       AppServiceName: '$(AppServiceName)'
+#       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+#       SharedResourceGroupName: $(SharedResourceGroupName)
+#       ApimServiceName: $(ApimServiceName)
+#       ApimProductInstanceName: $(ApimProductInstanceName)
+#       ApiName: $(ApiName)
+#       ApiId: $(ApiId)
+#       FunctionAppDomain: $(FunctionAppDomain)
+#       ApiDefinitionPath: $(ApiDefinitionPath)
+#       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+#       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+#       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+#       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+#       UIFunctionalTestEnabled: true
+#       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+#       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+#       UIFunctionalTestCategory: Pages
 
-- stage: DeployToPPAppPages
-  condition: and(eq(dependencies.Build.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  displayName: Deploy to PP_AppPages
-  variables:
-  - group: dfc-shared-all
-  - group: dfc-shared-pp
-  - group: dfc-app-shared-all
-  - group: dfc-app-shared-pp
-  - group: dfc-app-shared-registration
-  - group: dfc-stax-shared-pp
-  - group: dfc-compositeui-all
-  - group: dfc-app-uiautomation-browser-all
-  - group: dfc-app-uiautomation-browser-arguments-all
-  - group: dfc-app-uiautomation-browserstack-all
-  - group: dfc-app-uiautomation-browserstack-pp
-  - group: dfc-app-uiautomation-testexecution-timeout-all
-  - group: dfc-app-uiautomation-testexecution-retry-all
-  - group: dfc-browserstack
-  - group: dfc-app-uiautomation-pp
-  - template: VariableTemplates\PPEnvironmentVariables.yml
+# - stage: DeployToPPAppPages
+#   condition: and(eq(dependencies.Build.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+#   displayName: Deploy to PP_AppPages
+#   variables:
+#   - group: dfc-shared-all
+#   - group: dfc-shared-pp
+#   - group: dfc-app-shared-all
+#   - group: dfc-app-shared-pp
+#   - group: dfc-app-shared-registration
+#   - group: dfc-stax-shared-pp
+#   - group: dfc-compositeui-all
+#   - group: dfc-app-uiautomation-browser-all
+#   - group: dfc-app-uiautomation-browser-arguments-all
+#   - group: dfc-app-uiautomation-browserstack-all
+#   - group: dfc-app-uiautomation-browserstack-pp
+#   - group: dfc-app-uiautomation-testexecution-timeout-all
+#   - group: dfc-app-uiautomation-testexecution-retry-all
+#   - group: dfc-browserstack
+#   - group: dfc-app-uiautomation-pp
+#   - template: VariableTemplates\PPEnvironmentVariables.yml
   
-  jobs:
-  - template: JobTemplates/deploy-environment.yml
-    parameters:
-      AzureSubscription: 'SFA-DIG-PreProd (931bc9f6-359c-4f65-a753-1ee191a1fd6c)'
-      EnvironmentTag: '$(EnvironmentTag)'
-      ParentBusiness: '$(ParentBusiness)'
-      ServiceOffering: '$(ServiceOffering)'
-      ResourceGroup: $(ResourceGroup)
-      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
-      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
-      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: PP_AppPages
-      AppSharedResourceGroup: $(AppSharedResourceGroup)
-      appSharedCosmosDBName: $(appSharedCosmosDBName)
-      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
-      PageRegistrationFile: "$(PageRegistrationFile)"
-      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
-      ApimCompositeKey: "$(ApimCompositeKey)"
-      AppServiceName: '$(AppServiceName)'
-      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
-      SharedResourceGroupName: $(SharedResourceGroupName)
-      ApimServiceName: $(ApimServiceName)
-      ApimProductInstanceName: $(ApimProductInstanceName)
-      ApiName: $(ApiName)
-      ApiId: $(ApiId)
-      FunctionAppDomain: $(FunctionAppDomain)
-      ApiDefinitionPath: $(ApiDefinitionPath)
-      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
-      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
-      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
-      UIFunctionalTestEnabled: true
-      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
-      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
-      UIFunctionalTestCategory: Pages
+#   jobs:
+#   - template: JobTemplates/deploy-environment.yml
+#     parameters:
+#       AzureSubscription: 'SFA-DIG-PreProd (931bc9f6-359c-4f65-a753-1ee191a1fd6c)'
+#       EnvironmentTag: '$(EnvironmentTag)'
+#       ParentBusiness: '$(ParentBusiness)'
+#       ServiceOffering: '$(ServiceOffering)'
+#       ResourceGroup: $(ResourceGroup)
+#       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+#       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+#       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+#       EnvironmentName: PP_AppPages
+#       AppSharedResourceGroup: $(AppSharedResourceGroup)
+#       appSharedCosmosDBName: $(appSharedCosmosDBName)
+#       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+#       PageRegistrationFile: "$(PageRegistrationFile)"
+#       AppRegistryApiUrl: "$(AppRegistryApiUrl)"
+#       ApimCompositeKey: "$(ApimCompositeKey)"
+#       AppServiceName: '$(AppServiceName)'
+#       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+#       SharedResourceGroupName: $(SharedResourceGroupName)
+#       ApimServiceName: $(ApimServiceName)
+#       ApimProductInstanceName: $(ApimProductInstanceName)
+#       ApiName: $(ApiName)
+#       ApiId: $(ApiId)
+#       FunctionAppDomain: $(FunctionAppDomain)
+#       ApiDefinitionPath: $(ApiDefinitionPath)
+#       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+#       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+#       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+#       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+#       UIFunctionalTestEnabled: true
+#       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+#       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+#       UIFunctionalTestCategory: Pages
 
-- stage: DeployToPPDraftAppPages
-  condition: and(eq(dependencies.DeployToPPAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  displayName: Deploy to PP-Draft_AppPages
-  variables:
-  - group: dfc-shared-all
-  - group: dfc-shared-pp
-  - group: dfc-app-shared-all
-  - group: dfc-app-shared-pp
-  - group: dfc-app-draft
-  - group: dfc-app-shared-registration-draft
-  - group: dfc-stax-shared-pp
-  - group: dfc-compositeui-all
-  - group: dfc-app-uiautomation-browser-all
-  - group: dfc-app-uiautomation-browser-arguments-all
-  - group: dfc-app-uiautomation-browserstack-all
-  - group: dfc-app-uiautomation-browserstack-pp
-  - group: dfc-app-uiautomation-testexecution-timeout-all
-  - group: dfc-app-uiautomation-testexecution-retry-all
-  - group: dfc-browserstack
-  - group: dfc-app-uiautomation-pp
-  - template: VariableTemplates\PPDraftEnvironmentVariables.yml
+# - stage: DeployToPPDraftAppPages
+#   condition: and(eq(dependencies.DeployToPPAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+#   displayName: Deploy to PP-Draft_AppPages
+#   variables:
+#   - group: dfc-shared-all
+#   - group: dfc-shared-pp
+#   - group: dfc-app-shared-all
+#   - group: dfc-app-shared-pp
+#   - group: dfc-app-draft
+#   - group: dfc-app-shared-registration-draft
+#   - group: dfc-stax-shared-pp
+#   - group: dfc-compositeui-all
+#   - group: dfc-app-uiautomation-browser-all
+#   - group: dfc-app-uiautomation-browser-arguments-all
+#   - group: dfc-app-uiautomation-browserstack-all
+#   - group: dfc-app-uiautomation-browserstack-pp
+#   - group: dfc-app-uiautomation-testexecution-timeout-all
+#   - group: dfc-app-uiautomation-testexecution-retry-all
+#   - group: dfc-browserstack
+#   - group: dfc-app-uiautomation-pp
+#   - template: VariableTemplates\PPDraftEnvironmentVariables.yml
   
-  jobs:
-  - template: JobTemplates/deploy-environment.yml
-    parameters:
-      AzureSubscription: 'SFA-DIG-PreProd (931bc9f6-359c-4f65-a753-1ee191a1fd6c)'
-      EnvironmentTag: '$(EnvironmentTag)'
-      ParentBusiness: '$(ParentBusiness)'
-      ServiceOffering: '$(ServiceOffering)'
-      ResourceGroup: $(ResourceGroup)
-      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
-      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
-      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: PP-Draft_AppPages
-      AppSharedResourceGroup: $(AppSharedResourceGroup)
-      appSharedCosmosDBName: $(appSharedCosmosDBName)
-      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
-      PageRegistrationFile: "$(PageRegistrationFile)"
-      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
-      ApimCompositeKey: "$(ApimCompositeKey)"
-      AppServiceName: '$(AppServiceName)'
-      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
-      SharedResourceGroupName: $(SharedResourceGroupName)
-      ApimServiceName: $(ApimServiceName)
-      ApimProductInstanceName: $(ApimProductInstanceName)
-      ApiName: $(ApiName)
-      ApiId: $(ApiId)
-      FunctionAppDomain: $(FunctionAppDomain)
-      ApiDefinitionPath: $(ApiDefinitionPath)
-      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
-      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
-      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
-      UIFunctionalTestEnabled: true
-      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
-      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
-      UIFunctionalTestCategory: Pages
+#   jobs:
+#   - template: JobTemplates/deploy-environment.yml
+#     parameters:
+#       AzureSubscription: 'SFA-DIG-PreProd (931bc9f6-359c-4f65-a753-1ee191a1fd6c)'
+#       EnvironmentTag: '$(EnvironmentTag)'
+#       ParentBusiness: '$(ParentBusiness)'
+#       ServiceOffering: '$(ServiceOffering)'
+#       ResourceGroup: $(ResourceGroup)
+#       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+#       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+#       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+#       EnvironmentName: PP-Draft_AppPages
+#       AppSharedResourceGroup: $(AppSharedResourceGroup)
+#       appSharedCosmosDBName: $(appSharedCosmosDBName)
+#       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+#       PageRegistrationFile: "$(PageRegistrationFile)"
+#       AppRegistryApiUrl: "$(AppRegistryApiUrl)"
+#       ApimCompositeKey: "$(ApimCompositeKey)"
+#       AppServiceName: '$(AppServiceName)'
+#       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+#       SharedResourceGroupName: $(SharedResourceGroupName)
+#       ApimServiceName: $(ApimServiceName)
+#       ApimProductInstanceName: $(ApimProductInstanceName)
+#       ApiName: $(ApiName)
+#       ApiId: $(ApiId)
+#       FunctionAppDomain: $(FunctionAppDomain)
+#       ApiDefinitionPath: $(ApiDefinitionPath)
+#       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+#       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+#       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+#       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+#       UIFunctionalTestEnabled: true
+#       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+#       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+#       UIFunctionalTestCategory: Pages
 
-- stage: DeployToPRDAppPages
-  condition: and(eq(dependencies.DeployToPPDraftAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  displayName: Deploy to PRD_AppPages
-  variables:
-  - group: dfc-shared-all
-  - group: dfc-shared-prd
-  - group: dfc-app-shared-all
-  - group: dfc-app-shared-prd
-  - group: dfc-app-shared-registration
-  - group: dfc-stax-shared-prd
-  - group: dfc-compositeui-all
-  - group: dfc-app-uiautomation-browser-all
-  - group: dfc-app-uiautomation-browser-arguments-all
-  - group: dfc-app-uiautomation-browserstack-all
-  - group: dfc-app-uiautomation-browserstack-prd
-  - group: dfc-app-uiautomation-testexecution-timeout-all
-  - group: dfc-app-uiautomation-testexecution-retry-all
-  - group: dfc-browserstack
-  - group: dfc-app-uiautomation-prd
-  - template: VariableTemplates\PRDEnvironmentVariables.yml
+# - stage: DeployToPRDAppPages
+#   condition: and(eq(dependencies.DeployToPPDraftAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+#   displayName: Deploy to PRD_AppPages
+#   variables:
+#   - group: dfc-shared-all
+#   - group: dfc-shared-prd
+#   - group: dfc-app-shared-all
+#   - group: dfc-app-shared-prd
+#   - group: dfc-app-shared-registration
+#   - group: dfc-stax-shared-prd
+#   - group: dfc-compositeui-all
+#   - group: dfc-app-uiautomation-browser-all
+#   - group: dfc-app-uiautomation-browser-arguments-all
+#   - group: dfc-app-uiautomation-browserstack-all
+#   - group: dfc-app-uiautomation-browserstack-prd
+#   - group: dfc-app-uiautomation-testexecution-timeout-all
+#   - group: dfc-app-uiautomation-testexecution-retry-all
+#   - group: dfc-browserstack
+#   - group: dfc-app-uiautomation-prd
+#   - template: VariableTemplates\PRDEnvironmentVariables.yml
   
-  jobs:
-  - template: JobTemplates/deploy-environment.yml
-    parameters:
-      AzureSubscription: 'SFA-DIG-Prod (6c93f7dc-6c36-4ea6-8de3-3f4574f88027)'
-      EnvironmentTag: '$(EnvironmentTag)'
-      ParentBusiness: '$(ParentBusiness)'
-      ServiceOffering: '$(ServiceOffering)'
-      ResourceGroup: $(ResourceGroup)
-      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
-      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
-      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: PRD_AppPages
-      AppSharedResourceGroup: $(AppSharedResourceGroup)
-      appSharedCosmosDBName: $(appSharedCosmosDBName)
-      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
-      PageRegistrationFile: "$(PageRegistrationFile)"
-      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
-      ApimCompositeKey: "$(ApimCompositeKey)"
-      AppServiceName: '$(AppServiceName)'
-      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
-      SharedResourceGroupName: $(SharedResourceGroupName)
-      ApimServiceName: $(ApimServiceName)
-      ApimProductInstanceName: $(ApimProductInstanceName)
-      ApiName: $(ApiName)
-      ApiId: $(ApiId)
-      ApiDefinitionPath: $(ApiDefinitionPath)
-      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
-      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
-      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
-      UIFunctionalTestEnabled: true
-      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
-      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
-      UIFunctionalTestCategory: Pages
+#   jobs:
+#   - template: JobTemplates/deploy-environment.yml
+#     parameters:
+#       AzureSubscription: 'SFA-DIG-Prod (6c93f7dc-6c36-4ea6-8de3-3f4574f88027)'
+#       EnvironmentTag: '$(EnvironmentTag)'
+#       ParentBusiness: '$(ParentBusiness)'
+#       ServiceOffering: '$(ServiceOffering)'
+#       ResourceGroup: $(ResourceGroup)
+#       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+#       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+#       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+#       EnvironmentName: PRD_AppPages
+#       AppSharedResourceGroup: $(AppSharedResourceGroup)
+#       appSharedCosmosDBName: $(appSharedCosmosDBName)
+#       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+#       PageRegistrationFile: "$(PageRegistrationFile)"
+#       AppRegistryApiUrl: "$(AppRegistryApiUrl)"
+#       ApimCompositeKey: "$(ApimCompositeKey)"
+#       AppServiceName: '$(AppServiceName)'
+#       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+#       SharedResourceGroupName: $(SharedResourceGroupName)
+#       ApimServiceName: $(ApimServiceName)
+#       ApimProductInstanceName: $(ApimProductInstanceName)
+#       ApiName: $(ApiName)
+#       ApiId: $(ApiId)
+#       ApiDefinitionPath: $(ApiDefinitionPath)
+#       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+#       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+#       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+#       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+#       UIFunctionalTestEnabled: true
+#       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+#       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+#       UIFunctionalTestCategory: Pages
 
-- stage: DeployToPRDDraftAppPages
-  condition: and(eq(dependencies.DeployToPRDAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  displayName: Deploy to PRD-Draft_AppPages
-  variables:
-  - group: dfc-shared-all
-  - group: dfc-shared-prd
-  - group: dfc-app-shared-all
-  - group: dfc-app-shared-prd
-  - group: dfc-app-draft
-  - group: dfc-app-shared-registration-draft
-  - group: dfc-stax-shared-prd
-  - group: dfc-compositeui-all
-  - group: dfc-app-uiautomation-browser-all
-  - group: dfc-app-uiautomation-browser-arguments-all
-  - group: dfc-app-uiautomation-browserstack-all
-  - group: dfc-app-uiautomation-browserstack-prd
-  - group: dfc-app-uiautomation-testexecution-timeout-all
-  - group: dfc-app-uiautomation-testexecution-retry-all
-  - group: dfc-browserstack
-  - group: dfc-app-uiautomation-prd
-  - template: VariableTemplates\PRDDraftEnvironmentVariables.yml
+# - stage: DeployToPRDDraftAppPages
+#   condition: and(eq(dependencies.DeployToPRDAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+#   displayName: Deploy to PRD-Draft_AppPages
+#   variables:
+#   - group: dfc-shared-all
+#   - group: dfc-shared-prd
+#   - group: dfc-app-shared-all
+#   - group: dfc-app-shared-prd
+#   - group: dfc-app-draft
+#   - group: dfc-app-shared-registration-draft
+#   - group: dfc-stax-shared-prd
+#   - group: dfc-compositeui-all
+#   - group: dfc-app-uiautomation-browser-all
+#   - group: dfc-app-uiautomation-browser-arguments-all
+#   - group: dfc-app-uiautomation-browserstack-all
+#   - group: dfc-app-uiautomation-browserstack-prd
+#   - group: dfc-app-uiautomation-testexecution-timeout-all
+#   - group: dfc-app-uiautomation-testexecution-retry-all
+#   - group: dfc-browserstack
+#   - group: dfc-app-uiautomation-prd
+#   - template: VariableTemplates\PRDDraftEnvironmentVariables.yml
   
-  jobs:
-  - template: JobTemplates/deploy-environment.yml
-    parameters:
-      AzureSubscription: 'SFA-DIG-Prod (6c93f7dc-6c36-4ea6-8de3-3f4574f88027)'
-      EnvironmentTag: '$(EnvironmentTag)'
-      ParentBusiness: '$(ParentBusiness)'
-      ServiceOffering: '$(ServiceOffering)'
-      ResourceGroup: $(ResourceGroup)
-      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
-      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
-      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: PRD-Draft_AppPages
-      AppSharedResourceGroup: $(AppSharedResourceGroup)
-      appSharedCosmosDBName: $(appSharedCosmosDBName)
-      PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
-      PageRegistrationFile: "$(PageRegistrationFile)"
-      AppRegistryApiUrl: "$(AppRegistryApiUrl)"
-      ApimCompositeKey: "$(ApimCompositeKey)"
-      AppServiceName: '$(AppServiceName)'
-      AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
-      SharedResourceGroupName: $(SharedResourceGroupName)
-      ApimServiceName: $(ApimServiceName)
-      ApimProductInstanceName: $(ApimProductInstanceName)
-      ApiName: $(ApiName)
-      ApiId: $(ApiId)
-      FunctionAppDomain: $(FunctionAppDomain)
-      ApiDefinitionPath: $(ApiDefinitionPath)
-      APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
-      ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
-      SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
-      UIFunctionalTestEnabled: true
-      UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
-      UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
-      UIFunctionalTestCategory: Pages
+#   jobs:
+#   - template: JobTemplates/deploy-environment.yml
+#     parameters:
+#       AzureSubscription: 'SFA-DIG-Prod (6c93f7dc-6c36-4ea6-8de3-3f4574f88027)'
+#       EnvironmentTag: '$(EnvironmentTag)'
+#       ParentBusiness: '$(ParentBusiness)'
+#       ServiceOffering: '$(ServiceOffering)'
+#       ResourceGroup: $(ResourceGroup)
+#       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+#       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+#       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+#       EnvironmentName: PRD-Draft_AppPages
+#       AppSharedResourceGroup: $(AppSharedResourceGroup)
+#       appSharedCosmosDBName: $(appSharedCosmosDBName)
+#       PageRegistrationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.PageRegistrations/"
+#       PageRegistrationFile: "$(PageRegistrationFile)"
+#       AppRegistryApiUrl: "$(AppRegistryApiUrl)"
+#       ApimCompositeKey: "$(ApimCompositeKey)"
+#       AppServiceName: '$(AppServiceName)'
+#       AppRegistryClientOptionsBaseAddress: $(AppRegistryClientOptionsBaseAddress)
+#       SharedResourceGroupName: $(SharedResourceGroupName)
+#       ApimServiceName: $(ApimServiceName)
+#       ApimProductInstanceName: $(ApimProductInstanceName)
+#       ApiName: $(ApiName)
+#       ApiId: $(ApiId)
+#       FunctionAppDomain: $(FunctionAppDomain)
+#       ApiDefinitionPath: $(ApiDefinitionPath)
+#       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
+#       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
+#       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
+#       RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
+#       UIFunctionalTestEnabled: true
+#       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
+#       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
+#       UIFunctionalTestCategory: Pages
