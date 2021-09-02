@@ -15,11 +15,11 @@ namespace DFC.App.Pages.IntegrationTests.AutoMapperTests
             this.factory = factory;
         }
 
-        [Fact(Skip = "Needs code refactor")]
+        [Fact]
         public void AutoMapperProfileConfigurationForContentPageModelProfileReturnSuccess()
         {
             // Arrange
-            factory.CreateClientWithWebHostBuilder();
+            factory.CreateClient();
             var mapper = factory.Server.Host.Services.GetRequiredService<IMapper>();
 
             // Act
@@ -29,11 +29,11 @@ namespace DFC.App.Pages.IntegrationTests.AutoMapperTests
             Assert.True(true);
         }
 
-        [Fact(Skip = "Needs code refactor")]
+        [Fact]
         public void AutoMapperProfileConfigurationForAllProfilesReturnSuccess()
         {
             // Arrange
-            factory.CreateClientWithWebHostBuilder();
+            factory.CreateClient();
             var mapper = factory.Server.Host.Services.GetRequiredService<IMapper>();
 
             // Act
