@@ -19,6 +19,7 @@ namespace DFC.App.Pages.IntegrationTests.Extensions
             {
                 services.AddTransient(sp => cosmosRepository);
                 services.AddTransient(sp => contentPageService);
+                services.AddTransient<IPagesControlerHelpers, FakePagesControlerHelpers>();
                 services.AddTransient<ISubscriptionRegistrationService, FakeSubscriptionRegistrationService>();
                 services.AddTransient<IWebhooksService, FakeWebhooksService>();
             });

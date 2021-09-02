@@ -1,20 +1,16 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
-using DFC.App.Pages.Data.Models.ClientOptions;
-using DFC.App.Pages.Extensions;
-using DFC.App.Pages.HttpClientPolicies;
-using DFC.App.Pages.IntegrationTests.Extensions;
 using DFC.App.Pages.IntegrationTests.Fakes;
 using DFC.Compui.Cosmos.Contracts;
-using DFC.Content.Pkg.Netcore.Extensions;
+using DFC.Compui.Subscriptions.Pkg.NetStandard.Data.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace DFC.App.Pages.IntegrationTests
 {
@@ -30,14 +26,6 @@ namespace DFC.App.Pages.IntegrationTests
         internal ICosmosRepository<ContentPageModel> MockCosmosRepo { get; set; }
 
         internal IContentPageService<ContentPageModel> MockContentPageService { get; set; }
-
-        public HttpClient CreateClientWithWebHostBuilder()
-        {
-            return WithWebHostBuilder(builder =>
-            {
-                builder.RegisterServices(MockCosmosRepo, MockContentPageService);
-            }).CreateClient();
-        }
 
         internal IEnumerable<ContentPageModel> GetContentPageModels()
         {
@@ -108,27 +96,19 @@ namespace DFC.App.Pages.IntegrationTests
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder?.ConfigureServices(services =>
+            builder.ConfigureTestServices(services =>
             {
                 var configuration = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
 
                 services.AddSingleton<IConfiguration>(configuration);
-
-                const string AppSettingsPolicies = "Policies";
-                var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
-                var policyRegistry = services.AddPolicyRegistry();
-
-                services.AddApiServices(configuration, policyRegistry);
-
-                services
-                    .AddPolicies(policyRegistry, nameof(AppRegistryClientOptions), policyOptions)
-                    .AddHttpClient<IAppRegistryApiService, FakeAppRegistryApiService, AppRegistryClientOptions>(configuration, nameof(AppRegistryClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
-
                 services.AddTransient<ICacheReloadService, FakeCacheReloadService>();
                 services.AddHostedService<FakeCacheReloadBackgroundService>();
-
+                services.AddTransient(sp => MockCosmosRepo);
+                services.AddTransient(sp => MockContentPageService);
+                services.AddTransient<ISubscriptionRegistrationService, FakeSubscriptionRegistrationService>();
+                services.AddTransient<IWebhooksService, FakeWebhooksService>();
             });
         }
     }

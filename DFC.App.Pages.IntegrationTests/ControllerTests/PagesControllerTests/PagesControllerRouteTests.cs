@@ -1,11 +1,10 @@
-﻿using DFC.App.Pages.Data.Models;
-using FakeItEasy;
+﻿using FakeItEasy;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
+using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,10 +16,12 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
     public class PagesControllerRouteTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private readonly CustomWebApplicationFactory<Startup> factory;
+        private readonly HttpClient httpClient;
 
         public PagesControllerRouteTests(CustomWebApplicationFactory<Startup> factory)
         {
             this.factory = factory;
+            this.httpClient = this.factory.CreateClient();
         }
 
         public static IEnumerable<object[]> PagesContentRouteData => new List<object[]>
@@ -48,14 +49,12 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             // Arrange
             var contentPageModel = factory.GetContentPageModels().Where(x => x.CanonicalName == "an-article");
             var uri = new Uri(url, UriKind.Relative);
-            var client = factory.CreateClientWithWebHostBuilder();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
             A.CallTo(() => factory.MockCosmosRepo.GetAllAsync(A<string>.Ignored)).Returns(factory.GetContentPageModels());
-            A.CallTo(() => factory.MockCosmosRepo.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(contentPageModel);
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await httpClient.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -73,14 +72,12 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             // Arrange
             var contentPageModel = factory.GetContentPageModels().Where(x => x.CanonicalName == "an-article");
             var uri = new Uri(url, UriKind.Relative);
-            var client = factory.CreateClientWithWebHostBuilder();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
             A.CallTo(() => factory.MockCosmosRepo.GetAllAsync(A<string>.Ignored)).Returns(factory.GetContentPageModels());
-            A.CallTo(() => factory.MockCosmosRepo.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(contentPageModel);
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await httpClient.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -96,14 +93,12 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
         public async Task GetPagesEndpointsReturnSuccessAndNoContent(string url)
         {
             // Arrange
-            List<ContentPageModel>? contentPageModel = null;
             var uri = new Uri(url, UriKind.Relative);
-            var client = factory.CreateClientWithWebHostBuilder();
-            client.DefaultRequestHeaders.Accept.Clear();
-            A.CallTo(() => factory.MockCosmosRepo.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(contentPageModel);
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            A.CallTo(() => factory.MockCosmosRepo.GetAllAsync(A<string>.Ignored)).Returns(factory.GetContentPageModels());
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await httpClient.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();
