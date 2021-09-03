@@ -13,9 +13,9 @@ steps:
     destinationFolder: '${{ parameters.IntegrationTestProjectFolder }}'
 
 - powershell: |
-   Copy-Item -Path $(Pipeline.Workspace)/DFC.APP.Pages.IntegrationTests/appsettings.template.json -Destination $(Pipeline.Workspace)/DFC.APP.Pages.IntegrationTests/appsettings.json
+   Copy-Item -Path $(Pipeline.Workspace)/DFC.APP.Pages.IntegrationTests/appsettings-template.json -Destination $(Pipeline.Workspace)/DFC.APP.Pages.IntegrationTests/appsettings.json
   condition: eq('${{ parameters.IntegrationTestEnabled }}', true)
-  displayName: 'Copy and convert appsettings.template.json to appsettings.json'
+  displayName: 'Copy and convert appsettings-template.json to appsettings.json'
 
 - task: esfadevops.Tokenization.custom-build-task.Tokenization@0
   condition: eq('${{ parameters.IntegrationTestEnabled }}', true)
