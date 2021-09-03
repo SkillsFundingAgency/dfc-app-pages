@@ -10,16 +10,18 @@ using Xunit;
 namespace DFC.App.Pages.IntegrationTests.ControllerTests.WebhooksControllerTests
 {
     [Trait("Category", "Integration")]
-    public class WebhooksControllerRouteTests : IClassFixture<CustomWebApplicationFactory<DFC.App.Pages.Startup>>
+    public class WebhooksControllerRouteTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private const string EventTypePublished = "published";
         private const string WebhookApiUrl = "/api/webhook/ReceiveEvents";
 
-        private readonly CustomWebApplicationFactory<DFC.App.Pages.Startup> factory;
+        private readonly CustomWebApplicationFactory<Startup> factory;
+        private readonly HttpClient httpClient;
 
-        public WebhooksControllerRouteTests(CustomWebApplicationFactory<DFC.App.Pages.Startup> factory)
+        public WebhooksControllerRouteTests(CustomWebApplicationFactory<Startup> factory)
         {
             this.factory = factory;
+            this.httpClient = this.factory.CreateClient();
         }
 
         [Fact]
@@ -29,12 +31,11 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.WebhooksControllerTests
             string expectedValidationCode = Guid.NewGuid().ToString();
             var eventGridEvents = BuildValidEventGridEvent(Microsoft.Azure.EventGrid.EventTypes.EventGridSubscriptionValidationEvent, new SubscriptionValidationEventData(expectedValidationCode, "https://somewhere.com"));
             var uri = new Uri(WebhookApiUrl, UriKind.Relative);
-            var client = factory.CreateClient();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
 
             // Act
-            var response = await client.PostAsJsonAsync(uri, eventGridEvents).ConfigureAwait(false);
+            var response = await httpClient.PostAsJsonAsync(uri, eventGridEvents);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -47,12 +48,11 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.WebhooksControllerTests
             // Arrange
             var eventGridEvents = BuildValidEventGridEvent(EventTypePublished, new EventGridEventData { ItemId = "edfc8852-9820-4f29-b006-9fbd46cab646", Api = "https://localhost:44354/home/item/contact-us/edfc8852-9820-4f29-b006-9fbd46cab646", });
             var uri = new Uri(WebhookApiUrl, UriKind.Relative);
-            var client = factory.CreateClient();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
 
             // Act
-            var response = await client.PostAsJsonAsync(uri, eventGridEvents).ConfigureAwait(false);
+            var response = await httpClient.PostAsJsonAsync(uri, eventGridEvents);
 
             // Assert
             response.EnsureSuccessStatusCode();
