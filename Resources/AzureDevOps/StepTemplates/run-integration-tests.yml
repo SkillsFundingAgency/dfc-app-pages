@@ -24,13 +24,6 @@ steps:
     SourcePath: '${{ parameters.IntegrationTestProjectFolder }}'
     TargetFileNames: appsettings.json
 
-- task: esfadevops.Tokenization.custom-build-task.Tokenization@0
-  condition: eq('${{ parameters.IntegrationTestEnabled }}', true)
-  displayName: 'Tokenization: Transform file appsettings.json'
-  inputs:
-    SourcePath: '${{ parameters.IntegrationTestProjectFolder }}'
-    TargetFileNames: appsettings.json
-
 - task: VSTest@2
   condition: eq('${{ parameters.IntegrationTestEnabled }}', true)
   displayName: 'VsTest - run IntegrationTests'
@@ -39,6 +32,8 @@ steps:
      **\*Tests.dll
      !**\*TestAdapter.dll
      !**\obj\**
+    searchFolder: '${{ parameters.IntegrationTestProjectFolder }}'
+  continueOnError: true
 
 - task: DeleteFiles@1
   displayName: 'Delete appsettings.json'
