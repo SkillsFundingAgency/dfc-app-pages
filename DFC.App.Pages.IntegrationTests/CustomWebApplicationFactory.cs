@@ -96,13 +96,17 @@ namespace DFC.App.Pages.IntegrationTests
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.ConfigureTestServices(services =>
+            builder?.ConfigureServices(services =>
             {
                 var configuration = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
 
                 services.AddSingleton<IConfiguration>(configuration);
+            });
+
+            builder.ConfigureTestServices(services =>
+            {
                 services.AddTransient<ICacheReloadService, FakeCacheReloadService>();
                 services.AddHostedService<FakeCacheReloadBackgroundService>();
                 services.AddTransient(sp => MockCosmosRepo);
