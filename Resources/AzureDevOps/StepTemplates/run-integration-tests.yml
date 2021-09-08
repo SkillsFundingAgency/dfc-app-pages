@@ -1,0 +1,43 @@
+parameters:
+  EnvironmentName: ''
+  IntegrationTestEnabled: ''
+  IntegrationTestPackage: ''
+  IntegrationTestProjectFolder: ''
+
+steps:
+- task: ExtractFiles@1
+  condition: eq('${{ parameters.IntegrationTestEnabled }}', true)
+  displayName: Extract files
+  inputs:
+    archiveFilePatterns: '${{ parameters.IntegrationTestPackage }}'
+    destinationFolder: '${{ parameters.IntegrationTestProjectFolder }}'
+
+# - powershell: |
+#    Copy-Item -Path $(Pipeline.Workspace)/DFC.APP.Pages.IntegrationTests/appsettings-template.json -Destination $(Pipeline.Workspace)/DFC.APP.Pages.IntegrationTests/appsettings.json
+#   condition: eq('${{ parameters.IntegrationTestEnabled }}', true)
+#   displayName: 'Copy and convert appsettings-template.json to appsettings.json'
+
+- task: esfadevops.Tokenization.custom-build-task.Tokenization@0
+  condition: eq('${{ parameters.IntegrationTestEnabled }}', true)
+  displayName: 'Tokenization: Transform file appsettings.json'
+  inputs:
+    SourcePath: '${{ parameters.IntegrationTestProjectFolder }}'
+    TargetFileNames: appsettings.json
+
+- task: VSTest@2
+  condition: eq('${{ parameters.IntegrationTestEnabled }}', true)
+  displayName: 'VsTest - run IntegrationTests'
+  inputs:
+    testAssemblyVer2: |
+     **\*Tests.dll
+     !**\*TestAdapter.dll
+     !**\obj\**
+    searchFolder: '${{ parameters.IntegrationTestProjectFolder }}'
+  continueOnError: true
+
+- task: DeleteFiles@1
+  displayName: 'Delete appsettings.json'
+  inputs:
+    SourceFolder: '${{ parameters.IntegrationTestProjectFolder }}'
+    Contents: appsettings.json
+  condition: always()
