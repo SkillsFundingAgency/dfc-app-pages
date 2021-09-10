@@ -81,7 +81,7 @@ stages:
     displayName: Build-DotNetCore
 
     steps:
-    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
+    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-unit-integration-sonar.yml@dfc-devops
       parameters:
         SolutionBaseName: $(SolutionBaseName)
         BuildPlatform: $(BuildPlatform)
@@ -89,6 +89,7 @@ stages:
         DotNetCoreVersion: '3.1.100'
         PublishWebApp: true
         TestSuffix: UnitTests
+        IntegrationTestSuffix: IntegrationTests
 
   # Build all UI Functional Tests that ends with UI.FunctionalTests
   - job: Builduifunctionaltests
