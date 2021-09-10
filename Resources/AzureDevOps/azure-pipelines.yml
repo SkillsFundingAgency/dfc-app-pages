@@ -80,7 +80,7 @@ stages:
     displayName: Build-DotNetCore
 
     steps:
-    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
+    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-unit-integration-sonar.yml@dfc-devops
       parameters:
         SolutionBaseName: $(SolutionBaseName)
         BuildPlatform: $(BuildPlatform)
@@ -88,6 +88,7 @@ stages:
         DotNetCoreVersion: '3.1.100'
         PublishWebApp: true
         TestSuffix: UnitTests
+        IntegrationTestSuffix: IntegrationTests
 
   # Build all UI Functional Tests that ends with UI.FunctionalTests
   - job: Builduifunctionaltests
@@ -96,16 +97,6 @@ stages:
     - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
       parameters:
         SolutionBaseName: $(SolutionBaseName).UI.FunctionalTests
-        BuildPlatform: $(BuildPlatform)
-        BuildConfiguration: $(BuildConfiguration)
-        DotNetCoreVersion: '3.1.100'
-
-  - job: Buildintegrationtests
-    displayName: Build integration tests
-    steps:
-    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
-      parameters:
-        SolutionBaseName: $(SolutionBaseName).IntegrationTests
         BuildPlatform: $(BuildPlatform)
         BuildConfiguration: $(BuildConfiguration)
         DotNetCoreVersion: '3.1.100'
@@ -166,9 +157,6 @@ stages:
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
       UIFunctionalTestCategory: Pages
-      IntegrationTestEnabled: false
-      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Pages.zip"
-      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToLabDraftAppPages
   condition: succeeded()
@@ -227,9 +215,6 @@ stages:
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
       UIFunctionalTestCategory: Pages
-      IntegrationTestEnabled: false
-      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Pages.zip"
-      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToDevAppPages
   condition: succeeded()
@@ -287,9 +272,6 @@ stages:
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
       UIFunctionalTestCategory: Pages
-      IntegrationTestEnabled: true
-      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Pages.zip"
-      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToDevDraftAppPages
   condition: succeeded()
@@ -348,9 +330,6 @@ stages:
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
       UIFunctionalTestCategory: Pages
-      IntegrationTestEnabled: true
-      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Pages.zip"
-      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToSITAppPages
   condition: succeeded()
@@ -408,9 +387,6 @@ stages:
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
       UIFunctionalTestCategory: Pages
-      IntegrationTestEnabled: true
-      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Pages.zip"
-      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToSITDraftAppPages
   condition: succeeded()
@@ -469,9 +445,6 @@ stages:
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
       UIFunctionalTestCategory: Pages
-      IntegrationTestEnabled: true
-      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Pages.zip"
-      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToPPAppPages
   condition: and(eq(dependencies.Build.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -529,9 +502,6 @@ stages:
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
       UIFunctionalTestCategory: Pages
-      IntegrationTestEnabled: false
-      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Pages.zip"
-      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToPPDraftAppPages
   condition: and(eq(dependencies.DeployToPPAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -590,9 +560,6 @@ stages:
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
       UIFunctionalTestCategory: Pages
-      IntegrationTestEnabled: false
-      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Pages.zip"
-      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToPRDAppPages
   condition: and(eq(dependencies.DeployToPPDraftAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -649,9 +616,6 @@ stages:
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
       UIFunctionalTestCategory: Pages
-      IntegrationTestEnabled: false
-      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Pages.zip"
-      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"
 
 - stage: DeployToPRDDraftAppPages
   condition: and(eq(dependencies.DeployToPRDAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -710,6 +674,3 @@ stages:
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
       UIFunctionalTestCategory: Pages
-      IntegrationTestEnabled: false
-      IntegrationTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests.DeploymentPackages/DFC.App.Pages.zip"
-      IntegrationTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.IntegrationTests"

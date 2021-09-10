@@ -32,9 +32,6 @@ parameters:
   UIFunctionalTestPackage: ''
   UIFunctionalTestProjectFolder: ''
   UIFunctionalTestCategory: ''
-  IntegrationTestEnabled: ''
-  IntegrationTestPackage: ''
-  IntegrationTestProjectFolder: ''
 
 jobs:
 - deployment: DeployTemplate
@@ -116,19 +113,3 @@ jobs:
             UIFunctionalTestPackage: '${{ parameters.UIFunctionalTestPackage }}'
             UIFunctionalTestProjectFolder: '${{ parameters.UIFunctionalTestProjectFolder }}'
             UIFunctionalTestCategory: '${{ parameters.UIFunctionalTestCategory }}'
-
-- deployment: DeployIntegrationTests
-  displayName: "Deploy integration tests"
-  environment: ${{ parameters.EnvironmentName }}
-  dependsOn:
-  - DeployApplication
-  strategy:
-    runOnce:
-      deploy:
-        steps:
-        - template: ../StepTemplates/run-integration-tests.yml
-          parameters:
-            environment: ${{ parameters.EnvironmentName }}
-            IntegrationTestEnabled: '${{ parameters.IntegrationTestEnabled }}'
-            IntegrationTestPackage: '${{ parameters.IntegrationTestPackage }}'
-            IntegrationTestProjectFolder: '${{ parameters.IntegrationTestProjectFolder }}'
