@@ -1,5 +1,7 @@
-﻿using System;
+﻿using FakeItEasy;
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,15 +10,15 @@ using Xunit;
 namespace DFC.App.Pages.IntegrationTests.ControllerTests.HealthControllerTests
 {
     [Trait("Category", "Integration")]
-    public class HealthControllerRouteTests : IClassFixture<CustomWebApplicationFactory<DFC.App.Pages.Startup>>
+    public class HealthControllerRouteTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
-        private readonly CustomWebApplicationFactory<DFC.App.Pages.Startup> factory;
+        private readonly CustomWebApplicationFactory<Startup> factory;
+        private readonly HttpClient httpClient;
 
-        public HealthControllerRouteTests(CustomWebApplicationFactory<DFC.App.Pages.Startup> factory)
+        public HealthControllerRouteTests(CustomWebApplicationFactory<Startup> factory)
         {
             this.factory = factory;
-
-            DataSeeding.SeedDefaultArticles(factory);
+            this.httpClient = this.factory.CreateClient();
         }
 
         public static IEnumerable<object[]> HealthContentRouteData => new List<object[]>
@@ -35,12 +37,12 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.HealthControllerTests
         {
             // Arrange
             var uri = new Uri(url, UriKind.Relative);
-            var client = factory.CreateClient();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
+            A.CallTo(() => factory.MockContentPageService.PingAsync()).Returns(true);
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await httpClient.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -53,12 +55,12 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.HealthControllerTests
         {
             // Arrange
             var uri = new Uri(url, UriKind.Relative);
-            var client = factory.CreateClient();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
+            A.CallTo(() => factory.MockContentPageService.PingAsync()).Returns(true);
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await httpClient.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -71,11 +73,10 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.HealthControllerTests
         {
             // Arrange
             var uri = new Uri(url, UriKind.Relative);
-            var client = factory.CreateClient();
-            client.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Clear();
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await httpClient.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();

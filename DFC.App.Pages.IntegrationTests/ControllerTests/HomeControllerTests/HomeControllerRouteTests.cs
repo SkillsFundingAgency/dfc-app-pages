@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,15 +9,15 @@ using Xunit;
 namespace DFC.App.Pages.IntegrationTests.ControllerTests.HomeControllerTests
 {
     [Trait("Category", "Integration")]
-    public class HomeControllerRouteTests : IClassFixture<CustomWebApplicationFactory<DFC.App.Pages.Startup>>
+    public class HomeControllerRouteTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
-        private readonly CustomWebApplicationFactory<DFC.App.Pages.Startup> factory;
+        private readonly CustomWebApplicationFactory<Startup> factory;
+        private readonly HttpClient httpClient;
 
-        public HomeControllerRouteTests(CustomWebApplicationFactory<DFC.App.Pages.Startup> factory)
+        public HomeControllerRouteTests(CustomWebApplicationFactory<Startup> factory)
         {
             this.factory = factory;
-
-            DataSeeding.SeedDefaultArticles(factory);
+            this.httpClient = this.factory.CreateClient();
         }
 
         public static IEnumerable<object[]> HomeContentRouteData => new List<object[]>
@@ -30,11 +31,10 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.HomeControllerTests
         {
             // Arrange
             var uri = new Uri(url, UriKind.Relative);
-            var client = factory.CreateClient();
-            client.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Clear();
 
             // Act
-            var response = await client.GetAsync(uri).ConfigureAwait(false);
+            var response = await httpClient.GetAsync(uri);
 
             // Assert
             response.EnsureSuccessStatusCode();
