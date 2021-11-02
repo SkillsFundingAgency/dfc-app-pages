@@ -12,10 +12,10 @@ namespace DFC.App.Pages.UnitTests
     public class MarkupContentConverterTests
     {
         [Theory]
-        [InlineData(Constants.ContentTypeHtml, "<div class=\"govuk-grid-row\"><div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">this is content</div></div></div>")]
-        [InlineData(Constants.ContentTypeHtmlShared, "<div class=\"govuk-grid-row\"><div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">this is content</div></div></div>")]
-        [InlineData(Constants.ContentTypeSharedContent, "<div class=\"govuk-grid-row\"><div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">this is content</div></div></div>")]
-        [InlineData(Constants.ContentTypeForm, "<div class=\"govuk-grid-row\"><div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\"><form action=\"an action\" method=\"a method\" enctype=\"an enc type\"></form></div></div></div>")]
+        [InlineData(Constants.ContentTypeHtml, "<div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">this is content</div></div>")]
+        [InlineData(Constants.ContentTypeHtmlShared, "<div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">this is content</div></div>")]
+        [InlineData(Constants.ContentTypeSharedContent, "<div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">this is content</div></div>")]
+        [InlineData(Constants.ContentTypeForm, "<div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\"><form action=\"an action\" method=\"a method\" enctype=\"an enc type\"></form></div></div>")]
         public void ContentItemsConverterTestsWithAlignmentReturnsSuccess(string contentType, string expectedResult)
         {
             // Arrange
@@ -51,7 +51,7 @@ namespace DFC.App.Pages.UnitTests
         public void ContentItemsConverterTestsWithoutAlignmentReturnsSuccess()
         {
             // Arrange
-            var expectedResult = "<div class=\"govuk-grid-row\"><div class=\"govuk-grid-column-one-half\">this is content</div></div>";
+            var expectedResult = "<div class=\"govuk-grid-column-one-half\">this is content</div>";
             var converter = new MarkupContentConverter();
             IList<ContentItemModel> sourceMember = new List<ContentItemModel>
             {
@@ -94,7 +94,7 @@ namespace DFC.App.Pages.UnitTests
         public void ContentItemsConverterTestsWithChildReturnsSuccess()
         {
             // Arrange
-            var expectedResult = "<div class=\"govuk-grid-row\"><div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">some contentsome more html body</div></div></div>";
+            var expectedResult = "<div class=\"govuk-grid-column-one-half\"><div class=\"dfc-app-pages-alignment-centre\">some contentsome more html body</div></div>";
             var converter = new MarkupContentConverter();
             IList<ContentItemModel> sourceMember = new List<ContentItemModel>
             {
