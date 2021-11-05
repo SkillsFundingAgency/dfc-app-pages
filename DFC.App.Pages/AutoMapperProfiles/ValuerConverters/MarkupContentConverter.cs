@@ -35,6 +35,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             }
 
             var result = new StringBuilder();
+            result.Append("<div class=\"govuk-grid-row\">");
 
             foreach (var contentItemModel in sourceMember.OrderBy(o => o.Ordinal))
             {
@@ -67,7 +68,9 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
 
                 result.Append("</div>");
             }
-            
+
+            result.Append("</div>");
+
             return new HtmlString(result.ToString());
         }
 
