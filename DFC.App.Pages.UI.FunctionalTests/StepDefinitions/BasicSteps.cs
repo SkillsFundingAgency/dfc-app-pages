@@ -3,13 +3,13 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-using TestAutomation.UI.Extension;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Linq;
 using System.Threading;
 using TechTalk.SpecFlow;
+using TestAutomation.UI.Extension;
 
 namespace DFC.App.Pages.UI.FunctionalTests.StepDefinitions
 {
@@ -73,7 +73,6 @@ namespace DFC.App.Pages.UI.FunctionalTests.StepDefinitions
 
             throw new NotFoundException($"Unable to perform the step: {this.Context.StepContext.StepInfo.Text}. The link could not be found.");
         }
-
 
         [When(@"I select (.*) in the options filter")]
         public void WhenISelectSortFilter(string options)

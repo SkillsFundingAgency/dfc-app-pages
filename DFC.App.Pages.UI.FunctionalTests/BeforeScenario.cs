@@ -45,7 +45,8 @@ namespace DFC.App.Pages
         public void SetApplicationUrl()
         {
             string appBaseUrl = this.Context.GetSettingsLibrary<AppSettings>().AppSettings.AppBaseUrl.ToString();
-            //this.Context.GetSettingsLibrary<AppSettings>().AppSettings.AppBaseUrl = new Uri($"{appBaseUrl}home");
+
+            // this.Context.GetSettingsLibrary<AppSettings>().AppSettings.AppBaseUrl = new Uri($"{appBaseUrl}home");
         }
 
         [BeforeScenario(Order = 3)]

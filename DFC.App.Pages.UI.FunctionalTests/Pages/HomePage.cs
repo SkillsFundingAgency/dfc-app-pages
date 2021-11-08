@@ -4,9 +4,9 @@
 // </copyright>
 
 using DFC.App.Pages.Model;
-using TestAutomation.UI.Extension;
 using System;
 using TechTalk.SpecFlow;
+using TestAutomation.UI.Extension;
 
 namespace DFC.App.Pages.UI.FunctionalTests.Pages
 {

@@ -30,7 +30,7 @@ namespace DFC.App.Pages
         [AfterScenario(Order = 0)]
         public async Task UpdateBrowserStack()
         {
-            var browserHelper = this.Context.   GetHelperLibrary<AppSettings>().BrowserHelper;
+            var browserHelper = this.Context.GetHelperLibrary<AppSettings>().BrowserHelper;
             if (browserHelper.IsExecutingInBrowserStack())
             {
                 var sessionId = (this.Context.GetWebDriver() as RemoteWebDriver).SessionId.ToString();

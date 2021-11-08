@@ -5,11 +5,11 @@
 
 using DFC.App.Pages.Model;
 using DFC.App.Pages.UI.FunctionalTests.Pages;
-using TestAutomation.UI.Extension;
 using OpenQA.Selenium;
 using System;
 using System.Globalization;
 using TechTalk.SpecFlow;
+using TestAutomation.UI.Extension;
 
 namespace DFC.App.Pages.UI.FunctionalTests.StepDefinitions
 {
