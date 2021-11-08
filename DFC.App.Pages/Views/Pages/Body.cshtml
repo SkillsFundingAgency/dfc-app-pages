@@ -2,14 +2,7 @@
 
 @if (Model.Content != null)
 {
-    @if (Model.UseBrowserWidth)
-    {
+    <div class="@Model.WidthContainerClass">
         @Html.Raw(Model.Content)
-    }
-    else
-    {
-        <div class="govuk-width-container">
-            @Html.Raw(Model.Content)
-        </div>
-    }
+    </div>
 }
