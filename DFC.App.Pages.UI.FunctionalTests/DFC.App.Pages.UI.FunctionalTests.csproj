@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <SpecFlowObsoleteCodeBehindFiles Remove="Features\CareersAdvice - Copy.feature.cs" />
     <SpecFlowObsoleteCodeBehindFiles Remove="Features\ContactUsByEmail - Copy.feature.cs" />
     <SpecFlowObsoleteCodeBehindFiles Remove="Features\ContactUsByPost - Copy.feature.cs" />
+    <SpecFlowObsoleteCodeBehindFiles Remove="Features\Homepage - Copy.feature.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,13 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DFC.TestAutomation.UI" Version="1.0.143" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SpecFlow.xUnit" Version="3.4.31" />
+    <PackageReference Include="SpecFlow.xUnit" Version="3.9.22" />
+    <PackageReference Include="SpecflowFramework" Version="1.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -34,12 +36,38 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Features\ExamResults.feature.cs">
+      <DependentUpon>ExamResults.feature</DependentUpon>
+    </Compile>
+    <Compile Update="Features\CareersAdvice.feature.cs">
+      <DependentUpon>CareersAdvice.feature</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="appsettings.template.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <SpecFlowFeatureFiles Update="Features\ExamResults.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+      <LastGenOutput>CareersAdvice.feature.cs</LastGenOutput>
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\CareersAdvice.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CareersAdvice.feature.cs</LastGenOutput>
+    </SpecFlowFeatureFiles>
   </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-using DFC.TestAutomation.UI.Settings;
+using TestAutomation.UI.Settings;
 using System;
 
 namespace DFC.App.Pages.Model

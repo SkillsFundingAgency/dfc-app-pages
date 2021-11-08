@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-using DFC.TestAutomation.UI.Extension;
+using TestAutomation.UI.Extension;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -40,7 +40,7 @@ namespace DFC.App.Pages.UI.FunctionalTests.StepDefinitions
             throw new NotFoundException($"Unable to perform the step: {this.Context.StepContext.StepInfo.Text}. The button could not be found.");
         }
 
-        [When(@"I click the (.*) footer link")]
+        [When(@"I click the (.*) link in the footer")]
         public void WhenIClickTheFooterLink(string linkText)
         {
             var allfooterlinks = this.Context.GetWebDriver().FindElements(By.ClassName("govuk-footer__link")).ToList();
@@ -54,8 +54,26 @@ namespace DFC.App.Pages.UI.FunctionalTests.StepDefinitions
                 }
             }
 
-            throw new NotFoundException($"Unable to perform the step: {this.Context.StepContext.StepInfo.Text}. The button could not be found.");
+            throw new NotFoundException($"Unable to perform the step: {this.Context.StepContext.StepInfo.Text}. The link could not be found.");
         }
+
+        [When(@"I click the (.*) link")]
+        public void WhenIClickTheLink(string linkText)
+        {
+            var allfooterlinks = this.Context.GetWebDriver().FindElements(By.ClassName("govuk-link")).ToList();
+
+            foreach (var link in allfooterlinks)
+            {
+                if (link.Text.Trim().Equals(linkText, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    link.Click();
+                    return;
+                }
+            }
+
+            throw new NotFoundException($"Unable to perform the step: {this.Context.StepContext.StepInfo.Text}. The link could not be found.");
+        }
+
 
         [When(@"I select (.*) in the options filter")]
         public void WhenISelectSortFilter(string options)

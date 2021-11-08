@@ -4,11 +4,11 @@
 // </copyright>
 
 using DFC.App.Pages.Model;
-using DFC.TestAutomation.UI.Extension;
 using OpenQA.Selenium.Remote;
 using System;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using TestAutomation.UI.Extension;
 
 namespace DFC.App.Pages
 {
@@ -30,7 +30,7 @@ namespace DFC.App.Pages
         [AfterScenario(Order = 0)]
         public async Task UpdateBrowserStack()
         {
-            var browserHelper = this.Context.GetHelperLibrary<AppSettings>().BrowserHelper;
+            var browserHelper = this.Context.   GetHelperLibrary<AppSettings>().BrowserHelper;
             if (browserHelper.IsExecutingInBrowserStack())
             {
                 var sessionId = (this.Context.GetWebDriver() as RemoteWebDriver).SessionId.ToString();
