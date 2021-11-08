@@ -9,5 +9,7 @@ namespace DFC.App.Pages.ViewModels
         public HtmlString? Content { get; set; } = new HtmlString("Unknown content");
 
         public bool UseBrowserWidth { get; set; }
+
+        public string WidthContainerClass => UseBrowserWidth ? "govuk-full-width-container" : "govuk-width-container";
     }
 }
