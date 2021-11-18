@@ -24,7 +24,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="SpecFlow.xUnit" Version="3.9.22" />
-    <PackageReference Include="SpecflowFramework" Version="1.0.0" />
+    <PackageReference Include="SpecflowFramework" Version="1.0.6" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
