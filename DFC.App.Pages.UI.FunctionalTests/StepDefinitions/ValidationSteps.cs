@@ -7,7 +7,7 @@ using DFC.App.Pages.Model;
 using OpenQA.Selenium;
 using System.Globalization;
 using TechTalk.SpecFlow;
-using TestAutomation.UI.Extension;
+using DFC.TestAutomation.UI.Extension;
 
 namespace DFC.App.Pages.UI.FunctionalTests
 {

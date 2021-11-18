@@ -4,7 +4,7 @@
 // </copyright>
 
 using System;
-using TestAutomation.UI.Settings;
+using DFC.TestAutomation.UI.Settings;
 
 namespace DFC.App.Pages.Model
 {

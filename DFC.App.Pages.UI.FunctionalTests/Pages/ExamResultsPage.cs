@@ -6,7 +6,7 @@
 using DFC.App.Pages.Model;
 using System;
 using TechTalk.SpecFlow;
-using TestAutomation.UI.Extension;
+using DFC.TestAutomation.UI.Extension;
 
 namespace DFC.App.Pages.UI.FunctionalTests.Pages
 {
