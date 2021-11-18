@@ -6,11 +6,11 @@
 using DFC.App.Pages.Model;
 using System;
 using TechTalk.SpecFlow;
-using DFC.TestAutomation.UI;
-using DFC.TestAutomation.UI.Extension;
-using DFC.TestAutomation.UI.Helper;
-using DFC.TestAutomation.UI.Settings;
-using DFC.TestAutomation.UI.Support;
+using TestAutomation.UI;
+using TestAutomation.UI.Extension;
+using TestAutomation.UI.Helper;
+using TestAutomation.UI.Settings;
+using TestAutomation.UI.Support;
 
 namespace DFC.App.Pages
 {

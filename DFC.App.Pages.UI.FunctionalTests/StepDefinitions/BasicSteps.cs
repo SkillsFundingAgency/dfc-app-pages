@@ -9,7 +9,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using TechTalk.SpecFlow;
-using DFC.TestAutomation.UI.Extension;
+using TestAutomation.UI.Extension;
 
 namespace DFC.App.Pages.UI.FunctionalTests.StepDefinitions
 {
