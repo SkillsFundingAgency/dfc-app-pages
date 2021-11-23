@@ -46,7 +46,7 @@ namespace DFC.App.Pages.UI.FunctionalTests.StepDefinitions
                     var examResultsPage = new ExamResultsPage(this.Context);
                     examResultsPage.NavigateToExamResultsPage();
                     pageHeadingLocator = By.ClassName("govuk-heading-l");
-                    this.Context.GetHelperLibrary<AppSettings>().WebDriverWaitHelper.WaitForElementToContainText(pageHeadingLocator, "Making choices after your exams");
+                    this.Context.GetHelperLibrary<AppSettings>().WebDriverWaitHelper.WaitForElementToContainText(pageHeadingLocator, "Make choices after your exams");
                     break;
 
                 default:
