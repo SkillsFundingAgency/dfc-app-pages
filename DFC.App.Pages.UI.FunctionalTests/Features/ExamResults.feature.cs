@@ -120,7 +120,8 @@ this.ScenarioInitialize(scenarioInfo);
                         " link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 8
- testRunner.Then("I am taken to the A level page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("I am taken to the Options after A level, vocational, technical or other level 3 r" +
+                        "esults page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -166,7 +167,8 @@ this.ScenarioInitialize(scenarioInfo);
                         "nk", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 14
- testRunner.Then("I am taken to the GCSE page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("I am taken to the Options after GCSE, vocational, technical or other level 2 resu" +
+                        "lts page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
