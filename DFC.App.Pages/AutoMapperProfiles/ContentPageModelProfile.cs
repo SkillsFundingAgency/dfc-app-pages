@@ -26,13 +26,13 @@ namespace DFC.App.Pages.AutoMapperProfiles
             CreateMap<ContentPageModel, DocumentViewModel>()
                 .ForMember(d => d.DocumentId, s => s.MapFrom(a => a.Id))
                 .ForMember(d => d.Redirects, s => s.MapFrom(a => a.RedirectLocations))
-                .ForMember(d => d.HtmlHead, s => s.MapFrom(a => a))
+                .ForMember(d => d.Head, s => s.MapFrom(a => a))
                 .ForMember(d => d.Breadcrumb, s => s.Ignore())
                 .ForMember(d => d.Content, opt => opt.ConvertUsing(new MarkupContentConverter(), a => a.ContentItems))
                 .ForMember(d => d.BodyViewModel, s => s.MapFrom(a => a))
                 .ForMember(d => d.HeroBannerViewModel, s => s.MapFrom(a => a));
 
-            CreateMap<ContentPageModel, HtmlHeadViewModel>()
+            CreateMap<ContentPageModel, HeadViewModel>()
                 .ForMember(d => d.CanonicalUrl, s => s.Ignore())
                 .ForMember(d => d.Title, s => s.MapFrom(a => a.MetaTags != null && !string.IsNullOrWhiteSpace(a.MetaTags.Title) ? a.MetaTags.Title + " | " + NcsPageTitle : NcsPageTitle))
                 .ForMember(d => d.Description, s => s.MapFrom(a => a.MetaTags != null ? a.MetaTags.Description : null))
