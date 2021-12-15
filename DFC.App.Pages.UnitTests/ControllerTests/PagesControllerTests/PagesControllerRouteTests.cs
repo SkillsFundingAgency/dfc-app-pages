@@ -28,12 +28,12 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/document", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", string.Empty, nameof(PagesController.Document) },
             new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/{location5}/document", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", "SomeLocation5", nameof(PagesController.Document) },
 
-            new object[] { "/pages/htmlhead", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, nameof(PagesController.HtmlHead) },
-            new object[] { "/pages/{location1}/htmlhead", "SomeLocation1", string.Empty, string.Empty, string.Empty, string.Empty, nameof(PagesController.HtmlHead) },
-            new object[] { "/pages/{location1}/{location2}/htmlhead", "SomeLocation1", "SomeLocation2", string.Empty, string.Empty, string.Empty, nameof(PagesController.HtmlHead) },
-            new object[] { "/pages/{location1}/{location2}/{location3}/htmlhead", "SomeLocation1", "SomeLocation2", "SomeLocation3", string.Empty, string.Empty, nameof(PagesController.HtmlHead) },
-            new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/htmlhead", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", string.Empty, nameof(PagesController.HtmlHead) },
-            new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/{location5}/htmlhead", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", "SomeLocation5", nameof(PagesController.HtmlHead) },
+            new object[] { "/pages/head", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, nameof(PagesController.Head) },
+            new object[] { "/pages/{location1}/head", "SomeLocation1", string.Empty, string.Empty, string.Empty, string.Empty, nameof(PagesController.Head) },
+            new object[] { "/pages/{location1}/{location2}/head", "SomeLocation1", "SomeLocation2", string.Empty, string.Empty, string.Empty, nameof(PagesController.Head) },
+            new object[] { "/pages/{location1}/{location2}/{location3}/head", "SomeLocation1", "SomeLocation2", "SomeLocation3", string.Empty, string.Empty, nameof(PagesController.Head) },
+            new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/head", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", string.Empty, nameof(PagesController.Head) },
+            new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/{location5}/head", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", "SomeLocation5", nameof(PagesController.Head) },
 
             new object[] { "/pages/breadcrumb", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, nameof(PagesController.Breadcrumb) },
             new object[] { "/pages/{location1}/breadcrumb", "SomeLocation1", string.Empty, string.Empty, string.Empty, string.Empty, nameof(PagesController.Breadcrumb) },
@@ -146,7 +146,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         {
             return actionName switch
             {
-                nameof(PagesController.HtmlHead) => await controller.HtmlHead(pageRequestModel).ConfigureAwait(false),
+                nameof(PagesController.Head) => await controller.Head(pageRequestModel).ConfigureAwait(false),
                 nameof(PagesController.Breadcrumb) => await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false),
                 nameof(PagesController.BodyTop) => controller.BodyTop(pageRequestModel),
                 nameof(PagesController.HeroBanner) => await controller.HeroBanner(pageRequestModel).ConfigureAwait(false),

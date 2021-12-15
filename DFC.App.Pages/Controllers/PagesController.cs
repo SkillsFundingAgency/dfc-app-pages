@@ -133,16 +133,16 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/htmlhead")]
-        [Route("pages/{location1}/htmlhead")]
-        [Route("pages/{location1}/{location2}/htmlhead")]
-        [Route("pages/{location1}/{location2}/{location3}/htmlhead")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/htmlhead")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/htmlhead")]
-        public async Task<IActionResult> HtmlHead(PageRequestModel pageRequestModel)
+        [Route("pages/head")]
+        [Route("pages/{location1}/head")]
+        [Route("pages/{location1}/{location2}/head")]
+        [Route("pages/{location1}/{location2}/{location3}/head")]
+        [Route("pages/{location1}/{location2}/{location3}/{location4}/head")]
+        [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/head")]
+        public async Task<IActionResult> Head(PageRequestModel pageRequestModel)
         {
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
-            var viewModel = new HtmlHeadViewModel();
+            var viewModel = new HeadViewModel();
             var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
 
             if (contentPageModel != null)
@@ -152,7 +152,7 @@ namespace DFC.App.Pages.Controllers
                 viewModel.CanonicalUrl = new Uri($"{Request.GetBaseAddress()}{RegistrationPath}/{contentPageModel.CanonicalName}", UriKind.RelativeOrAbsolute);
             }
 
-            logger.LogInformation($"{nameof(HtmlHead)} has returned content for: /{location}/{article}");
+            logger.LogInformation($"{nameof(Head)} has returned content for: /{location}/{article}");
 
             return this.NegotiateContentResult(viewModel);
         }

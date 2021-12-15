@@ -14,7 +14,7 @@
       {
         "PageRegion": 1,
         "HealthCheckRequired": true,
-        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/htmlhead",
+        "RegionEndpoint": "https://__AppServiceName__.__appServiceDomain__/pages/{0}/head",
         "IsHealthy": true
       },
       {

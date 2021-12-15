@@ -28,7 +28,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
         {
             new object[] { "/" },
             new object[] { "/pages" },
-            new object[] { "/pages/htmlhead" },
+            new object[] { "/pages/head" },
             new object[] { "/pages/breadcrumb" },
             new object[] { "/pages/body" },
         };

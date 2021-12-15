@@ -3,9 +3,9 @@
 @{
     Layout = "_LocalLayout";
 
-    if (!string.IsNullOrWhiteSpace(Model.HtmlHead?.Title))
+    if (!string.IsNullOrWhiteSpace(Model.Head?.Title))
     {
-        ViewData["Title"] = Model.HtmlHead.Title;
+        ViewData["Title"] = Model.Head.Title;
     }
 }
 
@@ -89,34 +89,34 @@
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    @Html.DisplayNameFor(model => model.HtmlHead!.Description)
+                    @Html.DisplayNameFor(model => model.Head!.Description)
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @Html.DisplayFor(model => model.HtmlHead!.Description)
+                    @Html.DisplayFor(model => model.Head!.Description)
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    @Html.DisplayNameFor(model => model.HtmlHead!.Keywords)
+                    @Html.DisplayNameFor(model => model.Head!.Keywords)
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @Html.DisplayFor(model => model.HtmlHead!.Keywords)
+                    @Html.DisplayFor(model => model.Head!.Keywords)
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    @Html.DisplayNameFor(model => model.HtmlHead!.Title)
+                    @Html.DisplayNameFor(model => model.Head!.Title)
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @Html.DisplayFor(model => model.HtmlHead!.Title)
+                    @Html.DisplayFor(model => model.Head!.Title)
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    @Html.DisplayNameFor(model => model.HtmlHead!.CanonicalUrl)
+                    @Html.DisplayNameFor(model => model.Head!.CanonicalUrl)
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @Html.DisplayFor(model => model.HtmlHead!.CanonicalUrl)
+                    @Html.DisplayFor(model => model.Head!.CanonicalUrl)
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
