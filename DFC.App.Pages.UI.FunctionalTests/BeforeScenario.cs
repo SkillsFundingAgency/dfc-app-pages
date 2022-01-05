@@ -4,13 +4,13 @@
 // </copyright>
 
 using DFC.App.Pages.Model;
-using DFC.TestAutomation.UI;
-using DFC.TestAutomation.UI.Extension;
-using DFC.TestAutomation.UI.Helper;
-using DFC.TestAutomation.UI.Settings;
-using DFC.TestAutomation.UI.Support;
 using System;
 using TechTalk.SpecFlow;
+using TestAutomation.UI;
+using TestAutomation.UI.Extension;
+using TestAutomation.UI.Helper;
+using TestAutomation.UI.Settings;
+using TestAutomation.UI.Support;
 
 namespace DFC.App.Pages
 {
@@ -45,14 +45,15 @@ namespace DFC.App.Pages
         public void SetApplicationUrl()
         {
             string appBaseUrl = this.Context.GetSettingsLibrary<AppSettings>().AppSettings.AppBaseUrl.ToString();
-            this.Context.GetSettingsLibrary<AppSettings>().AppSettings.AppBaseUrl = new Uri($"{appBaseUrl}home");
+
+            // this.Context.GetSettingsLibrary<AppSettings>().AppSettings.AppBaseUrl = new Uri($"{appBaseUrl}home");
         }
 
         [BeforeScenario(Order = 3)]
         public void ConfigureBrowserStack()
         {
             this.Context.GetSettingsLibrary<AppSettings>().BrowserStackSettings.Name = this.Context.ScenarioInfo.Title;
-            this.Context.GetSettingsLibrary<AppSettings>().BrowserStackSettings.Build = "Triage-Tool";
+            this.Context.GetSettingsLibrary<AppSettings>().BrowserStackSettings.Build = "Pages";
         }
 
         [BeforeScenario(Order = 4)]

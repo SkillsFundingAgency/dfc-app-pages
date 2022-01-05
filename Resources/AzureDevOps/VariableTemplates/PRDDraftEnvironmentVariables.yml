@@ -10,7 +10,7 @@ variables:
 - name: SubscriptionSettingsEndpoint
   value: $(ApimProxyAddress)/composite-ui/pages-draft
 - name: pagesAppDatabaseThroughput
-  value: 2500
+  value: 7500
 - name: ResourceGroup
   value: $(WebAppPrefix)-rg
 - name: WebAppProjectName
@@ -34,7 +34,7 @@ variables:
 - name: aspTier
   value: Standard
 - name: aspInstances
-  value: 3
+  value: 2
 - name: aspSize
   value: 1
 - name: clientAffinity

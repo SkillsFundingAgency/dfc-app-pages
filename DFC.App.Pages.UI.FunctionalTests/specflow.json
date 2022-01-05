@@ -6,7 +6,7 @@
     "feature": "en-GB"
   },
   "stepAssemblies": [
-    { "assembly": "DFC.TestAutomation.UI" }
+    { "assembly": "TestAutomation" }
   ],
   "generator": {
     "allowRowTests" : false

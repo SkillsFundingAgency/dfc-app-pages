@@ -32,6 +32,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
         {
             new object[] { BuildValidContentPageModel(), true },
             new object[] { A.Fake<ContentPageModel>(), false },
+            new object[] { ClearPartitionKey(BuildValidContentPageModel()), false },
         };
 
         [Fact]
@@ -388,6 +389,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             A.Equals(result, expectedResult);
         }
 
+
         private static CmsApiSummaryItemModel BuildValidPagesSummaryItemModel()
         {
             var model = new CmsApiSummaryItemModel()
@@ -447,9 +449,15 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests
             return model;
         }
 
+        private static ContentPageModel ClearPartitionKey(ContentPageModel item)
+        {
+            item.PageLocation = null;
+            return item;
+        }
+
         private static ContentPageModel BuildValidContentPageModel()
         {
-            var model = new ContentPageModel()
+            var model = new ContentPageModel
             {
                 Id = Guid.NewGuid(),
                 CanonicalName = "an-article",

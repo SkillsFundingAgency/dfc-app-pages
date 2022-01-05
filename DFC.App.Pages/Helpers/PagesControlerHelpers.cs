@@ -2,21 +2,26 @@
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.Compui.Cosmos.Contracts;
+
+using Microsoft.Extensions.Caching.Memory;
+
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 
 namespace DFC.App.Pages.Helpers
 {
     public class PagesControlerHelpers : IPagesControlerHelpers
     {
+        private const int CacheDurationInSeconds = 30;
         private readonly IContentPageService<ContentPageModel> contentPageService;
+        private readonly IMemoryCache memoryCache;
 
-        public PagesControlerHelpers(IContentPageService<ContentPageModel> contentPageService)
+        public PagesControlerHelpers(IContentPageService<ContentPageModel> contentPageService, IMemoryCache memoryCache)
         {
             this.contentPageService = contentPageService;
+            this.memoryCache = memoryCache;
         }
 
         public static (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
@@ -41,7 +46,43 @@ namespace DFC.App.Pages.Helpers
             return (location, article);
         }
 
+        public async Task<ContentPageModel?> GetRedirectedContentPageAsync(string? location, string? article)
+        {
+            var redirectLocation = $"/{location}";
+
+            if (!string.IsNullOrWhiteSpace(article))
+            {
+                redirectLocation += $"/{article}";
+            }
+
+            if (!memoryCache.TryGetValue(redirectLocation, out ContentPageModel? content))
+            {
+                content = await contentPageService.GetByRedirectLocationAsync(redirectLocation);
+
+                memoryCache.Set(redirectLocation, content, TimeSpan.FromSeconds(CacheDurationInSeconds));
+            }
+
+            return content;
+        }
+
         public async Task<ContentPageModel?> GetContentPageAsync(string? location, string? article)
+        {
+            var cacheKey = BuildCacheKey(location, article);
+
+            if (!memoryCache.TryGetValue(cacheKey, out ContentPageModel? content))
+            {
+                content = await GetContentPageWithoutCacheAsync(location, article);
+
+                memoryCache.Set(cacheKey, content, TimeSpan.FromSeconds(CacheDurationInSeconds));
+            }
+
+            return content;
+        }
+
+        private string BuildCacheKey(string? location, string? article) =>
+            $"{nameof(GetContentPageAsync)}:Location:{location}:Article:{article}";
+
+        private async Task<ContentPageModel?> GetContentPageWithoutCacheAsync(string? location, string? article)
         {
             Expression<Func<ContentPageModel, bool>> where;
 
@@ -58,14 +99,14 @@ namespace DFC.App.Pages.Helpers
                 where = p => (p.PageLocation == $"/{location}" && p.CanonicalName == article) || (p.PageLocation == $"/{location}/{article}" && p.IsDefaultForPageLocation);
             }
 
-            var contentPageModels = await contentPageService.GetAsync(where).ConfigureAwait(false);
+            var contentPageModels = await contentPageService.GetAsync(where);
 
             if (contentPageModels == null || !contentPageModels.Any())
             {
                 var searchLocation = string.IsNullOrWhiteSpace(article) ? $"/{location}" : $"/{location}/{article}";
                 where = p => p.PageLocation == searchLocation && !p.IsDefaultForPageLocation;
 
-                contentPageModels = await contentPageService.GetAsync(where).ConfigureAwait(false);
+                contentPageModels = await contentPageService.GetAsync(where);
             }
 
             if (contentPageModels != null && contentPageModels.Any())
@@ -74,20 +115,6 @@ namespace DFC.App.Pages.Helpers
             }
 
             return default;
-        }
-
-        public async Task<ContentPageModel?> GetRedirectedContentPageAsync(string? location, string? article)
-        {
-            var redirectLocation = $"/{location}";
-
-            if (!string.IsNullOrWhiteSpace(article))
-            {
-                redirectLocation += $"/{article}";
-            }
-
-            var contentPageModel = await contentPageService.GetByRedirectLocationAsync(redirectLocation).ConfigureAwait(false);
-
-            return contentPageModel;
         }
     }
 }
