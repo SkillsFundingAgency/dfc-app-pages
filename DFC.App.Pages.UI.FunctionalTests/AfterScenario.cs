@@ -4,11 +4,11 @@
 // </copyright>
 
 using DFC.App.Pages.Model;
-using DFC.TestAutomation.UI.Extension;
 using OpenQA.Selenium.Remote;
 using System;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using TestAutomation.UI.Extension;
 
 namespace DFC.App.Pages
 {

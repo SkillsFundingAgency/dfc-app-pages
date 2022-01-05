@@ -300,6 +300,12 @@ namespace DFC.App.Pages.Services.CacheContentService
                 }
             }
 
+            if (string.IsNullOrEmpty(contentPageModel.PartitionKey))
+            {
+                logger.LogError($"Error validating {contentPageModel.CanonicalName} - Partition key (and thus page location) was null");
+                return false;
+            }
+
             return isValid;
         }
     }

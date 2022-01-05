@@ -4,10 +4,10 @@
 // </copyright>
 
 using DFC.App.Pages.Model;
-using DFC.TestAutomation.UI.Extension;
 using OpenQA.Selenium;
 using System.Globalization;
 using TechTalk.SpecFlow;
+using TestAutomation.UI.Extension;
 
 namespace DFC.App.Pages.UI.FunctionalTests
 {

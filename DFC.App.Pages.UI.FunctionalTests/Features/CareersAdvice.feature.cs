@@ -19,7 +19,7 @@ namespace DFC.App.Pages.UI.FunctionalTests.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class HomepageFeature : object, Xunit.IClassFixture<HomepageFeature.FixtureData>, System.IDisposable
+    public partial class CareersAdviceFeature : object, Xunit.IClassFixture<CareersAdviceFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -28,10 +28,10 @@ namespace DFC.App.Pages.UI.FunctionalTests.Features
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "Homepage.feature"
+#line 1 "CareersAdvice.feature"
 #line hidden
         
-        public HomepageFeature(HomepageFeature.FixtureData fixtureData, DFC_App_Pages_UI_FunctionalTests_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public CareersAdviceFeature(CareersAdviceFeature.FixtureData fixtureData, DFC_App_Pages_UI_FunctionalTests_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace DFC.App.Pages.UI.FunctionalTests.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-GB"), "Features", "Homepage", null, ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-GB"), "Features", "Careers Advice", null, ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -80,18 +80,18 @@ namespace DFC.App.Pages.UI.FunctionalTests.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Footer - Check Help link")]
-        [Xunit.TraitAttribute("FeatureTitle", "Homepage")]
-        [Xunit.TraitAttribute("Description", "Footer - Check Help link")]
+        [Xunit.SkippableFactAttribute(DisplayName="Navigate to a making career choice page")]
+        [Xunit.TraitAttribute("FeatureTitle", "Careers Advice")]
+        [Xunit.TraitAttribute("Description", "Navigate to a making career choice page")]
         [Xunit.TraitAttribute("Category", "Pages")]
         [Xunit.TraitAttribute("Category", "Smoke")]
-        public virtual void Footer_CheckHelpLink()
+        public virtual void NavigateToAMakingCareerChoicePage()
         {
             string[] tagsOfScenario = new string[] {
                     "Pages",
                     "Smoke"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Footer - Check Help link", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Navigate to a making career choice page", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 5
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -113,30 +113,30 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 6
- testRunner.Given("I am on the home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I am on the careers advice page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 7
- testRunner.When("I click the Help link in the footer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I click the Post 16 options link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 8
- testRunner.Then("I am taken to the Help page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("I am taken to the Post 16 options page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Footer - Check Information Sources link")]
-        [Xunit.TraitAttribute("FeatureTitle", "Homepage")]
-        [Xunit.TraitAttribute("Description", "Footer - Check Information Sources link")]
+        [Xunit.SkippableFactAttribute(DisplayName="Navigate to getting a job choice tab")]
+        [Xunit.TraitAttribute("FeatureTitle", "Careers Advice")]
+        [Xunit.TraitAttribute("Description", "Navigate to getting a job choice tab")]
         [Xunit.TraitAttribute("Category", "Pages")]
-        [Xunit.TraitAttribute("Category", "Homepage")]
-        public virtual void Footer_CheckInformationSourcesLink()
+        [Xunit.TraitAttribute("Category", "CareerAdvice")]
+        public virtual void NavigateToGettingAJobChoiceTab()
         {
             string[] tagsOfScenario = new string[] {
                     "Pages",
-                    "Homepage"};
+                    "CareerAdvice"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Footer - Check Information Sources link", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Navigate to getting a job choice tab", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 11
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -158,31 +158,34 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 12
- testRunner.Given("I am on the home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I am on the careers advice page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 13
- testRunner.When("I click the Information Sources link in the footer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I click the getting a job tab", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 14
- testRunner.Then("I am taken to the Information Sources page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.When("I click the How to find job vacancies link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 15
+ testRunner.Then("I am taken to the How to find job vacancies page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Footer - Check Privacy & Cookies link")]
-        [Xunit.TraitAttribute("FeatureTitle", "Homepage")]
-        [Xunit.TraitAttribute("Description", "Footer - Check Privacy & Cookies link")]
+        [Xunit.SkippableFactAttribute(DisplayName="Navigate to progressing your career tab")]
+        [Xunit.TraitAttribute("FeatureTitle", "Careers Advice")]
+        [Xunit.TraitAttribute("Description", "Navigate to progressing your career tab")]
         [Xunit.TraitAttribute("Category", "Pages")]
-        [Xunit.TraitAttribute("Category", "Homepage")]
-        public virtual void Footer_CheckPrivacyCookiesLink()
+        [Xunit.TraitAttribute("Category", "CareerAdvice")]
+        public virtual void NavigateToProgressingYourCareerTab()
         {
             string[] tagsOfScenario = new string[] {
                     "Pages",
-                    "Homepage"};
+                    "CareerAdvice"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Footer - Check Privacy & Cookies link", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 17
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Navigate to progressing your career tab", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 18
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -202,59 +205,17 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 18
- testRunner.Given("I am on the home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
 #line 19
- testRunner.When("I click the Privacy and cookies link in the footer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.Given("I am on the careers advice page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 20
- testRunner.Then("I am taken to the Privacy and cookies page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.When("I click the progressing your career tab", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="Footer - Check T&C link")]
-        [Xunit.TraitAttribute("FeatureTitle", "Homepage")]
-        [Xunit.TraitAttribute("Description", "Footer - Check T&C link")]
-        [Xunit.TraitAttribute("Category", "Pages")]
-        [Xunit.TraitAttribute("Category", "Homepage")]
-        public virtual void Footer_CheckTCLink()
-        {
-            string[] tagsOfScenario = new string[] {
-                    "Pages",
-                    "Homepage"};
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Footer - Check T&C link", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 23
-this.ScenarioInitialize(scenarioInfo);
+#line 21
+ testRunner.When("I click the Develop your soft skills link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 24
- testRunner.Given("I am on the home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 25
- testRunner.When("I click the Terms and conditions link in the footer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 26
- testRunner.Then("I am taken to the Terms and conditions page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 22
+ testRunner.Then("I am taken to the Develop your soft skills page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -267,12 +228,12 @@ this.ScenarioInitialize(scenarioInfo);
             
             public FixtureData()
             {
-                HomepageFeature.FeatureSetup();
+                CareersAdviceFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                HomepageFeature.FeatureTearDown();
+                CareersAdviceFeature.FeatureTearDown();
             }
         }
     }
