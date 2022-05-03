@@ -34,7 +34,7 @@ namespace DFC.App.Pages.Services.CacheContentService.ContentItemUpdaters
 
             if (contentItemModel != null)
             {
-                switch (contentItemModel.ContentType)
+                switch (contentItemModel.ContentType.ToLower())
                 {
                     case Constants.ContentTypeHtml:
                         return await htmlMarkupContentItemUpdater.FindAndUpdateAsync(contentItemModel, url).ConfigureAwait(false);
