@@ -26,7 +26,7 @@ namespace DFC.App.Pages.Services.CacheContentService.ContentItemUpdaters
 
             if (cmsApiModel != null)
             {
-                switch (contentItemModel.ContentType)
+                switch (contentItemModel.ContentType.ToLower())
                 {
                     case Constants.ContentTypeHtml:
                         if (cmsApiModel is CmsApiHtmlModel cmsApiHtmlModel)
