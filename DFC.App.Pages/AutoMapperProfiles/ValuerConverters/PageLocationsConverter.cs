@@ -24,7 +24,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
 
             foreach (var item in sourceMember)
             {
-                switch (item.ContentType)
+                switch (item.ContentType.ToLower())
                 {
                     case Constants.ContentTypePageLocation:
                         if (item is CmsApiPageLocationModel cmsApiPageLocationModel)
