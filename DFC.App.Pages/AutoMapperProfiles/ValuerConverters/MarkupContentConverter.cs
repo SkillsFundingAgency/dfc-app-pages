@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DFC.App.Pages.Data.Common;
 using DFC.App.Pages.Data.Models;
 using Microsoft.AspNetCore.Html;
@@ -78,7 +79,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
         {
             var content = new StringBuilder();
 
-            if (model.ContentType == Constants.ContentTypeForm)
+            if (model.ContentType!.Equals(Constants.ContentTypeForm, StringComparison.InvariantCultureIgnoreCase))
             {
                 content.Append($"<form");
 
@@ -112,7 +113,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
                 }
             }
 
-            if (model.ContentType == Constants.ContentTypeForm)
+            if (model.ContentType.Equals(Constants.ContentTypeForm, StringComparison.InvariantCultureIgnoreCase))
             {
                 content.Append("</form>");
             }
