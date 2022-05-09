@@ -2,6 +2,7 @@
 using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,12 @@ namespace DFC.App.Pages.Services.EventProcessorService
 
             upsertDocumentModel.PageLocation = ExtractPageLocation(upsertDocumentModel);
 
+            if (string.IsNullOrEmpty(upsertDocumentModel.PageLocation))
+            {
+                logger.LogError("PageLocation (and thus PartitionKey) are empty or null");
+                return HttpStatusCode.BadRequest;
+            }
+
             var response = await contentPageService.UpsertAsync(upsertDocumentModel).ConfigureAwait(false);
 
             logger.LogInformation($"{nameof(CreateAsync)} has upserted content for: {upsertDocumentModel.CanonicalName} with response code {response}");
@@ -66,7 +73,18 @@ namespace DFC.App.Pages.Services.EventProcessorService
 
             upsertDocumentModel.PageLocation = ExtractPageLocation(upsertDocumentModel);
 
-            if (existingDocument.PartitionKey != null && existingDocument.PartitionKey.Equals(upsertDocumentModel.PartitionKey, StringComparison.Ordinal))
+            if (string.IsNullOrEmpty(upsertDocumentModel.PageLocation) || string.IsNullOrEmpty(upsertDocumentModel.PartitionKey))
+            {
+                logger.LogError(
+                    "PageLocation ({PageLocation}) and/or PartitionKey ({PartitionKey}) is empty or null. Document = {SerialisedDocument}",
+                    upsertDocumentModel.PageLocation,
+                    upsertDocumentModel.PartitionKey,
+                    JsonConvert.SerializeObject(upsertDocumentModel));
+
+                return HttpStatusCode.BadRequest;
+            }
+
+            if (existingDocument.PartitionKey?.Equals(upsertDocumentModel.PartitionKey, StringComparison.Ordinal) == true)
             {
                 upsertDocumentModel.Etag = existingDocument.Etag;
             }
@@ -110,22 +128,25 @@ namespace DFC.App.Pages.Services.EventProcessorService
 
         public string? ExtractPageLocation(TModel? model)
         {
-            string? result = null;
             var contentPageModel = model as ContentPageModel;
 
-            if (contentPageModel?.PageLocations != null && contentPageModel.PageLocations.Any())
+            if (contentPageModel?.PageLocations?.Any() != true)
             {
-                var pageLocations = ExtractPageLocationItem(contentPageModel.PageLocations);
+                logger.LogInformation(
+                    "{MethodName} returns null. Is ContentPageModel = {ContentPageModelCastable}. {PageLocationCount} page locations",
+                    nameof(ExtractPageLocation),
+                    contentPageModel != null,
+                    contentPageModel?.PageLocations?.Count);
 
-                pageLocations.RemoveAll(r => string.IsNullOrWhiteSpace(r));
-                pageLocations.RemoveAll(r => r.Equals("/", StringComparison.Ordinal));
-
-                pageLocations.Reverse();
-
-                result = "/" + string.Join("/", pageLocations);
+                return null;
             }
 
-            return result;
+            var pageLocations = ExtractPageLocationItem(contentPageModel.PageLocations);
+            pageLocations.RemoveAll(pageLocation => string.IsNullOrWhiteSpace(pageLocation));
+            pageLocations.RemoveAll(pageLocation => pageLocation.Equals("/", StringComparison.Ordinal));
+            pageLocations.Reverse();
+
+            return $"/{string.Join("/", pageLocations)}";
         }
 
         private List<string> ExtractPageLocationItem(List<PageLocationModel> parentPageLocations)
