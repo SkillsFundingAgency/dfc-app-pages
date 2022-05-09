@@ -109,7 +109,7 @@ namespace DFC.App.Pages.Services.CacheContentService.UnitTests.WebhookContentPro
                 IncludeInSitemap = true,
                 Version = Guid.NewGuid(),
                 Url = new Uri("https://localhost"),
-                Content = null,
+                Content = "...",
                 ContentItems = new List<ContentItemModel>
                 {
                     BuildValidContentItemModel(ContentItemIdForCreate),
