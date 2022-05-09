@@ -43,14 +43,16 @@ namespace DFC.App.Pages.Services.EventProcessorService
                 return HttpStatusCode.AlreadyReported;
             }
 
+            var beforePageLocationUpdate = JsonConvert.SerializeObject(upsertDocumentModel);
             upsertDocumentModel.PageLocation = ExtractPageLocation(upsertDocumentModel);
 
             if (string.IsNullOrEmpty(upsertDocumentModel.PageLocation))
             {
                 logger.LogError(
-                    "PageLocation ({PageLocation}) and/or PartitionKey ({PartitionKey}) is empty or null. Document = {SerialisedDocument}",
+                    "PageLocation ({PageLocation}) and/or PartitionKey ({PartitionKey}) is empty or null. Document before = {SerialisedDocumentBefore}. Document = {SerialisedDocument}",
                     upsertDocumentModel.PageLocation,
                     upsertDocumentModel.PartitionKey,
+                    beforePageLocationUpdate,
                     JsonConvert.SerializeObject(upsertDocumentModel));
 
                 return HttpStatusCode.BadRequest;
@@ -76,20 +78,22 @@ namespace DFC.App.Pages.Services.EventProcessorService
                 return HttpStatusCode.NotFound;
             }
 
+            var beforePageLocationUpdate = JsonConvert.SerializeObject(upsertDocumentModel);
             upsertDocumentModel.PageLocation = ExtractPageLocation(upsertDocumentModel);
 
             if (string.IsNullOrEmpty(upsertDocumentModel.PageLocation) || string.IsNullOrEmpty(upsertDocumentModel.PartitionKey))
             {
                 logger.LogError(
-                    "PageLocation ({PageLocation}) and/or PartitionKey ({PartitionKey}) is empty or null. Document = {SerialisedDocument}",
+                    "PageLocation ({PageLocation}) and/or PartitionKey ({PartitionKey}) is empty or null. Document before = {SerialisedDocumentBefore}. Document = {SerialisedDocument}",
                     upsertDocumentModel.PageLocation,
                     upsertDocumentModel.PartitionKey,
+                    beforePageLocationUpdate,
                     JsonConvert.SerializeObject(upsertDocumentModel));
 
                 return HttpStatusCode.BadRequest;
             }
 
-            if (existingDocument.PartitionKey != null && existingDocument.PartitionKey.Equals(upsertDocumentModel.PartitionKey, StringComparison.OrdinalIgnoreCase))
+            if (existingDocument.PartitionKey?.Equals(upsertDocumentModel.PartitionKey, StringComparison.OrdinalIgnoreCase) == true)
             {
                 upsertDocumentModel.Etag = existingDocument.Etag;
             }
