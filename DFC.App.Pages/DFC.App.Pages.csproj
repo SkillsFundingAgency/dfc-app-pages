@@ -6,7 +6,6 @@
     <CodeAnalysisRuleSet>../DFC.Digital.CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <ProjectGuid>{14916DDA-9FE8-47C2-96D0-D4273ED2965D}</ProjectGuid>
     <Nullable>enable</Nullable>
-    <UserSecretsId>e780350f-24c7-45f0-97a1-3993ada0ebe3</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -66,7 +66,7 @@ namespace DFC.App.Pages.Services.EventProcessorService
 
             upsertDocumentModel.PageLocation = ExtractPageLocation(upsertDocumentModel);
 
-            if (existingDocument.PartitionKey != null && existingDocument.PartitionKey.Equals(upsertDocumentModel.PartitionKey, StringComparison.Ordinal))
+            if (existingDocument.PartitionKey != null && existingDocument.PartitionKey.Equals(upsertDocumentModel.PartitionKey, StringComparison.OrdinalIgnoreCase))
             {
                 upsertDocumentModel.Etag = existingDocument.Etag;
             }
