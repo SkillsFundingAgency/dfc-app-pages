@@ -41,6 +41,11 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             // arrange
             ContentPageModel? existingContentPageModel = null;
             var contentPageModel = A.Fake<ContentPageModel>();
+            contentPageModel.PageLocations = new List<PageLocationModel>
+            {
+                new PageLocationModel(),
+            };
+
             var expectedResult = HttpStatusCode.OK;
 
             A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(existingContentPageModel);
@@ -81,6 +86,11 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             // arrange
             var existingContentPageModel = A.Fake<ContentPageModel>();
             var contentPageModel = A.Fake<ContentPageModel>();
+            contentPageModel.PageLocations = new List<PageLocationModel>
+            {
+                new PageLocationModel(),
+            };
+
             var expectedResult = HttpStatusCode.AlreadyReported;
 
             A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(existingContentPageModel);
@@ -97,6 +107,34 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
         }
 
         [Fact]
+        public async Task EventMessageServiceUpdateAsyncDoesNothingForNoPageLocation()
+        {
+            // arrange
+            var existingContentPageModel = A.Fake<ContentPageModel>();
+            var contentPageModel = A.Fake<ContentPageModel>();
+            var expectedResult = HttpStatusCode.OK;
+
+            existingContentPageModel.Version = Guid.NewGuid();
+            contentPageModel.Version = Guid.NewGuid();
+            contentPageModel.PartitionKey = "a-partition-key";
+            existingContentPageModel.PartitionKey = contentPageModel.PartitionKey;
+
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(existingContentPageModel);
+            A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).Returns(expectedResult);
+
+            var eventMessageService = new EventMessageService<ContentPageModel>(fakeLogger, fakeContentPageService);
+
+            // act
+            var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
+
+            // assert
+            A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fakeContentPageService.DeleteAsync(A<Guid>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => fakeContentPageService.UpsertAsync(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
+            A.Equals(result, expectedResult);
+        }
+
+        [Fact]
         public async Task EventMessageServiceUpdateAsyncReturnsSuccessForSamePartitionKey()
         {
             // arrange
@@ -107,6 +145,11 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             existingContentPageModel.Version = Guid.NewGuid();
             contentPageModel.Version = Guid.NewGuid();
             contentPageModel.PartitionKey = "a-partition-key";
+            contentPageModel.PageLocations = new List<PageLocationModel>
+            {
+                new PageLocationModel(),
+            };
+
             existingContentPageModel.PartitionKey = contentPageModel.PartitionKey;
 
             A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(existingContentPageModel);
@@ -135,6 +178,11 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             existingContentPageModel.Version = Guid.NewGuid();
             contentPageModel.Version = Guid.NewGuid();
             contentPageModel.PartitionKey = "a-partition-key";
+            contentPageModel.PageLocations = new List<PageLocationModel>
+            {
+                new PageLocationModel(),
+            };
+
             existingContentPageModel.PartitionKey = "a-different-partition-key";
 
             A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(existingContentPageModel);
@@ -164,6 +212,11 @@ namespace DFC.App.Pages.Services.EventProcessorService.UnitTests
             existingContentPageModel.Version = Guid.NewGuid();
             contentPageModel.Version = Guid.NewGuid();
             contentPageModel.PartitionKey = "a-partition-key";
+            contentPageModel.PageLocations = new List<PageLocationModel>
+            {
+                new PageLocationModel(),
+            };
+
             existingContentPageModel.PartitionKey = "a-different-partition-key";
 
             A.CallTo(() => fakeContentPageService.GetByIdAsync(A<Guid>.Ignored, A<string>.Ignored)).Returns(existingContentPageModel);

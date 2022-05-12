@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,7 +17,6 @@ namespace DFC.App.Pages.Controllers
 {
     public class PagesController : Controller
     {
-        private const string RegistrationPath = "pages";
         private const string LocalPath = "pages";
 
         private readonly ILogger<PagesController> logger;
@@ -148,13 +148,25 @@ namespace DFC.App.Pages.Controllers
             if (contentPageModel != null)
             {
                 mapper.Map(contentPageModel, viewModel);
-
-                viewModel.CanonicalUrl = new Uri($"{Request.GetBaseAddress()}{RegistrationPath}/{contentPageModel.CanonicalName}", UriKind.RelativeOrAbsolute);
+                viewModel.CanonicalUrl = BuildCanonicalUrl(contentPageModel);
             }
 
             logger.LogInformation($"{nameof(Head)} has returned content for: /{location}/{article}");
 
             return this.NegotiateContentResult(viewModel);
+        }
+
+        private Uri BuildCanonicalUrl(ContentPageModel contentPageModel)
+        {
+            var pathDirectory1 = contentPageModel.PageLocation?[1..] ?? string.Empty;
+            var pathDirectory2 = contentPageModel.CanonicalName ?? string.Empty;
+
+            var uriString = Path.Combine(
+                Request.GetBaseAddress()?.ToString() ?? string.Empty,
+                pathDirectory1,
+                pathDirectory2 == pathDirectory1 ? string.Empty : pathDirectory2);
+
+            return new Uri(uriString, UriKind.RelativeOrAbsolute);
         }
 
         [Route("pages/breadcrumb")]
