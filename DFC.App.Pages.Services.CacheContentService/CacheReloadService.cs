@@ -162,16 +162,17 @@ namespace DFC.App.Pages.Services.CacheContentService
         public async Task GetAndSaveItemAsync(CmsApiSummaryItemModel item, CancellationToken stoppingToken)
         {
             _ = item ?? throw new ArgumentNullException(nameof(item));
+            var url = Combine(item.Url!.ToString(), "true"); // This enables the multiDirectional support needed for page locations
 
             try
             {
-                logger.LogInformation($"Get details for {item.Title} - {item.Url}");
+                logger.LogInformation($"Get details for {item.Title} - {url}");
 
-                var apiDataModel = await cmsApiService.GetItemAsync<CmsApiDataModel>(item.Url!).ConfigureAwait(false);
+                var apiDataModel = await cmsApiService.GetItemAsync<CmsApiDataModel>(url).ConfigureAwait(false);
 
                 if (apiDataModel == null)
                 {
-                    logger.LogWarning($"No details returned from {item.Title} - {item.Url}");
+                    logger.LogWarning($"No details returned from {item.Title} - {url}");
 
                     return;
                 }
@@ -187,33 +188,33 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 if (!TryValidateModel(contentPageModel))
                 {
-                    logger.LogError($"Validation failure for {item.Title} - {item.Url}");
+                    logger.LogError($"Validation failure for {item.Title} - {url}");
 
                     return;
                 }
 
-                logger.LogInformation($"Updating cache with {item.Title} - {item.Url}");
+                logger.LogInformation($"Updating cache with {item.Title} - {url}");
 
                 var result = await eventMessageService.UpdateAsync(contentPageModel).ConfigureAwait(false);
 
                 if (result == HttpStatusCode.NotFound)
                 {
-                    logger.LogInformation($"Does not exist, creating cache with {item.Title} - {item.Url}");
+                    logger.LogInformation($"Does not exist, creating cache with {item.Title} - {url}");
 
                     result = await eventMessageService.CreateAsync(contentPageModel).ConfigureAwait(false);
 
                     if (result == HttpStatusCode.Created)
                     {
-                        logger.LogInformation($"Created cache with {item.Title} - {item.Url}");
+                        logger.LogInformation($"Created cache with {item.Title} - {url}");
                     }
                     else
                     {
-                        logger.LogError($"Cache create error status {result} from {item.Title} - {item.Url}");
+                        logger.LogError($"Cache create error status {result} from {item.Title} - {url}");
                     }
                 }
                 else
                 {
-                    logger.LogInformation($"Updated cache with {item.Title} - {item.Url}");
+                    logger.LogInformation($"Updated cache with {item.Title} - {url}");
                 }
 
                 var contentItemIds = contentPageModel.AllContentItemIds;
@@ -224,8 +225,16 @@ namespace DFC.App.Pages.Services.CacheContentService
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"Error in get and save for {item.Title} - {item.Url}");
+                logger.LogError(ex, $"Error in get and save for {item.Title} - {url}");
             }
+        }
+
+        private static Uri Combine(string uri1, string uri2)
+        {
+            uri1 = uri1.TrimEnd('/');
+            uri2 = uri2.TrimStart('/');
+
+            return new Uri($"{uri1}/{uri2}", uri1.Contains("http", StringComparison.InvariantCultureIgnoreCase) ? UriKind.Absolute : UriKind.Relative);
         }
 
         public async Task DeleteStaleCacheEntriesAsync(IList<CmsApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
