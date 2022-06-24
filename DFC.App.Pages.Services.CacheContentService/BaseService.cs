@@ -1,5 +1,9 @@
 ﻿using DFC.App.Pages.Data.Models;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace DFC.App.Pages.Services.CacheContentService
 {
@@ -53,6 +57,34 @@ namespace DFC.App.Pages.Services.CacheContentService
             }
 
             return (versionWasSet, contentWasSet);
+        }
+
+        public static bool TryValidateModel(ContentPageModel? contentPageModel, ILogger logger)
+        {
+            _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
+            var (versionWasSet, contentWasSet) = IgnoreContentAndVersionFields(contentPageModel);
+
+            var validationContext = new ValidationContext(contentPageModel, null, null);
+            var validationResults = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(contentPageModel, validationContext, validationResults, true);
+
+            if (!isValid && validationResults.Any())
+            {
+                foreach (var validationResult in validationResults)
+                {
+                    logger.LogError($"Error validating {contentPageModel.CanonicalName} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
+                }
+            }
+
+            ResetContentAndVersionFields(contentPageModel, versionWasSet, contentWasSet);
+
+            if (string.IsNullOrEmpty(contentPageModel.PartitionKey))
+            {
+                logger.LogError($"Error validating {contentPageModel.CanonicalName} - Partition key (and thus page location) was null");
+                return false;
+            }
+
+            return isValid;
         }
     }
 }

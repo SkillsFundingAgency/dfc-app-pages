@@ -6,7 +6,6 @@ using DFC.Content.Pkg.Netcore.Data.Contracts;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -229,12 +228,9 @@ namespace DFC.App.Pages.Services.CacheContentService
             }
         }
 
-        private static Uri Combine(string uri1, string uri2)
+        public bool TryValidateModel(ContentPageModel? contentPageModel)
         {
-            uri1 = uri1.TrimEnd('/');
-            uri2 = uri2.TrimStart('/');
-
-            return new Uri($"{uri1}/{uri2}", uri1.Contains("http", StringComparison.InvariantCultureIgnoreCase) ? UriKind.Absolute : UriKind.Relative);
+            return BaseService.TryValidateModel(contentPageModel, logger);
         }
 
         public async Task DeleteStaleCacheEntriesAsync(IList<CmsApiSummaryItemModel> summaryList, CancellationToken stoppingToken)
@@ -293,32 +289,12 @@ namespace DFC.App.Pages.Services.CacheContentService
             logger.LogInformation("Posted to appRegistry to reload page locations");
         }
 
-        public bool TryValidateModel(ContentPageModel contentPageModel)
+        private static Uri Combine(string uri1, string uri2)
         {
-            _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
-            var (versionWasSet, contentWasSet) = BaseService.IgnoreContentAndVersionFields(contentPageModel);
+            uri1 = uri1.TrimEnd('/');
+            uri2 = uri2.TrimStart('/');
 
-            var validationContext = new ValidationContext(contentPageModel, null, null);
-            var validationResults = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(contentPageModel, validationContext, validationResults, true);
-
-            if (!isValid && validationResults.Any())
-            {
-                foreach (var validationResult in validationResults)
-                {
-                    logger.LogError($"Error validating {contentPageModel.CanonicalName} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
-                }
-            }
-
-            BaseService.ResetContentAndVersionFields(contentPageModel, versionWasSet, contentWasSet);
-
-            if (string.IsNullOrEmpty(contentPageModel.PartitionKey))
-            {
-                logger.LogError($"Error validating {contentPageModel.CanonicalName} - Partition key (and thus page location) was null");
-                return false;
-            }
-
-            return isValid;
+            return new Uri($"{uri1}/{uri2}", uri1.Contains("http", StringComparison.InvariantCultureIgnoreCase) ? UriKind.Absolute : UriKind.Relative);
         }
     }
 }
