@@ -246,21 +246,7 @@ namespace DFC.App.Pages.Services.CacheContentService
 
         public bool TryValidateModel(ContentPageModel? contentPageModel)
         {
-            _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
-
-            var validationContext = new ValidationContext(contentPageModel, null, null);
-            var validationResults = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(contentPageModel, validationContext, validationResults, true);
-
-            if (!isValid && validationResults.Any())
-            {
-                foreach (var validationResult in validationResults)
-                {
-                    logger.LogError($"Error validating {contentPageModel.CanonicalName} - {contentPageModel.Url}: {string.Join(",", validationResult.MemberNames)} - {validationResult.ErrorMessage}");
-                }
-            }
-
-            return isValid;
+            return BaseService.TryValidateModel(contentPageModel, logger);
         }
 
         private static Uri Combine(string uri1, string uri2)
