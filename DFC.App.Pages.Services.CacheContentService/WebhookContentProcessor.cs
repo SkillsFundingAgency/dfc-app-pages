@@ -50,6 +50,13 @@ namespace DFC.App.Pages.Services.CacheContentService
 
         public async Task<HttpStatusCode> ProcessContentAsync(Uri url, Guid contentId)
         {
+            if (url == null)
+            {
+                throw new ArgumentNullException(nameof(url));
+            }
+
+            url = Combine(url.ToString(), "true"); // This enables the multiDirectional support needed for page locations
+
             var apiDataModel = await cmsApiService.GetItemAsync<CmsApiDataModel>(url).ConfigureAwait(false);
             var contentPageModel = mapper.Map<ContentPageModel>(apiDataModel);
 
@@ -102,7 +109,7 @@ namespace DFC.App.Pages.Services.CacheContentService
 
                 if (contentPageModel != null)
                 {
-                    bool contentWasUpdated = false;
+                    bool contentWasUpdated;
 
                     if (contentPageModel.AllPageLocationIds.Contains(contentItemId))
                     {
@@ -254,6 +261,14 @@ namespace DFC.App.Pages.Services.CacheContentService
             }
 
             return isValid;
+        }
+
+        private static Uri Combine(string uri1, string uri2)
+        {
+            uri1 = uri1.TrimEnd('/');
+            uri2 = uri2.TrimStart('/');
+
+            return new Uri($"{uri1}/{uri2}", uri1.Contains("http", StringComparison.InvariantCultureIgnoreCase) ? UriKind.Absolute : UriKind.Relative);
         }
     }
 }
