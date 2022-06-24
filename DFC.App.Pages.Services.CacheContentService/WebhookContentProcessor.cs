@@ -247,6 +247,7 @@ namespace DFC.App.Pages.Services.CacheContentService
         public bool TryValidateModel(ContentPageModel? contentPageModel)
         {
             _ = contentPageModel ?? throw new ArgumentNullException(nameof(contentPageModel));
+            var (versionWasSet, contentWasSet) = IgnoreContentAndVersionFields(contentPageModel);
 
             var validationContext = new ValidationContext(contentPageModel, null, null);
             var validationResults = new List<ValidationResult>();
@@ -260,6 +261,8 @@ namespace DFC.App.Pages.Services.CacheContentService
                 }
             }
 
+            ResetContentAndVersionFields(contentPageModel, versionWasSet, contentWasSet);
+
             return isValid;
         }
 
@@ -269,6 +272,46 @@ namespace DFC.App.Pages.Services.CacheContentService
             uri2 = uri2.TrimStart('/');
 
             return new Uri($"{uri1}/{uri2}", uri1.Contains("http", StringComparison.InvariantCultureIgnoreCase) ? UriKind.Absolute : UriKind.Relative);
+        }
+
+        /// <summary>
+        /// This is used as a workaround as we can't remove the annotations on the inherited type of 'Compui.Cosmos.Models.ContentPageModel', but
+        /// do not care to have content or version set.
+        /// </summary>
+        /// <param name="contentPageModel">A populated content page model - either with content and version set, or not.</param>
+        /// <returns>Two bools returning information on whether version and content had to be set or not.</returns>
+        private static (bool versionWasSet, bool contentWasSet) IgnoreContentAndVersionFields(ContentPageModel contentPageModel)
+        {
+            var versionWasSet = false;
+
+            if (contentPageModel.Version == null)
+            {
+                contentPageModel.Version = Guid.NewGuid();
+                versionWasSet = true;
+            }
+
+            var contentWasSet = false;
+
+            if (contentPageModel.Content == null)
+            {
+                contentPageModel.Content = "[ANY CONTENT HERE TO BYPASS CHECK]";
+                contentWasSet = true;
+            }
+
+            return (versionWasSet, contentWasSet);
+        }
+
+        private static void ResetContentAndVersionFields(ContentPageModel contentPageModel, bool versionWasSet, bool contentWasSet)
+        {
+            if (versionWasSet)
+            {
+                contentPageModel.Version = null;
+            }
+
+            if (contentWasSet)
+            {
+                contentPageModel.Content = null;
+            }
         }
     }
 }
