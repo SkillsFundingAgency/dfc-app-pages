@@ -161,7 +161,7 @@ namespace DFC.App.Pages.Services.CacheContentService
         public async Task GetAndSaveItemAsync(CmsApiSummaryItemModel item, CancellationToken stoppingToken)
         {
             _ = item ?? throw new ArgumentNullException(nameof(item));
-            var url = Combine(item.Url!.ToString(), "true"); // This enables the multiDirectional support needed for page locations
+            var url = Combine(item.Url!.ToString(), "true?checkAncestryById=true"); // This enables the multiDirectional support needed for page locations
 
             try
             {
