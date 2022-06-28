@@ -55,7 +55,7 @@ namespace DFC.App.Pages.Services.CacheContentService
                 throw new ArgumentNullException(nameof(url));
             }
 
-            url = Combine(url.ToString(), "true"); // This enables the multiDirectional support needed for page locations
+            url = Combine(url.ToString(), "true?checkAncestryById=true"); // This enables the multiDirectional support needed for page locations
 
             var apiDataModel = await cmsApiService.GetItemAsync<CmsApiDataModel>(url).ConfigureAwait(false);
             var contentPageModel = mapper.Map<ContentPageModel>(apiDataModel);
