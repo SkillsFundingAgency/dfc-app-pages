@@ -562,7 +562,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToPRDAppPages
-  condition: and(eq(dependencies.DeployToPPDraftAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  # condition: and(eq(dependencies.DeployToPPDraftAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Deploy to PRD_AppPages
   variables:
   - group: dfc-shared-all
@@ -618,7 +618,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToPRDDraftAppPages
-  condition: and(eq(dependencies.DeployToPRDAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  # condition: and(eq(dependencies.DeployToPRDAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Deploy to PRD-Draft_AppPages
   variables:
   - group: dfc-shared-all
