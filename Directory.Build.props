@@ -1,5 +1,6 @@
 <Project>
-    <PropertyGroup>
-        <RollForward>LatestMajor</RollForward>
-    </PropertyGroup>
+	<PropertyGroup>
+		<RollForward>Minor</RollForward>
+		<RuntimeFrameworkVersion>6.0.9</RuntimeFrameworkVersion>
+	</PropertyGroup>
 </Project>
