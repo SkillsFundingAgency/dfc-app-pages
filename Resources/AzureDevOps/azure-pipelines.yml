@@ -445,7 +445,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToPPAppPages
-  condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   displayName: Deploy to PP_AppPages
   variables:
   - group: dfc-shared-all
@@ -502,7 +502,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToPPDraftAppPages
-  condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   displayName: Deploy to PP-Draft_AppPages
   variables:
   - group: dfc-shared-all
@@ -560,7 +560,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToPRDAppPages
-  condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   displayName: Deploy to PRD_AppPages
   variables:
   - group: dfc-shared-all
@@ -616,7 +616,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToPRDDraftAppPages
-  condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   displayName: Deploy to PRD-Draft_AppPages
   variables:
   - group: dfc-shared-all
