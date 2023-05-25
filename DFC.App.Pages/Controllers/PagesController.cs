@@ -37,6 +37,8 @@ namespace DFC.App.Pages.Controllers
         [Route("pages")]
         public async Task<IActionResult> Index()
         {
+            logger.LogInformation($"{nameof(Index)} has been called");
+
             var viewModel = new IndexViewModel()
             {
                 LocalPath = LocalPath,
@@ -75,6 +77,9 @@ namespace DFC.App.Pages.Controllers
         [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/document")]
         public async Task<IActionResult> Document(PageRequestModel pageRequestModel)
         {
+            logger.LogInformation($"{nameof(Document)} has been called");
+
+
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
 
@@ -141,6 +146,9 @@ namespace DFC.App.Pages.Controllers
         [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/head")]
         public async Task<IActionResult> Head(PageRequestModel pageRequestModel)
         {
+            logger.LogInformation($"{nameof(Head)} has been called");
+
+
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             var viewModel = new HeadViewModel();
             var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
@@ -149,9 +157,12 @@ namespace DFC.App.Pages.Controllers
             {
                 mapper.Map(contentPageModel, viewModel);
                 viewModel.CanonicalUrl = BuildCanonicalUrl(contentPageModel);
+                logger.LogInformation($"{nameof(Head)} has succeeded for: /{location}/{article}");
             }
-
-            logger.LogInformation($"{nameof(Head)} has returned content for: /{location}/{article}");
+            else
+            {
+                logger.LogInformation($"{nameof(Head)} has returned no content for: /{location}/{article}");
+            }
 
             return this.NegotiateContentResult(viewModel);
         }
@@ -177,11 +188,15 @@ namespace DFC.App.Pages.Controllers
         [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/breadcrumb")]
         public async Task<IActionResult> Breadcrumb(PageRequestModel pageRequestModel)
         {
+            logger.LogInformation($"{nameof(Breadcrumb)} has been called");
+
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
 
             if (contentPageModel == null || !contentPageModel.ShowBreadcrumb)
             {
+                logger.LogInformation($"{nameof(Breadcrumb)} Breadcrumb disabled or no content found for: /{location}/{article}");
+
                 return NoContent();
             }
 
@@ -213,11 +228,15 @@ namespace DFC.App.Pages.Controllers
         [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/herobanner")]
         public async Task<IActionResult> HeroBanner(PageRequestModel pageRequestModel)
         {
+            logger.LogInformation($"{nameof(HeroBanner)} has been called");
+
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
 
             if (contentPageModel == null)
             {
+                logger.LogInformation($"{nameof(HeroBanner)} found no content for: /{location}/{article}");
+
                 return NoContent();
             }
 
@@ -237,6 +256,9 @@ namespace DFC.App.Pages.Controllers
         [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/body")]
         public async Task<IActionResult> Body(PageRequestModel pageRequestModel)
         {
+            logger.LogInformation($"{nameof(Body)} has been called");
+
+
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             var viewModel = new BodyViewModel();
             var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);

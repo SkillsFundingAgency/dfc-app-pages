@@ -41,6 +41,8 @@ namespace DFC.App.Pages.Controllers
         [Route("ReceiveEvents")]
         public async Task<IActionResult> ReceiveEvents()
         {
+            logger.LogInformation($"{nameof(ReceiveEvents)} has been called");
+
             using var reader = new StreamReader(Request.Body, Encoding.UTF8);
             string requestContent = await reader.ReadToEndAsync().ConfigureAwait(false);
             logger.LogInformation($"Received events: {requestContent}");

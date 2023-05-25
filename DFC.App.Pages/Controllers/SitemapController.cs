@@ -81,6 +81,7 @@ namespace DFC.App.Pages.Controllers
 
                 if (!sitemap.Locations.Any())
                 {
+                    logger.LogWarning("No locations for sitemap found");
                     return NoContent();
                 }
 
