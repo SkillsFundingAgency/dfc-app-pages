@@ -216,6 +216,8 @@ namespace DFC.App.Pages.Controllers
         [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/bodytop")]
         public IActionResult BodyTop(PageRequestModel pageRequestModel)
         {
+            logger.LogWarning($"{nameof(BodyTop)} has returned no content");
+
             return NoContent();
         }
 
@@ -295,6 +297,8 @@ namespace DFC.App.Pages.Controllers
         [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/sidebarright")]
         public IActionResult SidebarRight(PageRequestModel pageRequestModel)
         {
+            logger.LogWarning($"{nameof(SidebarRight)} has returned no content");
+
             return NoContent();
         }
 
@@ -307,6 +311,8 @@ namespace DFC.App.Pages.Controllers
         [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/sidebarleft")]
         public IActionResult SidebarLeft(PageRequestModel pageRequestModel)
         {
+            logger.LogWarning($"{nameof(SidebarLeft)} has returned no content");
+
             return NoContent();
         }
 
@@ -319,6 +325,8 @@ namespace DFC.App.Pages.Controllers
         [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/bodyfooter")]
         public IActionResult BodyFooter(PageRequestModel pageRequestModel)
         {
+            logger.LogWarning($"{nameof(BodyFooter)} has returned no content");
+
             return NoContent();
         }
     }
