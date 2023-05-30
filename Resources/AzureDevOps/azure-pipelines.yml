@@ -85,7 +85,6 @@ stages:
         SolutionBaseName: $(SolutionBaseName)
         BuildPlatform: $(BuildPlatform)
         BuildConfiguration: $(BuildConfiguration)
-        DotNetCoreVersion: '3.1.100'
         PublishWebApp: true
         TestSuffix: UnitTests
         IntegrationTestSuffix: IntegrationTests
@@ -99,10 +98,9 @@ stages:
         SolutionBaseName: $(SolutionBaseName).UI.FunctionalTests
         BuildPlatform: $(BuildPlatform)
         BuildConfiguration: $(BuildConfiguration)
-        DotNetCoreVersion: '3.1.100'
 
 - stage: DeployToLabAppPages
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  condition: succeeded()
   displayName: Deploy to LAB_AppPages
   variables:
   - group: dfc-shared-all
@@ -447,7 +445,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToPPAppPages
-  condition: and(eq(dependencies.Build.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   displayName: Deploy to PP_AppPages
   variables:
   - group: dfc-shared-all
@@ -504,7 +502,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToPPDraftAppPages
-  condition: and(eq(dependencies.DeployToPPAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   displayName: Deploy to PP-Draft_AppPages
   variables:
   - group: dfc-shared-all
@@ -562,7 +560,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToPRDAppPages
-  condition: and(eq(dependencies.DeployToPPDraftAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   displayName: Deploy to PRD_AppPages
   variables:
   - group: dfc-shared-all
@@ -618,7 +616,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToPRDDraftAppPages
-  condition: and(eq(dependencies.DeployToPRDAppPages.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   displayName: Deploy to PRD-Draft_AppPages
   variables:
   - group: dfc-shared-all

@@ -375,6 +375,14 @@
                             {
                                 "name": "WEBSITE_ADD_SITENAME_BINDINGS_IN_APPHOST_CONFIG",
                                 "value": "1"
+                            },
+                            {
+                              "name": "DOTNET_ROLL_FORWARD",
+                              "value": "Minor"
+                            }, 
+                            {
+                              "name": "DOTNET_ROLL_FORWARD_ON_NO_CANDIDATE_FX",
+                              "value": "1"
                             }
                         ]
                     }
