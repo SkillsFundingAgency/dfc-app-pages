@@ -5,8 +5,6 @@ variables:
   value: $(WebAppPrefix)-as
 - name: cosmosDbCollectionName
   value: $(apiName)
-- name: EnableAzureMonitorAlerting
-  value: true
 - name: SubscriptionSettingsEndpoint
   value: $(ApimProxyAddress)/composite-ui/pages
 - name: pagesAppDatabaseThroughput
@@ -47,13 +45,9 @@ variables:
   value: https://$(AppServiceName).$(appServiceDomain)
 - name: WebAppPrefix
   value: dfc-dev-app-pages
-- name: ExceptionCountThreshold
-  value: 10
-- name: MemoryPercentageThreshold
-  value: 75
-- name: CPUPercentageThreshold
-  value: 75
 - name: SubscriptionSettingsFilterIncludeEventTypes3
   value:
 - name: SubscriptionSettingsFilterIncludeEventTypes4
   value:
+- name: appInsightsInstrumentationKey
+  value: $(appInsightsInstrumentationKey)
