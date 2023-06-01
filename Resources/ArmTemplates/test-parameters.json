@@ -2,6 +2,9 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "appInsightsInstrumentationKey": {
+            "value": "appInsightsInstrumentationKey"
+        },
         "appSharedResourceGroup": {
             "value": "dfc-dev-app-sharedresources-rg"
         },
@@ -40,9 +43,6 @@
         },
         "pagesAppDatabaseThroughput": {
             "value": 2
-        },
-        "enableAlerts": {
-            "value": false
         },
         "SubscriptionSettingsEndpoint": {
             "value": "http://www.food.co.uk"
@@ -97,15 +97,6 @@
         },
         "ApiName": {
             "value": "pages"
-        },
-        "ExceptionCountThreshold": {
-            "value": "0"
-        },
-        "MemoryPercentageThreshold": {
-            "value": "0"
-        },
-        "CPUPercentageThreshold": {
-            "value": "0"
         }
     }
 }

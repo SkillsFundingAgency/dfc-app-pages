@@ -2,6 +2,9 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "appInsightsInstrumentationKey": {
+            "value": "__appInsightsInstrumentationKey__"
+        },
         "appSharedResourceGroup": {
             "value": "__appSharedResourceGroup__"
         },
@@ -49,9 +52,6 @@
         },
         "pagesAppDatabaseThroughput": {
             "value": __pagesAppDatabaseThroughput__
-        },
-        "enableAlerts": {
-            "value": __EnableAzureMonitorAlerting__
         },
         "SubscriptionSettingsEndpoint": {
             "value": "__SubscriptionSettingsEndpoint__"
@@ -106,15 +106,6 @@
         },
         "ApiName": {
             "value": "__ApiName__"
-        },
-        "ExceptionCountThreshold": {
-            "value": "__ExceptionCountThreshold__"
-        },
-        "MemoryPercentageThreshold": {
-            "value": "__MemoryPercentageThreshold__"
-        },
-        "CPUPercentageThreshold": {
-            "value": "__CPUPercentageThreshold__"
         }
     }
 }
