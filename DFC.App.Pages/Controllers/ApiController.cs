@@ -28,6 +28,8 @@ namespace DFC.App.Pages.Controllers
         [Route("api/pages")]
         public async Task<IActionResult> Index()
         {
+            logger.LogInformation($"{nameof(Index)} has been called");
+
             var pages = new Dictionary<Guid, GetIndexModel>();
 
             var contentPageModels = await contentPageService.GetAllAsync().ConfigureAwait(false);
@@ -50,6 +52,8 @@ namespace DFC.App.Pages.Controllers
         [Route("api/pages/{id}")]
         public async Task<IActionResult> Document(Guid id)
         {
+            logger.LogInformation($"{nameof(Document)} has been called");
+
             var contentPageModel = await contentPageService.GetByIdAsync(id).ConfigureAwait(false);
 
             if (contentPageModel != null)

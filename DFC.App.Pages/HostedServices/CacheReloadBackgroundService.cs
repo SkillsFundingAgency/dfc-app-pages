@@ -41,6 +41,8 @@ namespace DFC.App.Pages.HostedServices
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            logger.LogInformation($"{nameof(ExecuteAsync)} has been called");
+
             if (cmsApiClientOptions.BaseAddress != null)
             {
                 logger.LogInformation("Cache reload executing");
@@ -56,6 +58,7 @@ namespace DFC.App.Pages.HostedServices
                         throw task.Exception;
                     }
                 }
+                logger.LogInformation("Cache reload has completed");
 
                 return task;
             }
