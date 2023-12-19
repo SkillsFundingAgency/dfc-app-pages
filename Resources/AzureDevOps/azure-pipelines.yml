@@ -100,7 +100,7 @@ stages:
         BuildConfiguration: $(BuildConfiguration)
 
 - stage: DeployToLabAppPages
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to LAB_AppPages
   variables:
   - group: dfc-shared-all
@@ -157,7 +157,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToLabDraftAppPages
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to LAB-DRAFT_AppPages
   variables:
   - group: dfc-shared-all
@@ -215,7 +215,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToDevAppPages
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to DEV_AppPages
   variables:
   - group: dfc-shared-all
@@ -272,7 +272,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToDevDraftAppPages
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to DEV-DRAFT_AppPages
   variables:
   - group: dfc-shared-all
@@ -330,7 +330,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToSITAppPages
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to SIT_AppPages
   variables:
   - group: dfc-shared-all
@@ -387,7 +387,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToSITDraftAppPages
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to SIT-DRAFT_AppPages
   variables:
   - group: dfc-shared-all
