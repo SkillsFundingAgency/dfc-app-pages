@@ -163,7 +163,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             httpContext.Request.Path = route;
             httpContext.Request.Headers[HeaderNames.Accept] = MediaTypeNames.Application.Json;
 
-            return new PagesController(Logger, FakeContentPageService, FakeMapper, FakePagesControlerHelpers)
+            return new PagesController(Logger, FakeContentPageService, FakeMapper, FakePagesControlerHelpers, FakePageService)
             {
                 ControllerContext = new ControllerContext
                 {

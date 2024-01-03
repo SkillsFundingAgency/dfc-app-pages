@@ -1,4 +1,5 @@
-﻿using DFC.App.Pages.Data.Models;
+﻿using DFC.App.Pages.Cms.Data.Interface;
+using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Extensions;
 using DFC.App.Pages.Models;
 using DFC.Compui.Cosmos.Contracts;
@@ -18,10 +19,19 @@ namespace DFC.App.Pages.Controllers
         private readonly ILogger<SitemapController> logger;
         private readonly IContentPageService<ContentPageModel> contentPageService;
 
+        private readonly IPageService pageService;
+
         public SitemapController(ILogger<SitemapController> logger, IContentPageService<ContentPageModel> contentPageService)
         {
             this.logger = logger;
             this.contentPageService = contentPageService;
+        }
+
+        public SitemapController(ILogger<SitemapController> logger, IContentPageService<ContentPageModel> contentPageService, IPageService pageService)
+        {
+            this.logger = logger;
+            this.contentPageService = contentPageService;
+            this.pageService = pageService;
         }
 
         [HttpGet]
@@ -78,6 +88,38 @@ namespace DFC.App.Pages.Controllers
                         }
                     }
                 }
+
+                if (!sitemap.Locations.Any())
+                {
+                    logger.LogWarning("No locations for sitemap found");
+                    return NoContent();
+                }
+
+                var xmlString = sitemap.WriteSitemapToString();
+
+                logger.LogInformation("Generated Sitemap");
+
+                return Content(xmlString, MediaTypeNames.Application.Xml);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"{nameof(Sitemap)}: {ex.Message}");
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet]
+        [Route("/sitemap.xml")]
+        public async Task<IActionResult> SitemapFromGrapghQL()
+        {
+            try
+            {
+                logger.LogInformation("Generating Sitemap");
+
+                var sitemapUrlPrefix = $"{Request.GetBaseAddress()}".TrimEnd('/');
+                var sitemap = new Sitemap();
+                var pageUrlResponse = await this.pageService.GetPageUrls();
 
                 if (!sitemap.Locations.Any())
                 {
