@@ -266,3 +266,5 @@ paket-files/
 __pycache__/
 *.pyc
 
+/DFC.App.Pages.UI.FunctionalTests/appsettings.template.json
+/DFC.App.Pages.UI.FunctionalTests/appsettings.template.json

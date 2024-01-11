@@ -1,4 +1,6 @@
-﻿using DFC.App.Pages.Data.Contracts;
+﻿using AutoMapper;
+using DFC.App.Pages.Cms.Data.Interface;
+using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.Compui.Cosmos.Contracts;
@@ -17,11 +19,15 @@ namespace DFC.App.Pages.Helpers
         private const int CacheDurationInSeconds = 30;
         private readonly IContentPageService<ContentPageModel> contentPageService;
         private readonly IMemoryCache memoryCache;
+        private readonly IPageService pageService;
+        private readonly AutoMapper.IMapper mapper;
 
-        public PagesControlerHelpers(IContentPageService<ContentPageModel> contentPageService, IMemoryCache memoryCache)
+        public PagesControlerHelpers(IContentPageService<ContentPageModel> contentPageService, IMemoryCache memoryCache, IPageService pageService, AutoMapper.IMapper mapper)
         {
             this.contentPageService = contentPageService;
             this.memoryCache = memoryCache;
+            this.pageService = pageService;
+            this.mapper = mapper;
         }
 
         public static (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
@@ -77,6 +83,33 @@ namespace DFC.App.Pages.Helpers
             }
 
             return content;
+        }
+
+        public async Task<ContentPageModel?> GetContentPageFromPageServiceAsync(string? location, string? article)
+        {
+            string pageUrl = GetPageUrl(location, article);
+            var pageResponse = await this.pageService.GetPage(pageUrl);
+            ContentPageModel? content = new ContentPageModel();
+            mapper.Map(pageResponse.First(), content);
+            return content;
+        }
+
+        private string GetPageUrl(string location, string article)
+        {
+            string pageUrl = string.Empty;
+            if (string.IsNullOrWhiteSpace(location) && string.IsNullOrWhiteSpace(article))
+            {
+                pageUrl = "/home";
+            }
+            else if (location == "home")
+            {
+                pageUrl = $"/{location}";
+            }
+            else
+            {
+                pageUrl = $"/{location}/{(string.IsNullOrWhiteSpace(article) ? location : article)}";
+            }
+            return pageUrl;
         }
 
         private string BuildCacheKey(string? location, string? article) =>

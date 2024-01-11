@@ -3,10 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <CodeAnalysisRuleSet>../DFC.Digital.CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-    <ProjectGuid>{14916DDA-9FE8-47C2-96D0-D4273ED2965D}</ProjectGuid>
+    
     <Nullable>enable</Nullable>
-    <UserSecretsId>e780350f-24c7-45f0-97a1-3993ada0ebe3</UserSecretsId>
+    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -31,6 +30,8 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="DFC.Compui.Subscriptions" Version="1.0.96" />
     <PackageReference Include="DFC.Compui.Telemetry" Version="1.0.31" />
+    <PackageReference Include="DfE.NCS.Framework.Cache" Version="1.0.2" />
+    <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0">
@@ -50,6 +51,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\DFC.App.Pages.Cms.Data\DFC.App.Pages.Cms.Data.csproj" />
     <ProjectReference Include="..\DFC.App.Pages.Data\DFC.App.Pages.Data.csproj" />
     <ProjectReference Include="..\DFC.App.Pages.Services.AppRegistryService\DFC.App.Pages.Services.AppRegistryService.csproj" />
     <ProjectReference Include="..\DFC.App.Pages.Services.CacheContentService\DFC.App.Pages.Services.CacheContentService.csproj" />

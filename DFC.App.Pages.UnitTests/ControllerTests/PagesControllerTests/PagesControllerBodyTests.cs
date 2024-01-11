@@ -1,5 +1,9 @@
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
+using DFC.App.Pages.Controllers;
+using DFC.App.Pages.Cms.Data.Interface;
+using DFC.App.Pages.Cms.Data.RequestHandler;
+using DFC.App.Pages.Cms.Data.Constant;
 using DFC.App.Pages.ViewModels;
 using FakeItEasy;
 using FluentAssertions;
@@ -7,9 +11,25 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
+using DFC.App.Pages.Helpers;
+using GraphQL.AspNet.Tests.Framework;
+using FluentAssertions.Common;
+using GraphQL.Client.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
+using GraphQL.Client.Http;
+using System;
+using GraphQL.Client.Serializer.Newtonsoft;
+using System.Net.Http;
+using Moq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using NSubstitute;
+using DFC.App.Pages.Cms.Data.Model;
 
 namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 {
+
+   
     [Trait("Category", "Pages Controller Unit Tests")]
     public class PagesControllerBodyTests : BasePagesControllerTests
     {
@@ -20,9 +40,11 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             // Arrange
             var pageRequestModel = new PageRequestModel
             {
-                Location1 = "a-location-name",
-                Location2 = "an-article-name",
+                Location1 = "find-a-course",
+                Location2 = "find-a-course",
             };
+           /* var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
+            string pageUrl = $"/{location}/{(string.IsNullOrWhiteSpace(article) ? location : article)}";*/
             var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
@@ -31,6 +53,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
+           
 
             // Assert
             A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
@@ -50,23 +73,31 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var pageRequestModel = new PageRequestModel
             {
                 Location1 = "a-location-name",
-                Location2 = "an-article-name",
+                Location2 = "a-article-name",
             };
-            var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
-            var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
+            //var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
+            var controller = BuildPagesController(mediaTypeName);
+            //var pageResponse = FakePageService.GetPage(mediaTypeName);
+            
+
+            A.CallTo(() => FakePageService.GetPage(A<string>.Ignored));
+            //A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeMapper.Map(A<PageResponse>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
+           
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
+            
+
 
             // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakePageService.GetPage(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            //A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map(A<PageResponse>.Ignored, A<BodyViewModel>.Ignored)).MustHaveHappenedOnceExactly();
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
-            _ = Assert.IsAssignableFrom<ContentPageModel>(jsonResult.Value);
+            _ = Assert.IsAssignableFrom<PageResponse>(jsonResult.Value);
 
             controller.Dispose();
         }
