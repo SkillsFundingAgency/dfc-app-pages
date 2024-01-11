@@ -2,7 +2,6 @@
 using DFC.App.Pages.Cms.Data;
 using DFC.App.Pages.Cms.Data.Constant;
 using DFC.App.Pages.Cms.Data.Interface;
-using DFC.App.Pages.Cms.Data.Repo;
 using DFC.App.Pages.Cms.Data.RequestHandler;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
@@ -40,6 +39,10 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
+using DfE.NCS.Framework.Cache.Interface;
+using DfE.NCS.Framework.Cache;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Repo;
 
 namespace DFC.App.Pages
 {
@@ -116,7 +119,8 @@ namespace DFC.App.Pages
             }
 
             );
-            services.AddScoped<ICmsRepo, CmsRepo>();
+            services.AddScoped<IRedisCacheRepo, RedisCacheRepo>();
+            services.AddScoped<IRedisCMSRepo, RedisCMSRepo>();
             services.AddScoped<IPageService, PageService>();
 
             var cosmosDbConnectionContentPages = configuration.GetSection(CosmosDbContentPagesConfigAppSettings).Get<CosmosDbConnection>();
@@ -147,6 +151,10 @@ namespace DFC.App.Pages
             services.AddSubscriptionBackgroundService(configuration);
             services.AddHostedService<CacheReloadBackgroundService>();
             services.AddHostedService<CacheReloadTimedHostedService>();
+
+            //Add Redis Cache
+            services.AddSingleton<ICacheConnection, RedisCacheConnection>();
+            services.AddSingleton<ICacheService, RedisCacheService>();
 
             const string AppSettingsPolicies = "Policies";
             var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();

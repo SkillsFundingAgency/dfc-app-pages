@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DFC.App.Pages.Cms.Data.Interface
+namespace DFC.App.Pages.Services.RedisCacheService.Interface
 {
-    public interface ICmsRepo
+    public interface IRedisCMSRepo
     {
         /// <summary>
         /// Gets the data.
@@ -14,9 +14,9 @@ namespace DFC.App.Pages.Cms.Data.Interface
         /// <typeparam name="TResponse">The type of the response.</typeparam>
         /// <param name="query">The query.</param>
         /// <returns>The response.</returns>
-        Task<TResponse> GetData<TResponse>(string query)
+        Task<TResponse> GetGraphQLData<TResponse>(string query, string cacheKey, bool disableCache = false)
             where TResponse : class;
 
-        Task<TResponse> GetSqlData<TResponse>(string queryName);
+        Task<TResponse> GetSqlData<TResponse>(string query, string cacheKey, bool disableCache = false);
     }
 }

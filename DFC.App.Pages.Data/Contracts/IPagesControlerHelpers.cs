@@ -7,6 +7,8 @@ namespace DFC.App.Pages.Data.Contracts
     {
         Task<ContentPageModel?> GetContentPageAsync(string? location, string? article);
 
+        Task<ContentPageModel?> GetContentPageFromPageServiceAsync(string? location, string? article);
+
         Task<ContentPageModel?> GetRedirectedContentPageAsync(string? location, string? article);
     }
 }

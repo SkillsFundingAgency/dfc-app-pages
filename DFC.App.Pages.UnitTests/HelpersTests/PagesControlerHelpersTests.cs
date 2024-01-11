@@ -1,4 +1,5 @@
-﻿using DFC.App.Pages.Data.Models;
+﻿using DFC.App.Pages.Cms.Data.Interface;
+using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Helpers;
 using DFC.App.Pages.Models;
 using DFC.Compui.Cosmos.Contracts;
@@ -23,8 +24,11 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
     {
         private readonly IContentPageService<ContentPageModel> fakeContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
         private readonly IMemoryCache memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
+        private readonly IPageService pageService = A.Fake<IPageService>();
+        private readonly AutoMapper.IMapper mapper= A.Fake<AutoMapper.IMapper>();
 
-        [Fact]
+
+       [Fact]
         public void PagesControlerHelpersTestsExtractPageLocationReturnsSuccessForFiveLocations()
         {
             // Arrange
@@ -100,7 +104,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             var expectedResults = A.CollectionOfDummy<ContentPageModel>(1);
             const string location = "a-location";
             const string article = "an-article";
-            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache, pageService, mapper);
 
             A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
 
@@ -120,7 +124,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             var expectedResults = A.CollectionOfDummy<ContentPageModel>(1);
             string location = string.Empty;
             const string? article = null;
-            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache, pageService, mapper);
 
             A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
 
@@ -140,7 +144,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             var expectedResults = A.CollectionOfDummy<ContentPageModel>(1);
             const string location = "a-location";
             string article = string.Empty;
-            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache, pageService, mapper);
 
             A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
 
@@ -160,7 +164,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             List<ContentPageModel>? expectedResults = null;
             const string location = "a-location";
             const string article = "an-article";
-            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache, pageService, mapper);
 
             A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
 
@@ -180,7 +184,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             var expectedResult = A.Dummy<ContentPageModel>();
             const string location = "a-location";
             const string article = "an-article";
-            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache, pageService, mapper);
 
             A.CallTo(() => fakeContentPageService.GetByRedirectLocationAsync(A<string>.Ignored)).Returns(expectedResult);
 
@@ -200,7 +204,7 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             var expectedResult = A.Dummy<ContentPageModel>();
             const string location = "a-location";
             const string? article = null;
-            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache, pageService, mapper);
 
             A.CallTo(() => fakeContentPageService.GetByRedirectLocationAsync(A<string>.Ignored)).Returns(expectedResult);
 
