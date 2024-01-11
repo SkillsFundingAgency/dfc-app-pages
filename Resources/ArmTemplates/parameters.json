@@ -20,6 +20,9 @@
         "clientAffinity": {
             "value": __clientAffinity__
         },
+        "contentMode": {
+            "value": __contentMode__
+        },
         "aspTier": {
             "value": "__aspTier__"
         },

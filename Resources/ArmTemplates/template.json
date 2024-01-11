@@ -28,6 +28,9 @@
         "clientAffinity": {
             "type": "bool"
         },
+        "contentMode" :{
+            "type": "string"
+        },
         "CosmosDbResourceGroup": {
             "type": "string"
         },
@@ -260,6 +263,10 @@
                     },
                     "appServiceAppSettings": {
                         "value": [
+                            {
+                                "name": "ContentMode",
+                                "value" : "[parameters('contentMode')]"
+                            },
                             {
                                 "name": "MSDEPLOY_RENAME_LOCKED_FILES",
                                 "value": "1"

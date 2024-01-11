@@ -39,6 +39,8 @@ variables:
   value: 2
 - name: clientAffinity
   value: false
+- name: contentMode
+  value: Draft
 - name: contentUrl
   value: $(ContentApiDraftAddress)/api/execute
 - name: subscriptionUrl
