@@ -1,4 +1,5 @@
-﻿using DFC.App.Pages.Controllers;
+﻿using DFC.App.Pages.Cms.Data.Interface;
+using DFC.App.Pages.Controllers;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.Compui.Cosmos.Contracts;
@@ -20,6 +21,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             FakeContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
             FakeMapper = A.Fake<AutoMapper.IMapper>();
             FakePagesControlerHelpers = A.Fake<IPagesControlerHelpers>();
+            FakePageService = A.Fake<IPageService>();
         }
 
         public static IEnumerable<object[]> HtmlMediaTypes => new List<object[]>
@@ -46,13 +48,15 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
         protected IPagesControlerHelpers FakePagesControlerHelpers { get; }
 
+        protected IPageService FakePageService { get; }
+
         protected PagesController BuildPagesController(string mediaTypeName)
         {
             var httpContext = new DefaultHttpContext();
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new PagesController(Logger, FakeContentPageService, FakeMapper, FakePagesControlerHelpers)
+            var controller = new PagesController(Logger, FakeContentPageService, FakeMapper, FakePagesControlerHelpers, FakePageService)
             {
                 ControllerContext = new ControllerContext()
                 {

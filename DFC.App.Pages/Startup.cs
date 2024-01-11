@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using DFC.App.Pages.Cms.Data;
+using DFC.App.Pages.Cms.Data.Constant;
+using DFC.App.Pages.Cms.Data.Interface;
+using DFC.App.Pages.Cms.Data.RequestHandler;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Data.Models.ClientOptions;
@@ -18,14 +22,27 @@ using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 using DFC.Compui.Telemetry;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Content.Pkg.Netcore.Extensions;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
+using RestSharp;
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
+using DfE.NCS.Framework.Cache.Interface;
+using DfE.NCS.Framework.Cache;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Repo;
 
 namespace DFC.App.Pages
 {
@@ -70,6 +87,42 @@ namespace DFC.App.Pages
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IGraphQLClient>(s =>
+            {
+                var option = new GraphQLHttpClientOptions()
+                {
+                    EndPoint = new Uri(configuration[ConfigKeys.GraphApiUrl]),
+                    HttpMessageHandler = new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
+                };
+                var client = new GraphQLHttpClient(option, new NewtonsoftJsonSerializer());
+                return client;
+            });
+            services.AddScoped<IRestClient>(s =>
+            {
+                var option = new RestClientOptions()
+                {
+                    BaseUrl = new Uri(configuration[ConfigKeys.SqlApiUrl]),
+                    ConfigureMessageHandler = handler => new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
+                };
+                JsonSerializerSettings defaultSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    DefaultValueHandling = DefaultValueHandling.Include,
+                    TypeNameHandling = TypeNameHandling.None,
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.None,
+                    ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                };
+
+                var client = new RestClient(option);
+                return client;
+            }
+
+            );
+            services.AddScoped<IRedisCacheRepo, RedisCacheRepo>();
+            services.AddScoped<IRedisCMSRepo, RedisCMSRepo>();
+            services.AddScoped<IPageService, PageService>();
+
             var cosmosDbConnectionContentPages = configuration.GetSection(CosmosDbContentPagesConfigAppSettings).Get<CosmosDbConnection>();
             var cosmosRetryOptions = new RetryOptions { MaxRetryAttemptsOnThrottledRequests = 20, MaxRetryWaitTimeInSeconds = 60 };
             services.AddContentPageServices<ContentPageModel>(cosmosDbConnectionContentPages, env.IsDevelopment(), cosmosRetryOptions);
@@ -98,6 +151,10 @@ namespace DFC.App.Pages
             services.AddSubscriptionBackgroundService(configuration);
             services.AddHostedService<CacheReloadBackgroundService>();
             services.AddHostedService<CacheReloadTimedHostedService>();
+
+            //Add Redis Cache
+            services.AddSingleton<ICacheConnection, RedisCacheConnection>();
+            services.AddSingleton<ICacheService, RedisCacheService>();
 
             const string AppSettingsPolicies = "Policies";
             var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
