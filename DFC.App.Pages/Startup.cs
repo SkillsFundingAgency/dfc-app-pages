@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
+using DFC.App.Pages.Cms.Data;
+using DFC.App.Pages.Cms.Data.Constant;
+using DFC.App.Pages.Cms.Data.Interface;
+using DFC.App.Pages.Cms.Data.Content;
+using DFC.App.Pages.Cms.Data.Repo;
+using DFC.App.Pages.Cms.Data.RequestHandler;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Data.Models.ClientOptions;
 using DFC.App.Pages.Data.Models.CmsApiModels;
-using DFC.App.Pages.Cms.Data;
-using DFC.App.Pages.Cms.Data.Constant;
-using DFC.App.Pages.Cms.Data.Interface;
-using DFC.App.Pages.Cms.Data.Repo;
-using DFC.App.Pages.Cms.Data.RequestHandler;
 using DFC.App.Pages.Extensions;
 using DFC.App.Pages.Helpers;
 using DFC.App.Pages.HostedServices;
@@ -17,36 +18,34 @@ using DFC.App.Pages.Services.AppRegistryService;
 using DFC.App.Pages.Services.CacheContentService;
 using DFC.App.Pages.Services.CacheContentService.ContentItemUpdaters;
 using DFC.App.Pages.Services.EventProcessorService;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Repo;
 using DFC.Compui.Cosmos;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Compui.Subscriptions.Pkg.Netstandard.Extensions;
 using DFC.Compui.Telemetry;
 using DFC.Content.Pkg.Netcore.Data.Models.ClientOptions;
 using DFC.Content.Pkg.Netcore.Extensions;
+using DfE.NCS.Framework.Cache;
+using DfE.NCS.Framework.Cache.Interface;
 using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Diagnostics.CodeAnalysis;
-using GraphQL.Client.Abstractions;
-using GraphQL.Client.Http;
-using GraphQL.Client.Serializer.Newtonsoft;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using RestSharp;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
-using DfE.NCS.Framework.Cache.Interface;
-using DfE.NCS.Framework.Cache;
-using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-using DFC.Common.SharedContent.Pkg.Netcore.Repo;
-
+using System.Configuration;
 namespace DFC.App.Pages
 {
     [ExcludeFromCodeCoverage]
@@ -62,6 +61,7 @@ namespace DFC.App.Pages
             this.configuration = configuration;
             this.env = env;
         }
+        
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper)
         {
@@ -126,6 +126,9 @@ namespace DFC.App.Pages
             services.AddScoped<IRedisCMSRepo, RedisCMSRepo>();
             services.AddScoped<ICmsRepo, CmsRepo>();
             services.AddScoped<IPageService, PageService>();
+            //services.Configure<contentModeOptions>(Configuration.GetSection(contentModeOptions.contentModeName));
+            services.ConfigureOptions<contentOptionsSetup>();
+            
 
             var cosmosDbConnectionContentPages = configuration.GetSection(CosmosDbContentPagesConfigAppSettings).Get<CosmosDbConnection>();
             var cosmosRetryOptions = new RetryOptions { MaxRetryAttemptsOnThrottledRequests = 20, MaxRetryWaitTimeInSeconds = 60 };

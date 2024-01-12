@@ -26,6 +26,9 @@
         "clientAffinity": {
             "value": false
         },
+        "contentMode": {
+            "value":  "PUBLISHED"
+        },
         "Environment": {
             "value": "FOO"
         },

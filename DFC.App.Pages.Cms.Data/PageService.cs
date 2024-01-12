@@ -1,31 +1,51 @@
-﻿using DFC.App.Pages.Cms.Data.Interface;
+﻿using System.Collections;
+using DFC.App.Pages.Cms.Data.Interface;
+using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Cms.Data.Model;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using StackExchange.Redis.Maintenance;
+//using ConfigSample.Options;
 
 namespace DFC.App.Pages.Cms.Data
 {
+    
     public class PageService : IPageService
     {
         private readonly ICmsRepo repo;
         private readonly IRedisCMSRepo redisCMSRepo;
         private readonly IConfiguration configuration;
+        private contentModeOptions _options;    
 
         public string status;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PageService"/> class.
         /// </summary>
         /// <param name="repo">The repo.</param>
-        public PageService(IRedisCMSRepo redisCMSRepo, IConfiguration configuration)
+        public PageService(IRedisCMSRepo redisCMSRepo, IConfiguration configuration, IOptions<contentModeOptions> options)
         {
             this.redisCMSRepo = redisCMSRepo;
             this.configuration = configuration;
+            _options = options.Value;
         }
+
+       
+
+       
 
         public async Task<IList<Model.PageUrl>> GetPageUrls()
     {
-            status = "PUBLISHED";
+
+            status = _options.value;
+            /*Environment.SetEnvironmentVariable("PUBLISHED", "contentMode");
+            status = Environment.GetEnvironmentVariable("contentMode");*/
+            
+            Console.WriteLine(status);
+            //status = "PUBLISHED";
             string query = @$"
                 query pageurl ($status: Status = {status}) {{
                     page(status: $status) {{
@@ -63,9 +83,15 @@ namespace DFC.App.Pages.Cms.Data
 
     public async Task<IList<Model.Page>> GetPage(string path)
     {
+           
+            status = _options.value;
+            //status = contentModeOptions.contentMode;
+           /* Environment.SetEnvironmentVariable("contentMode", "PUBLISHED");
+            status = Environment.GetEnvironmentVariable("contentMode");*/
+            Console.WriteLine(status);
             string query = @$"
                query page {{
-                  page(status: PUBLISHED, first: 1 , where: {{pageLocation: {{url: ""{path}""}}}}) {{
+                  page(status: {status}, first: 1 , where: {{pageLocation: {{url: ""{path}""}}}}) {{
                     displayText
                     description
                     pageLocation {{
