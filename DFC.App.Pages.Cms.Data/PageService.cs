@@ -41,11 +41,8 @@ namespace DFC.App.Pages.Cms.Data
     {
 
             status = _options.value;
-            /*Environment.SetEnvironmentVariable("PUBLISHED", "contentMode");
-            status = Environment.GetEnvironmentVariable("contentMode");*/
+           
             
-            Console.WriteLine(status);
-            //status = "PUBLISHED";
             string query = @$"
                 query pageurl ($status: Status = {status}) {{
                     page(status: $status) {{
@@ -85,10 +82,7 @@ namespace DFC.App.Pages.Cms.Data
     {
            
             status = _options.value;
-            //status = contentModeOptions.contentMode;
-           /* Environment.SetEnvironmentVariable("contentMode", "PUBLISHED");
-            status = Environment.GetEnvironmentVariable("contentMode");*/
-            Console.WriteLine(status);
+         
             string query = @$"
                query page {{
                   page(status: {status}, first: 1 , where: {{pageLocation: {{url: ""{path}""}}}}) {{

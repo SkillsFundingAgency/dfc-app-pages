@@ -126,7 +126,6 @@ namespace DFC.App.Pages
             services.AddScoped<IRedisCMSRepo, RedisCMSRepo>();
             services.AddScoped<ICmsRepo, CmsRepo>();
             services.AddScoped<IPageService, PageService>();
-            //services.Configure<contentModeOptions>(Configuration.GetSection(contentModeOptions.contentModeName));
             services.ConfigureOptions<contentOptionsSetup>();
             
 
