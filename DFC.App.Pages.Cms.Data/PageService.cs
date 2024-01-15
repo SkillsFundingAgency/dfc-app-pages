@@ -2,8 +2,10 @@
 using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Cms.Data.Model;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using RestSharp;
 
 namespace DFC.App.Pages.Cms.Data
 {
@@ -12,8 +14,9 @@ namespace DFC.App.Pages.Cms.Data
     {
         private readonly ICmsRepo repo;
         private readonly IRedisCMSRepo redisCMSRepo;
+        private readonly PageQueryStrategy queryStrategy;
         private readonly IConfiguration configuration;
-        private contentModeOptions _options;    
+        private contentModeOptions _options;
 
         public string status;
 
@@ -22,10 +25,11 @@ namespace DFC.App.Pages.Cms.Data
         /// Initializes a new instance of the <see cref="PageService"/> class.
         /// </summary>
         /// <param name="repo">The repo.</param>
-        public PageService(IRedisCMSRepo redisCMSRepo, IConfiguration configuration, IOptions<contentModeOptions> options)
+        public PageService(IRedisCMSRepo redisCMSRepo, IConfiguration configuration, IOptions<contentModeOptions> options, PageQueryStrategy queryStrategy)
         {
             this.redisCMSRepo = redisCMSRepo;
             this.configuration = configuration;
+            this.queryStrategy = queryStrategy;
             _options = options.Value;
         }
 
@@ -34,9 +38,7 @@ namespace DFC.App.Pages.Cms.Data
         public async Task<IList<Model.PageUrl>> GetPageUrls()
     {
 
-            status = _options.value;
-           
-            
+            status = _options.contentMode;
             string query = @$"
                 query pageurl ($status: Status = {status}) {{
                     page(status: $status) {{
@@ -65,6 +67,7 @@ namespace DFC.App.Pages.Cms.Data
                     }} 
                     }}
                 }}";
+            
 
             var response = await redisCMSRepo.GetGraphQLData<PageUrlReponse>(query, "pages/GetPageUrls");
 
@@ -75,7 +78,7 @@ namespace DFC.App.Pages.Cms.Data
     public async Task<IList<Model.Page>> GetPage(string path)
     {
            
-            status = _options.value;
+            status = _options.contentMode;
          
             string query = @$"
                query page {{
@@ -157,6 +160,7 @@ namespace DFC.App.Pages.Cms.Data
     
     public async Task<Model.Item> GetBreadCrumbs(string queryName)
     {
+            //var response = await redisCMSRep
             var response = await redisCMSRepo.GetSqlData<BreadcrumbResponse>(queryName, "pages/GetBreadCrumbs");
 
             return response.Items.FirstOrDefault();
