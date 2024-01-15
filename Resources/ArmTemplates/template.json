@@ -333,7 +333,7 @@
                             {
                                 "name": "Cms__ClientSecret",
                                 "value": "[parameters('ClientSecret')]"
-                            }
+                            },
                             {
                                 "name": "Logging__ApplicationInsights__LogLevel__Default",
                                 "value": "Information"
