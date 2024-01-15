@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.Cms.Data;
 using DFC.App.Pages.Cms.Data.Constant;
-using DFC.App.Pages.Cms.Data.Interface;
 using DFC.App.Pages.Cms.Data.Content;
+using DFC.App.Pages.Cms.Data.Interface;
 using DFC.App.Pages.Cms.Data.Repo;
 using DFC.App.Pages.Cms.Data.RequestHandler;
 using DFC.App.Pages.Data.Contracts;
@@ -45,7 +45,7 @@ using RestSharp;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
-using System.Configuration;
+
 namespace DFC.App.Pages
 {
     [ExcludeFromCodeCoverage]
@@ -61,7 +61,6 @@ namespace DFC.App.Pages
             this.configuration = configuration;
             this.env = env;
         }
-        
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper)
         {
@@ -74,7 +73,6 @@ namespace DFC.App.Pages
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
@@ -127,7 +125,6 @@ namespace DFC.App.Pages
             services.AddScoped<ICmsRepo, CmsRepo>();
             services.AddScoped<IPageService, PageService>();
             services.ConfigureOptions<contentOptionsSetup>();
-            
 
             var cosmosDbConnectionContentPages = configuration.GetSection(CosmosDbContentPagesConfigAppSettings).Get<CosmosDbConnection>();
             var cosmosRetryOptions = new RetryOptions { MaxRetryAttemptsOnThrottledRequests = 20, MaxRetryWaitTimeInSeconds = 60 };
@@ -149,6 +146,7 @@ namespace DFC.App.Pages
             services.AddTransient<IEventGridService, EventGridService>();
             services.AddTransient<IEventGridClientService, EventGridClientService>();
             services.AddAutoMapper(typeof(Startup).Assembly);
+
             //Add Redis Cache
             services.AddSingleton<ICacheConnection, RedisCacheConnection>();
             services.AddSingleton<ICacheService, RedisCacheService>();

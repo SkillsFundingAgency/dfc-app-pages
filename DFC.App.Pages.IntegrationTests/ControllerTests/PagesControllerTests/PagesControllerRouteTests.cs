@@ -1,14 +1,13 @@
-﻿/*using FakeItEasy;
-using FluentAssertions;
+﻿using DFC.App.Pages.Cms.Data.Model;
+using DFC.App.Pages.Cms.Data.RequestHandler;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Mime;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Newtonsoft.Json;
+using Xunit.Abstractions;
 
 namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
 {
@@ -17,14 +16,20 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
     {
         private readonly CustomWebApplicationFactory<Startup> factory;
         private readonly HttpClient httpClient;
+        private readonly ITestOutputHelper output;
+        //private readonly IRedisCMSRepo redisCMSRepo;
+
+
 
         public PagesControllerRouteTests(CustomWebApplicationFactory<Startup> factory)
         {
             this.factory = factory;
             this.httpClient = this.factory.CreateClient();
+            //this.output = output;
+            //this.redisCMSRepo = redisCMSRepo;
         }
 
-        public static IEnumerable<object[]> PagesContentRouteData => new List<object[]>
+       /* public static IEnumerable<object[]> PagesContentRouteData => new List<object[]>
         {
             new object[] { "/" },
             new object[] { "/pages" },
@@ -40,12 +45,136 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             new object[] { $"/pages/sidebarright" },
             new object[] { $"/pages/sidebarleft" },
             new object[] { $"/pages/bodyfooter" },
-        };
+        };*/
 
-        [Theory]
+        public async Task<TResponse> GetBearerToken<TResponse>()
+            where TResponse : OAuthTokenModel
+        {
+            var client = new HttpClient();
+            List<OAuthTokenModel> model = null;
+
+            var dict = new Dictionary<string, string>();
+            dict.Add("client_id", "99df80a0-b7c6-4438-a9ed-f7b2eac30cbc");
+            dict.Add("client_secret", "Ugetsu");
+            dict.Add("grant_type", "client_credentials");
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri("https://dfc-dev-stax-editor-as.azurewebsites.net/connect/token"),
+                Content = new FormUrlEncodedContent(dict),
+                Method = HttpMethod.Post,
+            };
+            request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-form-urlencoded");
+            //string token;
+            using (HttpResponseMessage responses = await client.SendAsync(request))
+            {
+                responses.EnsureSuccessStatusCode();
+
+                string responseBody = await responses.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<TResponse>(responseBody);
+            }
+        }
+
+        [Fact]
+        public async Task GetGraphQLPagesContentEndpointReturnSuccess()
+        {
+            // Arrange
+            var client = new HttpClient();
+            var tokenResponse = await GetBearerToken<OAuthTokenModel>();
+            string token = tokenResponse.AccessToken;
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri("https://dfc-dev-stax-editor-as.azurewebsites.net/api/graphql"),
+                Content = new StringContent("query MyQuery {" +
+                "page {" +
+                "description " +
+                "displayText" +
+                     "}" +
+                "}"),
+                Method = HttpMethod.Post,
+            };
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/graphql");
+            using (HttpResponseMessage responses = await client.SendAsync(request))
+            {
+                var responseBody = await responses.Content.ReadAsAsync<PageResponse>();
+                Assert.Equal(HttpStatusCode.OK, responses.StatusCode);
+            }
+        }
+
+       /* [Fact]
+        public async Task GetGraphQLPagesContentReturnSuccess()
+        {
+            // Arrange
+            var client = new HttpClient();
+            var tokenResponse = await GetBearerToken<OAuthTokenModel>();
+            string token = tokenResponse.AccessToken;
+            string expectedResult = "Test";
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri("https://dfc-dev-stax-editor-as.azurewebsites.net/api/graphql"),
+                Content = new StringContent("query MyQuery {" +
+                "page(first: 1) {" +
+                "description" +
+                "displayText" +
+                "contentItemId" +
+                    "}" +
+                "}"),
+                Method = HttpMethod.Post,
+            };
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/graphql");
+            using (var responses = await client.SendAsync(request))
+            {
+                responses.EnsureSuccessStatusCode();
+
+                string responseBody = await responses.Content.ReadAsStringAsync();
+                var response = await redisCMSRepo.GetGraphQLData<Page>(responseBody, "pages/GetPage");
+                var jsonDeserialize = JsonConvert.DeserializeObject<Page>(responseBody);
+                var desc = response.Description;
+                //string result = desc;
+              
+                
+                //string result = responseBody[0].ToString();
+                Assert.Equal(expectedResult, desc);
+                //var stream = JsonConvert.DeserializeObject<PageResponse>(responseBody);
+                Assert.Equal(HttpStatusCode.OK, responses.StatusCode);
+            }
+        }*/
+
+        [Fact]
+        public async Task GetSQLPagesContentEndpointReturnSuccess()
+        {
+            // Arrange
+            var client = new HttpClient();
+            var tokenResponse = await GetBearerToken<OAuthTokenModel>();
+            string token = tokenResponse.AccessToken;
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri("https://dfc-dev-stax-editor-as.azurewebsites.net/api/queries/PageLocation"),
+                Content = new StringContent(" {" +
+                "page {" +
+                "displayText" +
+                "description" +
+                "}" +
+                "}"),
+                Method = HttpMethod.Post,
+            };
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/graphql");
+            using (var responses = client.SendAsync(request).Result)
+            {
+                Assert.Equal(HttpStatusCode.OK, responses.StatusCode);
+            }
+        }
+
+        /*[Theory]
         [MemberData(nameof(PagesContentRouteData))]
         public async Task GetPagesHtmlContentEndpointsReturnSuccessAndCorrectContentType(string url)
-        {
+        { 
             // Arrange
             var contentPageModel = factory.GetContentPageModels().Where(x => x.CanonicalName == "an-article");
             var uri = new Uri(url, UriKind.Relative);
@@ -103,6 +232,6 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             // Assert
             response.EnsureSuccessStatusCode();
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-        }
+        }*/
     }
-}*/
+}

@@ -1,4 +1,5 @@
 ﻿
+using DFC.App.Pages.Cms.Data.Interface;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.IntegrationTests.Fakes;
@@ -13,12 +14,14 @@ namespace DFC.App.Pages.IntegrationTests.Extensions
     public static class IWebHostBuilderExtensions
     {
         public static IWebHostBuilder RegisterServices(
-            this IWebHostBuilder webHostBuilder, ICosmosRepository<ContentPageModel> cosmosRepository, IContentPageService<ContentPageModel> contentPageService)
+            this IWebHostBuilder webHostBuilder, ICosmosRepository<ContentPageModel> cosmosRepository, IContentPageService<ContentPageModel> contentPageService, ICmsRepo cmsRepo, IPageService pageService)
         {
             return webHostBuilder.ConfigureTestServices(services =>
             {
                 services.AddTransient(sp => cosmosRepository);
                 services.AddTransient(sp => contentPageService);
+                services.AddTransient(sp => cmsRepo);
+                services.AddTransient(sp => pageService);
                 services.AddTransient<IPagesControlerHelpers, FakePagesControlerHelpers>();
                 services.AddTransient<ISubscriptionRegistrationService, FakeSubscriptionRegistrationService>();
                 services.AddTransient<IWebhooksService, FakeWebhooksService>();

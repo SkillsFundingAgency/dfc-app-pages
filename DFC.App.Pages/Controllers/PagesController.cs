@@ -1,15 +1,11 @@
 ﻿using DFC.App.Pages.Cms.Data.Interface;
 using DFC.App.Pages.Cms.Data.Model;
 using DFC.App.Pages.Data.Contracts;
-using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Extensions;
 using DFC.App.Pages.Helpers;
 using DFC.App.Pages.Models;
-using DFC.App.Pages.Models.Robots;
 using DFC.App.Pages.ViewModels;
 using DFC.Compui.Cosmos.Contracts;
-using DFC.Compui.Cosmos.Models;
-using FluentNHibernate.Automapping;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Logging;
@@ -19,13 +15,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using ContentPageModel = DFC.App.Pages.Data.Models.ContentPageModel;
 
 namespace DFC.App.Pages.Controllers
 {
+   
     public class PagesController : Controller
     {
         private const string LocalPath = "pages";

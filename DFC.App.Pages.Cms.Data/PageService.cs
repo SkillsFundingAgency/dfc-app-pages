@@ -1,13 +1,9 @@
-﻿using System.Collections;
-using DFC.App.Pages.Cms.Data.Interface;
+﻿using DFC.App.Pages.Cms.Data.Interface;
 using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Cms.Data.Model;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using StackExchange.Redis.Maintenance;
-//using ConfigSample.Options;
 
 namespace DFC.App.Pages.Cms.Data
 {
@@ -32,8 +28,6 @@ namespace DFC.App.Pages.Cms.Data
             this.configuration = configuration;
             _options = options.Value;
         }
-
-       
 
        
 

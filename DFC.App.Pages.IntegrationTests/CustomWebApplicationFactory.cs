@@ -1,4 +1,6 @@
-﻿using DFC.App.Pages.Data.Contracts;
+﻿using DFC.App.Pages.Cms.Data.Model;
+using DFC.App.Pages.Cms.Data.Interface;
+using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.IntegrationTests.Fakes;
 using DFC.Compui.Cosmos.Contracts;
@@ -10,7 +12,15 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using DFC.App.Pages.Cms.Data.RequestHandler;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http;
+using DFC.App.Pages.Cms.Data.Constant;
 
 namespace DFC.App.Pages.IntegrationTests
 {
@@ -21,12 +31,35 @@ namespace DFC.App.Pages.IntegrationTests
         {
             MockCosmosRepo = A.Fake<ICosmosRepository<ContentPageModel>>();
             MockContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
+            MockPageResponse = A.Fake<PageResponse>();
+            MockPage = A.Fake<Page>();
+
+            this.configuration = configuration;
         }
+
+        private readonly IConfiguration configuration;
+
 
         internal ICosmosRepository<ContentPageModel> MockCosmosRepo { get; set; }
 
         internal IContentPageService<ContentPageModel> MockContentPageService { get; set; }
 
+        internal PageResponse MockPageResponse {  get; set; }
+        internal Page MockPage { get; set; }
+
+        internal IEnumerable<Page> GetPageResponses()
+        {
+            return new List<Page>
+            {
+                new Page
+                {
+                    DisplayText = "GraphQLTest",
+                    Description = "Test123",
+                },
+            };
+        }
+
+    
         internal IEnumerable<ContentPageModel> GetContentPageModels()
         {
             return new List<ContentPageModel>
@@ -107,8 +140,21 @@ namespace DFC.App.Pages.IntegrationTests
 
             builder.ConfigureTestServices(services =>
             {
+                services.AddScoped<IGraphQLClient>(s =>
+                {
+                    var option = new GraphQLHttpClientOptions()
+                    {
+                        EndPoint = new Uri(configuration[ConfigKeys.GraphApiUrl]),
+                        HttpMessageHandler = new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
+
+                    };
+                    var client = new GraphQLHttpClient(option, new NewtonsoftJsonSerializer());
+                    return client;
+                });
                 services.AddTransient<ICacheReloadService, FakeCacheReloadService>();
                 services.AddHostedService<FakeCacheReloadBackgroundService>();
+                services.AddTransient(sp => MockPage);
+                services.AddTransient(sp => MockPageResponse);
                 services.AddTransient(sp => MockCosmosRepo);
                 services.AddTransient(sp => MockContentPageService);
                 services.AddTransient<ISubscriptionRegistrationService, FakeSubscriptionRegistrationService>();
