@@ -27,7 +27,22 @@
             "value": false
         },
         "contentMode": {
-            "value":  "PUBLISHED"
+            "value": "PUBLISHED"
+        },
+        "TokenEndpointURL": {
+            "value": "Test"
+        },
+        "GraphApiUrl": {
+            "value": "Test"
+        },
+        "SqlApiUrl": {
+            "value": "Test"
+        },
+        "ClientId": {
+            "value": "Test"
+        },
+        "ClientSecret": {
+            "value": "Test"
         },
         "Environment": {
             "value": "FOO"
