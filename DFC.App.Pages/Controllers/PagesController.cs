@@ -112,27 +112,6 @@ namespace DFC.App.Pages.Controllers
                 return this.NegotiateContentResult(viewModel);
             }
             return NoContent();
-
-           /* var redirectedContentPageModel = await pagesControlerHelpers.GetRedirectedContentPageAsync(location, article).ConfigureAwait(false);
-
-            if (redirectedContentPageModel != null)
-            {
-                var redirectedUrl = $"{Request.GetBaseAddress()}{LocalPath}{redirectedContentPageModel.PageLocation}";
-                if (redirectedContentPageModel.PageLocation != "/")
-                {
-                    redirectedUrl += "/";
-                }
-
-                redirectedUrl += $"{redirectedContentPageModel.CanonicalName}/document";
-
-                logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
-
-                return RedirectPermanent(redirectedUrl);
-            }
-
-            logger.LogWarning($"{nameof(Document)} has returned no content for: /{location}/{article}");
-
-            return NoContent();*/
         }
 
         [HttpGet]

@@ -8,6 +8,13 @@ using System.Threading.Tasks;
 using Xunit;
 using Newtonsoft.Json;
 using Xunit.Abstractions;
+using Microsoft.AspNetCore.Mvc;
+using DFC.App.Pages.Data.Models;
+using System.Linq;
+using System.Net.Mime;
+using System.Text;
+using FluentAssertions;
+using FakeItEasy;
 
 namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
 {
@@ -29,25 +36,27 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             //this.redisCMSRepo = redisCMSRepo;
         }
 
-       /* public static IEnumerable<object[]> PagesContentRouteData => new List<object[]>
-        {
-            new object[] { "/" },
-            new object[] { "/pages" },
-            new object[] { "/pages/head" },
-            new object[] { "/pages/breadcrumb" },
-            new object[] { "/pages/body" },
-        };
+        public static IEnumerable<object[]> PagesContentRouteData => new List<object[]>
+         {
+             new object[] { "/" },
+             new object[] { "/pages" },
+             new object[] { "/pages/head" },
+             new object[] { "/pages/breadcrumb" },
+             new object[] { "/pages/body" },
+         };
 
         public static IEnumerable<object[]> PagesNoContentRouteData => new List<object[]>
-        {
-            new object[] { $"/pages/bodytop" },
-            new object[] { $"/pages/herobanner" },
-            new object[] { $"/pages/sidebarright" },
-            new object[] { $"/pages/sidebarleft" },
-            new object[] { $"/pages/bodyfooter" },
-        };*/
+         {
+             new object[] { $"/pages/bodytop" },
+             new object[] { $"/pages/herobanner" },
+             new object[] { $"/pages/sidebarright" },
+             new object[] { $"/pages/sidebarleft" },
+             new object[] { $"/pages/bodyfooter" },
+         };
 
-        public async Task<TResponse> GetBearerToken<TResponse>()
+       
+
+       /* public async Task<TResponse> GetBearerToken<TResponse>()
             where TResponse : OAuthTokenModel
         {
             var client = new HttpClient();
@@ -56,7 +65,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             var dict = new Dictionary<string, string>();
             dict.Add("client_id", "");
             dict.Add("client_secret", "");
-            dict.Add("grant_type", "");
+            dict.Add("grant_type", "client_credentials");
 
             var request = new HttpRequestMessage
             {
@@ -101,7 +110,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
                 var responseBody = await responses.Content.ReadAsAsync<PageResponse>();
                 Assert.Equal(HttpStatusCode.OK, responses.StatusCode);
             }
-        }
+        }*/
 
        /* [Fact]
         public async Task GetGraphQLPagesContentReturnSuccess()
@@ -143,7 +152,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
                 Assert.Equal(HttpStatusCode.OK, responses.StatusCode);
             }
         }*/
-
+/*
         [Fact]
         public async Task GetSQLPagesContentEndpointReturnSuccess()
         {
@@ -171,10 +180,10 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             }
         }
 
-        /*[Theory]
+        [Theory]
         [MemberData(nameof(PagesContentRouteData))]
         public async Task GetPagesHtmlContentEndpointsReturnSuccessAndCorrectContentType(string url)
-        { 
+        {
             // Arrange
             var contentPageModel = factory.GetContentPageModels().Where(x => x.CanonicalName == "an-article");
             var uri = new Uri(url, UriKind.Relative);
