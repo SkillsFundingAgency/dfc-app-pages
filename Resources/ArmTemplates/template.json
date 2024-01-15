@@ -31,6 +31,21 @@
         "contentMode": {
             "type": "string"
         },
+        "TokenEndPointURL": {
+            "type": "string"
+        },
+        "GraphApiUrl": {
+            "type": "string"
+        },
+        "SqlApiUrl": {
+            "type": "string"
+        },
+        "ClientId": {
+            "type": "string"
+        },
+        "ClientSecret": {
+            "type": "string"
+        },
         "CosmosDbResourceGroup": {
             "type": "string"
         },
@@ -299,6 +314,26 @@
                                 "name": "Configuration__CosmosDbConnections__ContentPages__PartitionKey",
                                 "value": "[variables('cosmosDbCollectionPartitionKey')]"
                             },
+                            {
+                                "name": "Cms__TokenEndPointURL",
+                                "value": "[parameters('TokenEndPointURL')]"
+                            },
+                            {
+                                "name": "Cms__GraphApiUrl",
+                                "value": "[parameters('GraphApiUrl')]"
+                            },
+                            {
+                                "name": "Cms__SqlApiUrl",
+                                "value": "[parameters('SqlApiUrl')]"
+                            },
+                            {
+                                "name": "Cms__ClientId",
+                                "value": "[parameters('ClientId')]"
+                            },
+                            {
+                                "name": "Cms__ClientSecret",
+                                "value": "[parameters('ClientSecret')]"
+                            }
                             {
                                 "name": "Logging__ApplicationInsights__LogLevel__Default",
                                 "value": "Information"

@@ -23,6 +23,21 @@
         "contentMode": {
             "value": __contentMode__
         },
+        "TokenEndPointURL": {
+            "value": "__TokenEndPointURL__"
+        },
+        "GraphApiUrl": {
+            "value": "__GraphApiUrl__"
+        },
+        "SqlApiUrl": {
+            "value": "__SqlApiUrl__"
+        },
+        "ClientId": {
+            "value": "__ClientId__"
+        },
+        "ClientSecret": {
+            "value": "__ClientSecret__"
+        },
         "aspTier": {
             "value": "__aspTier__"
         },

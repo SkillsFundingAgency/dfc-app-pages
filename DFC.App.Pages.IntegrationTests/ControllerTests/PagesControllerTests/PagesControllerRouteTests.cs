@@ -54,9 +54,9 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             List<OAuthTokenModel> model = null;
 
             var dict = new Dictionary<string, string>();
-            dict.Add("client_id", "99df80a0-b7c6-4438-a9ed-f7b2eac30cbc");
-            dict.Add("client_secret", "Ugetsu");
-            dict.Add("grant_type", "client_credentials");
+            dict.Add("client_id", "");
+            dict.Add("client_secret", "");
+            dict.Add("grant_type", "");
 
             var request = new HttpRequestMessage
             {
