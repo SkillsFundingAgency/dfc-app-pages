@@ -38,7 +38,8 @@ namespace DFC.App.Pages.Cms.Data
         public async Task<IList<Model.PageUrl>> GetPageUrls()
     {
 
-            status = _options.contentMode;
+            //status = _options.contentMode;
+            status = "PUBLISHED";
             string query = @$"
                 query pageurl ($status: Status = {status}) {{
                     page(status: $status) {{
@@ -67,7 +68,8 @@ namespace DFC.App.Pages.Cms.Data
                     }} 
                     }}
                 }}";
-            
+
+            //var response = await queryStrategy.ExecuteQueryAsync<PageUrlReponse>(query,"pages");
 
             var response = await redisCMSRepo.GetGraphQLData<PageUrlReponse>(query, "pages/GetPageUrls");
 
@@ -77,9 +79,9 @@ namespace DFC.App.Pages.Cms.Data
 
     public async Task<IList<Model.Page>> GetPage(string path)
     {
-           
-            status = _options.contentMode;
-         
+
+            //status = _options.contentMode;
+            status = "PUBLISHED";
             string query = @$"
                query page {{
                   page(status: {status}, first: 1 , where: {{pageLocation: {{url: ""{path}""}}}}) {{
