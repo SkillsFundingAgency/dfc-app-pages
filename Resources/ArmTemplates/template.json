@@ -46,6 +46,18 @@
         "ClientSecret": {
             "type": "string"
         },
+        "CacheEnabled": {
+            "type": "bool"
+        },
+        "ConnectionString": {
+            "type": "string"
+        },
+        "CacheExpirySeconds": {
+            "type": "int"
+        },
+        "CacheKeyPrefix": {
+            "type": "string"
+        },
         "CosmosDbResourceGroup": {
             "type": "string"
         },
@@ -333,6 +345,22 @@
                             {
                                 "name": "Cms__ClientSecret",
                                 "value": "[parameters('ClientSecret')]"
+                            },
+                            {
+                                "name": "RedisCache__CacheEnabled",
+                                "value": "[parameters('CacheEnabled')]"
+                            },
+                            {
+                                "name": "RedisCache__ConnectionString",
+                                "value": "[parameters('ConnectionString')]"
+                            },
+                            {
+                                "name": "RedisCache__CacheExpirySeconds",
+                                "value": "[parameters('CacheExpirySeconds')]"
+                            },
+                            {
+                                "name": "RedisCache__CacheKeyPrefix",
+                                "value": "[parameters('CacheKeyPrefix')]"
                             },
                             {
                                 "name": "Logging__ApplicationInsights__LogLevel__Default",

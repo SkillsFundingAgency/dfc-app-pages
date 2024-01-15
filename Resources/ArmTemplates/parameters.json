@@ -38,6 +38,18 @@
         "ClientSecret": {
             "value": "__ClientSecret__"
         },
+        "CacheEnabled": {
+            "value": "__CacheEnabled__"
+        },
+        "ConnectionString": {
+            "value": "__ConnectionString__"
+        },
+        "CacheExpirySeconds": {
+            "value": "__CacheExpirySeconds__"
+        },
+        "CacheKeyPrefix": {
+            "value": "__CacheKeyPrefix__"
+        },
         "aspTier": {
             "value": "__aspTier__"
         },

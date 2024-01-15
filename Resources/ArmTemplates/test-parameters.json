@@ -44,6 +44,18 @@
         "ClientSecret": {
             "value": "Test"
         },
+        "CacheEnabled": {
+            "value": true
+        },
+        "ConnectionString": {
+            "value": "test"
+        },
+        "CacheExpirySeconds": {
+            "value": 1
+        },
+        "CacheKeyPrefix": {
+            "value": "test"
+        },
         "Environment": {
             "value": "FOO"
         },
