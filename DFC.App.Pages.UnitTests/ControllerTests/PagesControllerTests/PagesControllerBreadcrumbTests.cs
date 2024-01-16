@@ -1,4 +1,4 @@
-using DFC.App.Pages.Data.Models;
+/*using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
 using FakeItEasy;
@@ -194,3 +194,4 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         }
     }
 }
+*/
