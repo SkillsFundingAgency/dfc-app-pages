@@ -46,6 +46,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBreadcrumb;
+using DFC.App.Pages.Cms.Data.Content;
 
 namespace DFC.App.Pages
 {
@@ -129,6 +130,8 @@ namespace DFC.App.Pages
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
 
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
+            services.ConfigureOptions<contentOptionsSetup>();
+
 
             var cosmosDbConnectionContentPages = configuration.GetSection(CosmosDbContentPagesConfigAppSettings).Get<CosmosDbConnection>();
             var cosmosRetryOptions = new RetryOptions { MaxRetryAttemptsOnThrottledRequests = 20, MaxRetryWaitTimeInSeconds = 60 };

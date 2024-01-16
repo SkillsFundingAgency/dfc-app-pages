@@ -1,4 +1,5 @@
-﻿using DFC.App.Pages.Data.Contracts;
+﻿using DFC.App.Pages.Cms.Data.Content;
+using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Extensions;
 using DFC.App.Pages.Helpers;
@@ -11,6 +12,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Compui.Cosmos.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -30,18 +32,22 @@ namespace DFC.App.Pages.Controllers
         private readonly AutoMapper.IMapper mapper;
         private readonly IPagesControlerHelpers pagesControlerHelpers;
         private ISharedContentRedisInterface sharedContentRedisInterface;
+        private contentModeOptions _options;
+        public string status;
 
         public PagesController(ILogger<PagesController> logger,
                                IContentPageService<ContentPageModel> contentPageService,
                                AutoMapper.IMapper mapper,
                                IPagesControlerHelpers pagesControlerHelpers,
-                               ISharedContentRedisInterface sharedContentRedisInterface)
+                               ISharedContentRedisInterface sharedContentRedisInterface, IOptions<contentModeOptions> options)
         {
             this.logger = logger;
             this.contentPageService = contentPageService;
             this.mapper = mapper;
             this.pagesControlerHelpers = pagesControlerHelpers;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
+            _options = options.Value;
+
         }
 
         [HttpGet]
@@ -49,8 +55,9 @@ namespace DFC.App.Pages.Controllers
         [Route("pages")]
         public async Task<IActionResult> Index()
         {
+            status = _options.contentMode;
             logger.LogInformation($"{nameof(Index)} has been called");
-
+            
             var viewModel = new IndexViewModel()
             {
                 LocalPath = LocalPath,
@@ -61,7 +68,7 @@ namespace DFC.App.Pages.Controllers
                     new IndexDocumentViewModel { CanonicalName = RobotController.RobotsViewCanonicalName },
                 },
             };
-            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlReponse>("pagesurl/PUBLISHED");
+            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlReponse>("pagesurl" + "/" + status);
             viewModel.Documents.AddRange(pageUrlResponse.Page.OrderBy(o => o.PageLocation.UrlName).Select(a => mapper.Map<IndexDocumentViewModel>(a)));
             return this.NegotiateContentResult(viewModel);
         }
@@ -76,11 +83,11 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Document(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Document)} has been called");
-
+            status = _options.contentMode;
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/PUBLISHED");
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
             if (pageResponse != null)
             {
                 var viewModel = mapper.Map<DocumentViewModel>(pageResponse);
@@ -125,11 +132,11 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Head(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Head)} has been called");
-
+            status = _options.contentMode;
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/PUBLISHED");
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
             var viewModel = new HeadViewModel();
             if (pageResponse != null)
             {
@@ -185,10 +192,10 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> HeroBanner(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(HeroBanner)} has been called");
-
+            status = _options.contentMode;
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/PUBLISHED");
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
             if (pageResponse == null)
             {
                 return NoContent();
@@ -209,10 +216,11 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Body(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Body)} has been called");
+            status = _options.contentMode;
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/PUBLISHED");
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
             var viewModel = new BodyViewModel();
             if (pageResponse != null)
             {
@@ -297,9 +305,10 @@ namespace DFC.App.Pages.Controllers
 
         private async Task<BreadcrumbViewModel> GetBreadcrumb(string location, string article)
         {
+            status = _options.contentMode;
             var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation");
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/PUBLISHED");
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
 
             if (pageResponse == null || !pageResponse.ShowBreadcrumb)
                 return null;
