@@ -1,6 +1,7 @@
 ﻿using DFC.App.Pages.Controllers;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +21,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             FakeContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
             FakeMapper = A.Fake<AutoMapper.IMapper>();
             FakePagesControlerHelpers = A.Fake<IPagesControlerHelpers>();
+            FakeSharedContentRedisInterface =A.Fake<ISharedContentRedisInterface>();
         }
 
         public static IEnumerable<object[]> HtmlMediaTypes => new List<object[]>
@@ -46,13 +48,15 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
         protected IPagesControlerHelpers FakePagesControlerHelpers { get; }
 
+        protected ISharedContentRedisInterface FakeSharedContentRedisInterface;
+
         protected PagesController BuildPagesController(string mediaTypeName)
         {
             var httpContext = new DefaultHttpContext();
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new PagesController(Logger, FakeContentPageService, FakeMapper, FakePagesControlerHelpers)
+            var controller = new PagesController(Logger, FakeContentPageService, FakeMapper, FakePagesControlerHelpers, FakeSharedContentRedisInterface)
             {
                 ControllerContext = new ControllerContext()
                 {
