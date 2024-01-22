@@ -52,6 +52,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         protected IPagesControlerHelpers FakePagesControlerHelpers { get; }
 
         protected ISharedContentRedisInterface FakeSharedContentRedisInterface;
+        protected IOptions<contentModeOptions> FakeContentOptions { get; }
 
         protected IOptions<contentModeOptions> FakeOptions;
 
@@ -61,7 +62,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new PagesController(Logger, FakeContentPageService, FakeMapper, FakePagesControlerHelpers, FakeSharedContentRedisInterface, FakeOptions)
+            var controller = new PagesController(Logger, FakeContentPageService, FakeMapper, FakePagesControlerHelpers, FakeSharedContentRedisInterface)
             {
                 ControllerContext = new ControllerContext()
                 {
