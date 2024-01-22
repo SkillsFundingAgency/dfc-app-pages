@@ -1,6 +1,9 @@
-﻿using DFC.App.Pages.Data.Contracts;
+﻿using AutoMapper;
+using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Compui.Cosmos.Contracts;
 
 using Microsoft.Extensions.Caching.Memory;
@@ -17,11 +20,15 @@ namespace DFC.App.Pages.Helpers
         private const int CacheDurationInSeconds = 30;
         private readonly IContentPageService<ContentPageModel> contentPageService;
         private readonly IMemoryCache memoryCache;
+        private ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly AutoMapper.IMapper mapper;
 
-        public PagesControlerHelpers(IContentPageService<ContentPageModel> contentPageService, IMemoryCache memoryCache)
+        public PagesControlerHelpers(IContentPageService<ContentPageModel> contentPageService, IMemoryCache memoryCache, ISharedContentRedisInterface sharedContentRedisInterface, AutoMapper.IMapper mapper)
         {
             this.contentPageService = contentPageService;
             this.memoryCache = memoryCache;
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
+            this.mapper = mapper;
         }
 
         public static (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
@@ -46,75 +53,31 @@ namespace DFC.App.Pages.Helpers
             return (location, article);
         }
 
-        public async Task<ContentPageModel?> GetRedirectedContentPageAsync(string? location, string? article)
+        public async Task<ContentPageModel?> GetContentPageFromSharedAsync(string? location, string? article)
         {
-            var redirectLocation = $"/{location}";
-
-            if (!string.IsNullOrWhiteSpace(article))
-            {
-                redirectLocation += $"/{article}";
-            }
-
-            if (!memoryCache.TryGetValue(redirectLocation, out ContentPageModel? content))
-            {
-                content = await contentPageService.GetByRedirectLocationAsync(redirectLocation);
-
-                memoryCache.Set(redirectLocation, content, TimeSpan.FromSeconds(CacheDurationInSeconds));
-            }
-
+            string pageUrl = GetPageUrl(location, article);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + "PUBLISHED"); ;
+            ContentPageModel? content = new ContentPageModel();
+            mapper.Map(pageResponse, content);
             return content;
         }
 
-        public async Task<ContentPageModel?> GetContentPageAsync(string? location, string? article)
+        private string GetPageUrl(string location, string article)
         {
-            var cacheKey = BuildCacheKey(location, article);
-
-            if (!memoryCache.TryGetValue(cacheKey, out ContentPageModel? content))
-            {
-                content = await GetContentPageWithoutCacheAsync(location, article);
-
-                memoryCache.Set(cacheKey, content, TimeSpan.FromSeconds(CacheDurationInSeconds));
-            }
-
-            return content;
-        }
-
-        private string BuildCacheKey(string? location, string? article) =>
-            $"{nameof(GetContentPageAsync)}:Location:{location}:Article:{article}";
-
-        private async Task<ContentPageModel?> GetContentPageWithoutCacheAsync(string? location, string? article)
-        {
-            Expression<Func<ContentPageModel, bool>> where;
-
+            string pageUrl = string.Empty;
             if (string.IsNullOrWhiteSpace(location) && string.IsNullOrWhiteSpace(article))
             {
-                where = p => p.PageLocation == "/" && p.IsDefaultForPageLocation;
+                pageUrl = "/home";
             }
-            else if (string.IsNullOrWhiteSpace(article))
+            else if (location == "home")
             {
-                where = p => (p.PageLocation == $"/{location}" && p.IsDefaultForPageLocation) || (p.PageLocation == "/" && p.CanonicalName == location);
+                pageUrl = $"/{location}";
             }
             else
             {
-                where = p => (p.PageLocation == $"/{location}" && p.CanonicalName == article) || (p.PageLocation == $"/{location}/{article}" && p.IsDefaultForPageLocation);
+                pageUrl = $"/{location}/{(string.IsNullOrWhiteSpace(article) ? location : article)}";
             }
-
-            var contentPageModels = await contentPageService.GetAsync(where);
-
-            if (contentPageModels == null || !contentPageModels.Any())
-            {
-                var searchLocation = string.IsNullOrWhiteSpace(article) ? $"/{location}" : $"/{location}/{article}";
-                where = p => p.PageLocation == searchLocation && !p.IsDefaultForPageLocation;
-
-                contentPageModels = await contentPageService.GetAsync(where);
-            }
-
-            if (contentPageModels != null && contentPageModels.Any())
-            {
-                return contentPageModels.OrderBy(o => o.CreatedDate).First();
-            }
-
-            return default;
+            return pageUrl;
         }
     }
 }

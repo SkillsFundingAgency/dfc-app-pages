@@ -28,6 +28,27 @@
         "clientAffinity": {
             "type": "bool"
         },
+        "contentMode": {
+            "type": "string"
+        },
+        "TokenEndPointURL": {
+            "type": "string"
+        },
+        "GraphApiUrl": {
+            "type": "string"
+        },
+        "SqlApiUrl": {
+            "type": "string"
+        },
+        "ClientId": {
+            "type": "string"
+        },
+        "ClientSecret": {
+            "type": "string"
+        },
+        "RedisCacheConnectionString": {
+            "type": "string"
+        },
         "CosmosDbResourceGroup": {
             "type": "string"
         },
@@ -273,6 +294,10 @@
                                 "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('appSharedStorageAccountName'),';AccountKey=',listKeys(resourceId(parameters('appSharedResourceGroup'), 'Microsoft.Storage/storageAccounts', parameters('appSharedStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]"
                             },
                             {
+                                "name": "ContentMode",
+                                "value": "[parameters('contentMode')]"
+                            },
+                            {
                                 "name": "Configuration__CosmosDbConnections__ContentPages__AccessKey",
                                 "value": "[parameters('cosmosDbKey')]"
                             },
@@ -292,6 +317,30 @@
                                 "name": "Configuration__CosmosDbConnections__ContentPages__PartitionKey",
                                 "value": "[variables('cosmosDbCollectionPartitionKey')]"
                             },
+                            {
+                                "name": "Cms__TokenEndPointURL",
+                                "value": "[parameters('TokenEndPointURL')]"
+                            },
+                            {
+                                "name": "Cms__GraphApiUrl",
+                                "value": "[parameters('GraphApiUrl')]"
+                            },
+                            {
+                                "name": "Cms__SqlApiUrl",
+                                "value": "[parameters('SqlApiUrl')]"
+                            },
+                            {
+                                "name": "Cms__ClientId",
+                                "value": "[parameters('ClientId')]"
+                            },
+                            {
+                                "name": "Cms__ClientSecret",
+                                "value": "[parameters('ClientSecret')]"
+                            },
+                          {
+                            "name": "Cms__RedisCacheConnectionString",
+                            "value": "[parameters('RedisCacheConnectionString')]"
+                          },
                             {
                                 "name": "Logging__ApplicationInsights__LogLevel__Default",
                                 "value": "Information"
