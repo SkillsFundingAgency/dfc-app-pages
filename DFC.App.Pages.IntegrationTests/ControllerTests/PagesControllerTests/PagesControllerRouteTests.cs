@@ -31,12 +31,12 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             new object[] { "/pages/head" },
             new object[] { "/pages/breadcrumb" },
             new object[] { "/pages/body" },
+            new object[] { $"/pages/herobanner" },
         };
 
         public static IEnumerable<object[]> PagesNoContentRouteData => new List<object[]>
         {
             new object[] { $"/pages/bodytop" },
-            new object[] { $"/pages/herobanner" },
             new object[] { $"/pages/sidebarright" },
             new object[] { $"/pages/sidebarleft" },
             new object[] { $"/pages/bodyfooter" },

@@ -33,7 +33,7 @@ namespace DFC.App.Pages.Controllers
         private readonly IPagesControlerHelpers pagesControlerHelpers;
         private ISharedContentRedisInterface sharedContentRedisInterface;
         private contentModeOptions _options;
-        public string status;
+        private string status;
 
         public PagesController(ILogger<PagesController> logger,
                                IContentPageService<ContentPageModel> contentPageService,
@@ -55,9 +55,16 @@ namespace DFC.App.Pages.Controllers
         [Route("pages")]
         public async Task<IActionResult> Index()
         {
-            status = _options.contentMode;
+            if (_options.contentMode != null)
+            {
+                status = _options.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
+
             logger.LogInformation($"{nameof(Index)} has been called");
-            
             var viewModel = new IndexViewModel()
             {
                 LocalPath = LocalPath,
@@ -69,6 +76,8 @@ namespace DFC.App.Pages.Controllers
                 },
             };
             var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlReponse>("pagesurl" + "/" + status);
+            if (pageUrlResponse.Page == null)
+                return NoContent();
             viewModel.Documents.AddRange(pageUrlResponse.Page.OrderBy(o => o.PageLocation.UrlName).Select(a => mapper.Map<IndexDocumentViewModel>(a)));
             return this.NegotiateContentResult(viewModel);
         }
@@ -83,7 +92,14 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Document(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Document)} has been called");
-            status = _options.contentMode;
+            if (_options.contentMode != null)
+            {
+                status = _options.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
@@ -132,13 +148,20 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Head(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Head)} has been called");
-            status = _options.contentMode;
+            if (_options.contentMode != null)
+            {
+                status = _options.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
             var viewModel = new HeadViewModel();
-            if (pageResponse != null)
+            if (pageResponse != null && pageResponse.PageLocation!=null)
             {
                 mapper.Map(pageResponse, viewModel);
                 viewModel.CanonicalUrl = BuildCanonicalUrl(pageResponse);
@@ -192,7 +215,15 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> HeroBanner(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(HeroBanner)} has been called");
-            status = _options.contentMode;
+            if (_options.contentMode != null)
+            {
+                status = _options.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
+
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
@@ -216,7 +247,14 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Body(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Body)} has been called");
-            status = _options.contentMode;
+            if (_options.contentMode != null)
+            {
+                status = _options.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
@@ -305,7 +343,15 @@ namespace DFC.App.Pages.Controllers
 
         private async Task<BreadcrumbViewModel> GetBreadcrumb(string location, string article)
         {
-            status = _options.contentMode;
+            if (_options.contentMode != null)
+            {
+                status = _options.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
+
             var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation");
             string pageUrl = GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
