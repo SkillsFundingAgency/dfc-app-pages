@@ -296,7 +296,7 @@
                             {
                                 "name": "ContentMode",
                                 "value": "[parameters('contentMode')]"
-                            }
+                            },
                             {
                                 "name": "Configuration__CosmosDbConnections__ContentPages__AccessKey",
                                 "value": "[parameters('cosmosDbKey')]"
