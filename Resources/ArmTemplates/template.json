@@ -337,10 +337,10 @@
                                 "name": "Cms__ClientSecret",
                                 "value": "[parameters('ClientSecret')]"
                             },
-                            {
-                                "name": "Cms__RedisCacheConnectionString",
-                                "value": "[paramters('RedisCacheConnectionString')]"
-                            },
+                          {
+                            "name": "Cms__RedisCacheConnectionString",
+                            "value": "[parameters('RedisCacheConnectionString')]"
+                          },
                             {
                                 "name": "Logging__ApplicationInsights__LogLevel__Default",
                                 "value": "Information"
