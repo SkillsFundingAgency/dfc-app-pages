@@ -44,10 +44,10 @@
             "type": "string"
         },
         "ClientSecret": {
-            "type": "string"
+            "type": "securestring"
         },
         "RedisCacheConnectionString": {
-            "type": "string"
+            "type": "securestring"
         },
         "CosmosDbResourceGroup": {
             "type": "string"

@@ -21,25 +21,25 @@
             "value": "__clientAffinity__"
         },
         "contentMode": {
-            "value": "__contentMode__"
+            "value": "__ContentMode__"
         },
         "TokenEndPointURL": {
-            "value": "__TokenEndPointURL"
+            "value": "__StaxGraphqlTokenEndPointURL"
         },
         "GraphApiUrl": {
-            "value": "__GraphApiUrl__"
+            "value": "__StaxGraphApiUrl__"
         },
         "SqlApiUrl": {
-            "value": "__SqlApiUrl__"
+            "value": "__StaxGraphqlSqlApiUrl__"
         },
         "ClientId": {
-            "value": "__ClientId__"
+            "value": "__StaxGraphqlClientId__"
         },
         "ClientSecret": {
-            "value": "__ClientSecret__"
+            "value": "__StaxGraphqlClientSecret__"
         },
         "RedisCacheConnectionString": {
-            "value": "__RedisCacheConnectionString__"
+            "value": "__RedisConnectionString__"
         },
         "aspTier": {
             "value": "__aspTier__"
