@@ -23,16 +23,16 @@ namespace DFC.App.Pages.Helpers
         private readonly IMemoryCache memoryCache;
         private ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly AutoMapper.IMapper mapper;
-        private IOptionsMonitor<contentModeOptions> _options;
+        private contentModeOptions _options;
         private string status;
 
-        public PagesControlerHelpers(IContentPageService<ContentPageModel> contentPageService, IMemoryCache memoryCache, ISharedContentRedisInterface sharedContentRedisInterface, AutoMapper.IMapper mapper, IOptionsMonitor<contentModeOptions> options)
+        public PagesControlerHelpers(IContentPageService<ContentPageModel> contentPageService, IMemoryCache memoryCache, ISharedContentRedisInterface sharedContentRedisInterface, AutoMapper.IMapper mapper, IOptions<contentModeOptions> options)
         {
             this.contentPageService = contentPageService;
             this.memoryCache = memoryCache;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
             this.mapper = mapper;
-            _options = options;
+            _options = options.Value;
         }
 
         public static (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
@@ -59,9 +59,9 @@ namespace DFC.App.Pages.Helpers
 
         public async Task<ContentPageModel?> GetContentPageFromSharedAsync(string? location, string? article)
         {
-            if (_options.CurrentValue.contentMode != null)
+            if (_options.contentMode != null)
             {
-                status = _options.CurrentValue.contentMode;
+                status = _options.contentMode;
             }
             else
             {
