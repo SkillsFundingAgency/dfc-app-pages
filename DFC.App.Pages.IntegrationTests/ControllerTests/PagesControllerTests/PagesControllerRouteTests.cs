@@ -1,7 +1,12 @@
-﻿/*using FakeItEasy;
+﻿using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using FakeItEasy;
 using FluentAssertions;
+using Moq;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -30,7 +35,6 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             new object[] { "/pages" },
             new object[] { "/pages/head" },
             new object[] { "/pages/breadcrumb" },
-            new object[] { "/pages/body" },
             new object[] { $"/pages/herobanner" },
         };
 
@@ -46,6 +50,29 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
         [MemberData(nameof(PagesContentRouteData))]
         public async Task GetPagesHtmlContentEndpointsReturnSuccessAndCorrectContentType(string url)
         {
+            var page = new Page()
+            {
+                Description = "test",
+                DisplayText = "test",
+            };
+            var pageUrl = new PageUrl()
+            {
+                DisplayText = "test",
+                PageLocation = new PageLocation()
+                {
+                    FullUrl = "test",
+                    UrlName = "test",
+                },
+            };
+            var pageUrlResponse = new PageUrlReponse()
+            {
+                Page = new List<PageUrl> { pageUrl },
+            };
+            this.factory.MockSharedContentRedis.Setup(
+                x => x.GetDataAsync<PageUrlReponse>(
+                    It.IsAny<string>()))
+            .ReturnsAsync(pageUrlResponse);
+
             // Arrange
             var contentPageModel = factory.GetContentPageModels().Where(x => x.CanonicalName == "an-article");
             var uri = new Uri(url, UriKind.Relative);
@@ -70,6 +97,23 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
         public async Task GetPagesJsonContentEndpointsReturnSuccessAndCorrectContentType(string url)
         {
             // Arrange
+            var pageUrl = new PageUrl()
+            {
+                DisplayText = "test",
+                PageLocation = new PageLocation()
+                {
+                    FullUrl = "test",
+                    UrlName = "test",
+                },
+            };
+            var pageUrlResponse = new PageUrlReponse()
+            {
+                Page = new List<PageUrl> { pageUrl },
+            };
+            this.factory.MockSharedContentRedis.Setup(
+                x => x.GetDataAsync<PageUrlReponse>(
+                    It.IsAny<string>()))
+            .ReturnsAsync(pageUrlResponse);
             var contentPageModel = factory.GetContentPageModels().Where(x => x.CanonicalName == "an-article");
             var uri = new Uri(url, UriKind.Relative);
             httpClient.DefaultRequestHeaders.Accept.Clear();
@@ -105,4 +149,4 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
     }
-}*/
+}
