@@ -24,7 +24,7 @@
             "value": "__contentMode__"
         },
         "TokenEndPointURL": {
-            "value": "__StaxGraphqlTokenEndPointURL"
+            "value": "__StaxGraphqlTokenEndPointURL__"
         },
         "GraphApiUrl": {
             "value": "__StaxGraphApiUrl__"
