@@ -127,7 +127,7 @@ namespace DFC.App.Pages
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageBreadcrumb>, PageBreadcrumbQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
 
-            services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
+            services.AddTransient<ISharedContentRedisInterface, SharedContentRedis>();
             services.ConfigureOptions<contentOptionsSetup>();
 
 
