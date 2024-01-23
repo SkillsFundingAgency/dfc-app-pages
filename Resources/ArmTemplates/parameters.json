@@ -21,7 +21,7 @@
             "value": "__clientAffinity__"
         },
         "contentMode": {
-            "value": "__ContentMode__"
+            "value": "__contentMode__"
         },
         "TokenEndPointURL": {
             "value": "__StaxGraphqlTokenEndPointURL"
