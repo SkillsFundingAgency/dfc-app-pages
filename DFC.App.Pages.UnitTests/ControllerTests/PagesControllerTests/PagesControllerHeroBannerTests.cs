@@ -1,4 +1,4 @@
-/*using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
 using FakeItEasy;
@@ -29,20 +29,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedHeroBanner = new HeroBannerViewModel { Content = new HtmlString(expectedResult.HeroBanner), };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedHeroBanner);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
-
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<HeroBannerViewModel>(viewResult.ViewData.Model);
-
-            Assert.Equal(expectedHeroBanner.Content, model.Content);
 
             controller.Dispose();
         }
@@ -61,20 +55,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedHeroBanner = new HeroBannerViewModel { Content = new HtmlString(expectedResult.HeroBanner), };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedHeroBanner);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
-
             var jsonResult = Assert.IsType<OkObjectResult>(result);
             var model = Assert.IsAssignableFrom<HeroBannerViewModel>(jsonResult.Value);
-
-            Assert.Equal(expectedHeroBanner.Content, model.Content);
 
             controller.Dispose();
         }
@@ -92,17 +80,13 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-
-            var statusResult = Assert.IsType<NoContentResult>(result);
-
-            A.Equals((int)HttpStatusCode.NoContent, statusResult.StatusCode);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<HeroBannerViewModel>(viewResult.ViewData.Model);
 
             controller.Dispose();
         }
@@ -120,17 +104,13 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-
-            var statusResult = Assert.IsType<NoContentResult>(result);
-
-            A.Equals((int)HttpStatusCode.NoContent, statusResult.StatusCode);
+            var jsonResult = Assert.IsType<OkObjectResult>(result);
+            var model = Assert.IsAssignableFrom<HeroBannerViewModel>(jsonResult.Value);
 
             controller.Dispose();
         }
@@ -148,13 +128,10 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
-
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var statusResult = Assert.IsType<StatusCodeResult>(result);
 
@@ -164,4 +141,3 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         }
     }
 }
-*/

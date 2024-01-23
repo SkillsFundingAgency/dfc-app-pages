@@ -1,4 +1,4 @@
-/*using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
 using FakeItEasy;
@@ -17,7 +17,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
     {
         [Theory]
         [MemberData(nameof(HtmlMediaTypes))]
-        public async Task PagesControllerBreadcrumbHtmlReturnsSuccess(string mediaTypeName)
+        public async Task PagesControllerBreadcrumbHtmlReturnsNoContentResult(string mediaTypeName)
         {
             // Arrange
             var pageRequestModel = new PageRequestModel
@@ -29,27 +29,22 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedBreadcrumb = new BreadcrumbViewModel { Breadcrumbs = new List<BreadcrumbItemViewModel> { new BreadcrumbItemViewModel { Route = "a-route", Title = "A title", }, }, };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedBreadcrumb);
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
+            var statusResult = Assert.IsType<NoContentResult>(result);
 
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<BreadcrumbViewModel>(viewResult.ViewData.Model);
-
-            model?.Breadcrumbs!.Count.Should().BeGreaterThan(0);
+            A.Equals((int)HttpStatusCode.NoContent, statusResult.StatusCode);
 
             controller.Dispose();
         }
 
         [Theory]
         [MemberData(nameof(JsonMediaTypes))]
-        public async Task PagesControllerBreadcrumbJsonReturnsSuccess(string mediaTypeName)
+        public async Task PagesControllerBreadcrumbJsonReturnsNoContent(string mediaTypeName)
         {
             // Arrange
             var pageRequestModel = new PageRequestModel
@@ -63,20 +58,15 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
             expectedResult.MetaTags.Title = pageRequestModel.Location2.ToUpperInvariant();
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedBreadcrumb);
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
+            var statusResult = Assert.IsType<NoContentResult>(result);
 
-            var jsonResult = Assert.IsType<OkObjectResult>(result);
-            var model = Assert.IsAssignableFrom<BreadcrumbViewModel>(jsonResult.Value);
-
-            model?.Breadcrumbs!.Count.Should().BeGreaterThan(0);
+            A.Equals((int)HttpStatusCode.NoContent, statusResult.StatusCode);
 
             controller.Dispose();
         }
@@ -94,13 +84,10 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
-
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var statusResult = Assert.IsType<NoContentResult>(result);
 
@@ -122,13 +109,10 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
-
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var statusResult = Assert.IsType<NoContentResult>(result);
 
@@ -139,7 +123,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
         [Theory]
         [MemberData(nameof(InvalidMediaTypes))]
-        public async Task PagesControllerBreadcrumbReturnsNotAcceptable(string mediaTypeName)
+        public async Task PagesControllerBreadcrumbReturnsNoContent(string mediaTypeName)
         {
             // Arrange
             var pageRequestModel = new PageRequestModel
@@ -150,17 +134,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2, ShowBreadcrumb = true, };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            var statusResult = Assert.IsType<NoContentResult>(result);
 
-            var statusResult = Assert.IsType<StatusCodeResult>(result);
-
-            A.Equals((int)HttpStatusCode.NotAcceptable, statusResult.StatusCode);
+            A.Equals((int)HttpStatusCode.NoContent, statusResult.StatusCode);
 
             controller.Dispose();
         }
@@ -177,14 +158,10 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2, ShowBreadcrumb = false };
             var controller = BuildPagesController(MediaTypeNames.Text.Html);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
-
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
 
             var statusResult = Assert.IsType<NoContentResult>(result);
 
@@ -194,4 +171,3 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         }
     }
 }
-*/

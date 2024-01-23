@@ -25,39 +25,46 @@ namespace DFC.App.Pages.Controllers
 {
     public class PagesController : Controller
     {
-        private const string LocalPath = "pages";
+        private const string LocalPath = "Pages";
 
         private readonly ILogger<PagesController> logger;
         private readonly IContentPageService<ContentPageModel> contentPageService;
         private readonly AutoMapper.IMapper mapper;
         private readonly IPagesControlerHelpers pagesControlerHelpers;
         private ISharedContentRedisInterface sharedContentRedisInterface;
-        private readonly IOptionsMonitor<contentModeOptions> _options;
-        public string status;
+        private contentModeOptions _options;
+        private string status;
 
         public PagesController(ILogger<PagesController> logger,
                                IContentPageService<ContentPageModel> contentPageService,
                                AutoMapper.IMapper mapper,
                                IPagesControlerHelpers pagesControlerHelpers,
-                               ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
+                               ISharedContentRedisInterface sharedContentRedisInterface, IOptions<contentModeOptions> options)
         {
             this.logger = logger;
             this.contentPageService = contentPageService;
             this.mapper = mapper;
             this.pagesControlerHelpers = pagesControlerHelpers;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
-            _options = options;
+            _options = options.Value;
 
         }
 
         [HttpGet]
         [Route("/")]
-        [Route("pages")]
+        [Route("Pages")]
         public async Task<IActionResult> Index()
-        {           
-            status = _options.CurrentValue.contentMode;
+        {
+            if (_options.contentMode != null)
+            {
+                status = _options.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
+
             logger.LogInformation($"{nameof(Index)} has been called");
-            
             var viewModel = new IndexViewModel()
             {
                 LocalPath = LocalPath,
@@ -69,25 +76,34 @@ namespace DFC.App.Pages.Controllers
                 },
             };
             var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlReponse>("pagesurl" + "/" + status);
+            if (pageUrlResponse.Page == null)
+                return NoContent();
             viewModel.Documents.AddRange(pageUrlResponse.Page.OrderBy(o => o.PageLocation.UrlName).Select(a => mapper.Map<IndexDocumentViewModel>(a)));
             return this.NegotiateContentResult(viewModel);
         }
 
         [HttpGet]
-        [Route("pages/document")]
-        [Route("pages/{location1}/document")]
-        [Route("pages/{location1}/{location2}/document")]
-        [Route("pages/{location1}/{location2}/{location3}/document")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/document")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/document")]
+        [Route("Pages/document")]
+        [Route("Pages/{location1}/document")]
+        [Route("Pages/{location1}/{location2}/document")]
+        [Route("Pages/{location1}/{location2}/{location3}/document")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/document")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/{location5}/document")]
         public async Task<IActionResult> Document(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Document)} has been called");
-            status = _options.CurrentValue.contentMode;
+            if (_options.contentMode != null)
+            {
+                status = _options.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status);
             if (pageResponse != null)
             {
                 var viewModel = mapper.Map<DocumentViewModel>(pageResponse);
@@ -100,7 +116,7 @@ namespace DFC.App.Pages.Controllers
                         foreach (var breadcrumb in viewModel.Breadcrumb.Breadcrumbs)
                         {
                             var route = breadcrumb.Route == "/" ? string.Empty : breadcrumb.Route;
-                            breadcrumb.Route = $"/pages{route}/document";
+                            breadcrumb.Route = $"/Pages{route}/document";
                         }
                     }
                 }
@@ -123,22 +139,29 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/head")]
-        [Route("pages/{location1}/head")]
-        [Route("pages/{location1}/{location2}/head")]
-        [Route("pages/{location1}/{location2}/{location3}/head")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/head")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/head")]
+        [Route("Pages/head")]
+        [Route("Pages/{location1}/head")]
+        [Route("Pages/{location1}/{location2}/head")]
+        [Route("Pages/{location1}/{location2}/{location3}/head")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/head")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/{location5}/head")]
         public async Task<IActionResult> Head(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Head)} has been called");
-            status = _options.CurrentValue.contentMode;
+            if (_options.contentMode != null)
+            {
+                status = _options.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status);
             var viewModel = new HeadViewModel();
-            if (pageResponse != null)
+            if (pageResponse != null && pageResponse.PageLocation != null)
             {
                 mapper.Map(pageResponse, viewModel);
                 viewModel.CanonicalUrl = BuildCanonicalUrl(pageResponse);
@@ -147,12 +170,12 @@ namespace DFC.App.Pages.Controllers
             return this.NegotiateContentResult(viewModel);
         }
 
-        [Route("pages/breadcrumb")]
-        [Route("pages/{location1}/breadcrumb")]
-        [Route("pages/{location1}/{location2}/breadcrumb")]
-        [Route("pages/{location1}/{location2}/{location3}/breadcrumb")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/breadcrumb")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/breadcrumb")]
+        [Route("Pages/breadcrumb")]
+        [Route("Pages/{location1}/breadcrumb")]
+        [Route("Pages/{location1}/{location2}/breadcrumb")]
+        [Route("Pages/{location1}/{location2}/{location3}/breadcrumb")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/breadcrumb")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/{location5}/breadcrumb")]
         public async Task<IActionResult> Breadcrumb(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Breadcrumb)} has been called");
@@ -169,12 +192,12 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/bodytop")]
-        [Route("pages/{location1}/bodytop")]
-        [Route("pages/{location1}/{location2}/bodytop")]
-        [Route("pages/{location1}/{location2}/{location3}/bodytop")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/bodytop")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/bodytop")]
+        [Route("Pages/bodytop")]
+        [Route("Pages/{location1}/bodytop")]
+        [Route("Pages/{location1}/{location2}/bodytop")]
+        [Route("Pages/{location1}/{location2}/{location3}/bodytop")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/bodytop")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/{location5}/bodytop")]
         public IActionResult BodyTop(PageRequestModel pageRequestModel)
         {
             logger.LogWarning($"{nameof(BodyTop)} has returned no content");
@@ -183,19 +206,27 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/herobanner")]
-        [Route("pages/{location1}/herobanner")]
-        [Route("pages/{location1}/{location2}/herobanner")]
-        [Route("pages/{location1}/{location2}/{location3}/herobanner")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/herobanner")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/herobanner")]
+        [Route("Pages/herobanner")]
+        [Route("Pages/{location1}/herobanner")]
+        [Route("Pages/{location1}/{location2}/herobanner")]
+        [Route("Pages/{location1}/{location2}/{location3}/herobanner")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/herobanner")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/{location5}/herobanner")]
         public async Task<IActionResult> HeroBanner(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(HeroBanner)} has been called");
-            status = _options.CurrentValue.contentMode;
+            if (_options.contentMode != null)
+            {
+                status = _options.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
+
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status);
             if (pageResponse == null)
             {
                 return NoContent();
@@ -207,20 +238,27 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/body")]
-        [Route("pages/{location1}/body")]
-        [Route("pages/{location1}/{location2}/body")]
-        [Route("pages/{location1}/{location2}/{location3}/body")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/body")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/body")]
+        [Route("Pages/body")]
+        [Route("Pages/{location1}/body")]
+        [Route("Pages/{location1}/{location2}/body")]
+        [Route("Pages/{location1}/{location2}/{location3}/body")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/body")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/{location5}/body")]
         public async Task<IActionResult> Body(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Body)} has been called");
-            status = _options.CurrentValue.contentMode;
+            if (_options.contentMode != null)
+            {
+                status = _options.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status);
             var viewModel = new BodyViewModel();
             if (pageResponse != null)
             {
@@ -228,7 +266,7 @@ namespace DFC.App.Pages.Controllers
                 return this.NegotiateContentResult(viewModel);
             }
 
-            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<IList<PageUrl>>("page/GetPageUrls");
+            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<IList<PageUrl>>("Page/GetPageUrls");
             var filterList = redirectedContentPageModel.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
             if (filterList.Count > 0)
             {
@@ -243,12 +281,12 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/sidebarright")]
-        [Route("pages/{location1}/sidebarright")]
-        [Route("pages/{location1}/{location2}/sidebarright")]
-        [Route("pages/{location1}/{location2}/{location3}/sidebarright")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/sidebarright")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/sidebarright")]
+        [Route("Pages/sidebarright")]
+        [Route("Pages/{location1}/sidebarright")]
+        [Route("Pages/{location1}/{location2}/sidebarright")]
+        [Route("Pages/{location1}/{location2}/{location3}/sidebarright")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/sidebarright")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/{location5}/sidebarright")]
         public IActionResult SidebarRight(PageRequestModel pageRequestModel)
         {
             logger.LogWarning($"{nameof(SidebarRight)} has returned no content");
@@ -257,12 +295,12 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/sidebarleft")]
-        [Route("pages/{location1}/sidebarleft")]
-        [Route("pages/{location1}/{location2}/sidebarleft")]
-        [Route("pages/{location1}/{location2}/{location3}/sidebarleft")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/sidebarleft")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/sidebarleft")]
+        [Route("Pages/sidebarleft")]
+        [Route("Pages/{location1}/sidebarleft")]
+        [Route("Pages/{location1}/{location2}/sidebarleft")]
+        [Route("Pages/{location1}/{location2}/{location3}/sidebarleft")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/sidebarleft")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/{location5}/sidebarleft")]
         public IActionResult SidebarLeft(PageRequestModel pageRequestModel)
         {
             logger.LogWarning($"{nameof(SidebarLeft)} has returned no content");
@@ -271,12 +309,12 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/bodyfooter")]
-        [Route("pages/{location1}/bodyfooter")]
-        [Route("pages/{location1}/{location2}/bodyfooter")]
-        [Route("pages/{location1}/{location2}/{location3}/bodyfooter")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/bodyfooter")]
-        [Route("pages/{location1}/{location2}/{location3}/{location4}/{location5}/bodyfooter")]
+        [Route("Pages/bodyfooter")]
+        [Route("Pages/{location1}/bodyfooter")]
+        [Route("Pages/{location1}/{location2}/bodyfooter")]
+        [Route("Pages/{location1}/{location2}/{location3}/bodyfooter")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/bodyfooter")]
+        [Route("Pages/{location1}/{location2}/{location3}/{location4}/{location5}/bodyfooter")]
         public IActionResult BodyFooter(PageRequestModel pageRequestModel)
         {
             logger.LogWarning($"{nameof(BodyFooter)} has returned no content");
@@ -305,10 +343,18 @@ namespace DFC.App.Pages.Controllers
 
         private async Task<BreadcrumbViewModel> GetBreadcrumb(string location, string article)
         {
-            status = _options.CurrentValue.contentMode;
+            if (_options.contentMode != null)
+            {
+                status = _options.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
+
             var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation");
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status);
 
             if (pageResponse == null || !pageResponse.ShowBreadcrumb)
                 return null;

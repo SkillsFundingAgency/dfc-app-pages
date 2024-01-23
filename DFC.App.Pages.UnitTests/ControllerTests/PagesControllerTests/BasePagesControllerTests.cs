@@ -24,7 +24,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             FakeMapper = A.Fake<AutoMapper.IMapper>();
             FakePagesControlerHelpers = A.Fake<IPagesControlerHelpers>();
             FakeSharedContentRedisInterface =A.Fake<ISharedContentRedisInterface>();
-            FakeContentOptions = A.Fake<IOptionsMonitor<contentModeOptions>>();
+            FakeContentOptions = A.Fake<IOptions<contentModeOptions>>();
         }
 
         public static IEnumerable<object[]> HtmlMediaTypes => new List<object[]>
@@ -52,7 +52,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         protected IPagesControlerHelpers FakePagesControlerHelpers { get; }
 
         protected ISharedContentRedisInterface FakeSharedContentRedisInterface;
-        protected IOptionsMonitor<contentModeOptions> FakeContentOptions { get; }
+        protected IOptions<contentModeOptions> FakeContentOptions { get; }
 
         protected PagesController BuildPagesController(string mediaTypeName)
         {
