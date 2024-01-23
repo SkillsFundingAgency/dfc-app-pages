@@ -68,7 +68,7 @@ namespace DFC.App.Pages.Helpers
                 status = "PUBLISHED";
             }
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("page" + pageUrl + "/" + status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status);
             ContentPageModel? content = new ContentPageModel();
             mapper.Map(pageResponse, content);
             return content;
