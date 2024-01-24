@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Data.Models.ClientOptions;
@@ -6,12 +7,18 @@ using DFC.App.Pages.Data.Models.CmsApiModels;
 using DFC.App.Pages.Extensions;
 using DFC.App.Pages.Helpers;
 using DFC.App.Pages.HttpClientPolicies;
-using DFC.App.Pages.Models;
 using DFC.App.Pages.Services.AppRegistryService;
 using DFC.App.Pages.Services.CacheContentService;
 using DFC.App.Pages.Services.CacheContentService.ContentItemUpdaters;
 using DFC.App.Pages.Services.EventProcessorService;
+using DFC.Common.SharedContent.Pkg.Netcore;
 using DFC.Common.SharedContent.Pkg.Netcore.Constant;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBreadcrumb;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Common.SharedContent.Pkg.Netcore.RequestHandler;
 using DFC.Compui.Cosmos;
 using DFC.Compui.Cosmos.Contracts;
@@ -30,22 +37,12 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using RestSharp;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
-using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
-using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
-using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
-using DFC.Common.SharedContent.Pkg.Netcore;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBreadcrumb;
-using DFC.App.Pages.Cms.Data.Content;
 
 namespace DFC.App.Pages
 {
@@ -130,7 +127,6 @@ namespace DFC.App.Pages
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
             services.ConfigureOptions<contentOptionsSetup>();
 
-
             var cosmosDbConnectionContentPages = configuration.GetSection(CosmosDbContentPagesConfigAppSettings).Get<CosmosDbConnection>();
             var cosmosRetryOptions = new RetryOptions { MaxRetryAttemptsOnThrottledRequests = 20, MaxRetryWaitTimeInSeconds = 60 };
             services.AddContentPageServices<ContentPageModel>(cosmosDbConnectionContentPages, env.IsDevelopment(), cosmosRetryOptions);
@@ -154,10 +150,8 @@ namespace DFC.App.Pages
             services.AddSingleton(configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
             services.AddSingleton(configuration.GetSection(nameof(EventGridPublishClientOptions)).Get<EventGridPublishClientOptions>() ?? new EventGridPublishClientOptions());
             services.AddSingleton(configuration.GetSection(nameof(AppRegistryClientOptions)).Get<AppRegistryClientOptions>() ?? new AppRegistryClientOptions());
-           
             services.AddHostedServiceTelemetryWrapper();
             services.AddSubscriptionBackgroundService(configuration);
-            
 
             const string AppSettingsPolicies = "Policies";
             var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
