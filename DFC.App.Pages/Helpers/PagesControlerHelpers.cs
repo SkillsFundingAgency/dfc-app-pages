@@ -6,7 +6,6 @@ using DFC.App.Pages.Models;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Compui.Cosmos.Contracts;
-
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using System;

@@ -39,7 +39,8 @@ namespace DFC.App.Pages.Controllers
                                IContentPageService<ContentPageModel> contentPageService,
                                AutoMapper.IMapper mapper,
                                IPagesControlerHelpers pagesControlerHelpers,
-                               ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
+                               ISharedContentRedisInterface sharedContentRedisInterface, 
+                               IOptionsMonitor<contentModeOptions> options)
         {
             this.logger = logger;
             this.contentPageService = contentPageService;
@@ -77,7 +78,10 @@ namespace DFC.App.Pages.Controllers
             };
             var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlReponse>("pagesurl" + "/" + status);
             if (pageUrlResponse.Page == null)
+            {
                 return NoContent();
+            }
+
             viewModel.Documents.AddRange(pageUrlResponse.Page.OrderBy(o => o.PageLocation.UrlName).Select(a => mapper.Map<IndexDocumentViewModel>(a)));
             return this.NegotiateContentResult(viewModel);
         }
@@ -357,7 +361,9 @@ namespace DFC.App.Pages.Controllers
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status);
 
             if (pageResponse == null || !pageResponse.ShowBreadcrumb)
+            {
                 return null;
+            }
 
             string breadCrumbDisplayText = pageResponse.Breadcrumb.TermContentItems.FirstOrDefault().DisplayText;
             var jdoc = JObject.Parse(breadcrumbResponse.Content);
@@ -377,6 +383,7 @@ namespace DFC.App.Pages.Controllers
 
                 result.Breadcrumbs.Add(articlePathViewModel);
             }
+
             return result;
         }
 
@@ -385,7 +392,7 @@ namespace DFC.App.Pages.Controllers
             StringBuilder breadCrumbText = new StringBuilder();
             BreadcrumbViewModel breadCrumbs = new BreadcrumbViewModel()
             {
-                Breadcrumbs = new List<BreadcrumbItemViewModel>()
+                Breadcrumbs = new List<BreadcrumbItemViewModel>(),
             };
 
             int index = 0;
@@ -400,10 +407,10 @@ namespace DFC.App.Pages.Controllers
                     Route = displayTextToken.ToString(),
                     Title = breadCrumbToken.ToString(),
                 });
-                // breadCrumbText.Insert(0, $"\\{tokenValue.ToString()}");
                 index = path.LastIndexOf(".");
                 path = path.Remove(index);
-            } while (path.LastIndexOf(".") > 0);
+            }
+            while (path.LastIndexOf(".") > 0);
 
             breadCrumbs.Breadcrumbs.Reverse();
             return breadCrumbs;
@@ -415,8 +422,7 @@ namespace DFC.App.Pages.Controllers
 
             var uriString = Path.Combine(
                 Request.GetBaseAddress()?.ToString() ?? string.Empty,
-                pathDirectory1
-              );
+                pathDirectory1);
 
             return new Uri(uriString, UriKind.RelativeOrAbsolute);
         }

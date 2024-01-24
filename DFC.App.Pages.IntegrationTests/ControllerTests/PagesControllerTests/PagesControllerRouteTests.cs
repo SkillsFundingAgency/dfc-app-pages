@@ -1,12 +1,10 @@
 ﻿using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.SharedHtml;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using FakeItEasy;
 using FluentAssertions;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
