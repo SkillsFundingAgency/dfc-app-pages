@@ -27,7 +27,7 @@
             "value": "__StaxGraphqlTokenEndPointURL__"
         },
         "GraphApiUrl": {
-            "value": "__StaxGraphApiUrl__"
+            "value": "__StaxGraphqlApiUrl__"
         },
         "SqlApiUrl": {
             "value": "__StaxGraphqlSqlApiUrl__"
