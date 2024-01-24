@@ -15,10 +15,10 @@
             "value": "__aseResourceGroup__"
         },
         "aspInstances": {
-            "value": "__aspInstances__"
+            "value": __aspInstances__
         },
         "clientAffinity": {
-            "value": "__clientAffinity__"
+            "value": __clientAffinity__
         },
         "contentMode": {
             "value": "__contentMode__"
@@ -27,7 +27,7 @@
             "value": "__StaxGraphqlTokenEndPointURL__"
         },
         "GraphApiUrl": {
-            "value": "__StaxGraphApiUrl__"
+            "value": "__StaxGraphqlApiUrl__"
         },
         "SqlApiUrl": {
             "value": "__StaxGraphqlSqlApiUrl__"
@@ -66,13 +66,13 @@
             "value": "__cosmosDbCollectionName__"
         },
         "pagesAppDatabaseNeedsCreation": {
-            "value": "__CosmosDbDatabaseDoesntExist__"
+            "value": __CosmosDbDatabaseDoesntExist__
         },
         "pagesAppDatabaseThroughput": {
-            "value": "__pagesAppDatabaseThroughput__"
+            "value": __pagesAppDatabaseThroughput__
         },
         "enableAlerts": {
-            "value": "__EnableAzureMonitorAlerting__"
+            "value": __EnableAzureMonitorAlerting__
         },
         "SubscriptionSettingsEndpoint": {
             "value": "__SubscriptionSettingsEndpoint__"
