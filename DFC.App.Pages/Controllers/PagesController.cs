@@ -356,7 +356,7 @@ namespace DFC.App.Pages.Controllers
                 status = "PUBLISHED";
             }
 
-            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation" + " / " + status);
+            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation" + "/" + status);
             string pageUrl = GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status);
 
