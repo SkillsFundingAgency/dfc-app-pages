@@ -21,7 +21,7 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("pages/robots")]
+        [Route("Pages/robots")]
         public IActionResult RobotView()
         {
             var result = Robot();
