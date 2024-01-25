@@ -25,7 +25,7 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("api/Pages")]
+        [Route("api/pages")]
         public async Task<IActionResult> Index()
         {
             logger.LogInformation($"{nameof(Index)} has been called");
@@ -49,7 +49,7 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("api/Pages/{id}")]
+        [Route("api/pages/{id}")]
         public async Task<IActionResult> Document(Guid id)
         {
             logger.LogInformation($"{nameof(Document)} has been called");

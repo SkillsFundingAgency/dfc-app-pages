@@ -26,7 +26,7 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("Pages/health")]
+        [Route("pages/health")]
         public async Task<IActionResult> HealthView()
         {
             var result = await Health().ConfigureAwait(false);
