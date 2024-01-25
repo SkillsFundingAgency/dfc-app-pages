@@ -89,6 +89,8 @@ namespace DFC.App.Pages
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddStackExchangeRedisCache(options => { options.Configuration = configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
+
             services.AddSingleton<IGraphQLClient>(s =>
             {
                 var option = new GraphQLHttpClientOptions()
