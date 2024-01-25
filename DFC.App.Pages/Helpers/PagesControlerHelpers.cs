@@ -19,16 +19,16 @@ namespace DFC.App.Pages.Helpers
     {
         private const int CacheDurationInSeconds = 30;
         private readonly IContentPageService<ContentPageModel> contentPageService;
-        private readonly IMemoryCache memoryCache;
+        //private readonly IMemoryCache memoryCache;
         private ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly AutoMapper.IMapper mapper;
         private IOptionsMonitor<contentModeOptions> _options;
         private string status;
 
-        public PagesControlerHelpers(IContentPageService<ContentPageModel> contentPageService, IMemoryCache memoryCache, ISharedContentRedisInterface sharedContentRedisInterface, AutoMapper.IMapper mapper, IOptionsMonitor<contentModeOptions> options)
+        public PagesControlerHelpers(IContentPageService<ContentPageModel> contentPageService, ISharedContentRedisInterface sharedContentRedisInterface, AutoMapper.IMapper mapper, IOptionsMonitor<contentModeOptions> options)
         {
             this.contentPageService = contentPageService;
-            this.memoryCache = memoryCache;
+            //this.memoryCache = memoryCache;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
             this.mapper = mapper;
             _options = options;
