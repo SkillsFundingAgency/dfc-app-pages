@@ -14,13 +14,6 @@
     <NoWarn>1701;1702;</NoWarn>
   </PropertyGroup>
 
-	<ItemGroup>
-		<Compile Remove="HostedServices\**" />
-		<Content Remove="HostedServices\**" />
-		<EmbeddedResource Remove="HostedServices\**" />
-		<None Remove="HostedServices\**" />
-	</ItemGroup>
-
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
   </ItemGroup>
