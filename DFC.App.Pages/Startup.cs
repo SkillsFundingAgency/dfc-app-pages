@@ -7,6 +7,7 @@ using DFC.App.Pages.Data.Models.CmsApiModels;
 using DFC.App.Pages.Extensions;
 using DFC.App.Pages.Helpers;
 using DFC.App.Pages.HttpClientPolicies;
+using DFC.App.Pages.Models;
 using DFC.App.Pages.Services.AppRegistryService;
 using DFC.App.Pages.Services.CacheContentService;
 using DFC.App.Pages.Services.CacheContentService.ContentItemUpdaters;
@@ -136,28 +137,30 @@ namespace DFC.App.Pages
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
             services.AddTransient<IPagesControlerHelpers, PagesControlerHelpers>();
-            //services.AddTransient<IEventMessageService<ContentPageModel>, EventMessageService<ContentPageModel>>();
-            //services.AddTransient<ICacheReloadService, CacheReloadService>();
-            //services.AddTransient<IWebhooksService, WebhooksService>();
-            //services.AddTransient<IWebhookContentProcessor, WebhookContentProcessor>();
+            services.AddTransient<IEventMessageService<ContentPageModel>, EventMessageService<ContentPageModel>>();
+            services.AddTransient<ICacheReloadService, CacheReloadService>();
+            services.AddTransient<IWebhooksService, WebhooksService>();
+            services.AddTransient<IWebhookContentProcessor, WebhookContentProcessor>();
             services.AddTransient<IPageLocatonUpdater, PageLocatonUpdater>();
             services.AddTransient<IContentItemUpdater, ContentItemUpdater>();
-            //services.AddTransient<IMarkupContentItemUpdater<CmsApiHtmlModel>, MarkupContentItemUpdater<CmsApiHtmlModel>>();
-            //services.AddTransient<IMarkupContentItemUpdater<CmsApiHtmlSharedModel>, MarkupContentItemUpdater<CmsApiHtmlSharedModel>>();
-            //services.AddTransient<IMarkupContentItemUpdater<CmsApiSharedContentModel>, MarkupContentItemUpdater<CmsApiSharedContentModel>>();
-            //services.AddTransient<IMarkupContentItemUpdater<CmsApiFormModel>, MarkupContentItemUpdater<CmsApiFormModel>>();
-            //services.AddTransient<IEventGridService, EventGridService>();
-            //services.AddTransient<IEventGridClientService, EventGridClientService>();
+            services.AddTransient<IMarkupContentItemUpdater<CmsApiHtmlModel>, MarkupContentItemUpdater<CmsApiHtmlModel>>();
+            services.AddTransient<IMarkupContentItemUpdater<CmsApiHtmlSharedModel>, MarkupContentItemUpdater<CmsApiHtmlSharedModel>>();
+            services.AddTransient<IMarkupContentItemUpdater<CmsApiSharedContentModel>, MarkupContentItemUpdater<CmsApiSharedContentModel>>();
+            services.AddTransient<IMarkupContentItemUpdater<CmsApiFormModel>, MarkupContentItemUpdater<CmsApiFormModel>>();
+            services.AddTransient<IEventGridService, EventGridService>();
+            services.AddTransient<IEventGridClientService, EventGridClientService>();
             services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddSingleton(configuration.GetSection(nameof(CmsApiClientOptions)).Get<CmsApiClientOptions>() ?? new CmsApiClientOptions());
             services.AddSingleton(configuration.GetSection(nameof(EventGridPublishClientOptions)).Get<EventGridPublishClientOptions>() ?? new EventGridPublishClientOptions());
             services.AddSingleton(configuration.GetSection(nameof(AppRegistryClientOptions)).Get<AppRegistryClientOptions>() ?? new AppRegistryClientOptions());
             services.AddHostedServiceTelemetryWrapper();
-            //services.AddSubscriptionBackgroundService(configuration);
+            services.AddSubscriptionBackgroundService(configuration);
 
             const string AppSettingsPolicies = "Policies";
             var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
             var policyRegistry = services.AddPolicyRegistry();
+
+           
 
             services.AddApiServices(configuration, policyRegistry);
 
