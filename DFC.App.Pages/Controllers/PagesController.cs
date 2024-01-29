@@ -120,7 +120,7 @@ namespace DFC.App.Pages.Controllers
                         foreach (var breadcrumb in viewModel.Breadcrumb.Breadcrumbs)
                         {
                             var route = breadcrumb.Route == "/" ? string.Empty : breadcrumb.Route;
-                            breadcrumb.Route = $"/Page/{route}/document";
+                            breadcrumb.Route = $"/Page{route}/document";
                         }
                     }
                 }
