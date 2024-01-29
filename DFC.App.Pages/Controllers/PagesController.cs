@@ -120,7 +120,7 @@ namespace DFC.App.Pages.Controllers
                         foreach (var breadcrumb in viewModel.Breadcrumb.Breadcrumbs)
                         {
                             var route = breadcrumb.Route == "/" ? string.Empty : breadcrumb.Route;
-                            breadcrumb.Route = $"/Page{route}/document";
+                            breadcrumb.Route = $"/Pages{route}/document";
                         }
                     }
                 }
@@ -356,7 +356,7 @@ namespace DFC.App.Pages.Controllers
                 status = "PUBLISHED";
             }
 
-            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation" + "/" + status);
+            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation/" + status);
             string pageUrl = GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status);
 
