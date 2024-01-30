@@ -380,8 +380,17 @@ namespace DFC.App.Pages.Controllers
                     Title = pageResponse.DisplayText,
                     AddHyperlink = false,
                 };
-
                 result.Breadcrumbs.Add(articlePathViewModel);
+                string segmentRoute = string.Empty;
+
+                foreach (var segment in result.Breadcrumbs)
+                {
+                    if (segment.Route != "/")
+                    {
+                        segmentRoute += "/" + segment.Route;
+                        segment.Route = segmentRoute;
+                    }
+                }
             }
 
             return result;
@@ -394,14 +403,13 @@ namespace DFC.App.Pages.Controllers
             {
                 Breadcrumbs = new List<BreadcrumbItemViewModel>(),
             };
-
             int index = 0;
             do
             {
                 var breadCrumbPath = $"{path}.PageLocation.BreadcrumbText.Text";
                 var displayTextPath = $"{path}.DisplayText";
                 var breadCrumbToken = doc.SelectToken(breadCrumbPath);
-                var displayTextToken = doc.SelectToken(displayTextPath);
+                var displayTextToken = doc.SelectToken(displayTextPath);          
                 breadCrumbs.Breadcrumbs.Add(new BreadcrumbItemViewModel()
                 {
                     Route = displayTextToken.ToString(),
