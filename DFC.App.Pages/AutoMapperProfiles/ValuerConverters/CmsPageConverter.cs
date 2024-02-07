@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using DFC.App.Pages.Data.Common;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using Microsoft.AspNetCore.Html;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,7 +38,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             var result = new StringBuilder();
             result.Append("<div class=\"govuk-grid-row\">");
 
-            foreach (var contentItemModel in sourceMember.Where(ctr => ctr.HtmlBody != null || ctr.SharedContent != null || ctr.Metadata != null || ctr.FormContent != null))
+            foreach (var contentItemModel in sourceMember.Where(ctr => ctr.HtmlBody != null || ctr.SharedContent != null || ctr.Metadata != null || ctr.FormContent != null || ctr.ContentType != null))
             {
                 var sizeClass = "govuk-grid-column-full";
                 var alignmentClass = string.Empty;
@@ -84,6 +86,26 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             else if (model.FormContent != null)
             {
                 content.Append(model.FormContent);
+            }
+            else if (model.ContentType != null && model.ContentType!.Equals("Form", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (model.Flow.Widgets.FirstOrDefault().HtmlBody != null)
+                {
+                    content.Append(model.Flow.Widgets.FirstOrDefault().HtmlBody.Html);
+                }
+
+                model.Form.EncType = "application/x-www-form-urlencoded";
+                content.Append($"<form");
+
+                if (!string.IsNullOrWhiteSpace(model.Form.Action))
+                {
+                    content.Append($" action=\"{model.Form.Action}\"");
+                    content.Append($" method=\"{model.Form.Method}\"");
+                    content.Append($" enctype=\"{model.Form.EncType}\"");
+                }
+
+                content.Append('>');
+                content.Append("</form>");
             }
             else
             {
