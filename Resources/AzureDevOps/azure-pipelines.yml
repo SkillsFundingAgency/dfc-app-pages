@@ -18,7 +18,7 @@ resources:
   - repository: dfc-devops
     type: github
     name: SkillsFundingAgency/dfc-devops
-    ref: refs/tags/v1.11.2
+    ref: refs/tags/v1.15.0
     endpoint: 'SkillsFundingAgency'
 
 pool:
@@ -118,6 +118,7 @@ stages:
   - group: dfc-app-uiautomation-testexecution-retry-all
   - group: dfc-browserstack
   - group: dfc-app-uiautomation-lab
+  - group: KeyVault - dfc-lab-shared-kv
   - template: VariableTemplates\LabEnvironmentVariables.yml
 
   jobs:
@@ -176,6 +177,7 @@ stages:
   - group: dfc-app-uiautomation-testexecution-retry-all
   - group: dfc-browserstack
   - group: dfc-app-uiautomation-lab
+  - group: KeyVault - dfc-lab-shared-kv
   - template: VariableTemplates\LabDraftEnvironmentVariables.yml
   
   jobs:
@@ -233,6 +235,7 @@ stages:
   - group: dfc-app-uiautomation-testexecution-retry-all
   - group: dfc-browserstack
   - group: dfc-app-uiautomation-dev
+  - group: KeyVault - dfc-dev-shared-kv
   - template: VariableTemplates\DevEnvironmentVariables.yml
   
   jobs:
@@ -291,6 +294,7 @@ stages:
   - group: dfc-app-uiautomation-testexecution-retry-all
   - group: dfc-browserstack
   - group: dfc-app-uiautomation-dev
+  - group: KeyVault - dfc-dev-shared-kv
   - template: VariableTemplates\DevDraftEnvironmentVariables.yml
   
   jobs:
@@ -348,6 +352,7 @@ stages:
   - group: dfc-app-uiautomation-testexecution-retry-all
   - group: dfc-browserstack
   - group: dfc-app-uiautomation-sit
+  - group: KeyVault - dfc-sit-shared-kv
   - template: VariableTemplates\SitEnvironmentVariables.yml
   
   jobs:
@@ -406,6 +411,7 @@ stages:
   - group: dfc-app-uiautomation-testexecution-retry-all
   - group: dfc-browserstack
   - group: dfc-app-uiautomation-sit
+  - group: KeyVault - dfc-sit-shared-kv
   - template: VariableTemplates\SitDraftEnvironmentVariables.yml
   
   jobs:
@@ -463,6 +469,7 @@ stages:
   - group: dfc-app-uiautomation-testexecution-retry-all
   - group: dfc-browserstack
   - group: dfc-app-uiautomation-pp
+  - group: KeyVault - dfc-pp-shared-kv
   - template: VariableTemplates\PPEnvironmentVariables.yml
   
   jobs:
@@ -521,6 +528,7 @@ stages:
   - group: dfc-app-uiautomation-testexecution-retry-all
   - group: dfc-browserstack
   - group: dfc-app-uiautomation-pp
+  - group: KeyVault - dfc-pp-shared-kv
   - template: VariableTemplates\PPDraftEnvironmentVariables.yml
   
   jobs:
@@ -578,6 +586,7 @@ stages:
   - group: dfc-app-uiautomation-testexecution-retry-all
   - group: dfc-browserstack
   - group: dfc-app-uiautomation-prd
+  - group: KeyVault - dfc-prd-shared-kv
   - template: VariableTemplates\PRDEnvironmentVariables.yml
   
   jobs:
@@ -635,6 +644,7 @@ stages:
   - group: dfc-app-uiautomation-testexecution-retry-all
   - group: dfc-browserstack
   - group: dfc-app-uiautomation-prd
+  - group: KeyVault - dfc-prd-shared-kv
   - template: VariableTemplates\PRDDraftEnvironmentVariables.yml
   
   jobs:

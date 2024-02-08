@@ -23,7 +23,7 @@ steps:
   condition: eq('${{ parameters.RunInfrastructureDeployment }}', true)
   displayName: "Download scripts from dfc-devops repo"
 
-- task: AzurePowerShell@3
+- task: AzurePowerShell@5
   condition: eq('${{ parameters.RunInfrastructureDeployment }}', true)
   displayName:  "Create resource groups with tags"
   inputs:
