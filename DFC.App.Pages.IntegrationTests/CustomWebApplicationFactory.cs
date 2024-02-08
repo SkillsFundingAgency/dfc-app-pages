@@ -1,6 +1,7 @@
 ﻿using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.IntegrationTests.Fakes;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Compui.Cosmos.Contracts;
 using DFC.Compui.Subscriptions.Pkg.NetStandard.Data.Contracts;
 using FakeItEasy;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using System;
 using System.Collections.Generic;
 
@@ -21,9 +23,12 @@ namespace DFC.App.Pages.IntegrationTests
         {
             MockCosmosRepo = A.Fake<ICosmosRepository<ContentPageModel>>();
             MockContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
+            this.MockSharedContentRedis = new Mock<ISharedContentRedisInterface>();
         }
 
         internal ICosmosRepository<ContentPageModel> MockCosmosRepo { get; set; }
+
+        public Mock<ISharedContentRedisInterface> MockSharedContentRedis { get; set; }
 
         internal IContentPageService<ContentPageModel> MockContentPageService { get; set; }
 
@@ -113,6 +118,7 @@ namespace DFC.App.Pages.IntegrationTests
                 services.AddTransient(sp => MockContentPageService);
                 services.AddTransient<ISubscriptionRegistrationService, FakeSubscriptionRegistrationService>();
                 services.AddTransient<IWebhooksService, FakeWebhooksService>();
+                services.AddScoped<ISharedContentRedisInterface>(_ => MockSharedContentRedis.Object);
             });
         }
     }
