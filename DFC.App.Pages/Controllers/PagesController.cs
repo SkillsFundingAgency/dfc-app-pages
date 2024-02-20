@@ -265,11 +265,9 @@ namespace DFC.App.Pages.Controllers
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status);
-            var viewModel = new BodyViewModel();
-            if (pageResponse != null)
-            {
-                mapper.Map(pageResponse, viewModel);
+            var viewModel = GetResponse(pageUrl).Result;
+            if (viewModel != null)
+            { 
                 return this.NegotiateContentResult(viewModel);
             }
 
@@ -279,13 +277,42 @@ namespace DFC.App.Pages.Controllers
             {
                 var pageLocation = $"{Request.GetBaseAddress()}".TrimEnd('/');
                 var redirectedUrl = $"{pageLocation}{filterList.FirstOrDefault().PageLocation.FullUrl}";
+
                 logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
                 return RedirectPermanent(redirectedUrl);
             }
-           
+
+            foreach (var page in redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.DefaultPageForLocation == true)))
+            {
+                var fullUrl = page.PageLocation.FullUrl;
+
+                var pageLocationUrl = $"{fullUrl}".Substring(0, fullUrl.LastIndexOf('/'));
+
+                if(pageUrl == pageLocationUrl)
+                {
+                    var redirectViewModel = GetResponse(fullUrl).Result;
+                    if (redirectViewModel != null)
+                    {    
+                        return this.NegotiateContentResult(redirectViewModel);
+                    }
+                }
+            }
+
 
             logger.LogWarning($"{nameof(Body)} has not returned any content for: /{location}/{article}");
             return NotFound();
+        }
+
+        private async Task<BodyViewModel> GetResponse(string pageUrl)
+        {
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status);
+            var viewModel = new BodyViewModel();
+            if (pageResponse != null)
+            {
+                mapper.Map(pageResponse, viewModel);
+                return viewModel;
+            }
+            return null;
         }
 
         [HttpGet]
