@@ -7,6 +7,7 @@ using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.JobProfiles.JobProfileCategory;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBreadcrumb;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Compui.Cosmos.Contracts;
@@ -113,7 +114,7 @@ namespace DFC.App.Pages.Controllers
             if (pageResponse != null)
             {
                 var viewModel = mapper.Map<DocumentViewModel>(pageResponse);
-                if (pageResponse.ShowBreadcrumb)
+                if (pageResponse.ShowBreadcrumb.GetValueOrDefault(false))
                 {
                     viewModel.Breadcrumb = await GetBreadcrumb(location, article);
 
@@ -363,7 +364,7 @@ namespace DFC.App.Pages.Controllers
             string pageUrl = GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status);
 
-            if (pageResponse == null || !pageResponse.ShowBreadcrumb)
+            if (pageResponse == null || !pageResponse.ShowBreadcrumb.GetValueOrDefault(false))
             {
                 return null;
             }
