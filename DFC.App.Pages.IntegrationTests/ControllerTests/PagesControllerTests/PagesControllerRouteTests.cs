@@ -62,12 +62,12 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
                     UrlName = "test",
                 },
             };
-            var pageUrlResponse = new PageUrlReponse()
+            var pageUrlResponse = new PageUrlResponse()
             {
                 Page = new List<PageUrl> { pageUrl },
             };
             this.factory.MockSharedContentRedis.Setup(
-                x => x.GetDataAsync<PageUrlReponse>(
+                x => x.GetDataAsync<PageUrlResponse>(
                     It.IsAny<string>()))
             .ReturnsAsync(pageUrlResponse);
 
@@ -104,12 +104,12 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
                     UrlName = "test",
                 },
             };
-            var pageUrlResponse = new PageUrlReponse()
+            var pageUrlResponse = new PageUrlResponse()
             {
                 Page = new List<PageUrl> { pageUrl },
             };
             this.factory.MockSharedContentRedis.Setup(
-                x => x.GetDataAsync<PageUrlReponse>(
+                x => x.GetDataAsync<PageUrlResponse>(
                     It.IsAny<string>()))
             .ReturnsAsync(pageUrlResponse);
             var contentPageModel = factory.GetContentPageModels().Where(x => x.CanonicalName == "an-article");
