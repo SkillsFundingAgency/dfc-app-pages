@@ -190,7 +190,7 @@ namespace DFC.App.Pages.Controllers
 
                     if (pageUrl == pageLocationUrl)
                     {
-                        var redirectViewModel = GetResponse<BodyViewModel>(fullUrl).Result;
+                        var redirectViewModel = GetResponse<HeadViewModel>(fullUrl).Result;
                         if (redirectViewModel != null)
                         {
                             return this.NegotiateContentResult(redirectViewModel);
@@ -291,7 +291,7 @@ namespace DFC.App.Pages.Controllers
 
                     if (pageUrl == pageLocationUrl)
                     {
-                        var redirectViewModel = GetResponse<BodyViewModel>(fullUrl).Result;
+                        var redirectViewModel = GetResponse<HeroBannerViewModel>(fullUrl).Result;
                         if (redirectViewModel != null)
                         {
                             return this.NegotiateContentResult(redirectViewModel);
