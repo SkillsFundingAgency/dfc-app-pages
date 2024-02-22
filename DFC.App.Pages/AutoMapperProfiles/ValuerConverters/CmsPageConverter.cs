@@ -89,6 +89,11 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             }
             else if (model.ContentType != null && model.ContentType!.Equals("Form", System.StringComparison.InvariantCultureIgnoreCase))
             {
+                if (model.Flow.Widgets.FirstOrDefault().HtmlBody != null)
+                {
+                    content.Append(model.Flow.Widgets.FirstOrDefault().HtmlBody.Html);
+                }
+
                 model.Form.EncType = "application/x-www-form-urlencoded";
                 content.Append($"<form");
 
@@ -100,12 +105,6 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
                 }
 
                 content.Append('>');
-
-                if (model.Flow.Widgets.FirstOrDefault().HtmlBody != null)
-                {
-                    content.Append(model.Flow.Widgets.FirstOrDefault().HtmlBody.Html);
-                }
-
                 content.Append("</form>");
             }
             else
