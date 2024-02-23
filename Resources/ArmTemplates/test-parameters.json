@@ -26,27 +26,6 @@
         "clientAffinity": {
             "value": false
         },
-        "contentMode": {
-            "value": "PUBLISHED"
-        },
-        "TokenEndPointURL": {
-            "value": "test"
-        },
-        "GraphApiUrl": {
-            "value": "test"
-        },
-        "SqlApiUrl": {
-            "value": "test"
-        },
-        "ClientId": {
-            "value": "test"
-        },
-        "ClientSecret": {
-            "value": "test"
-        },
-        "RedisCacheConnectionString": {
-            "value": "string"
-        },
         "Environment": {
             "value": "FOO"
         },

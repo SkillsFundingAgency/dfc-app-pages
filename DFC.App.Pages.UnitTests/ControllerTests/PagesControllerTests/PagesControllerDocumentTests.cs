@@ -61,15 +61,23 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 },
             };
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedModel);
             A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedBreadcrumbModel);
 
             // Act
             var result = await controller.Document(pageRequestModel).ConfigureAwait(false);
 
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
+
             var viewResult = Assert.IsType<ViewResult>(result);
             _ = Assert.IsAssignableFrom<DocumentViewModel>(viewResult.ViewData.Model);
+            var model = viewResult.ViewData.Model as DocumentViewModel;
+            Assert.Equal(expectedModel, model);
+
             controller.Dispose();
         }
 
@@ -102,12 +110,17 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(A.Fake<DocumentViewModel>());
             A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel?>(A<ContentPageModel>.Ignored)).Returns(expectedBreadcrumbModel);
 
             // Act
             var result = await controller.Document(pageRequestModel).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
             _ = Assert.IsAssignableFrom<DocumentViewModel>(jsonResult.Value);
@@ -117,7 +130,8 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
         [Theory]
         [MemberData(nameof(HtmlMediaTypes))]
-        public async Task PagesControllerDocumentReturnsViewResult(string mediaTypeName)
+        [MemberData(nameof(JsonMediaTypes))]
+        public async Task PagesControllerDocumentReturnsRedirectWhenRedirectLocationExists(string mediaTypeName)
         {
             // Arrange
             var pageRequestModel = new PageRequestModel
@@ -126,22 +140,36 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location2 = "an-article-name",
             };
             ContentPageModel? expectedResult = null;
+            var expectedRedirectResult = A.Fake<ContentPageModel>();
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            expectedRedirectResult.PageLocation = pageRequestModel.Location1;
+            expectedRedirectResult.CanonicalName = pageRequestModel.Location2;
+
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetRedirectedContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedRedirectResult);
 
             // Act
             var result = await controller.Document(pageRequestModel).ConfigureAwait(false);
 
-            var viewResult = Assert.IsType<ViewResult>(result);
-            _ = Assert.IsAssignableFrom<DocumentViewModel>(viewResult.ViewData.Model);
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakePagesControlerHelpers.GetRedirectedContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
+
+            var statusResult = Assert.IsType<RedirectResult>(result);
+
+            statusResult.Url.Should().NotBeNullOrWhiteSpace();
+            A.Equals(true, statusResult.Permanent);
 
             controller.Dispose();
         }
 
         [Theory]
         [MemberData(nameof(JsonMediaTypes))]
-        public async Task PagesControllerDocumentJsonReturnsOkResult(string mediaTypeName)
+        [MemberData(nameof(HtmlMediaTypes))]
+        public async Task PagesControllerDocumentReturnsNoContentWhenNoData(string mediaTypeName)
         {
             // Arrange
             var pageRequestModel = new PageRequestModel
@@ -152,13 +180,21 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetRedirectedContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.Document(pageRequestModel).ConfigureAwait(false);
 
-            var jsonResult = Assert.IsType<OkObjectResult>(result);
-            _ = Assert.IsAssignableFrom<DocumentViewModel>(jsonResult.Value);
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakePagesControlerHelpers.GetRedirectedContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
+
+            var statusResult = Assert.IsType<NoContentResult>(result);
+
+            A.Equals((int)HttpStatusCode.NoContent, statusResult.StatusCode);
 
             controller.Dispose();
         }
@@ -192,12 +228,17 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(A.Fake<DocumentViewModel>());
             A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel?>(A<ContentPageModel>.Ignored)).Returns(expectedBreadcrumbModel);
 
             // Act
             var result = await controller.Document(pageRequestModel).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
 
             var statusResult = Assert.IsType<StatusCodeResult>(result);
 
@@ -234,14 +275,21 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 LastReviewed = DateTime.Now,
             };
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedModel);
 
             // Act
             var result = await controller.Document(pageRequestModel).ConfigureAwait(false);
 
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).MustNotHaveHappened();
+
             var viewResult = Assert.IsType<ViewResult>(result);
             _ = Assert.IsAssignableFrom<DocumentViewModel>(viewResult.ViewData.Model);
+            var model = viewResult.ViewData.Model as DocumentViewModel;
+            Assert.Equal(expectedModel, model);
 
             controller.Dispose();
         }

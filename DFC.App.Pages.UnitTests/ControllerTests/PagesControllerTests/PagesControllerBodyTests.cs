@@ -26,11 +26,15 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).MustHaveHappenedOnceExactly();
 
             var viewResult = Assert.IsType<ViewResult>(result);
             _ = Assert.IsAssignableFrom<BodyViewModel>(viewResult.ViewData.Model);
@@ -51,14 +55,18 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
 
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).MustHaveHappenedOnceExactly();
+
             var jsonResult = Assert.IsType<OkObjectResult>(result);
-            _ = Assert.IsAssignableFrom<BodyViewModel>(jsonResult.Value);
+            _ = Assert.IsAssignableFrom<ContentPageModel>(jsonResult.Value);
 
             controller.Dispose();
         }
@@ -75,11 +83,15 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).MustHaveHappenedOnceExactly();
 
             var viewResult = Assert.IsType<ViewResult>(result);
             _ = Assert.IsAssignableFrom<BodyViewModel>(viewResult.ViewData.Model);
@@ -99,21 +111,26 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
 
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).MustHaveHappenedOnceExactly();
+
             var jsonResult = Assert.IsType<OkObjectResult>(result);
-            _ = Assert.IsAssignableFrom<BodyViewModel>(jsonResult.Value);
+            _ = Assert.IsAssignableFrom<ContentPageModel>(jsonResult.Value);
 
             controller.Dispose();
         }
 
         [Theory]
         [MemberData(nameof(HtmlMediaTypes))]
-        public async Task PagesControllerBodyReturnsViewModel(string mediaTypeName)
+        [MemberData(nameof(JsonMediaTypes))]
+        public async Task PagesControllerBodyReturnsRedirectWhenRedirectLocationExists(string mediaTypeName)
         {
             // Arrange
             var pageRequestModel = new PageRequestModel
@@ -121,25 +138,35 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
+            ContentPageModel? expectedResult = null;
+            var expectedRedirectResult = A.Fake<ContentPageModel>();
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
+            expectedRedirectResult.PageLocation = "/" + pageRequestModel.Location1;
+            expectedRedirectResult.CanonicalName = pageRequestModel.Location2;
+
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetRedirectedContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedRedirectResult);
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
 
-            var viewResult = Assert.IsType<ViewResult>(result);
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakePagesControlerHelpers.GetRedirectedContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
-            _ = Assert.IsAssignableFrom<BodyViewModel>(viewResult.ViewData.Model);
+            var statusResult = Assert.IsType<RedirectResult>(result);
+
+            statusResult.Url.Should().NotBeNullOrWhiteSpace();
+            A.Equals(true, statusResult.Permanent);
 
             controller.Dispose();
         }
 
         [Theory]
         [MemberData(nameof(JsonMediaTypes))]
-        public async Task PagesControllerBodyJsonReturnsBodyViewModel(string mediaTypeName)
+        [MemberData(nameof(HtmlMediaTypes))]
+        public async Task PagesControllerBodyReturnsNotFoundWhenNoRedirectLocation(string mediaTypeName)
         {
             // Arrange
             var pageRequestModel = new PageRequestModel
@@ -147,17 +174,23 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
+            ContentPageModel? expectedResult = null;
+            ContentPageModel? expectedRedirectResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetRedirectedContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedRedirectResult);
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
 
-            var jsonResult = Assert.IsType<OkObjectResult>(result);
-            _ = Assert.IsAssignableFrom<BodyViewModel>(jsonResult.Value);
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakePagesControlerHelpers.GetRedirectedContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+
+            var statusResult = Assert.IsType<NotFoundResult>(result);
+
+            A.Equals((int)HttpStatusCode.NotFound, statusResult.StatusCode);
 
             controller.Dispose();
         }
@@ -175,11 +208,15 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).MustHaveHappenedOnceExactly();
 
             var statusResult = Assert.IsType<StatusCodeResult>(result);
 
