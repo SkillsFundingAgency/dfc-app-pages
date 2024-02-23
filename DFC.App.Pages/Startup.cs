@@ -123,7 +123,7 @@ namespace DFC.App.Pages
                 var client = new RestClient(option);
                 return client;
             });
-            services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageUrlReponse>, PageUrlQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageUrlResponse>, PageUrlQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<Page>, PageQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageBreadcrumb>, PageBreadcrumbQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
