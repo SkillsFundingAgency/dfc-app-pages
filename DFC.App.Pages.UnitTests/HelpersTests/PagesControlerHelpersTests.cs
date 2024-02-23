@@ -92,5 +92,125 @@ namespace DFC.App.Pages.UnitTests.HelpersTests
             Assert.Equal(expectedLocation, location);
             Assert.Equal(expectedArticle, article);
         }
+
+        [Fact]
+        public async Task PagesControlerHelpersTestsGetContentPageAsyncReturnsSuccess()
+        {
+            // Arrange
+            var expectedResults = A.CollectionOfDummy<ContentPageModel>(1);
+            const string location = "a-location";
+            const string article = "an-article";
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
+
+            A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
+
+            // Act
+            var result = await helper.GetContentPageAsync(location, article).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).MustHaveHappenedOnceExactly();
+
+            Assert.Equal(expectedResults.First(), result);
+        }
+
+        [Fact]
+        public async Task PagesControlerHelpersTestsGetContentPageAsyncReturnsSuccessEmptyParameters()
+        {
+            // Arrange
+            var expectedResults = A.CollectionOfDummy<ContentPageModel>(1);
+            string location = string.Empty;
+            const string? article = null;
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
+
+            A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
+
+            // Act
+            var result = await helper.GetContentPageAsync(location, article).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).MustHaveHappenedOnceExactly();
+
+            Assert.Equal(expectedResults.First(), result);
+        }
+
+        [Fact]
+        public async Task PagesControlerHelpersTestsGetContentPageAsyncReturnsSuccessEmptyArticle()
+        {
+            // Arrange
+            var expectedResults = A.CollectionOfDummy<ContentPageModel>(1);
+            const string location = "a-location";
+            string article = string.Empty;
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
+
+            A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
+
+            // Act
+            var result = await helper.GetContentPageAsync(location, article).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).MustHaveHappenedOnceExactly();
+
+            Assert.Equal(expectedResults.First(), result);
+        }
+
+        [Fact]
+        public async Task PagesControlerHelpersTestsGetContentPageAsyncReturnsNull()
+        {
+            // Arrange
+            List<ContentPageModel>? expectedResults = null;
+            const string location = "a-location";
+            const string article = "an-article";
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
+
+            A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).Returns(expectedResults);
+
+            // Act
+            var result = await helper.GetContentPageAsync(location, article).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => fakeContentPageService.GetAsync(A<Expression<Func<ContentPageModel, bool>>>.Ignored)).MustHaveHappenedTwiceExactly();
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task PagesControlerHelpersTestsGetRedirectedContentPageAsyncReturnsSuccess()
+        {
+            // Arrange
+            var expectedResult = A.Dummy<ContentPageModel>();
+            const string location = "a-location";
+            const string article = "an-article";
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
+
+            A.CallTo(() => fakeContentPageService.GetByRedirectLocationAsync(A<string>.Ignored)).Returns(expectedResult);
+
+            // Act
+            var result = await helper.GetRedirectedContentPageAsync(location, article).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => fakeContentPageService.GetByRedirectLocationAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public async Task PagesControlerHelpersTestsGetRedirectedContentPageAsyncReturnsSuccessWithMissingArticle()
+        {
+            // Arrange
+            var expectedResult = A.Dummy<ContentPageModel>();
+            const string location = "a-location";
+            const string? article = null;
+            var helper = new PagesControlerHelpers(fakeContentPageService, memoryCache);
+
+            A.CallTo(() => fakeContentPageService.GetByRedirectLocationAsync(A<string>.Ignored)).Returns(expectedResult);
+
+            // Act
+            var result = await helper.GetRedirectedContentPageAsync(location, article).ConfigureAwait(false);
+
+            // Assert
+            A.CallTo(() => fakeContentPageService.GetByRedirectLocationAsync(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+
+            Assert.Equal(expectedResult, result);
+        }
     }
 }
