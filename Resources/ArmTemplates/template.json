@@ -147,6 +147,12 @@
         },
         "workspaceResourceGroup": {
             "type": "string"
+        },
+        "WorkerThreads": {
+            "type": "string"
+        },
+        "IocpThreads": {
+            "type": "string"
         }
     },
     "variables": {
@@ -444,6 +450,14 @@
                             {
                               "name": "DOTNET_ROLL_FORWARD_ON_NO_CANDIDATE_FX",
                               "value": "1"
+                            },
+                            {
+                              "name": "ThreadSettings__WorkerThreads",
+                              "value": "[parameters('WorkerThreads')]"
+                            },
+                            {
+                               "name": "ThreadSettings__IocpThreads",
+                               "value": "[parameters('IocpThreads')]"
                             }
                         ]
                     }
