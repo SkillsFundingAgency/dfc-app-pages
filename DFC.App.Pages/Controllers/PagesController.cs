@@ -166,7 +166,7 @@ namespace DFC.App.Pages.Controllers
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
             var viewModel = new HeadViewModel();
 
             try
@@ -268,7 +268,7 @@ namespace DFC.App.Pages.Controllers
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
 
             try
             {
@@ -374,7 +374,7 @@ namespace DFC.App.Pages.Controllers
         private async Task<T?> GetResponse<T>(string pageUrl)
             where T : new()
         {
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
             var viewModel = new T();
             if (pageResponse != null)
             {
@@ -457,9 +457,9 @@ namespace DFC.App.Pages.Controllers
                 status = "PUBLISHED";
             }
 
-            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation" + "/" + status, status);
+            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation", status);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl + "/" + status, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
 
             if (pageResponse == null || !pageResponse.ShowBreadcrumb.GetValueOrDefault(false))
             {
