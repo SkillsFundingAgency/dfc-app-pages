@@ -73,7 +73,7 @@ namespace DFC.App.Pages.Controllers
 
                         foreach (var contentPageModel in sitemapContentPageModels)
                         {
-                            //GraphQL stores Priority as whole number so need to place decimal in front to display proper priority number
+                            //GraphQL stores Priority as whole number so need to place decimal in front to display proper priority number.
                             if (contentPageModel.PageLocation.DefaultPageForLocation == true)
                             {
                                 sitemap.Add(new SitemapLocation
