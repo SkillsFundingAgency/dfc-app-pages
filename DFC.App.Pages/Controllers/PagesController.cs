@@ -473,7 +473,7 @@ namespace DFC.App.Pages.Controllers
             var path = token.FirstOrDefault().Path;
             var result = BuildBreadCrumb(path, jdoc);
 
-            if (!pageResponse.PageLocation.DefaultPageForLocation == false && !string.IsNullOrWhiteSpace(pageResponse.DisplayText))
+            if (!(bool)pageResponse.PageLocation.DefaultPageForLocation && !string.IsNullOrWhiteSpace(pageResponse.DisplayText))
             {
                 var articlePathViewModel = new BreadcrumbItemViewModel
                 {
