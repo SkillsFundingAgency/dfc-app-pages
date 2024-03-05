@@ -20,6 +20,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBreadcrumb;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Sitemap;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using DFC.Common.SharedContent.Pkg.Netcore.RequestHandler;
 using DFC.Compui.Cosmos;
@@ -127,6 +128,7 @@ namespace DFC.App.Pages
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<Page>, PageQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageBreadcrumb>, PageBreadcrumbQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<SitemapResponse>, PageSitemapStrategy>();
 
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
             services.ConfigureOptions<contentOptionsSetup>();

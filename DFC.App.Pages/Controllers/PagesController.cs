@@ -78,7 +78,7 @@ namespace DFC.App.Pages.Controllers
                     new IndexDocumentViewModel { CanonicalName = RobotController.RobotsViewCanonicalName },
                 },
             };
-            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("Pagesurl", status);
+            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
             if (pageUrlResponse.Page == null)
             {
                 return NoContent();
@@ -170,7 +170,7 @@ namespace DFC.App.Pages.Controllers
 
             try
             {
-                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("Pagesurl", status);
+                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
                 var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
                 if (filterList.Count > 0)
                 {
@@ -271,7 +271,7 @@ namespace DFC.App.Pages.Controllers
 
             try
             {
-                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("Pagesurl", status);
+                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
                 var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
                 if (filterList.Count > 0)
                 {
@@ -340,7 +340,7 @@ namespace DFC.App.Pages.Controllers
                 return this.NegotiateContentResult(viewModel);
             }
 
-            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("Pagesurl", status);
+            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
             var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
             if (filterList.Count > 0)
             {
@@ -472,7 +472,7 @@ namespace DFC.App.Pages.Controllers
             var path = token.FirstOrDefault().Path;
             var result = BuildBreadCrumb(path, jdoc);
 
-            if (pageResponse.PageLocation.DefaultPageForLocation==false && !string.IsNullOrWhiteSpace(pageResponse.DisplayText))
+            if (!(bool)pageResponse.PageLocation.DefaultPageForLocation && !string.IsNullOrWhiteSpace(pageResponse.DisplayText))
             {
                 var articlePathViewModel = new BreadcrumbItemViewModel
                 {
