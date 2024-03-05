@@ -43,9 +43,9 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
                 var sizeClass = "govuk-grid-column-full";
                 var alignmentClass = string.Empty;
 
-                if (contentItemModel.Metadata.Size != 0 && columnWidthClasses.Keys.Contains(contentItemModel.Metadata.Size))
+                if (contentItemModel.Metadata.Size != 0 && columnWidthClasses.Keys.Contains((int)contentItemModel.Metadata.Size))
                 {
-                    sizeClass = columnWidthClasses[contentItemModel.Metadata.Size];
+                    sizeClass = columnWidthClasses[(int)contentItemModel.Metadata.Size];
                 }
 
                 if (!string.IsNullOrWhiteSpace(contentItemModel.Metadata.Alignment) && alignmentClasses.Keys.Contains(contentItemModel.Metadata.Alignment))
