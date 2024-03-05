@@ -68,7 +68,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             };
             this.factory.MockSharedContentRedis.Setup(
                 x => x.GetDataAsync<PageUrlResponse>(
-                    It.IsAny<string>(), It.IsAny<string>()))
+                    It.IsAny<string>(), "PUBLISHED"))
             .ReturnsAsync(pageUrlResponse);
 
             // Arrange
@@ -110,7 +110,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             };
             this.factory.MockSharedContentRedis.Setup(
                 x => x.GetDataAsync<PageUrlResponse>(
-                    It.IsAny<string>(), It.IsAny<string>()))
+                    It.IsAny<string>(), "PUBLISHED"))
             .ReturnsAsync(pageUrlResponse);
             var contentPageModel = factory.GetContentPageModels().Where(x => x.CanonicalName == "an-article");
             var uri = new Uri(url, UriKind.Relative);
