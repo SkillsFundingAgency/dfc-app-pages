@@ -32,8 +32,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DFC.App.Pages.Services.EventProcessorService\DFC.App.Pages.Services.EventProcessorService.csproj" />
-  </ItemGroup>
-
 </Project>
