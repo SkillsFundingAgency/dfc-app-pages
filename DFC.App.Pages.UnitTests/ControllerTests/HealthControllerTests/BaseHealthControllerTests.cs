@@ -1,6 +1,4 @@
 ﻿using DFC.App.Pages.Controllers;
-using DFC.App.Pages.Data.Models;
-using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +13,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.HealthControllerTests
     {
         public BaseHealthControllerTests()
         {
-            FakeContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
             FakeLogger = A.Fake<ILogger<HealthController>>();
         }
 
@@ -35,8 +32,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.HealthControllerTests
             new string[] { MediaTypeNames.Application.Json },
         };
 
-        protected IContentPageService<ContentPageModel> FakeContentPageService { get; }
-
         protected ILogger<HealthController> FakeLogger { get; }
 
         protected HealthController BuildHealthController(string mediaTypeName)
@@ -45,7 +40,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.HealthControllerTests
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new HealthController(FakeLogger, FakeContentPageService)
+            var controller = new HealthController(FakeLogger)
             {
                 ControllerContext = new ControllerContext()
                 {

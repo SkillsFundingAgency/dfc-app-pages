@@ -2,7 +2,6 @@ using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
 using FakeItEasy;
-using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -61,7 +60,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 },
             };
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedModel);
             A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedBreadcrumbModel);
 
@@ -102,7 +101,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(A.Fake<DocumentViewModel>());
             A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel?>(A<ContentPageModel>.Ignored)).Returns(expectedBreadcrumbModel);
 
@@ -128,7 +127,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.Document(pageRequestModel).ConfigureAwait(false);
@@ -152,7 +151,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.Document(pageRequestModel).ConfigureAwait(false);
@@ -192,7 +191,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(A.Fake<DocumentViewModel>());
             A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel?>(A<ContentPageModel>.Ignored)).Returns(expectedBreadcrumbModel);
 
@@ -234,7 +233,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 LastReviewed = DateTime.Now,
             };
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
             A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedModel);
 
             // Act

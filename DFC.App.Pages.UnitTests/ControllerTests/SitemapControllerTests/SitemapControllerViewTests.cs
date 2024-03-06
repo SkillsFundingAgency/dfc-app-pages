@@ -1,10 +1,8 @@
 ﻿using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Controllers;
-using DFC.App.Pages.Data.Models;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Sitemap;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
-using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

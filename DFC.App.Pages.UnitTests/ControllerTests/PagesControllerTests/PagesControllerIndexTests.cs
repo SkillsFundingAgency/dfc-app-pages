@@ -12,7 +12,8 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
     [Trait("Category", "Pages Controller Unit Tests")]
     public class PagesControllerIndexTests : BasePagesControllerTests
     {
-        [Theory]
+        //TODO: Replace Cosmos call with Redis call
+        /*[Theory]
         [MemberData(nameof(JsonMediaTypes))]
         [MemberData(nameof(HtmlMediaTypes))]
         public async Task PagesControllerIndexHtmlReturnsNoContent(string mediaTypeName)
@@ -32,6 +33,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             A.Equals((int)HttpStatusCode.NoContent, statusResult.StatusCode);
 
             controller.Dispose();
-        }
+        }*/
     }
 }

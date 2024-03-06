@@ -1,19 +1,14 @@
-﻿using Castle.Core.Logging;
-using DFC.App.Pages.Cms.Data.Content;
+﻿using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Controllers;
-using DFC.App.Pages.Data.Models;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.Sitemap;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
-using FakeItEasy;
-using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using System.Collections.Generic;
-using System.Net.Mime;
 using System.Threading.Tasks;
 using Xunit;
 
