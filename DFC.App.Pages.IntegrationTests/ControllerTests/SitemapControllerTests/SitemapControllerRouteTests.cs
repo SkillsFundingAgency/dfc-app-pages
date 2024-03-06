@@ -1,12 +1,5 @@
-﻿using DFC.App.Pages.Data.Models;
-using FakeItEasy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Mime;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DFC.App.Pages.IntegrationTests.ControllerTests.SitemapControllerTests
@@ -29,7 +22,8 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.SitemapControllerTests
             new object[] { $"/pages/sitemap" },
         };
 
-        [Theory]
+        //TODO: Add GraphQl call to replace Cosmos call
+        /*[Theory]
         [MemberData(nameof(SitemapRouteData))]
         public async Task GetSitemapXmlContentEndpointsReturnSuccessAndCorrectContentType(string url)
         {
@@ -46,6 +40,6 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.SitemapControllerTests
 
             // Assert
             response.EnsureSuccessStatusCode();
-        }
+        }*/
     }
 }

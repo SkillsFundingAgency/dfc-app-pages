@@ -1,18 +1,13 @@
-﻿using DFC.App.Pages.Data.Contracts;
-using DFC.App.Pages.Data.Models;
-using DFC.App.Pages.IntegrationTests.Fakes;
+﻿using DFC.App.Pages.Data.Models;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-using DFC.Compui.Cosmos.Contracts;
-using DFC.Compui.Subscriptions.Pkg.NetStandard.Data.Contracts;
-using FakeItEasy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using System;
 using System.Collections.Generic;
+using System;
 
 namespace DFC.App.Pages.IntegrationTests
 {
@@ -21,48 +16,40 @@ namespace DFC.App.Pages.IntegrationTests
     {
         public CustomWebApplicationFactory()
         {
-            MockCosmosRepo = A.Fake<ICosmosRepository<ContentPageModel>>();
-            MockContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
             this.MockSharedContentRedis = new Mock<ISharedContentRedisInterface>();
         }
 
-        internal ICosmosRepository<ContentPageModel> MockCosmosRepo { get; set; }
-
         public Mock<ISharedContentRedisInterface> MockSharedContentRedis { get; set; }
 
-        internal IContentPageService<ContentPageModel> MockContentPageService { get; set; }
-
+        //TODO: To recreate with latest Page model and to update related tests
         internal IEnumerable<ContentPageModel> GetContentPageModels()
         {
             return new List<ContentPageModel>
             {
                 new ContentPageModel
                 {
-                    Id = Guid.NewGuid(),
-                    CanonicalName = "test-test",
+                    Id = Guid.NewGuid(), CanonicalName = "test-test",
                     PageLocation = "/top-of-the-tree",
                     RedirectLocations = new List<string>
                     {
                         "/test/test",
-                    },
-                    Url = new Uri("http://www.test.com"),
+                    }, Url = new Uri("http://www.test.com"),
                 },
                 new ContentPageModel
                 {
-                    Id = Guid.NewGuid(),
-                    CanonicalName = "default-page",
+                    Id = Guid.NewGuid(), CanonicalName = "default-page",
                     PageLocation = "/top-of-the-tree",
                     IsDefaultForPageLocation = true,
                     RedirectLocations = new List<string>
-                        {
-                            "/test/test",
-                        },
-                    Url = new Uri("http://www.test.com"),
+                    {
+                        "/test/test",
+                    }, Url = new Uri("http://www.test.com"),
                 },
                 new ContentPageModel
                 {
-                    Id = Guid.NewGuid(),
-                    CanonicalName = "an-article",
+                    LastReviewed = DateTime.UtcNow,
+                    CreatedDate = DateTime.UtcNow,
+                    Id = Guid.NewGuid(), CanonicalName = "an-article",
                     PageLocation = "/",
                     IncludeInSitemap = true,
                     Version = Guid.NewGuid(),
@@ -74,7 +61,8 @@ namespace DFC.App.Pages.IntegrationTests
                         {
                             ItemId = Guid.NewGuid(),
                             Alignment = "Left",
-                            Ordinal = 1, Size = 50,
+                            Ordinal = 1,
+                            Size = 50,
                             Content = "<h1>A document</h1>",
                             CreatedDate = DateTime.Now,
                             Title = "title",
@@ -93,8 +81,6 @@ namespace DFC.App.Pages.IntegrationTests
                             },
                         },
                     },
-                    LastReviewed = DateTime.UtcNow,
-                    CreatedDate = DateTime.UtcNow,
                 },
             };
         }
@@ -112,13 +98,7 @@ namespace DFC.App.Pages.IntegrationTests
 
             builder.ConfigureTestServices(services =>
             {
-                services.AddTransient<ICacheReloadService, FakeCacheReloadService>();
-                services.AddHostedService<FakeCacheReloadBackgroundService>();
-                services.AddTransient(sp => MockCosmosRepo);
-                services.AddTransient(sp => MockContentPageService);
-                services.AddTransient<ISubscriptionRegistrationService, FakeSubscriptionRegistrationService>();
-                services.AddTransient<IWebhooksService, FakeWebhooksService>();
-                services.AddScoped<ISharedContentRedisInterface>(_ => MockSharedContentRedis.Object);
+                services.AddScoped(_ => MockSharedContentRedis.Object);
             });
         }
     }
