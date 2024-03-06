@@ -1,26 +1,20 @@
 ﻿using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Data.Contracts;
-using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Extensions;
-using DFC.App.Pages.Helpers;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.JobProfiles.JobProfileCategory;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBreadcrumb;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
-using DFC.Compui.Cosmos.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,25 +24,23 @@ namespace DFC.App.Pages.Controllers
     {
         private const string LocalPath = "pages";
 
+        private readonly IPagesControllerHelper pagesControllerHelper;
         private readonly ILogger<PagesController> logger;
-        private readonly IContentPageService<ContentPageModel> contentPageService;
         private readonly AutoMapper.IMapper mapper;
-        private readonly IPagesControlerHelpers pagesControlerHelpers;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IOptionsMonitor<contentModeOptions> options;
-        private string status;
+        private string status = string.Empty;
 
-        public PagesController(ILogger<PagesController> logger,
-                               IContentPageService<ContentPageModel> contentPageService,
-                               AutoMapper.IMapper mapper,
-                               IPagesControlerHelpers pagesControlerHelpers,
-                               ISharedContentRedisInterface sharedContentRedisInterface,
-                               IOptionsMonitor<contentModeOptions> options)
+        public PagesController(
+            IPagesControllerHelper pageControllerHelper,
+            ILogger<PagesController> logger,
+            AutoMapper.IMapper mapper,
+            ISharedContentRedisInterface sharedContentRedisInterface,
+            IOptionsMonitor<contentModeOptions> options)
         {
+            this.pagesControllerHelper = pageControllerHelper;
             this.logger = logger;
-            this.contentPageService = contentPageService;
             this.mapper = mapper;
-            this.pagesControlerHelpers = pagesControlerHelpers;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
             this.options = options;
         }
@@ -107,8 +99,8 @@ namespace DFC.App.Pages.Controllers
                 status = "PUBLISHED";
             }
 
-            var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
-            string pageUrl = GetPageUrl(location, article);
+            var (location, article) = ExtractPageLocation(pageRequestModel);
+            string pageUrl = pagesControllerHelper.GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
             if (pageResponse != null)
             {
@@ -163,8 +155,8 @@ namespace DFC.App.Pages.Controllers
                 status = "PUBLISHED";
             }
 
-            var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
-            string pageUrl = GetPageUrl(location, article);
+            var (location, article) = ExtractPageLocation(pageRequestModel);
+            string pageUrl = pagesControllerHelper.GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
             var viewModel = new HeadViewModel();
 
@@ -221,7 +213,7 @@ namespace DFC.App.Pages.Controllers
         {
             logger.LogInformation($"{nameof(Breadcrumb)} has been called");
 
-            var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
+            var (location, article) = ExtractPageLocation(pageRequestModel);
             var breadcrumbResponse = await GetBreadcrumb(location, article);
 
             if (breadcrumbResponse == null)
@@ -265,8 +257,8 @@ namespace DFC.App.Pages.Controllers
                 status = "PUBLISHED";
             }
 
-            var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
-            string pageUrl = GetPageUrl(location, article);
+            var (location, article) = ExtractPageLocation(pageRequestModel);
+            string pageUrl = pagesControllerHelper.GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
 
             try
@@ -332,8 +324,8 @@ namespace DFC.App.Pages.Controllers
                 status = "PUBLISHED";
             }
 
-            var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
-            string pageUrl = GetPageUrl(location, article);
+            var (location, article) = ExtractPageLocation(pageRequestModel);
+            string pageUrl = pagesControllerHelper.GetPageUrl(location, article);
             var viewModel = GetResponse<BodyViewModel>(pageUrl).Result;
             if (viewModel != null)
             {
@@ -427,23 +419,6 @@ namespace DFC.App.Pages.Controllers
         }
 
         #region private functions
-        private string GetPageUrl(string location, string article)
-        {
-            string pageUrl = string.Empty;
-            if (string.IsNullOrWhiteSpace(location) && string.IsNullOrWhiteSpace(article))
-            {
-                pageUrl = "/home";
-            }
-            else if (location == "home")
-            {
-                pageUrl = $"/{location}";
-            }
-            else
-            {
-                pageUrl = $"/{location}/{(string.IsNullOrWhiteSpace(article) ? location : article)}";
-            }
-            return pageUrl;
-        }
 
         private async Task<BreadcrumbViewModel> GetBreadcrumb(string location, string article)
         {
@@ -457,7 +432,7 @@ namespace DFC.App.Pages.Controllers
             }
 
             var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation", status);
-            string pageUrl = GetPageUrl(location, article);
+            string pageUrl = pagesControllerHelper.GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
 
             if (pageResponse == null || !pageResponse.ShowBreadcrumb.GetValueOrDefault(false))
@@ -494,6 +469,28 @@ namespace DFC.App.Pages.Controllers
             }
 
             return result;
+        }
+
+        private (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
+        {
+            _ = pageRequestModel ?? throw new ArgumentNullException(nameof(pageRequestModel));
+
+            var pageLocation = string.Join("/", new[] { pageRequestModel.Location1, pageRequestModel.Location2, pageRequestModel.Location3, pageRequestModel.Location4, pageRequestModel.Location5 });
+            var pageLocations = pageLocation.Split("/", StringSplitOptions.RemoveEmptyEntries);
+            var location = string.Empty;
+            var article = string.Empty;
+
+            if (pageLocations.Length == 1)
+            {
+                location = pageLocations.First();
+            }
+            else if (pageLocations.Length > 1)
+            {
+                location = string.Join("/", pageLocations, 0, pageLocations.Length - 1);
+                article = pageLocations.Last();
+            }
+
+            return (location, article);
         }
 
         private BreadcrumbViewModel BuildBreadCrumb(string path, JObject doc)

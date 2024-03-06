@@ -1,30 +1,22 @@
 ﻿using AutoMapper;
-using DFC.App.Pages.Data.Models;
-using DFC.App.Pages.Models.Api;
-using DFC.Compui.Cosmos.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DFC.App.Pages.Controllers
 {
     public class ApiController : Controller
     {
         private readonly ILogger<ApiController> logger;
-        private readonly IContentPageService<ContentPageModel> contentPageService;
-        private readonly AutoMapper.IMapper mapper;
+        private readonly IMapper mapper;
 
-        public ApiController(ILogger<ApiController> logger, IContentPageService<ContentPageModel> contentPageService, IMapper mapper)
+        public ApiController(ILogger<ApiController> logger, IMapper mapper)
         {
             this.logger = logger;
-            this.contentPageService = contentPageService;
             this.mapper = mapper;
         }
 
-        [HttpGet]
+        //TODO: Replace Cosmos call with Redis call
+        /*[HttpGet]
         [Route("api/pages")]
         public async Task<IActionResult> Index()
         {
@@ -32,6 +24,7 @@ namespace DFC.App.Pages.Controllers
 
             var pages = new Dictionary<Guid, GetIndexModel>();
 
+            //TODO: replace with redis call
             var contentPageModels = await contentPageService.GetAllAsync().ConfigureAwait(false);
 
             if (contentPageModels != null && contentPageModels.Any())
@@ -46,14 +39,16 @@ namespace DFC.App.Pages.Controllers
             }
 
             return Ok(pages);
-        }
+        }*/
 
-        [HttpGet]
+        //TODO: Replace Cosmos call with Redis call
+        /*[HttpGet]
         [Route("api/pages/{id}")]
         public async Task<IActionResult> Document(Guid id)
         {
             logger.LogInformation($"{nameof(Document)} has been called");
 
+            //TODO: replace with redis call
             var contentPageModel = await contentPageService.GetByIdAsync(id).ConfigureAwait(false);
 
             if (contentPageModel != null)
@@ -66,6 +61,6 @@ namespace DFC.App.Pages.Controllers
             logger.LogWarning($"{nameof(Document)} has returned with no content");
 
             return NoContent();
-        }
+        }*/
     }
 }
