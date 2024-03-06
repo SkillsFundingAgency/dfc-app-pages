@@ -53,8 +53,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DFC.App.Pages.Data\DFC.App.Pages.Data.csproj" />
     <ProjectReference Include="..\DFC.App.Pages.Services.AppRegistryService\DFC.App.Pages.Services.AppRegistryService.csproj" />
-    <ProjectReference Include="..\DFC.App.Pages.Services.CacheContentService\DFC.App.Pages.Services.CacheContentService.csproj" />
-    <ProjectReference Include="..\DFC.App.Pages.Services.EventProcessorService\DFC.App.Pages.Services.EventProcessorService.csproj" />
   </ItemGroup>
 
 
