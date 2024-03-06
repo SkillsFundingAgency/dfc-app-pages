@@ -17,7 +17,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
         public ApiControllerApiTests()
         {
             logger = A.Fake<ILogger<ApiController>>();
-            fakeMapper = A.Fake<AutoMapper.IMapper>();
+            fakeMapper = A.Fake<IMapper>();
             //fakeContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
         }
 

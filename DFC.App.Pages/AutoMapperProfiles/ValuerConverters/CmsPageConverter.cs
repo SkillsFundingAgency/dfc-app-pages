@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DFC.App.Pages.Data.Common;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using Microsoft.AspNetCore.Html;
 using System;
