@@ -1,5 +1,6 @@
 ﻿using DFC.App.Pages.Controllers;
 using DFC.App.Pages.Models;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -87,8 +88,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/{location5}/breadcrumb", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", "SomeLocation5", nameof(PagesController.Breadcrumb) },
         };
 
-        //TODO: Replace Cosmos call with Redis call
-        /*[Theory]
+        [Theory]
         [MemberData(nameof(PagesRouteDataOk))]
         public async Task PagesControllerCallsContentPageServiceUsingPagesRouteForOkResult(string route, string? location1, string? location2, string? location3, string? location4, string? location5, string actionMethod)
         {
@@ -102,9 +102,16 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location5 = location5,
             };
             var controller = BuildController(route);
-            var expectedResult = new ContentPageModel() { ShowBreadcrumb = true, Content = "<h1>A document</h1>" };
+            var expected = new Page()
+            {
+                Herobanner = new()
+                {
+                    Html = "This is a hero banner",
+                },
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            };
+
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
 
             // Act
             var result = await RunControllerAction(controller, pageRequestModel, actionMethod).ConfigureAwait(false);
@@ -113,7 +120,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             Assert.IsType<OkObjectResult>(result);
 
             controller.Dispose();
-        }*/
+        }
 
         [Theory]
         [MemberData(nameof(PagesRouteDataNoContent))]

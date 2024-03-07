@@ -1,7 +1,9 @@
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using FakeItEasy;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net;
@@ -24,12 +26,10 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2, ShowBreadcrumb = true };
             var expectedBreadcrumb = new BreadcrumbViewModel { Breadcrumbs = new List<BreadcrumbItemViewModel> { new BreadcrumbItemViewModel { Route = "a-route", Title = "A title", }, }, };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedBreadcrumb);
+            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<Page>.Ignored)).Returns(expectedBreadcrumb);
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
@@ -51,14 +51,11 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2, ShowBreadcrumb = true };
             var expectedBreadcrumb = new BreadcrumbViewModel { Breadcrumbs = new List<BreadcrumbItemViewModel> { new BreadcrumbItemViewModel { Route = "a-route", Title = "A title", }, }, };
             var controller = BuildPagesController(mediaTypeName);
 
-            expectedResult.MetaTags.Title = pageRequestModel.Location2.ToUpperInvariant();
 
-            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedBreadcrumb);
+            A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<Page>.Ignored)).Returns(expectedBreadcrumb);
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
@@ -83,7 +80,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
@@ -108,7 +104,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
@@ -130,10 +125,8 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2, ShowBreadcrumb = true, };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
@@ -146,7 +139,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         }
 
         [Fact]
-        public async Task PagesControllerBreadcrumbHtmlReturnsBoContentForDoNotShwoBradcrumb()
+        public async Task PagesControllerBreadcrumbHtmlReturnsNoContentForDoNotShowBreadcrumb()
         {
             // Arrange
             var pageRequestModel = new PageRequestModel
@@ -154,10 +147,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2, ShowBreadcrumb = false };
             var controller = BuildPagesController(MediaTypeNames.Text.Html);
-
-            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);

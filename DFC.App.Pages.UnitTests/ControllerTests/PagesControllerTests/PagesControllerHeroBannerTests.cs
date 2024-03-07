@@ -1,9 +1,12 @@
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using FakeItEasy;
+using FluentAssertions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -23,12 +26,19 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { HeroBanner = "This is a hero banner" };
-            var expectedHeroBanner = new HeroBannerViewModel { Content = new HtmlString(expectedResult.HeroBanner), };
+            var expected = new Page()
+            {
+                Herobanner = new()
+                {
+                    Html = "This is a hero banner",
+                },
+
+            };
+            var expectedHeroBanner = new HeroBannerViewModel { Content = new HtmlString(expected.Herobanner.Html), };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedHeroBanner);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<Page>.Ignored)).Returns(expectedHeroBanner);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
@@ -49,12 +59,19 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { HeroBanner = "This is a hero banner" };
-            var expectedHeroBanner = new HeroBannerViewModel { Content = new HtmlString(expectedResult.HeroBanner), };
+            var expected = new Page()
+            {
+                Herobanner = new()
+                {
+                    Html = "This is a hero banner",
+                },
+
+            };
+            var expectedHeroBanner = new HeroBannerViewModel { Content = new HtmlString(expected.Herobanner.Html), };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedHeroBanner);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<Page>.Ignored)).Returns(expectedHeroBanner);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
@@ -75,10 +92,10 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            ContentPageModel? expectedResult = null;
+            Page? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expectedResult);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
@@ -89,7 +106,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             controller.Dispose();
         }
 
-        //TODO: 
         [Theory]
         [MemberData(nameof(JsonMediaTypes))]
         public async Task PagesControllerHeroBannerJsonReturnsSuccessWhenNoData(string mediaTypeName)
@@ -100,10 +116,10 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            ContentPageModel? expectedResult = null;
+            Page? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expectedResult);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
@@ -124,10 +140,18 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
-            var controller = BuildPagesController(mediaTypeName);
+            var expected = new Page()
+            {
+                PageLocation = new()
+                {
+                    FullUrl = "/" + pageRequestModel.Location1,
+                    UrlName = "location1",
+                },
+                DisplayText = pageRequestModel.Location2,
 
-            A.CallTo(() => FakePagesControllerHelper.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            }; var controller = BuildPagesController(mediaTypeName);
+
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
