@@ -3,7 +3,6 @@ using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models.ClientOptions;
 using DFC.App.Pages.Extensions;
-using DFC.App.Pages.Helpers;
 using DFC.App.Pages.HttpClientPolicies;
 using DFC.App.Pages.Services.AppRegistryService;
 using DFC.Common.SharedContent.Pkg.Netcore;
@@ -116,9 +115,10 @@ namespace DFC.App.Pages
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageBreadcrumb>, PageBreadcrumbQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<SitemapResponse>, PageSitemapStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageApiResponse>, PageApiStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategy<GetByPageApiResponse>, GetByIdPageApiStrategy>();
 
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
-            services.AddScoped<IPagesControllerHelper, PagesControllerHelper>();
             services.ConfigureOptions<contentOptionsSetup>();
 
             services.AddApplicationInsightsTelemetry();

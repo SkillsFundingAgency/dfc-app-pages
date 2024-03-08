@@ -18,7 +18,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
     {
         protected BasePagesControllerTests()
         {
-            FakePagesControllerHelper = A.Fake<IPagesControllerHelper>();
             Logger = A.Fake<ILogger<PagesController>>();
             FakeMapper = A.Fake<IMapper>();
             FakeSharedContentRedisInterface =A.Fake<ISharedContentRedisInterface>();
@@ -41,8 +40,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             new string[] { MediaTypeNames.Application.Json },
         };
 
-        protected IPagesControllerHelper FakePagesControllerHelper { get; }
-
         protected ILogger<PagesController> Logger { get; }
 
         protected IMapper FakeMapper { get; }
@@ -57,7 +54,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new PagesController(FakePagesControllerHelper, Logger, FakeMapper, FakeSharedContentRedisInterface, FakeContentOptions)
+            var controller = new PagesController(Logger, FakeMapper, FakeSharedContentRedisInterface, FakeContentOptions)
             {
                 ControllerContext = new ControllerContext()
                 {

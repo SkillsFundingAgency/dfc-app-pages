@@ -24,7 +24,6 @@ namespace DFC.App.Pages.Controllers
     {
         private const string LocalPath = "pages";
 
-        private readonly IPagesControllerHelper pagesControllerHelper;
         private readonly ILogger<PagesController> logger;
         private readonly AutoMapper.IMapper mapper;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
@@ -32,13 +31,11 @@ namespace DFC.App.Pages.Controllers
         private string status = string.Empty;
 
         public PagesController(
-            IPagesControllerHelper pageControllerHelper,
             ILogger<PagesController> logger,
             AutoMapper.IMapper mapper,
             ISharedContentRedisInterface sharedContentRedisInterface,
             IOptionsMonitor<contentModeOptions> options)
         {
-            this.pagesControllerHelper = pageControllerHelper;
             this.logger = logger;
             this.mapper = mapper;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
@@ -100,7 +97,7 @@ namespace DFC.App.Pages.Controllers
             }
 
             var (location, article) = ExtractPageLocation(pageRequestModel);
-            string pageUrl = pagesControllerHelper.GetPageUrl(location, article);
+            string pageUrl = GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
             if (pageResponse != null)
             {
@@ -156,7 +153,7 @@ namespace DFC.App.Pages.Controllers
             }
 
             var (location, article) = ExtractPageLocation(pageRequestModel);
-            string pageUrl = pagesControllerHelper.GetPageUrl(location, article);
+            string pageUrl = GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
             var viewModel = new HeadViewModel();
 
@@ -258,7 +255,7 @@ namespace DFC.App.Pages.Controllers
             }
 
             var (location, article) = ExtractPageLocation(pageRequestModel);
-            string pageUrl = pagesControllerHelper.GetPageUrl(location, article);
+            string pageUrl = GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
 
             try
@@ -325,7 +322,7 @@ namespace DFC.App.Pages.Controllers
             }
 
             var (location, article) = ExtractPageLocation(pageRequestModel);
-            string pageUrl = pagesControllerHelper.GetPageUrl(location, article);
+            string pageUrl = GetPageUrl(location, article);
             var viewModel = GetResponse<BodyViewModel>(pageUrl).Result;
             if (viewModel != null)
             {
@@ -432,7 +429,7 @@ namespace DFC.App.Pages.Controllers
             }
 
             var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation", status);
-            string pageUrl = pagesControllerHelper.GetPageUrl(location, article);
+            string pageUrl = GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
 
             if (pageResponse == null || !pageResponse.ShowBreadcrumb.GetValueOrDefault(false))
@@ -530,6 +527,25 @@ namespace DFC.App.Pages.Controllers
                 pathDirectory1);
 
             return new Uri(uriString, UriKind.RelativeOrAbsolute);
+        }
+
+        public string GetPageUrl(string location, string article)
+        {
+            string pageUrl = string.Empty;
+            if (string.IsNullOrWhiteSpace(location) && string.IsNullOrWhiteSpace(article))
+            {
+                pageUrl = "/home";
+            }
+            else if (location == "home")
+            {
+                pageUrl = $"/{location}";
+            }
+            else
+            {
+                pageUrl = $"/{location}/{(string.IsNullOrWhiteSpace(article) ? location : article)}";
+            }
+
+            return pageUrl;
         }
 
         #endregion

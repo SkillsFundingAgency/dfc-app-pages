@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.AutoMapperProfiles.ValuerConverters;
 using DFC.App.Pages.Data.Models;
+using DFC.App.Pages.Models.Api;
 using DFC.App.Pages.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using Microsoft.AspNetCore.Html;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -19,6 +21,11 @@ namespace DFC.App.Pages.AutoMapperProfiles
             //TODO: Add AutoMapper profile for Page -> ContentPageModel if required
             CreateMap<BreadcrumbItemModel, BreadcrumbItemViewModel>()
                 .ForMember(d => d.AddHyperlink, s => s.Ignore());
+
+            CreateMap<PageApi, GetIndexModel>()
+                .ForMember(d => d.Id, s => s.MapFrom(a => a.GraphSync.NodeId.Substring(a.GraphSync.NodeId.LastIndexOf('/') + 1)))
+                .ForMember(d => d.Locations, s => s.MapFrom(a => a.PageLocation.FullUrl.Split(
+                    ',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList()));
 
             CreateMap<Page, HeadViewModel>()
                 .ForMember(d => d.CanonicalUrl, s => s.Ignore())

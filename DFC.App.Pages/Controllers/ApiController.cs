@@ -1,6 +1,17 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using System;
+using AutoMapper;
+using DFC.App.Pages.Models.Api;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using System.Linq;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using Microsoft.Extensions.Options;
+using NHibernate.Engine;
+using DFC.App.Pages.Cms.Data.Content;
 
 namespace DFC.App.Pages.Controllers
 {
@@ -8,28 +19,47 @@ namespace DFC.App.Pages.Controllers
     {
         private readonly ILogger<ApiController> logger;
         private readonly IMapper mapper;
+        private ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IOptionsMonitor<contentModeOptions> options;
+        private string status = string.Empty;
 
-        public ApiController(ILogger<ApiController> logger, IMapper mapper)
+
+
+
+        public ApiController(ILogger<ApiController> logger, IMapper mapper, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
         {
             this.logger = logger;
             this.mapper = mapper;
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
+            this.options = options;
+
+
         }
 
-        //TODO: Replace Cosmos call with Redis call
-        /*[HttpGet]
+        [HttpGet]
         [Route("api/pages")]
         public async Task<IActionResult> Index()
         {
+            if (options.CurrentValue.contentMode != null)
+            {
+                status = options.CurrentValue.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
+
             logger.LogInformation($"{nameof(Index)} has been called");
 
             var pages = new Dictionary<Guid, GetIndexModel>();
 
-            //TODO: replace with redis call
-            var contentPageModels = await contentPageService.GetAllAsync().ConfigureAwait(false);
+            var contentPageModels = await sharedContentRedisInterface.GetDataAsync<PageApiResponse>("PagesApiTest/All", status);
 
-            if (contentPageModels != null && contentPageModels.Any())
+            var contentPageModelsList = contentPageModels.Page.ToList();
+
+            if (contentPageModelsList != null && contentPageModelsList.Any())
             {
-                pages = (from a in contentPageModels.OrderBy(o => o.PageLocation).ThenBy(o => o.CanonicalName)
+                pages = (from a in contentPageModelsList.OrderBy(o => o.PageLocation.FullUrl).ThenBy(o => o.DisplayText)
                          select mapper.Map<GetIndexModel>(a)).ToDictionary(x => x.Id);
                 logger.LogInformation($"{nameof(Index)} has succeeded");
             }
@@ -39,21 +69,28 @@ namespace DFC.App.Pages.Controllers
             }
 
             return Ok(pages);
-        }*/
+        }
 
-        //TODO: Replace Cosmos call with Redis call
-        /*[HttpGet]
+        [HttpGet]
         [Route("api/pages/{id}")]
         public async Task<IActionResult> Document(Guid id)
         {
             logger.LogInformation($"{nameof(Document)} has been called");
 
-            //TODO: replace with redis call
-            var contentPageModel = await contentPageService.GetByIdAsync(id).ConfigureAwait(false);
+            var contentPageModel = await sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>("PageApi" + "/" + id, status);
+            var contentPage = contentPageModel.Page;
 
-            if (contentPageModel != null)
+            PageApi page = new PageApi()
             {
-                var getIndexModel = mapper.Map<GetIndexModel>(contentPageModel);
+                DisplayText = contentPage.FirstOrDefault().DisplayText,
+                GraphSync = contentPage.FirstOrDefault().GraphSync,
+                PageLocation = contentPage.FirstOrDefault().PageLocation
+            };
+
+            if (page != null)
+            {
+                var getIndexModel = mapper.Map<GetIndexModel>(page);
+
                 logger.LogInformation($"{nameof(Document)} has succeeded");
                 return Ok(getIndexModel);
             }
@@ -61,6 +98,6 @@ namespace DFC.App.Pages.Controllers
             logger.LogWarning($"{nameof(Document)} has returned with no content");
 
             return NoContent();
-        }*/
+        }
     }
 }
