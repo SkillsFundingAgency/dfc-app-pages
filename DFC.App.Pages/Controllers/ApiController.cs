@@ -53,7 +53,7 @@ namespace DFC.App.Pages.Controllers
 
             var pages = new Dictionary<Guid, GetIndexModel>();
 
-            var contentPageModels = await sharedContentRedisInterface.GetDataAsync<PageApiResponse>("PagesApiTest/All", status);
+            var contentPageModels = await sharedContentRedisInterface.GetDataAsync<PageApiResponse>("PagesApi/All", status);
 
             var contentPageModelsList = contentPageModels.Page.ToList();
 
@@ -75,6 +75,15 @@ namespace DFC.App.Pages.Controllers
         [Route("api/pages/{id}")]
         public async Task<IActionResult> Document(Guid id)
         {
+            if (options.CurrentValue.contentMode != null)
+            {
+                status = options.CurrentValue.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
+
             logger.LogInformation($"{nameof(Document)} has been called");
 
             var contentPageModel = await sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>("PageApi" + "/" + id, status);
