@@ -2,7 +2,6 @@
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using System.Collections.Generic;
@@ -15,7 +14,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.HealthControllerTests
         public BaseHealthControllerTests()
         {
             FakeLogger = A.Fake<ILogger<HealthController>>();
-            FakeHealthCheckService = A.Fake<HealthCheckService>();
         }
 
         public static IEnumerable<object[]> HtmlMediaTypes => new List<object[]>
@@ -36,15 +34,13 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.HealthControllerTests
 
         protected ILogger<HealthController> FakeLogger { get; }
 
-        protected HealthCheckService FakeHealthCheckService { get; }
-
         protected HealthController BuildHealthController(string mediaTypeName)
         {
             var httpContext = new DefaultHttpContext();
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new HealthController(FakeLogger, FakeHealthCheckService)
+            var controller = new HealthController(FakeLogger)
             {
                 ControllerContext = new ControllerContext()
                 {
