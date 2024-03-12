@@ -1,17 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using System;
-using AutoMapper;
+﻿using AutoMapper;
+using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Models.Api;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
-using System.Linq;
-using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using Microsoft.Extensions.Options;
-using NHibernate.Engine;
-using DFC.App.Pages.Cms.Data.Content;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DFC.App.Pages.Controllers
 {
@@ -23,17 +22,12 @@ namespace DFC.App.Pages.Controllers
         private readonly IOptionsMonitor<contentModeOptions> options;
         private string status = string.Empty;
 
-
-
-
         public ApiController(ILogger<ApiController> logger, IMapper mapper, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
             this.options = options;
-
-
         }
 
         [HttpGet]
@@ -55,11 +49,11 @@ namespace DFC.App.Pages.Controllers
 
             var contentPageModels = await sharedContentRedisInterface.GetDataAsync<PageApiResponse>("PagesApi/All", status);
 
-            var contentPageModelsList = contentPageModels.Page.ToList();
+            var contentPageModelsList = contentPageModels?.Page.ToList();
 
             if (contentPageModelsList != null && contentPageModelsList.Any())
             {
-                pages = (from a in contentPageModelsList.OrderBy(o => o.PageLocation.FullUrl).ThenBy(o => o.DisplayText)
+                pages = (from a in contentPageModelsList.OrderBy(o => o.PageLocation?.FullUrl).ThenBy(o => o.DisplayText)
                          select mapper.Map<GetIndexModel>(a)).ToDictionary(x => x.Id);
                 logger.LogInformation($"{nameof(Index)} has succeeded");
             }
@@ -87,13 +81,13 @@ namespace DFC.App.Pages.Controllers
             logger.LogInformation($"{nameof(Document)} has been called");
 
             var contentPageModel = await sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>("PageApi" + "/" + id, status);
-            var contentPage = contentPageModel.Page;
+            var contentPage = contentPageModel?.Page;
 
             PageApi page = new PageApi()
             {
-                DisplayText = contentPage.FirstOrDefault().DisplayText,
-                GraphSync = contentPage.FirstOrDefault().GraphSync,
-                PageLocation = contentPage.FirstOrDefault().PageLocation
+                DisplayText = contentPage?.FirstOrDefault()?.DisplayText,
+                GraphSync = contentPage?.FirstOrDefault()?.GraphSync,
+                PageLocation = contentPage?.FirstOrDefault()?.PageLocation,
             };
 
             if (page != null)

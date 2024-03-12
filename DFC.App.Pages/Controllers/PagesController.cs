@@ -529,7 +529,7 @@ namespace DFC.App.Pages.Controllers
             return new Uri(uriString, UriKind.RelativeOrAbsolute);
         }
 
-        public string GetPageUrl(string location, string article)
+        private string GetPageUrl(string location, string article)
         {
             string pageUrl = string.Empty;
             if (string.IsNullOrWhiteSpace(location) && string.IsNullOrWhiteSpace(article))
