@@ -86,8 +86,8 @@ namespace DFC.App.Pages
 
         public void ConfigureServices(IServiceCollection services)
         {
-			ConfigureMinimumThreads();
-			
+            ConfigureMinimumThreads();
+
             var redisCacheConnectionString = ConfigurationOptions.Parse(configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>() ??
                 throw new ArgumentNullException($"{nameof(RedisCacheConnectionStringAppSettings)} is missing or has an invalid value."));
 
