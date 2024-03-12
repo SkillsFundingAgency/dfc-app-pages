@@ -33,7 +33,6 @@ namespace DFC.App.Pages.Controllers
             return result;
         }
 
-        //TODO: Add GraphQl health check
         [HttpGet]
         [Route("health")]
         public async Task<IActionResult> Health()
