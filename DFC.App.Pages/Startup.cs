@@ -22,6 +22,7 @@ using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -82,7 +83,6 @@ namespace DFC.App.Pages
                 throw new ArgumentNullException($"{nameof(RedisCacheConnectionStringAppSettings)} is missing or has an invalid value."));
 
             services.AddStackExchangeRedisCache(options => { options.Configuration = configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
-            services.AddHealthChecks().AddCheck<HealthCheck>("RedisConnectionCheck");
             services.AddSingleton<IConnectionMultiplexer>(option =>
             ConnectionMultiplexer.Connect(new ConfigurationOptions
             {
@@ -91,6 +91,7 @@ namespace DFC.App.Pages
                 Ssl = true,
                 Password = redisCacheConnectionString.Password,
             }));
+            services.AddHealthChecks().AddCheck<HealthCheck>("GraphQlRedisConnectionCheck");
 
             services.AddSingleton<IGraphQLClient>(s =>
             {
@@ -145,19 +146,19 @@ namespace DFC.App.Pages
             var policyOptions = configuration.GetSection(AppSettingsPolicies).Get<PolicyOptions>() ?? new PolicyOptions();
             var policyRegistry = services.AddPolicyRegistry();
 
-            services.AddRazorPages();
-
             services.AddApiServices(configuration, policyRegistry);
 
             services
                 .AddPolicies(policyRegistry, nameof(AppRegistryClientOptions), policyOptions)
                 .AddHttpClient<IAppRegistryApiService, AppRegistryApiService, AppRegistryClientOptions>(configuration, nameof(AppRegistryClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
 
-            services.AddControllers(options =>
+            services.AddMvc(config =>
             {
-                options.RespectBrowserAcceptHeader = true;
-                options.ReturnHttpNotAcceptable = true;
-            }).AddNewtonsoftJson();
+                config.RespectBrowserAcceptHeader = true;
+                config.ReturnHttpNotAcceptable = true;
+            })
+                .AddNewtonsoftJson()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
     }
 }
