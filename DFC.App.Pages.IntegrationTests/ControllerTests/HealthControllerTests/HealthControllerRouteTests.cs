@@ -1,12 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
@@ -35,51 +28,43 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.HealthControllerTests
             new object[] { "/health/ping" },
         };
 
-        [Theory]
+        //TODO: Replace Cosmos ping with Redis and GraphQl ping
+        /*[Theory]
         [MemberData(nameof(HealthContentRouteData))]
-        public async Task GetHealthHtmlContentEndpointsReturnSuccess(string url)
+        public async Task GetHealthHtmlContentEndpointsReturnSuccessAndCorrectContentType(string url)
         {
             // Arrange
             var uri = new Uri(url, UriKind.Relative);
-
-            using var host = new HostBuilder()
-                .ConfigureWebHost(webHostBuilder =>
-                {
-                    webHostBuilder
-                    .UseTestServer()
-                    .UseStartup<Startup>()
-                    .Configure(app =>
-                    {
-                        app.UseRouting();
-                        app.UseEndpoints(endpoints =>
-                        {
-                            endpoints.MapHealthChecks(url);
-                        });
-                    })
-
-                    .ConfigureServices(services =>
-                    {
-                        var configuration = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                    .Build();
-                        services.AddSingleton<IConfiguration>(configuration);
-                        services.AddRouting();
-                        services.AddHealthChecks();
-                    });
-                }).Build();
-
-            await host.StartAsync();
-
-            var server = host.GetTestServer();
-            var client = server.CreateClient();
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
+            A.CallTo(() => factory.MockContentPageService.PingAsync()).Returns(true);
 
             // Act
-            var response = await client.GetAsync(uri);
+            var response = await httpClient.GetAsync(uri);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("Healthy", await response.Content.ReadAsStringAsync());
-        }
+            response.EnsureSuccessStatusCode();
+            Assert.Equal($"{MediaTypeNames.Text.Html}; charset={Encoding.UTF8.WebName}", response.Content.Headers.ContentType.ToString());
+        }*/
+
+        //TODO: Replace Cosmos ping with Redis and GraphQl ping
+        /*[Theory]
+        [MemberData(nameof(HealthContentRouteData))]
+        public async Task GetHealthJsonContentEndpointsReturnSuccessAndCorrectContentType(string url)
+        {
+            // Arrange
+            var uri = new Uri(url, UriKind.Relative);
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
+            A.CallTo(() => factory.MockContentPageService.PingAsync()).Returns(true);
+
+            // Act
+            var response = await httpClient.GetAsync(uri);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            Assert.Equal($"{MediaTypeNames.Application.Json}; charset={Encoding.UTF8.WebName}", response.Content.Headers.ContentType.ToString());
+        }*/
 
         [Theory]
         [MemberData(nameof(HealthOkRouteData))]

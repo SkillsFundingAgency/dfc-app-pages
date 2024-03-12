@@ -1,10 +1,13 @@
-﻿using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+﻿using DFC.App.Pages.Data.Models;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using System.Collections.Generic;
+using System;
 
 namespace DFC.App.Pages.IntegrationTests
 {
