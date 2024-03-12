@@ -12,6 +12,8 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
+
 
 namespace DFC.App.Pages.Helpers
 {
@@ -67,7 +69,7 @@ namespace DFC.App.Pages.Helpers
                 status = "PUBLISHED";
             }
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
             ContentPageModel? content = new ContentPageModel();
             mapper.Map(pageResponse, content);
             return content;

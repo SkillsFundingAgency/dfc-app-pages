@@ -23,6 +23,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.Pages.Controllers
 {
@@ -78,7 +79,7 @@ namespace DFC.App.Pages.Controllers
                     new IndexDocumentViewModel { CanonicalName = RobotController.RobotsViewCanonicalName },
                 },
             };
-            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
+            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix + "/" + status, status);
             if (pageUrlResponse.Page == null)
             {
                 return NoContent();
@@ -109,7 +110,7 @@ namespace DFC.App.Pages.Controllers
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
             if (pageResponse != null)
             {
                 var viewModel = mapper.Map<DocumentViewModel>(pageResponse);
@@ -165,12 +166,12 @@ namespace DFC.App.Pages.Controllers
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
             var viewModel = new HeadViewModel();
 
             try
             {
-                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
+                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix + "/" + status, status);
                 var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
                 if (filterList.Count > 0)
                 {
@@ -267,11 +268,11 @@ namespace DFC.App.Pages.Controllers
 
             var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
 
             try
             {
-                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
+                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix + "/" + status, status);
                 var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
                 if (filterList.Count > 0)
                 {
@@ -340,7 +341,7 @@ namespace DFC.App.Pages.Controllers
                 return this.NegotiateContentResult(viewModel);
             }
 
-            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
+            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix + "/" + status, status);
             var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
             if (filterList.Count > 0)
             {
@@ -373,7 +374,7 @@ namespace DFC.App.Pages.Controllers
         private async Task<T?> GetResponse<T>(string pageUrl)
             where T : new()
         {
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
             var viewModel = new T();
             if (pageResponse != null)
             {
@@ -456,9 +457,9 @@ namespace DFC.App.Pages.Controllers
                 status = "PUBLISHED";
             }
 
-            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation", status);
+            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>(Constants.PageLocationSuffix, status);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
 
             if (pageResponse == null || !pageResponse.ShowBreadcrumb.GetValueOrDefault(false))
             {
