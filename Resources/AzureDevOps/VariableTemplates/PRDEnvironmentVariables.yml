@@ -35,6 +35,8 @@ variables:
   value: 2
 - name: clientAffinity
   value: false
+- name: contentMode
+  value: PUBLISHED
 - name: contentUrl
   value: $(ContentApiAddress)/api/execute
 - name: subscriptionUrl

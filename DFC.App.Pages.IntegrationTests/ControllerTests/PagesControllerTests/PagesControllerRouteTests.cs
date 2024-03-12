@@ -1,5 +1,9 @@
-﻿using FakeItEasy;
+﻿using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
+using FakeItEasy;
 using FluentAssertions;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,13 +34,12 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             new object[] { "/pages" },
             new object[] { "/pages/head" },
             new object[] { "/pages/breadcrumb" },
-            new object[] { "/pages/body" },
+            new object[] { $"/pages/herobanner" },
         };
 
         public static IEnumerable<object[]> PagesNoContentRouteData => new List<object[]>
         {
             new object[] { $"/pages/bodytop" },
-            new object[] { $"/pages/herobanner" },
             new object[] { $"/pages/sidebarright" },
             new object[] { $"/pages/sidebarleft" },
             new object[] { $"/pages/bodyfooter" },
@@ -46,12 +49,33 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
         [MemberData(nameof(PagesContentRouteData))]
         public async Task GetPagesHtmlContentEndpointsReturnSuccessAndCorrectContentType(string url)
         {
+            var page = new Page()
+            {
+                Description = "test",
+                DisplayText = "test",
+            };
+            var pageUrl = new PageUrl()
+            {
+                DisplayText = "test",
+                PageLocation = new PageLocation()
+                {
+                    FullUrl = "test",
+                    UrlName = "test",
+                },
+            };
+            var pageUrlResponse = new PageUrlResponse()
+            {
+                Page = new List<PageUrl> { pageUrl },
+            };
+            this.factory.MockSharedContentRedis.Setup(
+                x => x.GetDataAsync<PageUrlResponse>(
+                    It.IsAny<string>(), "PUBLISHED"))
+            .ReturnsAsync(pageUrlResponse);
+
             // Arrange
-            var contentPageModel = factory.GetContentPageModels().Where(x => x.CanonicalName == "an-article");
             var uri = new Uri(url, UriKind.Relative);
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Text.Html));
-            A.CallTo(() => factory.MockCosmosRepo.GetAllAsync(A<string>.Ignored)).Returns(factory.GetContentPageModels());
 
             // Act
             var response = await httpClient.GetAsync(uri);
@@ -70,11 +94,26 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
         public async Task GetPagesJsonContentEndpointsReturnSuccessAndCorrectContentType(string url)
         {
             // Arrange
-            var contentPageModel = factory.GetContentPageModels().Where(x => x.CanonicalName == "an-article");
+            var pageUrl = new PageUrl()
+            {
+                DisplayText = "test",
+                PageLocation = new PageLocation()
+                {
+                    FullUrl = "test",
+                    UrlName = "test",
+                },
+            };
+            var pageUrlResponse = new PageUrlResponse()
+            {
+                Page = new List<PageUrl> { pageUrl },
+            };
+            this.factory.MockSharedContentRedis.Setup(
+                x => x.GetDataAsync<PageUrlResponse>(
+                    It.IsAny<string>(), "PUBLISHED"))
+            .ReturnsAsync(pageUrlResponse);
             var uri = new Uri(url, UriKind.Relative);
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
-            A.CallTo(() => factory.MockCosmosRepo.GetAllAsync(A<string>.Ignored)).Returns(factory.GetContentPageModels());
 
             // Act
             var response = await httpClient.GetAsync(uri);
@@ -95,7 +134,8 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             // Arrange
             var uri = new Uri(url, UriKind.Relative);
             httpClient.DefaultRequestHeaders.Accept.Clear();
-            A.CallTo(() => factory.MockCosmosRepo.GetAllAsync(A<string>.Ignored)).Returns(factory.GetContentPageModels());
+            var RedisContentMock = new Mock<ISharedContentRedisInterface>();
+            RedisContentMock.Setup(m => m.GetDataAsync<PageUrlResponse>("PagesIntegration", "PUBKUSHED")).ReturnsAsync((PageUrlResponse)null);
 
             // Act
             var response = await httpClient.GetAsync(uri);

@@ -1,15 +1,14 @@
-﻿using System;
-using AutoMapper;
-using DFC.App.Pages.Data.Common;
-using DFC.App.Pages.Data.Models;
+﻿using AutoMapper;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using Microsoft.AspNetCore.Html;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
 {
-    public class MarkupContentConverter : IValueConverter<IList<ContentItemModel>?, HtmlString?>
+    public class CmsPageConverter : IValueConverter<IList<Widget>?, HtmlString?>
     {
         private readonly Dictionary<int, string> columnWidthClasses = new Dictionary<int, string>
         {
@@ -28,7 +27,7 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             { "Justify", "dfc-app-pages-alignment-justify" },
         };
 
-        public HtmlString? Convert(IList<ContentItemModel>? sourceMember, ResolutionContext context)
+        public HtmlString? Convert(IList<Widget>? sourceMember, ResolutionContext context)
         {
             if (sourceMember == null || !sourceMember.Any())
             {
@@ -38,19 +37,19 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             var result = new StringBuilder();
             result.Append("<div class=\"govuk-grid-row\">");
 
-            foreach (var contentItemModel in sourceMember.OrderBy(o => o.Ordinal))
+            foreach (var contentItemModel in sourceMember.Where(ctr => ctr.HtmlBody != null || ctr.SharedContent != null || ctr.Metadata != null || ctr.FormContent != null || ctr.ContentType != null))
             {
                 var sizeClass = "govuk-grid-column-full";
                 var alignmentClass = string.Empty;
 
-                if (contentItemModel.Size.HasValue && columnWidthClasses.Keys.Contains(contentItemModel.Size.Value))
+                if (contentItemModel.Metadata.Size != 0 && columnWidthClasses.Keys.Contains((int)contentItemModel.Metadata.Size))
                 {
-                    sizeClass = columnWidthClasses[contentItemModel.Size.Value];
+                    sizeClass = columnWidthClasses[(int)contentItemModel.Metadata.Size];
                 }
 
-                if (!string.IsNullOrWhiteSpace(contentItemModel.Alignment) && alignmentClasses.Keys.Contains(contentItemModel.Alignment))
+                if (!string.IsNullOrWhiteSpace(contentItemModel.Metadata.Alignment) && alignmentClasses.Keys.Contains(contentItemModel.Metadata.Alignment))
                 {
-                    alignmentClass = alignmentClasses[contentItemModel.Alignment];
+                    alignmentClass = alignmentClasses[contentItemModel.Metadata.Alignment];
                 }
 
                 result.Append($"<div class=\"{sizeClass}\">");
@@ -75,47 +74,45 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
             return new HtmlString(result.ToString());
         }
 
-        private static string GetContentFromItem(ContentItemModel model)
+        private static string GetContentFromItem(Widget model)
         {
             var content = new StringBuilder();
 
-            if (model.ContentType!.Equals(Constants.ContentTypeForm, StringComparison.InvariantCultureIgnoreCase))
+            if (model.HtmlBody != null)
             {
+                content.Append(model.HtmlBody.Html);
+            }
+            else if (model.FormContent != null)
+            {
+                content.Append(model.FormContent);
+            }
+            else if (model.ContentType != null && model.ContentType!.Equals("Form", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                model.Form.EncType = "application/x-www-form-urlencoded";
                 content.Append($"<form");
 
-                if (!string.IsNullOrWhiteSpace(model.EncType))
+                if (!string.IsNullOrWhiteSpace(model.Form.Action))
                 {
-                    content.Append($" action=\"{model.Action}\"");
-                }
-
-                if (!string.IsNullOrWhiteSpace(model.EncType))
-                {
-                    content.Append($" method=\"{model.Method}\"");
-                }
-
-                if (!string.IsNullOrWhiteSpace(model.EncType))
-                {
-                    content.Append($" enctype=\"{model.EncType}\"");
+                    content.Append($" action=\"{model.Form.Action}\"");
+                    content.Append($" method=\"{model.Form.Method}\"");
+                    content.Append($" enctype=\"{model.Form.EncType}\"");
                 }
 
                 content.Append('>');
+
+                if (model.Flow.Widgets.FirstOrDefault().HtmlBody != null)
+                {
+                    content.Append(model.Flow.Widgets.FirstOrDefault().HtmlBody.Html);
+                }
+
+                content.Append("</form>");
             }
             else
             {
-                content.Append(string.IsNullOrEmpty(model.Content) ? model.HtmlBody : model.Content);
-            }
-
-            if (model.ContentItems != null && model.ContentItems.Any())
-            {
-                foreach (var item in model.ContentItems.OrderBy(x => x.Ordinal))
+                foreach (var item in model.SharedContent.ContentItems)
                 {
-                    content.Append(string.IsNullOrEmpty(item.Content) ? item.HtmlBody : item.Content);
+                    content.Append(item.Content.Html);
                 }
-            }
-
-            if (model.ContentType.Equals(Constants.ContentTypeForm, StringComparison.InvariantCultureIgnoreCase))
-            {
-                content.Append("</form>");
             }
 
             return content.ToString();

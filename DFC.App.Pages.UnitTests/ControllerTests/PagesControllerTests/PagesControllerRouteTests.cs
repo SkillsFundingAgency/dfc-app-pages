@@ -1,6 +1,6 @@
 ﻿using DFC.App.Pages.Controllers;
-using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,13 +34,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             new object[] { "/pages/{location1}/{location2}/{location3}/head", "SomeLocation1", "SomeLocation2", "SomeLocation3", string.Empty, string.Empty, nameof(PagesController.Head) },
             new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/head", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", string.Empty, nameof(PagesController.Head) },
             new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/{location5}/head", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", "SomeLocation5", nameof(PagesController.Head) },
-
-            new object[] { "/pages/breadcrumb", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, nameof(PagesController.Breadcrumb) },
-            new object[] { "/pages/{location1}/breadcrumb", "SomeLocation1", string.Empty, string.Empty, string.Empty, string.Empty, nameof(PagesController.Breadcrumb) },
-            new object[] { "/pages/{location1}/{location2}/breadcrumb", "SomeLocation1", "SomeLocation2", string.Empty, string.Empty, string.Empty, nameof(PagesController.Breadcrumb) },
-            new object[] { "/pages/{location1}/{location2}/{location3}/breadcrumb", "SomeLocation1", "SomeLocation2", "SomeLocation3", string.Empty, string.Empty, nameof(PagesController.Breadcrumb) },
-            new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/breadcrumb", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", string.Empty, nameof(PagesController.Breadcrumb) },
-            new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/{location5}/breadcrumb", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", "SomeLocation5", nameof(PagesController.Breadcrumb) },
 
             new object[] { "/pages/herobanner", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, nameof(PagesController.HeroBanner) },
             new object[] { "/pages/{location1}/herobanner", "SomeLocation1", string.Empty, string.Empty, string.Empty, string.Empty, nameof(PagesController.HeroBanner) },
@@ -86,6 +79,13 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             new object[] { "/pages/{location1}/{location2}/{location3}/bodyfooter", "SomeLocation1", "SomeLocation2", "SomeLocation3", string.Empty, string.Empty, nameof(PagesController.BodyFooter) },
             new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/bodyfooter", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", string.Empty, nameof(PagesController.BodyFooter) },
             new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/{location5}/bodyfooter", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", "SomeLocation5", nameof(PagesController.BodyFooter) },
+
+            new object[] { "/pages/breadcrumb", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, nameof(PagesController.Breadcrumb) },
+            new object[] { "/pages/{location1}/breadcrumb", "SomeLocation1", string.Empty, string.Empty, string.Empty, string.Empty, nameof(PagesController.Breadcrumb) },
+            new object[] { "/pages/{location1}/{location2}/breadcrumb", "SomeLocation1", "SomeLocation2", string.Empty, string.Empty, string.Empty, nameof(PagesController.Breadcrumb) },
+            new object[] { "/pages/{location1}/{location2}/{location3}/breadcrumb", "SomeLocation1", "SomeLocation2", "SomeLocation3", string.Empty, string.Empty, nameof(PagesController.Breadcrumb) },
+            new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/breadcrumb", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", string.Empty, nameof(PagesController.Breadcrumb) },
+            new object[] { "/pages/{location1}/{location2}/{location3}/{location4}/{location5}/breadcrumb", "SomeLocation1", "SomeLocation2", "SomeLocation3", "SomeLocation4", "SomeLocation5", nameof(PagesController.Breadcrumb) },
         };
 
         [Theory]
@@ -102,16 +102,22 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location5 = location5,
             };
             var controller = BuildController(route);
-            var expectedResult = new ContentPageModel() { ShowBreadcrumb = true, Content = "<h1>A document</h1>" };
+            var expected = new Page()
+            {
+                Herobanner = new()
+                {
+                    Html = "This is a hero banner",
+                },
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            };
+
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
 
             // Act
             var result = await RunControllerAction(controller, pageRequestModel, actionMethod).ConfigureAwait(false);
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             controller.Dispose();
         }
@@ -163,7 +169,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             httpContext.Request.Path = route;
             httpContext.Request.Headers[HeaderNames.Accept] = MediaTypeNames.Application.Json;
 
-            return new PagesController(Logger, FakeContentPageService, FakeMapper, FakePagesControlerHelpers)
+            return new PagesController(Logger, FakeMapper, FakeSharedContentRedisInterface, FakeContentOptions)
             {
                 ControllerContext = new ControllerContext
                 {

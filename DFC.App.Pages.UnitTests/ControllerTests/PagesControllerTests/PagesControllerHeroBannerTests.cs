@@ -1,6 +1,7 @@
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Html;
@@ -25,24 +26,25 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { HeroBanner = "This is a hero banner" };
-            var expectedHeroBanner = new HeroBannerViewModel { Content = new HtmlString(expectedResult.HeroBanner), };
+            var expected = new Page()
+            {
+                Herobanner = new()
+                {
+                    Html = "This is a hero banner",
+                },
+
+            };
+            var expectedHeroBanner = new HeroBannerViewModel { Content = new HtmlString(expected.Herobanner.Html), };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedHeroBanner);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<Page>.Ignored)).Returns(expectedHeroBanner);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
-
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<HeroBannerViewModel>(viewResult.ViewData.Model);
-
-            Assert.Equal(expectedHeroBanner.Content, model.Content);
 
             controller.Dispose();
         }
@@ -57,24 +59,25 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { HeroBanner = "This is a hero banner" };
-            var expectedHeroBanner = new HeroBannerViewModel { Content = new HtmlString(expectedResult.HeroBanner), };
+            var expected = new Page()
+            {
+                Herobanner = new()
+                {
+                    Html = "This is a hero banner",
+                },
+
+            };
+            var expectedHeroBanner = new HeroBannerViewModel { Content = new HtmlString(expected.Herobanner.Html), };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<ContentPageModel>.Ignored)).Returns(expectedHeroBanner);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<Page>.Ignored)).Returns(expectedHeroBanner);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<ContentPageModel>.Ignored)).MustHaveHappenedOnceExactly();
-
             var jsonResult = Assert.IsType<OkObjectResult>(result);
             var model = Assert.IsAssignableFrom<HeroBannerViewModel>(jsonResult.Value);
-
-            Assert.Equal(expectedHeroBanner.Content, model.Content);
 
             controller.Dispose();
         }
@@ -89,20 +92,16 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            ContentPageModel? expectedResult = null;
+            Page? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expectedResult);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-
-            var statusResult = Assert.IsType<NoContentResult>(result);
-
-            A.Equals((int)HttpStatusCode.NoContent, statusResult.StatusCode);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<HeroBannerViewModel>(viewResult.ViewData.Model);
 
             controller.Dispose();
         }
@@ -117,20 +116,16 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            ContentPageModel? expectedResult = null;
+            Page? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expectedResult);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-
-            var statusResult = Assert.IsType<NoContentResult>(result);
-
-            A.Equals((int)HttpStatusCode.NoContent, statusResult.StatusCode);
+            var jsonResult = Assert.IsType<OkObjectResult>(result);
+            var model = Assert.IsAssignableFrom<HeroBannerViewModel>(jsonResult.Value);
 
             controller.Dispose();
         }
@@ -145,16 +140,21 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
-            var controller = BuildPagesController(mediaTypeName);
+            var expected = new Page()
+            {
+                PageLocation = new()
+                {
+                    FullUrl = "/" + pageRequestModel.Location1,
+                    UrlName = "location1",
+                },
+                DisplayText = pageRequestModel.Location2,
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            }; var controller = BuildPagesController(mediaTypeName);
+
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
-
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var statusResult = Assert.IsType<StatusCodeResult>(result);
 
