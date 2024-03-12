@@ -1,10 +1,8 @@
 ﻿using DFC.App.Pages.Cms.Data.Content;
-using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Extensions;
 using DFC.App.Pages.Models;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
-using DFC.Compui.Cosmos.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

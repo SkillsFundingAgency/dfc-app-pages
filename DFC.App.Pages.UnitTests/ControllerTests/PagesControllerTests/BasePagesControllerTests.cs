@@ -1,9 +1,8 @@
-﻿using DFC.App.Pages.Cms.Data.Content;
+﻿using AutoMapper;
+using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Controllers;
 using DFC.App.Pages.Data.Contracts;
-using DFC.App.Pages.Data.Models;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
-using DFC.Compui.Cosmos.Contracts;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +19,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
         protected BasePagesControllerTests()
         {
             Logger = A.Fake<ILogger<PagesController>>();
-            FakeContentPageService = A.Fake<IContentPageService<ContentPageModel>>();
-            FakeMapper = A.Fake<AutoMapper.IMapper>();
-            FakePagesControlerHelpers = A.Fake<IPagesControlerHelpers>();
+            FakeMapper = A.Fake<IMapper>();
             FakeSharedContentRedisInterface =A.Fake<ISharedContentRedisInterface>();
             FakeContentOptions = A.Fake<IOptionsMonitor<contentModeOptions>>();
         }
@@ -45,13 +42,10 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
         protected ILogger<PagesController> Logger { get; }
 
-        protected IContentPageService<ContentPageModel> FakeContentPageService { get; }
+        protected IMapper FakeMapper { get; }
 
-        protected AutoMapper.IMapper FakeMapper { get; }
+        protected ISharedContentRedisInterface FakeSharedContentRedisInterface { get; }
 
-        protected IPagesControlerHelpers FakePagesControlerHelpers { get; }
-
-        protected ISharedContentRedisInterface FakeSharedContentRedisInterface;
         protected IOptionsMonitor<contentModeOptions> FakeContentOptions { get; }
 
         protected PagesController BuildPagesController(string mediaTypeName)
@@ -60,7 +54,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new PagesController(Logger, FakeContentPageService, FakeMapper, FakePagesControlerHelpers, FakeSharedContentRedisInterface, FakeContentOptions)
+            var controller = new PagesController(Logger, FakeMapper, FakeSharedContentRedisInterface, FakeContentOptions)
             {
                 ControllerContext = new ControllerContext()
                 {

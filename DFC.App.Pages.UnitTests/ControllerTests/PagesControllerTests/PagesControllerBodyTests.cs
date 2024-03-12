@@ -1,9 +1,15 @@
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -23,11 +29,10 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
+
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
+            A.CallTo(() => FakeMapper.Map(A<Page>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
@@ -48,11 +53,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
+            A.CallTo(() => FakeMapper.Map(A<Page>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
@@ -72,11 +75,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             {
                 Location1 = "a-location-name",
             };
-            var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
+            A.CallTo(() => FakeMapper.Map(A<Page>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
@@ -96,11 +97,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             {
                 Location1 = "a-location-name",
             };
-            var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
+            A.CallTo(() => FakeMapper.Map(A<Page>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
@@ -121,11 +120,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
+            A.CallTo(() => FakeMapper.Map(A<Page>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
@@ -147,11 +144,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
+            A.CallTo(() => FakeMapper.Map(A<Page>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
@@ -172,11 +167,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { Content = "<h1>A document</h1>", PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
+            A.CallTo(() => FakeMapper.Map(A<Page>.Ignored, A<BodyViewModel>.Ignored)).Returns(A.Fake<BodyViewModel>());
 
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);

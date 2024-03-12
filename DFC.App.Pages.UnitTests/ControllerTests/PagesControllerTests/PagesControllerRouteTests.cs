@@ -1,6 +1,6 @@
 ﻿using DFC.App.Pages.Controllers;
-using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -102,9 +102,16 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location5 = location5,
             };
             var controller = BuildController(route);
-            var expectedResult = new ContentPageModel() { ShowBreadcrumb = true, Content = "<h1>A document</h1>" };
+            var expected = new Page()
+            {
+                Herobanner = new()
+                {
+                    Html = "This is a hero banner",
+                },
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageFromSharedAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            };
+
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
 
             // Act
             var result = await RunControllerAction(controller, pageRequestModel, actionMethod).ConfigureAwait(false);
@@ -162,7 +169,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             httpContext.Request.Path = route;
             httpContext.Request.Headers[HeaderNames.Accept] = MediaTypeNames.Application.Json;
 
-            return new PagesController(Logger, FakeContentPageService, FakeMapper, FakePagesControlerHelpers, FakeSharedContentRedisInterface, FakeContentOptions)
+            return new PagesController(Logger, FakeMapper, FakeSharedContentRedisInterface, FakeContentOptions)
             {
                 ControllerContext = new ControllerContext
                 {
