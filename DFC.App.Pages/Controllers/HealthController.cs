@@ -46,7 +46,7 @@ namespace DFC.App.Pages.Controllers
 
                 if (status == HealthStatus.Healthy)
                 {
-                    const string message = "Redis is available";
+                    const string message = "Redis and GraphQl are available";
                     logger.LogInformation($"{nameof(Health)} responded with: {resourceName} - {message}");
 
                     var viewModel = CreateHealthViewModel(message);
