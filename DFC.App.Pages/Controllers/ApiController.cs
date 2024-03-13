@@ -30,7 +30,7 @@ namespace DFC.App.Pages.Controllers
             this.options = options;
         }
 
-       /* [HttpGet]
+        /*[HttpGet]
         [Route("api/pages")]
         public async Task<IActionResult> Index()
         {

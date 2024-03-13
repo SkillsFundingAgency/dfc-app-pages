@@ -67,7 +67,7 @@ namespace DFC.App.Pages.Controllers
                     new IndexDocumentViewModel { CanonicalName = RobotController.RobotsViewCanonicalName },
                 },
             };
-            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
+            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("Pagesurl", status);
             if (pageUrlResponse.Page == null)
             {
                 return NoContent();
@@ -159,7 +159,7 @@ namespace DFC.App.Pages.Controllers
 
             try
             {
-                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
+                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("Pagesurl", status);
                 var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
                 if (filterList.Count > 0)
                 {
@@ -260,7 +260,7 @@ namespace DFC.App.Pages.Controllers
 
             try
             {
-                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
+                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("Pagesurl", status);
                 var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
                 if (filterList.Count > 0)
                 {
@@ -329,7 +329,7 @@ namespace DFC.App.Pages.Controllers
                 return this.NegotiateContentResult(viewModel);
             }
 
-            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
+            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("Pagesurl", status);
             var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
             if (filterList.Count > 0)
             {
@@ -416,6 +416,27 @@ namespace DFC.App.Pages.Controllers
         }
 
         #region private functions
+        private static (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
+        {
+            _ = pageRequestModel ?? throw new ArgumentNullException(nameof(pageRequestModel));
+
+            var pageLocation = string.Join("/", new[] { pageRequestModel.Location1, pageRequestModel.Location2, pageRequestModel.Location3, pageRequestModel.Location4, pageRequestModel.Location5 });
+            var pageLocations = pageLocation.Split("/", StringSplitOptions.RemoveEmptyEntries);
+            var location = string.Empty;
+            var article = string.Empty;
+
+            if (pageLocations.Length == 1)
+            {
+                location = pageLocations.First();
+            }
+            else if (pageLocations.Length > 1)
+            {
+                location = string.Join("/", pageLocations, 0, pageLocations.Length - 1);
+                article = pageLocations.Last();
+            }
+
+            return (location, article);
+        }
 
         private async Task<BreadcrumbViewModel> GetBreadcrumb(string location, string article)
         {
@@ -466,28 +487,6 @@ namespace DFC.App.Pages.Controllers
             }
 
             return result;
-        }
-
-        private (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
-        {
-            _ = pageRequestModel ?? throw new ArgumentNullException(nameof(pageRequestModel));
-
-            var pageLocation = string.Join("/", new[] { pageRequestModel.Location1, pageRequestModel.Location2, pageRequestModel.Location3, pageRequestModel.Location4, pageRequestModel.Location5 });
-            var pageLocations = pageLocation.Split("/", StringSplitOptions.RemoveEmptyEntries);
-            var location = string.Empty;
-            var article = string.Empty;
-
-            if (pageLocations.Length == 1)
-            {
-                location = pageLocations.First();
-            }
-            else if (pageLocations.Length > 1)
-            {
-                location = string.Join("/", pageLocations, 0, pageLocations.Length - 1);
-                article = pageLocations.Last();
-            }
-
-            return (location, article);
         }
 
         private BreadcrumbViewModel BuildBreadCrumb(string path, JObject doc)
