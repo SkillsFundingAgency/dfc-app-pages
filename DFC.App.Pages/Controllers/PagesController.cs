@@ -417,6 +417,27 @@ namespace DFC.App.Pages.Controllers
         }
 
         #region private functions
+        private static (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
+        {
+            _ = pageRequestModel ?? throw new ArgumentNullException(nameof(pageRequestModel));
+
+            var pageLocation = string.Join("/", new[] { pageRequestModel.Location1, pageRequestModel.Location2, pageRequestModel.Location3, pageRequestModel.Location4, pageRequestModel.Location5 });
+            var pageLocations = pageLocation.Split("/", StringSplitOptions.RemoveEmptyEntries);
+            var location = string.Empty;
+            var article = string.Empty;
+
+            if (pageLocations.Length == 1)
+            {
+                location = pageLocations.First();
+            }
+            else if (pageLocations.Length > 1)
+            {
+                location = string.Join("/", pageLocations, 0, pageLocations.Length - 1);
+                article = pageLocations.Last();
+            }
+
+            return (location, article);
+        }
 
         private async Task<BreadcrumbViewModel> GetBreadcrumb(string location, string article)
         {
@@ -469,28 +490,6 @@ namespace DFC.App.Pages.Controllers
             return result;
         }
 
-        private (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
-        {
-            _ = pageRequestModel ?? throw new ArgumentNullException(nameof(pageRequestModel));
-
-            var pageLocation = string.Join("/", new[] { pageRequestModel.Location1, pageRequestModel.Location2, pageRequestModel.Location3, pageRequestModel.Location4, pageRequestModel.Location5 });
-            var pageLocations = pageLocation.Split("/", StringSplitOptions.RemoveEmptyEntries);
-            var location = string.Empty;
-            var article = string.Empty;
-
-            if (pageLocations.Length == 1)
-            {
-                location = pageLocations.First();
-            }
-            else if (pageLocations.Length > 1)
-            {
-                location = string.Join("/", pageLocations, 0, pageLocations.Length - 1);
-                article = pageLocations.Last();
-            }
-
-            return (location, article);
-        }
-
         private BreadcrumbViewModel BuildBreadCrumb(string path, JObject doc)
         {
             StringBuilder breadCrumbText = new StringBuilder();
@@ -530,7 +529,7 @@ namespace DFC.App.Pages.Controllers
             return new Uri(uriString, UriKind.RelativeOrAbsolute);
         }
 
-        public string GetPageUrl(string location, string article)
+        private string GetPageUrl(string location, string article)
         {
             string pageUrl = string.Empty;
             if (string.IsNullOrWhiteSpace(location) && string.IsNullOrWhiteSpace(article))

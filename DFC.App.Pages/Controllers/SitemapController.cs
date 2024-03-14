@@ -61,35 +61,23 @@ namespace DFC.App.Pages.Controllers
 
                 if (contentPageModels != null)
                 {
-                    var contentPageModelsList = contentPageModels.Page.ToList();
+                    var contentPageModelsList = contentPageModels.Page?.ToList();
 
                     if (contentPageModelsList.Any())
                     {
                         var sitemapContentPageModels = contentPageModelsList
-                             .Where(w => w.Sitemap.Exclude == false)
-                             .OrderBy(o => o.PageLocation.urlName);
+                             .Where(w => w.Sitemap?.Exclude == false)
+                             .OrderBy(o => o.PageLocation?.urlName);
 
                         foreach (var contentPageModel in sitemapContentPageModels)
                         {
                             //GraphQL stores Priority as whole number so need to place decimal in front to display proper priority number.
-                            if (contentPageModel.PageLocation.DefaultPageForLocation == true)
-                            {
                                 sitemap.Add(new SitemapLocation
                                 {
-                                    Url = $"{sitemapUrlPrefix}{contentPageModel.PageLocation.FullUrl}",
-                                    Priority = double.Parse("0." + contentPageModel.Sitemap.Priority),
-                                    ChangeFrequency = contentPageModel.Sitemap.ChangeFrequency,
+                                    Url = $"{sitemapUrlPrefix}{contentPageModel?.PageLocation?.FullUrl}",
+                                    Priority = double.Parse("0." + contentPageModel?.Sitemap?.Priority),
+                                    ChangeFrequency = contentPageModel?.Sitemap?.ChangeFrequency,
                                 });
-                            }
-
-                            var location = string.IsNullOrWhiteSpace(contentPageModel.PageLocation.FullUrl) || contentPageModel.PageLocation.FullUrl == "/" ? string.Empty : $"{contentPageModel.PageLocation.FullUrl}";
-
-                            sitemap.Add(new SitemapLocation
-                            {
-                                Url = $"{sitemapUrlPrefix}{contentPageModel.PageLocation.FullUrl}",
-                                Priority = double.Parse("0." + contentPageModel.Sitemap.Priority),
-                                ChangeFrequency = contentPageModel.Sitemap.ChangeFrequency,
-                            });
                         }
                     }
                 }
