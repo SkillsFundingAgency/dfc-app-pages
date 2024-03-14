@@ -68,7 +68,7 @@ namespace DFC.App.Pages.Controllers
                     new IndexDocumentViewModel { CanonicalName = RobotController.RobotsViewCanonicalName },
                 },
             };
-            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix + "/" + status, status);
+            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix, status);
             if (pageUrlResponse.Page == null)
             {
                 return NoContent();
@@ -160,7 +160,7 @@ namespace DFC.App.Pages.Controllers
 
             try
             {
-                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix + "/" + status, status);
+                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix, status);
                 var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
                 if (filterList.Count > 0)
                 {
@@ -261,7 +261,7 @@ namespace DFC.App.Pages.Controllers
 
             try
             {
-                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix + "/" + status, status);
+                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix, status);
                 var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
                 if (filterList.Count > 0)
                 {
@@ -330,7 +330,7 @@ namespace DFC.App.Pages.Controllers
                 return this.NegotiateContentResult(viewModel);
             }
 
-            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix + "/" + status, status);
+            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix, status);
             var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
             if (filterList.Count > 0)
             {
