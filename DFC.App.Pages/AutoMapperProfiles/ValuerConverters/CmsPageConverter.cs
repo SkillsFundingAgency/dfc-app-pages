@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Common;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using Microsoft.AspNetCore.Html;
 using System;
@@ -100,18 +101,18 @@ namespace DFC.App.Pages.AutoMapperProfiles.ValuerConverters
 
                 content.Append('>');
 
-                if (model.Flow.Widgets.FirstOrDefault().HtmlBody != null)
+                if (model?.Flow?.Widgets?.FirstOrDefault()?.HtmlBody != null)
                 {
-                    content.Append(model.Flow.Widgets.FirstOrDefault().HtmlBody.Html);
+                    content.Append(model?.Flow?.Widgets?.FirstOrDefault()?.HtmlBody?.Html);
                 }
 
                 content.Append("</form>");
             }
             else
             {
-                foreach (var item in model.SharedContent.ContentItems)
+                foreach (var item in model?.SharedContent?.ContentItems ?? Enumerable.Empty<ContentItem>())
                 {
-                    content.Append(item.Content.Html);
+                    content.Append(item?.Content?.Html);
                 }
             }
 

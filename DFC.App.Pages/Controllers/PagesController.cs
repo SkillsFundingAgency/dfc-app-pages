@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.Pages.Controllers
 {
@@ -67,7 +68,7 @@ namespace DFC.App.Pages.Controllers
                     new IndexDocumentViewModel { CanonicalName = RobotController.RobotsViewCanonicalName },
                 },
             };
-            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
+            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix, status);
             if (pageUrlResponse.Page == null)
             {
                 return NoContent();
@@ -98,7 +99,7 @@ namespace DFC.App.Pages.Controllers
 
             var (location, article) = ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
             if (pageResponse != null)
             {
                 var viewModel = mapper.Map<DocumentViewModel>(pageResponse);
@@ -154,12 +155,12 @@ namespace DFC.App.Pages.Controllers
 
             var (location, article) = ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
             var viewModel = new HeadViewModel();
 
             try
             {
-                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
+                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix, status);
                 var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
                 if (filterList.Count > 0)
                 {
@@ -256,11 +257,11 @@ namespace DFC.App.Pages.Controllers
 
             var (location, article) = ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
 
             try
             {
-                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
+                var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix, status);
                 var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
                 if (filterList.Count > 0)
                 {
@@ -329,7 +330,7 @@ namespace DFC.App.Pages.Controllers
                 return this.NegotiateContentResult(viewModel);
             }
 
-            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>("pagesurl" + "/" + status, status);
+            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix, status);
             var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
             if (filterList.Count > 0)
             {
@@ -362,7 +363,7 @@ namespace DFC.App.Pages.Controllers
         private async Task<T?> GetResponse<T>(string pageUrl)
             where T : new()
         {
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
             var viewModel = new T();
             if (pageResponse != null)
             {
@@ -416,6 +417,27 @@ namespace DFC.App.Pages.Controllers
         }
 
         #region private functions
+        private static (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
+        {
+            _ = pageRequestModel ?? throw new ArgumentNullException(nameof(pageRequestModel));
+
+            var pageLocation = string.Join("/", new[] { pageRequestModel.Location1, pageRequestModel.Location2, pageRequestModel.Location3, pageRequestModel.Location4, pageRequestModel.Location5 });
+            var pageLocations = pageLocation.Split("/", StringSplitOptions.RemoveEmptyEntries);
+            var location = string.Empty;
+            var article = string.Empty;
+
+            if (pageLocations.Length == 1)
+            {
+                location = pageLocations.First();
+            }
+            else if (pageLocations.Length > 1)
+            {
+                location = string.Join("/", pageLocations, 0, pageLocations.Length - 1);
+                article = pageLocations.Last();
+            }
+
+            return (location, article);
+        }
 
         private async Task<BreadcrumbViewModel> GetBreadcrumb(string location, string article)
         {
@@ -428,9 +450,9 @@ namespace DFC.App.Pages.Controllers
                 status = "PUBLISHED";
             }
 
-            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>("PageLocation", status);
+            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>(Constants.PageLocationSuffix, status);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>("Page" + pageUrl, status);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
 
             if (pageResponse == null || !pageResponse.ShowBreadcrumb.GetValueOrDefault(false))
             {
@@ -466,28 +488,6 @@ namespace DFC.App.Pages.Controllers
             }
 
             return result;
-        }
-
-        private (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
-        {
-            _ = pageRequestModel ?? throw new ArgumentNullException(nameof(pageRequestModel));
-
-            var pageLocation = string.Join("/", new[] { pageRequestModel.Location1, pageRequestModel.Location2, pageRequestModel.Location3, pageRequestModel.Location4, pageRequestModel.Location5 });
-            var pageLocations = pageLocation.Split("/", StringSplitOptions.RemoveEmptyEntries);
-            var location = string.Empty;
-            var article = string.Empty;
-
-            if (pageLocations.Length == 1)
-            {
-                location = pageLocations.First();
-            }
-            else if (pageLocations.Length > 1)
-            {
-                location = string.Join("/", pageLocations, 0, pageLocations.Length - 1);
-                article = pageLocations.Last();
-            }
-
-            return (location, article);
         }
 
         private BreadcrumbViewModel BuildBreadCrumb(string path, JObject doc)
@@ -529,7 +529,7 @@ namespace DFC.App.Pages.Controllers
             return new Uri(uriString, UriKind.RelativeOrAbsolute);
         }
 
-        public string GetPageUrl(string location, string article)
+        private string GetPageUrl(string location, string article)
         {
             string pageUrl = string.Empty;
             if (string.IsNullOrWhiteSpace(location) && string.IsNullOrWhiteSpace(article))

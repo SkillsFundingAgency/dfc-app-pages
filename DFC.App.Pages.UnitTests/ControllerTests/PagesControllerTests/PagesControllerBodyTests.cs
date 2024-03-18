@@ -60,6 +60,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             // Act
             var result = await controller.Body(pageRequestModel).ConfigureAwait(false);
 
+            // Assert
             var jsonResult = Assert.IsType<OkObjectResult>(result);
             _ = Assert.IsAssignableFrom<BodyViewModel>(jsonResult.Value);
 

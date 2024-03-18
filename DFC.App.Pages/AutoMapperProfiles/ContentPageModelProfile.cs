@@ -40,7 +40,7 @@ namespace DFC.App.Pages.AutoMapperProfiles
                .ForMember(d => d.Content, opt => opt.ConvertUsing(new CmsPageConverter(), a => a.Flow.Widgets));
 
             CreateMap<PageUrl, IndexDocumentViewModel>()
-                .ForMember(d => d.CanonicalName, s => s.MapFrom(a => a.PageLocation.UrlName))
+                .ForMember(d => d.CanonicalName, s => s.MapFrom(a => a.PageLocation.UrlName ?? string.Empty))
                 .ForMember(d => d.PageLocation, s => s.MapFrom(a => (a.Breadcrumb.TermContentItems.FirstOrDefault().DisplayText == "/" ? "/" : $"/{a.Breadcrumb.TermContentItems.FirstOrDefault().DisplayText}")))
                 .ForMember(d => d.IsDefaultForPageLocation, s => s.MapFrom(a => a.PageLocation.DefaultPageForLocation));
 
