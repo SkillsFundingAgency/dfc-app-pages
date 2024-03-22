@@ -326,20 +326,6 @@ namespace DFC.App.Pages.Controllers
             return NotFound();
         }
 
-        private async Task<T?> GetResponse<T>(string pageUrl)
-            where T : new()
-        {
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
-            var viewModel = new T();
-            if (pageResponse != null)
-            {
-                mapper.Map(pageResponse, viewModel);
-                return viewModel;
-            }
-
-            return default(T);
-        }
-        
         [HttpGet]
         [Route("pages/sidebarright")]
         [Route("pages/{location1}/sidebarright")]
@@ -404,7 +390,7 @@ namespace DFC.App.Pages.Controllers
 
             return (location, article);
         }
-        
+
         private async Task<T?> GetResponse<T>(string pageUrl)
             where T : new()
         {
