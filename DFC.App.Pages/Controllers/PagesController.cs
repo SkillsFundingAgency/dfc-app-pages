@@ -404,7 +404,7 @@ namespace DFC.App.Pages.Controllers
 
             return (location, article);
         }
-
+        
         private async Task<T?> GetResponse<T>(string pageUrl)
             where T : new()
         {
