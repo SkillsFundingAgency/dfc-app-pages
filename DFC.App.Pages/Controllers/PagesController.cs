@@ -99,12 +99,18 @@ namespace DFC.App.Pages.Controllers
             var (location, article) = ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
+            if (pageResponse == null)
+            {
+                pageUrl = pageUrl.Remove(pageUrl.LastIndexOf('/'));
+                pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
+            }
+
             if (pageResponse != null)
             {
                 var viewModel = mapper.Map<DocumentViewModel>(pageResponse);
                 if (pageResponse.ShowBreadcrumb.GetValueOrDefault(false))
                 {
-                    viewModel.Breadcrumb = await GetBreadcrumb(location, article);
+                    viewModel.Breadcrumb = await GetBreadcrumb(location, article, pageUrl);
 
                     if (viewModel.Breadcrumb?.Breadcrumbs != null && viewModel.Breadcrumb.Breadcrumbs.Any())
                     {
@@ -194,9 +200,9 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Breadcrumb(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Breadcrumb)} has been called");
-
+            string pageUrl = string.Empty;
             var (location, article) = ExtractPageLocation(pageRequestModel);
-            var breadcrumbResponse = await GetBreadcrumb(location, article);
+            var breadcrumbResponse = await GetBreadcrumb(location, article, pageUrl);
 
             if (breadcrumbResponse == null)
             {
@@ -393,6 +399,13 @@ namespace DFC.App.Pages.Controllers
         {
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
             var viewModel = new T();
+
+            if (pageResponse == null)
+            {
+                pageUrl = pageUrl.Remove(pageUrl.LastIndexOf('/'));
+                pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
+            }
+
             if (pageResponse != null)
             {
                 mapper.Map(pageResponse, viewModel);
@@ -419,10 +432,11 @@ namespace DFC.App.Pages.Controllers
                     return viewModel;
                 }
             }
+
             return default(T);
         }
 
-        private async Task<BreadcrumbViewModel> GetBreadcrumb(string location, string article)
+        private async Task<BreadcrumbViewModel> GetBreadcrumb(string location, string article, string pageUrl)
         {
             if (options.CurrentValue.contentMode != null)
             {
@@ -434,7 +448,10 @@ namespace DFC.App.Pages.Controllers
             }
 
             var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>(Constants.PageLocationSuffix, status);
-            string pageUrl = GetPageUrl(location, article);
+            if (pageUrl == string.Empty)
+            {
+                pageUrl = GetPageUrl(location, article);
+            }
             var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
 
             if (pageResponse == null || !pageResponse.ShowBreadcrumb.GetValueOrDefault(false))
@@ -518,10 +535,6 @@ namespace DFC.App.Pages.Controllers
             if (string.IsNullOrWhiteSpace(location) && string.IsNullOrWhiteSpace(article))
             {
                 pageUrl = "/home";
-            }
-            else if (location == "home")
-            {
-                pageUrl = $"/{location}";
             }
             else
             {
