@@ -28,27 +28,6 @@
         "clientAffinity": {
             "type": "bool"
         },
-        "contentMode": {
-            "type": "string"
-        },
-        "TokenEndPointURL": {
-            "type": "string"
-        },
-        "GraphApiUrl": {
-            "type": "string"
-        },
-        "SqlApiUrl": {
-            "type": "string"
-        },
-        "ClientId": {
-            "type": "string"
-        },
-        "ClientSecret": {
-            "type": "securestring"
-        },
-        "RedisCacheConnectionString": {
-            "type": "securestring"
-        },
         "CosmosDbResourceGroup": {
             "type": "string"
         },
@@ -147,12 +126,6 @@
         },
         "workspaceResourceGroup": {
             "type": "string"
-        },
-        "WorkerThreads": {
-            "type": "string"
-        },
-        "IocpThreads": {
-            "type": "string"
         }
     },
     "variables": {
@@ -226,38 +199,6 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[variables('appServicePlanName')]",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('buildingBlocksDfcBaseUrl'), 'app-service-plan.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "appServicePlanName": {
-                        "value": "[variables('appServicePlanName')]"
-                    },
-                    "aseHostingEnvironmentName": {
-                        "value": "[parameters('aseHostingEnvironmentName')]"
-                    },
-                    "aseResourceGroup": {
-                        "value": "[parameters('aseResourceGroup')]"
-                    },
-                    "aspSize": {
-                        "value": "[parameters('aspSize')]"
-                    },
-                    "aspInstances": {
-                        "value": "[parameters('aspInstances')]"
-                    },
-                    "nonASETier": {
-                        "value": "[parameters('aspTier')]"
-                    }
-                }
-            }
-        },
-        {
-            "apiVersion": "2017-05-10",
             "name": "[variables('WebAppName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
@@ -300,10 +241,6 @@
                                 "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('appSharedStorageAccountName'),';AccountKey=',listKeys(resourceId(parameters('appSharedResourceGroup'), 'Microsoft.Storage/storageAccounts', parameters('appSharedStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]"
                             },
                             {
-                                "name": "contentMode__contentMode",
-                                "value": "[parameters('contentMode')]"
-                            },
-                            {
                                 "name": "Configuration__CosmosDbConnections__ContentPages__AccessKey",
                                 "value": "[parameters('cosmosDbKey')]"
                             },
@@ -322,30 +259,6 @@
                             {
                                 "name": "Configuration__CosmosDbConnections__ContentPages__PartitionKey",
                                 "value": "[variables('cosmosDbCollectionPartitionKey')]"
-                            },
-                            {
-                                "name": "Cms__TokenEndPointURL",
-                                "value": "[parameters('TokenEndPointURL')]"
-                            },
-                            {
-                                "name": "Cms__GraphApiUrl",
-                                "value": "[parameters('GraphApiUrl')]"
-                            },
-                            {
-                                "name": "Cms__SqlApiUrl",
-                                "value": "[parameters('SqlApiUrl')]"
-                            },
-                            {
-                                "name": "Cms__ClientId",
-                                "value": "[parameters('ClientId')]"
-                            },
-                            {
-                                "name": "Cms__ClientSecret",
-                                "value": "[parameters('ClientSecret')]"
-                            },
-                            {
-                                "name": "Cms__RedisCacheConnectionString",
-                                "value": "[parameters('RedisCacheConnectionString')]"
                             },
                             {
                                 "name": "Logging__ApplicationInsights__LogLevel__Default",
@@ -450,14 +363,6 @@
                             {
                               "name": "DOTNET_ROLL_FORWARD_ON_NO_CANDIDATE_FX",
                               "value": "1"
-                            },
-                            {
-                              "name": "ThreadSettings__WorkerThreads",
-                              "value": "[parameters('WorkerThreads')]"
-                            },
-                            {
-                               "name": "ThreadSettings__IocpThreads",
-                               "value": "[parameters('IocpThreads')]"
                             }
                         ]
                     }
@@ -611,112 +516,6 @@
                     }
                 }
             }
-        },
-        {
-            "apiVersion": "2019-05-01",
-            "name": "[concat(variables('AppServicePlanName'), '-CPUPercentage')]",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'Application-Insights/metric-alerts.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "enabled": {
-                        "value": "[parameters('enableAlerts')]"
-                    },
-                    "alertName": {
-                        "value": "[concat(variables('AppServicePlanName'), '-metric-CPUPercentage')]"
-                    },
-                    "alertSeverity": {
-                        "value": 3
-                    },
-                    "metricName": {
-                        "value": "CpuPercentage"
-                    },
-                    "operator": {
-                        "value": "GreaterThanOrEqual"
-                    },
-                    "threshold": {
-                        "value": "[parameters('CPUPercentageThreshold')]"
-                    },
-                    "aggregation": {
-                        "value": "Average"
-                    },
-                    "windowSize": {
-                        "value": "PT5M"
-                    },
-                    "evaluationFrequency": {
-                        "value": "PT1M"
-                    },
-                    "actionGroupName": {
-                        "value": "[variables('ActionGroupName')]"
-                    },
-                    "actionGroupResourceGroup": {
-                        "value": "[parameters('appSharedResourceGroup')]"
-                    },
-                    "resourceId": {
-                        "value": "[resourceId('Microsoft.Web/serverFarms', variables('AppServicePlanName'))]"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[variables('AppServicePlanName')]"
-            ]
-        },
-        {
-            "apiVersion": "2019-05-01",
-            "name": "[concat(variables('AppServicePlanName'), '-MemoryPercentage')]",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'Application-Insights/metric-alerts.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "enabled": {
-                        "value": "[parameters('enableAlerts')]"
-                    },
-                    "alertName": {
-                        "value": "[concat(variables('AppServicePlanName'), '-metric-MemoryPercentage')]"
-                    },
-                    "alertSeverity": {
-                        "value": 3
-                    },
-                    "metricName": {
-                        "value": "MemoryPercentage"
-                    },
-                    "operator": {
-                        "value": "GreaterThanOrEqual"
-                    },
-                    "threshold": {
-                        "value": "[parameters('MemoryPercentageThreshold')]"
-                    },
-                    "aggregation": {
-                        "value": "Average"
-                    },
-                    "windowSize": {
-                        "value": "PT5M"
-                    },
-                    "evaluationFrequency": {
-                        "value": "PT1M"
-                    },
-                    "actionGroupName": {
-                        "value": "[variables('ActionGroupName')]"
-                    },
-                    "actionGroupResourceGroup": {
-                        "value": "[parameters('appSharedResourceGroup')]"
-                    },
-                    "resourceId": {
-                        "value": "[resourceId('Microsoft.Web/serverFarms', variables('AppServicePlanName'))]"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[variables('AppServicePlanName')]"
-            ]
         }
     ],
     "outputs": {
