@@ -338,7 +338,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToSITAppPages
-  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release'))
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to SIT_AppPages
   variables:
   - group: dfc-shared-all
@@ -397,7 +397,7 @@ stages:
       UIFunctionalTestCategory: Pages
 
 - stage: DeployToSITDraftAppPages
-  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release'))
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to SIT-DRAFT_AppPages
   variables:
   - group: dfc-shared-all

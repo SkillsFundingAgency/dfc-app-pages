@@ -30,6 +30,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RestSharp;
+using StackExchange.Redis;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
@@ -86,13 +87,26 @@ namespace DFC.App.Pages
         {
             ConfigureMinimumThreads();
 
+            var redisCacheConnectionString = ConfigurationOptions.Parse(configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>() ??
+                throw new ArgumentNullException($"{nameof(RedisCacheConnectionStringAppSettings)} is missing or has an invalid value."));
+
             services.AddStackExchangeRedisCache(options => { options.Configuration = configuration.GetSection(RedisCacheConnectionStringAppSettings).Get<string>(); });
+            services.AddSingleton<IConnectionMultiplexer>(option =>
+            ConnectionMultiplexer.Connect(new ConfigurationOptions
+            {
+                EndPoints = { redisCacheConnectionString.EndPoints[0] },
+                AbortOnConnectFail = false,
+                Ssl = true,
+                Password = redisCacheConnectionString.Password,
+            }));
+            services.AddHealthChecks().AddCheck<HealthCheck>("GraphQlRedisConnectionCheck");
 
             services.AddSingleton<IGraphQLClient>(s =>
             {
                 var option = new GraphQLHttpClientOptions()
                 {
-                    EndPoint = new Uri(configuration[ConfigKeys.GraphApiUrl]),
+                    EndPoint = new Uri(configuration[ConfigKeys.GraphApiUrl] ??
+                throw new ArgumentNullException($"{nameof(ConfigKeys.GraphApiUrl)} is missing or has an invalid value.")),
                     HttpMessageHandler = new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
                 };
                 var client = new GraphQLHttpClient(option, new NewtonsoftJsonSerializer());
@@ -102,10 +116,11 @@ namespace DFC.App.Pages
             {
                 var option = new RestClientOptions()
                 {
-                    BaseUrl = new Uri(configuration[ConfigKeys.SqlApiUrl]),
+                    BaseUrl = new Uri(configuration[ConfigKeys.SqlApiUrl] ??
+                throw new ArgumentNullException($"{nameof(ConfigKeys.SqlApiUrl)} is missing or has an invalid value.")),
                     ConfigureMessageHandler = handler => new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
                 };
-                JsonSerializerSettings defaultSettings = new JsonSerializerSettings
+                JsonSerializerSettings defaultSettings = new ()
                 {
                     ContractResolver = new CamelCasePropertyNamesContractResolver(),
                     DefaultValueHandling = DefaultValueHandling.Include,
@@ -146,10 +161,10 @@ namespace DFC.App.Pages
                 .AddHttpClient<IAppRegistryApiService, AppRegistryApiService, AppRegistryClientOptions>(configuration, nameof(AppRegistryClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
 
             services.AddMvc(config =>
-                {
-                    config.RespectBrowserAcceptHeader = true;
-                    config.ReturnHttpNotAcceptable = true;
-                })
+            {
+                config.RespectBrowserAcceptHeader = true;
+                config.ReturnHttpNotAcceptable = true;
+            })
                 .AddNewtonsoftJson()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
