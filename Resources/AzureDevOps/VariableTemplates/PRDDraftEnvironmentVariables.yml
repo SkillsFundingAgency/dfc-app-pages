@@ -36,7 +36,7 @@ variables:
 - name: aspInstances
   value: 2
 - name: aspSize
-  value: 1
+  value: 2
 - name: clientAffinity
   value: false
 - name: contentMode
