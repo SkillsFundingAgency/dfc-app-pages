@@ -97,8 +97,10 @@ namespace DFC.App.Pages.Controllers
                 logger.LogInformation($"{nameof(Document)} has succeeded");
                 return Ok(getIndexModel);
             }
-
-            logger.LogWarning($"{nameof(Document)} has returned with no content");
+            else
+            {
+                logger.LogWarning($"{nameof(Document)} has returned with no content");
+            }
 
             return NoContent();
         }
