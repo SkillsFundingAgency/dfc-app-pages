@@ -100,9 +100,8 @@ namespace DFC.App.Pages.Controllers
             else
             {
                 logger.LogWarning($"{nameof(Document)} has returned with no content");
+                return NoContent();
             }
-
-            return NoContent();
         }
     }
 }
