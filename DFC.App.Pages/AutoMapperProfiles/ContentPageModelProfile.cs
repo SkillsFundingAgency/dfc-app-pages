@@ -18,7 +18,6 @@ namespace DFC.App.Pages.AutoMapperProfiles
 
         public ContentPageModelProfile()
         {
-            //TODO: Add AutoMapper profile for Page -> ContentPageModel if required
             CreateMap<BreadcrumbItemModel, BreadcrumbItemViewModel>()
                 .ForMember(d => d.AddHyperlink, s => s.Ignore());
 
