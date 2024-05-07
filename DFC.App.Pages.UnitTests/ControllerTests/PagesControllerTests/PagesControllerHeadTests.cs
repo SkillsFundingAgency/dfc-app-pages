@@ -1,6 +1,7 @@
 using DFC.App.Pages.Data.Models;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -23,23 +24,15 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<HeadViewModel>.Ignored)).Returns(A.Fake<HeadViewModel>());
+            A.CallTo(() => FakeMapper.Map(A<Page>.Ignored, A<HeadViewModel>.Ignored)).Returns(A.Fake<HeadViewModel>());
 
             // Act
             var result = await controller.Head(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<HeadViewModel>.Ignored)).MustHaveHappenedOnceExactly();
-
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<HeadViewModel>(viewResult.ViewData.Model);
-
-            model.CanonicalUrl.Should().NotBeNull();
 
             controller.Dispose();
         }
@@ -54,23 +47,28 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
+
+            var expected = new Page()
+            {
+                PageLocation = new()
+                {
+                    FullUrl = "/" + pageRequestModel.Location1,
+                    UrlName = "location1",
+                },
+                DisplayText = pageRequestModel.Location2,
+
+            };
+
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<HeadViewModel>.Ignored)).Returns(A.Fake<HeadViewModel>());
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeMapper.Map(A<Page>.Ignored, A<HeadViewModel>.Ignored)).Returns(A.Fake<HeadViewModel>());
 
             // Act
             var result = await controller.Head(pageRequestModel).ConfigureAwait(false);
 
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<HeadViewModel>.Ignored)).MustHaveHappenedOnceExactly();
-
             var jsonResult = Assert.IsType<OkObjectResult>(result);
             var model = Assert.IsAssignableFrom<HeadViewModel>(jsonResult.Value);
-
-            model.CanonicalUrl.Should().NotBeNull();
 
             controller.Dispose();
         }
@@ -85,17 +83,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            ContentPageModel? expectedResult = null;
+            Page? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<HeadViewModel>.Ignored)).Returns(A.Fake<HeadViewModel>());
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expectedResult);
+            A.CallTo(() => FakeMapper.Map(A<Page>.Ignored, A<HeadViewModel>.Ignored)).Returns(A.Fake<HeadViewModel>());
 
             // Act
             var result = await controller.Head(pageRequestModel).ConfigureAwait(false);
-
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var viewResult = Assert.IsType<ViewResult>(result);
             _ = Assert.IsAssignableFrom<HeadViewModel>(viewResult.ViewData.Model);
@@ -113,17 +108,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            ContentPageModel? expectedResult = null;
+            Page? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<HeadViewModel>.Ignored)).Returns(A.Fake<HeadViewModel>());
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expectedResult);
+            A.CallTo(() => FakeMapper.Map(A<Page>.Ignored, A<HeadViewModel>.Ignored)).Returns(A.Fake<HeadViewModel>());
 
             // Act
             var result = await controller.Head(pageRequestModel).ConfigureAwait(false);
-
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
             _ = Assert.IsAssignableFrom<HeadViewModel>(jsonResult.Value);
@@ -141,16 +133,13 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            ContentPageModel? expectedResult = null;
+            Page? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expectedResult);
 
             // Act
             var result = await controller.Head(pageRequestModel).ConfigureAwait(false);
-
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<HeadViewModel>(viewResult.ViewData.Model);
@@ -170,16 +159,13 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            ContentPageModel? expectedResult = null;
+            Page? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expectedResult);
 
             // Act
             var result = await controller.Head(pageRequestModel).ConfigureAwait(false);
-
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             var jsonResult = Assert.IsType<OkObjectResult>(result);
             var model = Assert.IsAssignableFrom<HeadViewModel>(jsonResult.Value);
@@ -199,18 +185,22 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            var expectedResult = new ContentPageModel() { PageLocation = "/" + pageRequestModel.Location1, CanonicalName = pageRequestModel.Location2 };
-            var controller = BuildPagesController(mediaTypeName);
+            var expected = new Page()
+            {
+                PageLocation = new()
+                {
+                    FullUrl = "/" + pageRequestModel.Location1,
+                    UrlName = "location1",
+                },
+                DisplayText = pageRequestModel.Location2,
 
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(expectedResult);
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<HeadViewModel>.Ignored)).Returns(A.Fake<HeadViewModel>());
+            }; var controller = BuildPagesController(mediaTypeName);
+
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeMapper.Map(A<Page>.Ignored, A<HeadViewModel>.Ignored)).Returns(A.Fake<HeadViewModel>());
 
             // Act
             var result = await controller.Head(pageRequestModel).ConfigureAwait(false);
-
-            // Assert
-            A.CallTo(() => FakePagesControlerHelpers.GetContentPageAsync(A<string>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => FakeMapper.Map(A<ContentPageModel>.Ignored, A<HeadViewModel>.Ignored)).MustHaveHappenedOnceExactly();
 
             var statusResult = Assert.IsType<StatusCodeResult>(result);
 

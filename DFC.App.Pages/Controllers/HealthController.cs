@@ -1,8 +1,7 @@
-﻿using DFC.App.Pages.Data.Models;
-using DFC.App.Pages.Extensions;
+﻿using DFC.App.Pages.Extensions;
 using DFC.App.Pages.ViewModels;
-using DFC.Compui.Cosmos.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,13 +15,13 @@ namespace DFC.App.Pages.Controllers
         public const string HealthViewCanonicalName = "health";
 
         private readonly ILogger<HealthController> logger;
-        private readonly IContentPageService<ContentPageModel> contentPageService;
+        private readonly HealthCheckService healthCheckService;
         private readonly string resourceName = typeof(Program).Namespace!;
 
-        public HealthController(ILogger<HealthController> logger, IContentPageService<ContentPageModel> contentPageService)
+        public HealthController(ILogger<HealthController> logger, HealthCheckService healthCheckService)
         {
+            this.healthCheckService = healthCheckService;
             this.logger = logger;
-            this.contentPageService = contentPageService;
         }
 
         [HttpGet]
@@ -42,11 +41,12 @@ namespace DFC.App.Pages.Controllers
 
             try
             {
-                var isHealthy = await contentPageService.PingAsync().ConfigureAwait(false);
+                var report = await healthCheckService.CheckHealthAsync();
+                var status = report.Status;
 
-                if (isHealthy)
+                if (status == HealthStatus.Healthy)
                 {
-                    const string message = "Document store is available";
+                    const string message = "Redis and GraphQl are available";
                     logger.LogInformation($"{nameof(Health)} responded with: {resourceName} - {message}");
 
                     var viewModel = CreateHealthViewModel(message);

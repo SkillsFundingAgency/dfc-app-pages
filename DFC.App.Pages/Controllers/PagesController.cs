@@ -1,17 +1,22 @@
-﻿using DFC.App.Pages.Data.Contracts;
-using DFC.App.Pages.Data.Models;
+﻿using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Extensions;
-using DFC.App.Pages.Helpers;
 using DFC.App.Pages.Models;
 using DFC.App.Pages.ViewModels;
-using DFC.Compui.Cosmos.Contracts;
+using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems.PageBreadcrumb;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Constants = DFC.Common.SharedContent.Pkg.Netcore.Constant.ApplicationKeys;
 
 namespace DFC.App.Pages.Controllers
 {
@@ -20,16 +25,21 @@ namespace DFC.App.Pages.Controllers
         private const string LocalPath = "pages";
 
         private readonly ILogger<PagesController> logger;
-        private readonly IContentPageService<ContentPageModel> contentPageService;
         private readonly AutoMapper.IMapper mapper;
-        private readonly IPagesControlerHelpers pagesControlerHelpers;
+        private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IOptionsMonitor<contentModeOptions> options;
+        private string status = string.Empty;
 
-        public PagesController(ILogger<PagesController> logger, IContentPageService<ContentPageModel> contentPageService, AutoMapper.IMapper mapper, IPagesControlerHelpers pagesControlerHelpers)
+        public PagesController(
+            ILogger<PagesController> logger,
+            AutoMapper.IMapper mapper,
+            ISharedContentRedisInterface sharedContentRedisInterface,
+            IOptionsMonitor<contentModeOptions> options)
         {
             this.logger = logger;
-            this.contentPageService = contentPageService;
             this.mapper = mapper;
-            this.pagesControlerHelpers = pagesControlerHelpers;
+            this.sharedContentRedisInterface = sharedContentRedisInterface;
+            this.options = options;
         }
 
         [HttpGet]
@@ -37,8 +47,16 @@ namespace DFC.App.Pages.Controllers
         [Route("pages")]
         public async Task<IActionResult> Index()
         {
-            logger.LogInformation($"{nameof(Index)} has been called");
+            if (options.CurrentValue.contentMode != null)
+            {
+                status = options.CurrentValue.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
 
+            logger.LogInformation($"{nameof(Index)} has been called");
             var viewModel = new IndexViewModel()
             {
                 LocalPath = LocalPath,
@@ -49,22 +67,13 @@ namespace DFC.App.Pages.Controllers
                     new IndexDocumentViewModel { CanonicalName = RobotController.RobotsViewCanonicalName },
                 },
             };
-            var contentPageModels = await contentPageService.GetAllAsync().ConfigureAwait(false);
-
-            if (contentPageModels != null)
+            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix, status);
+            if (pageUrlResponse.Page == null)
             {
-                var documents = from a in contentPageModels.OrderBy(o => o.PageLocation).ThenBy(o => o.CanonicalName)
-                                select mapper.Map<IndexDocumentViewModel>(a);
-
-                viewModel.Documents.AddRange(documents);
-
-                logger.LogInformation($"{nameof(Index)} has succeeded");
-            }
-            else
-            {
-                logger.LogWarning($"{nameof(Index)} has returned with no results");
+                return NoContent();
             }
 
+            viewModel.Documents.AddRange(pageUrlResponse.Page.OrderBy(o => o.PageLocation.UrlName).Select(a => mapper.Map<IndexDocumentViewModel>(a)));
             return this.NegotiateContentResult(viewModel);
         }
 
@@ -78,25 +87,37 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Document(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Document)} has been called");
-
-
-            var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
-            var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
-
-            if (contentPageModel != null)
+            if (options.CurrentValue.contentMode != null)
             {
-                var viewModel = mapper.Map<DocumentViewModel>(contentPageModel);
+                status = options.CurrentValue.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
 
-                if (contentPageModel.ShowBreadcrumb)
+            var (location, article) = ExtractPageLocation(pageRequestModel);
+            string pageUrl = GetPageUrl(location, article);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
+            if (pageResponse == null)
+            {
+                pageUrl = pageUrl.Remove(pageUrl.LastIndexOf('/'));
+                pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
+            }
+
+            if (pageResponse != null)
+            {
+                var viewModel = mapper.Map<DocumentViewModel>(pageResponse);
+                if (pageResponse.ShowBreadcrumb.GetValueOrDefault(false))
                 {
-                    viewModel.Breadcrumb = mapper.Map<BreadcrumbViewModel>(contentPageModel);
+                    viewModel.Breadcrumb = await GetBreadcrumb(location, article, pageUrl);
 
                     if (viewModel.Breadcrumb?.Breadcrumbs != null && viewModel.Breadcrumb.Breadcrumbs.Any())
                     {
                         foreach (var breadcrumb in viewModel.Breadcrumb.Breadcrumbs)
                         {
                             var route = breadcrumb.Route == "/" ? string.Empty : breadcrumb.Route;
-                            breadcrumb.Route = $"/pages{route}/document";
+                            breadcrumb.Route = $"Page/{route}/document";
                         }
                     }
                 }
@@ -115,25 +136,6 @@ namespace DFC.App.Pages.Controllers
                 return this.NegotiateContentResult(viewModel);
             }
 
-            var redirectedContentPageModel = await pagesControlerHelpers.GetRedirectedContentPageAsync(location, article).ConfigureAwait(false);
-
-            if (redirectedContentPageModel != null)
-            {
-                var redirectedUrl = $"{Request.GetBaseAddress()}{LocalPath}{redirectedContentPageModel.PageLocation}";
-                if (redirectedContentPageModel.PageLocation != "/")
-                {
-                    redirectedUrl += "/";
-                }
-
-                redirectedUrl += $"{redirectedContentPageModel.CanonicalName}/document";
-
-                logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
-
-                return RedirectPermanent(redirectedUrl);
-            }
-
-            logger.LogWarning($"{nameof(Document)} has returned no content for: /{location}/{article}");
-
             return NoContent();
         }
 
@@ -147,37 +149,46 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Head(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Head)} has been called");
-
-
-            var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
-            var viewModel = new HeadViewModel();
-            var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
-
-            if (contentPageModel != null)
+            if (options.CurrentValue.contentMode != null)
             {
-                mapper.Map(contentPageModel, viewModel);
-                viewModel.CanonicalUrl = BuildCanonicalUrl(contentPageModel);
-                logger.LogInformation($"{nameof(Head)} has succeeded for: /{location}/{article}");
+                status = options.CurrentValue.contentMode;
             }
             else
             {
-                logger.LogInformation($"{nameof(Head)} has returned no content for: /{location}/{article}");
+                status = "PUBLISHED";
             }
 
-            return this.NegotiateContentResult(viewModel);
-        }
+            var (location, article) = ExtractPageLocation(pageRequestModel);
+            string pageUrl = GetPageUrl(location, article);
+            var viewModel = GetResponse<HeadViewModel>(pageUrl).Result;
 
-        private Uri BuildCanonicalUrl(ContentPageModel contentPageModel)
-        {
-            var pathDirectory1 = contentPageModel.PageLocation?[1..] ?? string.Empty;
-            var pathDirectory2 = contentPageModel.CanonicalName ?? string.Empty;
+            if (viewModel != null)
+            {
+                return this.NegotiateContentResult(viewModel);
 
-            var uriString = Path.Combine(
-                Request.GetBaseAddress()?.ToString() ?? string.Empty,
-                pathDirectory1,
-                pathDirectory2 == pathDirectory1 ? string.Empty : pathDirectory2);
+            }
 
-            return new Uri(uriString, UriKind.RelativeOrAbsolute);
+            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix, status);
+            var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? string.Empty).Split("\r\n").Contains(pageUrl)).ToList();
+
+            if (filterList.Count > 0)
+            {
+                var pageLocation = $"{Request.GetBaseAddress()}".TrimEnd('/');
+                var redirectedUrl = $"{pageLocation}{filterList.FirstOrDefault()?.PageLocation?.FullUrl}";
+
+                logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
+                return RedirectPermanent(redirectedUrl);
+            }
+            else
+            {
+                var redirectViewModel = GetResponse<HeadViewModel>(pageUrl, redirectedContentPageModel).Result;
+                if (redirectViewModel != null)
+                {
+                    return this.NegotiateContentResult(redirectViewModel);
+                }
+            }
+
+            return NoContent();
         }
 
         [Route("pages/breadcrumb")]
@@ -189,22 +200,16 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Breadcrumb(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Breadcrumb)} has been called");
+            string pageUrl = string.Empty;
+            var (location, article) = ExtractPageLocation(pageRequestModel);
+            var breadcrumbResponse = await GetBreadcrumb(location, article, pageUrl);
 
-            var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
-            var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
-
-            if (contentPageModel == null || !contentPageModel.ShowBreadcrumb)
+            if (breadcrumbResponse == null)
             {
-                logger.LogInformation($"{nameof(Breadcrumb)} Breadcrumb disabled or no content found for: /{location}/{article}");
-
                 return NoContent();
             }
 
-            var viewModel = mapper.Map<BreadcrumbViewModel>(contentPageModel);
-
-            logger.LogInformation($"{nameof(Breadcrumb)} has returned content for: /{location}/{article}");
-
-            return this.NegotiateContentResult(viewModel);
+            return this.NegotiateContentResult(breadcrumbResponse);
         }
 
         [HttpGet]
@@ -231,22 +236,45 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> HeroBanner(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(HeroBanner)} has been called");
-
-            var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
-            var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
-
-            if (contentPageModel == null)
+            if (options.CurrentValue.contentMode != null)
             {
-                logger.LogInformation($"{nameof(HeroBanner)} found no content for: /{location}/{article}");
-
-                return NoContent();
+                status = options.CurrentValue.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
             }
 
-            var viewModel = mapper.Map<HeroBannerViewModel>(contentPageModel);
+            var (location, article) = ExtractPageLocation(pageRequestModel);
+            string pageUrl = GetPageUrl(location, article);
+            var viewModel = GetResponse<HeroBannerViewModel>(pageUrl).Result;
 
-            logger.LogInformation($"{nameof(HeroBanner)} has returned content for: /{location}/{article}");
+            if (viewModel != null)
+            {
+                return this.NegotiateContentResult(viewModel);
+            }
 
-            return this.NegotiateContentResult(viewModel);
+            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix, status);
+            var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
+
+            if (filterList.Count > 0)
+            {
+                var pageLocation = $"{Request.GetBaseAddress()}".TrimEnd('/');
+                var redirectedUrl = $"{pageLocation}{filterList.FirstOrDefault()?.PageLocation?.FullUrl}";
+
+                logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
+                return RedirectPermanent(redirectedUrl);
+            }
+            else
+            {
+                var redirectViewModel = GetResponse<HeroBannerViewModel>(pageUrl, redirectedContentPageModel).Result;
+                if (redirectViewModel != null)
+                {
+                    return this.NegotiateContentResult(redirectViewModel);
+                }
+            }
+
+            return NoContent();
         }
 
         [HttpGet]
@@ -259,29 +287,42 @@ namespace DFC.App.Pages.Controllers
         public async Task<IActionResult> Body(PageRequestModel pageRequestModel)
         {
             logger.LogInformation($"{nameof(Body)} has been called");
-
-
-            var (location, article) = PagesControlerHelpers.ExtractPageLocation(pageRequestModel);
-            var viewModel = new BodyViewModel();
-            var contentPageModel = await pagesControlerHelpers.GetContentPageAsync(location, article).ConfigureAwait(false);
-
-            if (contentPageModel != null)
+            if (options.CurrentValue.contentMode != null)
             {
-                mapper.Map(contentPageModel, viewModel);
-                logger.LogInformation($"{nameof(Body)} has returned content for: /{location}/{article}");
-
-                return this.NegotiateContentResult(viewModel, contentPageModel);
+                status = options.CurrentValue.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
             }
 
-            var redirectedContentPageModel = await pagesControlerHelpers.GetRedirectedContentPageAsync(location, article).ConfigureAwait(false);
+            var (location, article) = ExtractPageLocation(pageRequestModel);
+            string pageUrl = GetPageUrl(location, article);
+            var viewModel = GetResponse<BodyViewModel>(pageUrl).Result;
 
-            if (redirectedContentPageModel != null)
+            if (viewModel != null)
             {
-                var pageLocation = $"{Request.GetBaseAddress()}".TrimEnd('/') + redirectedContentPageModel.PageLocation.TrimEnd('/');
-                var redirectedUrl = $"{pageLocation}/{redirectedContentPageModel.CanonicalName}";
-                logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
+                return this.NegotiateContentResult(viewModel);
+            }
 
+            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsync<PageUrlResponse>(Constants.PagesUrlSuffix, status);
+            var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
+
+            if (filterList.Count > 0)
+            {
+                var pageLocation = $"{Request.GetBaseAddress()}".TrimEnd('/');
+                var redirectedUrl = $"{pageLocation}{filterList.FirstOrDefault()?.PageLocation?.FullUrl}";
+
+                logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
                 return RedirectPermanent(redirectedUrl);
+            }
+            else
+            {
+                var redirectViewModel = GetResponse<BodyViewModel>(pageUrl, redirectedContentPageModel).Result;
+                if (redirectViewModel != null)
+                {
+                    return this.NegotiateContentResult(redirectViewModel);
+                }
             }
 
             logger.LogWarning($"{nameof(Body)} has not returned any content for: /{location}/{article}");
@@ -329,5 +370,180 @@ namespace DFC.App.Pages.Controllers
 
             return NoContent();
         }
+
+        #region private functions
+        private static (string location, string? article) ExtractPageLocation(PageRequestModel pageRequestModel)
+        {
+            _ = pageRequestModel ?? throw new ArgumentNullException(nameof(pageRequestModel));
+
+            var pageLocation = string.Join("/", new[] { pageRequestModel.Location1, pageRequestModel.Location2, pageRequestModel.Location3, pageRequestModel.Location4, pageRequestModel.Location5 });
+            var pageLocations = pageLocation.Split("/", StringSplitOptions.RemoveEmptyEntries);
+            var location = string.Empty;
+            var article = string.Empty;
+
+            if (pageLocations.Length == 1)
+            {
+                location = pageLocations.First();
+            }
+            else if (pageLocations.Length > 1)
+            {
+                location = string.Join("/", pageLocations, 0, pageLocations.Length - 1);
+                article = pageLocations.Last();
+            }
+
+            return (location, article);
+        }
+
+        private async Task<T?> GetResponse<T>(string pageUrl)
+            where T : new()
+        {
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
+            var viewModel = new T();
+
+            if (pageResponse == null)
+            {
+                pageUrl = pageUrl.Remove(pageUrl.LastIndexOf('/'));
+                pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
+            }
+
+            if (pageResponse != null)
+            {
+                mapper.Map(pageResponse, viewModel);
+                return viewModel;
+            }
+
+            return default(T);
+        }
+
+        private async Task<T?> GetResponse<T>(string pageUrl, PageUrlResponse redirectedContentPageModel)
+            where T : new()
+        {
+            foreach (var page in redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.DefaultPageForLocation == true)))
+            {
+                var fullUrl = page.PageLocation.FullUrl;
+
+                var pageLocationUrl = $"{fullUrl}".Substring(0, fullUrl.LastIndexOf('/'));
+
+                if (pageUrl == pageLocationUrl)
+                {
+                    var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + fullUrl, status);
+                    var viewModel = new T();
+                    mapper.Map(pageResponse, viewModel);
+                    return viewModel;
+                }
+            }
+
+            return default(T);
+        }
+
+        private async Task<BreadcrumbViewModel> GetBreadcrumb(string location, string article, string pageUrl)
+        {
+            if (options.CurrentValue.contentMode != null)
+            {
+                status = options.CurrentValue.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
+
+            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsync<PageBreadcrumb>(Constants.PageLocationSuffix, status);
+            if (pageUrl == string.Empty)
+            {
+                pageUrl = GetPageUrl(location, article);
+            }
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsync<Page>(Constants.PageSuffix + pageUrl, status);
+
+            if (pageResponse == null || !pageResponse.ShowBreadcrumb.GetValueOrDefault(false))
+            {
+                return null;
+            }
+
+            string breadCrumbDisplayText = pageResponse?.Breadcrumb?.TermContentItems?.FirstOrDefault()?.DisplayText ?? string.Empty;
+            var jdoc = JObject.Parse(breadcrumbResponse.Content);
+            var root = jdoc.SelectToken("$.TaxonomyPart.Terms");
+            var token = root.SelectTokens($"$..Terms[?(@.DisplayText == '{breadCrumbDisplayText}')]");
+            var path = token.FirstOrDefault()?.Path ?? string.Empty;
+            var result = BuildBreadCrumb(path, jdoc);
+
+            if (!(bool)pageResponse.PageLocation.DefaultPageForLocation && !string.IsNullOrWhiteSpace(pageResponse.DisplayText))
+            {
+                var articlePathViewModel = new BreadcrumbItemViewModel
+                {
+                    Route = $"{pageResponse?.Breadcrumb?.TermContentItems?.FirstOrDefault()?.DisplayText ?? string.Empty}",
+                    Title = pageResponse?.DisplayText ?? string.Empty,
+                    AddHyperlink = false,
+                };
+                result.Breadcrumbs.Add(articlePathViewModel);
+                string segmentRoute = string.Empty;
+
+                foreach (var segment in result.Breadcrumbs)
+                {
+                    if (segment.Route != "/")
+                    {
+                        segmentRoute += "/" + segment.Route;
+                        segment.Route = segmentRoute;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private BreadcrumbViewModel BuildBreadCrumb(string path, JObject doc)
+        {
+            StringBuilder breadCrumbText = new StringBuilder();
+            BreadcrumbViewModel breadCrumbs = new BreadcrumbViewModel()
+            {
+                Breadcrumbs = new List<BreadcrumbItemViewModel>(),
+            };
+            int index = 0;
+            do
+            {
+                var breadCrumbPath = $"{path}.PageLocation.BreadcrumbText.Text";
+                var displayTextPath = $"{path}.DisplayText";
+                var breadCrumbToken = doc.SelectToken(breadCrumbPath);
+                var displayTextToken = doc.SelectToken(displayTextPath);
+                breadCrumbs.Breadcrumbs.Add(new BreadcrumbItemViewModel()
+                {
+                    Route = displayTextToken.ToString(),
+                    Title = breadCrumbToken.ToString(),
+                });
+                index = path.LastIndexOf(".");
+                path = path.Remove(index);
+            }
+            while (path.LastIndexOf(".") > 0);
+
+            breadCrumbs.Breadcrumbs.Reverse();
+            return breadCrumbs;
+        }
+
+        private Uri BuildCanonicalUrl(Page pageModel)
+        {
+            var pathDirectory1 = pageModel.PageLocation.UrlName ?? string.Empty;
+
+            var uriString = Path.Combine(
+                Request.GetBaseAddress()?.ToString() ?? string.Empty,
+                pathDirectory1);
+
+            return new Uri(uriString, UriKind.RelativeOrAbsolute);
+        }
+
+        private string GetPageUrl(string location, string article)
+        {
+            string pageUrl = string.Empty;
+            if (string.IsNullOrWhiteSpace(location) && string.IsNullOrWhiteSpace(article))
+            {
+                pageUrl = "/home";
+            }
+            else
+            {
+                pageUrl = $"/{location}/{(string.IsNullOrWhiteSpace(article) ? location : article)}";
+            }
+
+            return pageUrl;
+        }
+
+        #endregion
     }
 }

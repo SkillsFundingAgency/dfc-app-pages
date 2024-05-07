@@ -20,6 +20,27 @@
         "clientAffinity": {
             "value": __clientAffinity__
         },
+        "contentMode": {
+            "value": "__contentMode__"
+        },
+        "TokenEndPointURL": {
+            "value": "__StaxGraphqlTokenEndPointURL__"
+        },
+        "GraphApiUrl": {
+            "value": "__StaxGraphqlApiUrl__"
+        },
+        "SqlApiUrl": {
+            "value": "__StaxGraphqlSqlApiUrl__"
+        },
+        "ClientId": {
+            "value": "__StaxGraphqlClientId__"
+        },
+        "ClientSecret": {
+            "value": "__StaxGraphqlClientSecret__"
+        },
+        "RedisCacheConnectionString": {
+            "value": "__RedisConnectionString__"
+        },
         "aspTier": {
             "value": "__aspTier__"
         },
@@ -121,6 +142,12 @@
         },
         "workspaceResourceGroup": {
             "value": "__sharedLogAnalyticsResourceGroup__"
+        },
+        "WorkerThreads": {
+            "value": "__WorkerThreads__"
+        },
+        "IocpThreads": {
+            "value": "__IocpThreads__"
         }
     }
 }

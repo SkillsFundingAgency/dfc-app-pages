@@ -26,6 +26,27 @@
         "clientAffinity": {
             "value": false
         },
+        "contentMode": {
+            "value": "PUBLISHED"
+        },
+        "TokenEndPointURL": {
+            "value": "test"
+        },
+        "GraphApiUrl": {
+            "value": "test"
+        },
+        "SqlApiUrl": {
+            "value": "test"
+        },
+        "ClientId": {
+            "value": "test"
+        },
+        "ClientSecret": {
+            "value": "test"
+        },
+        "RedisCacheConnectionString": {
+            "value": "string"
+        },
         "Environment": {
             "value": "FOO"
         },
@@ -112,6 +133,12 @@
         },
         "workspaceResourceGroup": {
             "value": "aResourceGroup"
+        },
+        "WorkerThreads": {
+            "value": "200"
+        },
+        "IocpThreads": {
+            "value": "200"
         }
     }
 }
