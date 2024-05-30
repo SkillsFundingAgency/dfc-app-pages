@@ -109,9 +109,6 @@
         "appServicePlanName": "[concat(variables('resourcePrefix'), '-asp')]",
         "appServicePlanResourceGroup": "[concat(variables('resourcePrefix'),'-rg')]",
         "buildingBlocksDfcBaseUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
-        "cosmosDbCollectionPartitionKey": "/PartitionKey",
-        "cosmosDbDatabaseName": "dfc-app-pages",
-        "cosmosDbEndpoint": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/')]",
         "resourcePrefix": "[tolower(concat('dfc-', parameters('Environment'), '-app-pages'))]",
         "webAppName": "[concat(variables('ResourcePrefix'), '-as')]",
         "webAppInsightsName": "[concat(variables('resourcePrefix'), '-ai')]",
@@ -314,69 +311,6 @@
             },
             "dependsOn": [
                 "[variables('webAppInsightsName')]"
-            ]
-        },
-        {
-            "name": "[variables('CosmosDbDatabaseName')]",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
-            "apiVersion": "2017-05-10",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'),'CosmosDb/cosmos-database.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "accountName": {
-                        "value": "[parameters('CosmosDbName')]"
-                    },
-                    "databaseName": {
-                        "value": "[variables('CosmosDbDatabaseName')]"
-                    },
-                    "useSharedRequestUnits": {
-                        "value": true
-                    },
-                    "offerThroughput": {
-                        "value": "[parameters('pagesAppDatabaseThroughput')]"
-                    },
-                    "databaseNeedsCreation": {
-                        "value": "[parameters('pagesAppDatabaseNeedsCreation')]"
-                    }
-                }
-            }
-        },
-        {
-            "apiVersion": "2017-05-10",
-            "name": "[parameters('cosmosDbCollectionName')]",
-            "type": "Microsoft.Resources/deployments",
-            "resourceGroup": "[parameters('CosmosDbResourceGroup')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('BuildingBlocksDfcBaseUrl'), 'CosmosDb/cosmos-collection.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "accountName": {
-                        "value": "[parameters('cosmosDbName')]"
-                    },
-                    "databaseName": {
-                        "value": "[variables('cosmosDbDatabaseName')]"
-                    },
-                    "collectionName": {
-                        "value": "[parameters('cosmosDbCollectionName')]"
-                    },
-                    "provisionRequestUnits": {
-                        "value": false
-                    },
-                    "partitionKey": {
-                        "value": "[variables('cosmosDbCollectionPartitionKey')]"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[variables('CosmosDbDatabaseName')]"
             ]
         },
         {
