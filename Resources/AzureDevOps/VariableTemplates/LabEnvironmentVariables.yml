@@ -3,12 +3,8 @@ variables:
   value: LAB
 - name: AppServiceName
   value: $(WebAppPrefix)-as
-- name: cosmosDbCollectionName
-  value: $(apiName)
 - name: EnableAzureMonitorAlerting
   value: true
-- name: SubscriptionSettingsEndpoint
-  value: $(ApimProxyAddress)/composite-ui/pages
 - name: pagesAppDatabaseThroughput
   value: 400
 - name: ResourceGroup
@@ -17,14 +13,8 @@ variables:
   value: DFC.App.Pages
 - name: PageRegistrationFile
   value: registration.json
-- name: EventGridPublishClientOptionsApiEndpoint
-  value: https://$(AppServiceName).$(appServiceDomain)/api/pages
 - name: ApplicationName
   value: DFC-App-Pages
-- name: EventGridSubjectPrefix
-  value: /$(ApplicationName)/
-- name: AppRegistryClientOptionsBaseAddress
-  value: $(ApimProxyAddress)/composite-ui-appRegistry/pages/
 - name: SummaryEndpoint
   value: /page
 - name: aspTier
@@ -39,8 +29,6 @@ variables:
   value: PUBLISHED
 - name: contentUrl
   value: $(ContentApiAddress)/api/execute
-- name: subscriptionUrl
-  value: https://dfc-lab-api-eventgridsubscriptions-fa.$(appServiceDomain)
 - name: apiName
   value: pages
 - name: apiId
@@ -55,7 +43,3 @@ variables:
   value: 75
 - name: CPUPercentageThreshold
   value: 75
-- name: SubscriptionSettingsFilterIncludeEventTypes3
-  value:
-- name: SubscriptionSettingsFilterIncludeEventTypes4
-  value:
