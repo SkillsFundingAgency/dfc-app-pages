@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models.ClientOptions;
 using DFC.App.Pages.Extensions;
@@ -22,7 +21,6 @@ using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -42,11 +40,8 @@ namespace DFC.App.Pages
     public class Startup
     {
         private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
-        private const string GraphApiUrlAppSettings = "Cms:GraphApiUrl";
         private const string WorkerThreadsConfigAppSettings = "ThreadSettings:WorkerThreads";
         private const string IocpThreadsConfigAppSettings = "ThreadSettings:IocpThreads";
-
-
         private readonly IConfiguration configuration;
         private readonly IWebHostEnvironment env;
         private readonly ILogger<Startup> logger;
@@ -142,7 +137,6 @@ namespace DFC.App.Pages
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<GetByPageApiResponse>, GetByIdPageApiStrategy>();
 
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
-            services.ConfigureOptions<contentOptionsSetup>();
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
@@ -161,12 +155,11 @@ namespace DFC.App.Pages
                 .AddHttpClient<IAppRegistryApiService, AppRegistryApiService, AppRegistryClientOptions>(configuration, nameof(AppRegistryClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
 
             services.AddMvc(config =>
-            {
-                config.RespectBrowserAcceptHeader = true;
-                config.ReturnHttpNotAcceptable = true;
-            })
-                .AddNewtonsoftJson()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                {
+                    config.RespectBrowserAcceptHeader = true;
+                    config.ReturnHttpNotAcceptable = true;
+                })
+                .AddNewtonsoftJson();
         }
 
         private void ConfigureMinimumThreads()

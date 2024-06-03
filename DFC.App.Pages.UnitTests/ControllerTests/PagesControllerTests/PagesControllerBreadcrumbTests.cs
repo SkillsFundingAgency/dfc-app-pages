@@ -54,7 +54,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedBreadcrumb = new BreadcrumbViewModel { Breadcrumbs = new List<BreadcrumbItemViewModel> { new BreadcrumbItemViewModel { Route = "a-route", Title = "A title", }, }, };
             var controller = BuildPagesController(mediaTypeName);
 
-
             A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<Page>.Ignored)).Returns(expectedBreadcrumb);
 
             // Act
@@ -77,9 +76,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
-
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
@@ -101,9 +98,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location1 = "a-location-name",
                 Location2 = "an-article-name",
             };
-            ContentPageModel? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
-
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
@@ -126,7 +121,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 Location2 = "an-article-name",
             };
             var controller = BuildPagesController(mediaTypeName);
-
 
             // Act
             var result = await controller.Breadcrumb(pageRequestModel).ConfigureAwait(false);
