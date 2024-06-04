@@ -66,7 +66,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 },
             };
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED",4)).Returns(expected);
             A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<Page>.Ignored)).Returns(expectedModel);
             A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel>(A<Page>.Ignored)).Returns(expectedBreadcrumbModel);
 
@@ -118,7 +118,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED",4)).Returns(expected);
             A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<Page>.Ignored)).Returns(A.Fake<DocumentViewModel>());
             A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel?>(A<Page>.Ignored)).Returns(expectedBreadcrumbModel);
 
@@ -144,7 +144,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             Page? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expectedResult);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED",4)).Returns(expectedResult);
 
             // Act
             var result = await controller.Document(pageRequestModel).ConfigureAwait(false);
@@ -168,7 +168,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             Page? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expectedResult);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED",4)).Returns(expectedResult);
 
             // Act
             var result = await controller.Document(pageRequestModel).ConfigureAwait(false);
@@ -219,7 +219,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED",4)).Returns(expected);
             A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<Page>.Ignored)).Returns(A.Fake<DocumentViewModel>());
             A.CallTo(() => FakeMapper.Map<BreadcrumbViewModel?>(A<Page>.Ignored)).Returns(expectedBreadcrumbModel);
 
@@ -265,7 +265,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
                 LastReviewed = DateTime.Now,
             };
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED",4)).Returns(expected);
             A.CallTo(() => FakeMapper.Map<DocumentViewModel>(A<Page>.Ignored)).Returns(expectedModel);
 
             // Act

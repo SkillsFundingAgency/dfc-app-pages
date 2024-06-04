@@ -29,7 +29,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED", 4)).Returns(expected);
             A.CallTo(() => FakeMapper.Map<IndexDocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(A.Fake<IndexDocumentViewModel>());
 
             // Act
