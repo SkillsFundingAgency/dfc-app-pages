@@ -1,9 +1,6 @@
-using DFC.App.Pages.Data.Models;
-using DFC.App.Pages.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -30,7 +27,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var controller = BuildPagesController(mediaTypeName);
 
             A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
-            A.CallTo(() => FakeMapper.Map<IndexDocumentViewModel>(A<ContentPageModel>.Ignored)).Returns(A.Fake<IndexDocumentViewModel>());
 
             // Act
             var result = await controller.Index().ConfigureAwait(false);

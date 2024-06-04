@@ -9,7 +9,6 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.GraphQL_Tests
     {
         private contentModeOptions _options;
 
-        public contentOptionsSetup setup;
         private readonly ITestOutputHelper output;
 
         public QueryStatusTests(ITestOutputHelper output)
