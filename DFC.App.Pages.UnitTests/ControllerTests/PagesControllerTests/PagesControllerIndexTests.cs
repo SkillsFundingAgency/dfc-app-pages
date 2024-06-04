@@ -1,9 +1,6 @@
-using DFC.App.Pages.Data.Models;
-using DFC.App.Pages.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;

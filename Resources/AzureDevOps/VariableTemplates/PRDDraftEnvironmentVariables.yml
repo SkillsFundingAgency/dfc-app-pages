@@ -3,12 +3,8 @@ variables:
   value: PRD-DRAFT
 - name: AppServiceName
   value: $(WebAppPrefix)-as
-- name: cosmosDbCollectionName
-  value: $(apiName)
 - name: EnableAzureMonitorAlerting
   value: true
-- name: SubscriptionSettingsEndpoint
-  value: $(ApimProxyAddress)/composite-ui/pages-draft
 - name: pagesAppDatabaseThroughput
   value: 7500
 - name: ResourceGroup
@@ -17,18 +13,8 @@ variables:
   value: DFC.App.Pages
 - name: PageRegistrationFile
   value: registration.json
-- name: EventGridPublishClientOptionsApiEndpoint
-  value: https://$(AppServiceName).$(appServiceDomain)/api/pages
-- name: SubscriptionSettingsFilterIncludeEventTypes3
-  value: draft
-- name: SubscriptionSettingsFilterIncludeEventTypes4
-  value: draft-discarded
 - name: ApplicationName
   value: DFC-App-Pages-draft
-- name: EventGridSubjectPrefix
-  value: /$(ApplicationName)/
-- name: AppRegistryClientOptionsBaseAddress
-  value: $(ApimProxyAddress)/composite-ui-appRegistry-draft/pages/
 - name: SummaryEndpoint
   value: /page
 - name: aspTier
@@ -36,15 +22,13 @@ variables:
 - name: aspInstances
   value: 2
 - name: aspSize
-  value: 1
+  value: 2
 - name: clientAffinity
   value: false
 - name: contentMode
   value: DRAFT
 - name: contentUrl
   value: $(ContentApiDraftAddress)/api/execute
-- name: subscriptionUrl
-  value: https://dfc-prd-api-eventgridsubscriptions-fa.$(appServiceDomain)
 - name: apiName
   value: pages-draft
 - name: apiId
@@ -59,7 +43,3 @@ variables:
   value: 75
 - name: CPUPercentageThreshold
   value: 75
-- name: SubscriptionSettingsFilterIncludeEventTypes3
-  value: draft
-- name: SubscriptionSettingsFilterIncludeEventTypes4
-  value: draft-discarded
