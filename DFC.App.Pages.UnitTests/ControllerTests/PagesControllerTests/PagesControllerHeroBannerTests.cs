@@ -37,7 +37,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedHeroBanner = new HeroBannerViewModel { Content = new HtmlString(expected.Herobanner.Html), };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED",4)).Returns(expected);
             A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<Page>.Ignored)).Returns(expectedHeroBanner);
 
             // Act
@@ -70,7 +70,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             var expectedHeroBanner = new HeroBannerViewModel { Content = new HtmlString(expected.Herobanner.Html), };
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED", 4)).Returns(expected);
             A.CallTo(() => FakeMapper.Map<HeroBannerViewModel>(A<Page>.Ignored)).Returns(expectedHeroBanner);
 
             // Act
@@ -95,7 +95,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             Page? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expectedResult);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED", 4)).Returns(expectedResult);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
@@ -119,7 +119,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             Page? expectedResult = null;
             var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expectedResult);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED", 4)).Returns(expectedResult);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);
@@ -151,7 +151,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
             }; var controller = BuildPagesController(mediaTypeName);
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED", 4)).Returns(expected);
 
             // Act
             var result = await controller.HeroBanner(pageRequestModel).ConfigureAwait(false);

@@ -111,7 +111,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
             };
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED")).Returns(expected);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED", 4)).Returns(expected);
 
             // Act
             var result = await RunControllerAction(controller, pageRequestModel, actionMethod).ConfigureAwait(false);

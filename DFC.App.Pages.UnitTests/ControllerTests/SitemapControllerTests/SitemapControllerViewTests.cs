@@ -58,7 +58,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
                 },
             };
 
-            sharedContentRedisMock.Setup(m => m.GetDataAsync<SitemapResponse>("SitemapPages/ALL", monitor.CurrentValue.contentMode)).ReturnsAsync(pageSitemapResponse);
+            sharedContentRedisMock.Setup(m => m.GetDataAsync<SitemapResponse>("SitemapPages/ALL", monitor.CurrentValue.contentMode, 4)).ReturnsAsync(pageSitemapResponse);
 
             var controller = new SitemapController(loggerMock.Object, sharedContentRedisMock.Object, monitor);
 
@@ -92,7 +92,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
             httpContextMock.Setup(c => c.Request).Returns(requestMock.Object);
 
             var sharedContentRedisMock = new Mock<ISharedContentRedisInterface>();
-            sharedContentRedisMock.Setup(m => m.GetDataAsync<SitemapResponse>("PagesSitemap/All", "PUBLISHED")).ReturnsAsync((SitemapResponse)null);
+            sharedContentRedisMock.Setup(m => m.GetDataAsync<SitemapResponse>("PagesSitemap/All", "PUBLISHED", 4)).ReturnsAsync((SitemapResponse)null);
             var controller = new SitemapController(loggerMock.Object, sharedContentRedisMock.Object, monitor);
 
             //Act
