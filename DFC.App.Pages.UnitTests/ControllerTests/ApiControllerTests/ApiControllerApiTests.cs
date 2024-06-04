@@ -68,7 +68,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             };
             var monitor = Mock.Of<IOptionsMonitor<contentModeOptions>>(x => x.CurrentValue == settings);
 
-            A.CallTo(() => sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored)).Returns(expectedContentPageModel);
+            A.CallTo(() => sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored, A<double>.Ignored)).Returns(expectedContentPageModel);
 
             using var controller = new ApiController(logger, fakeMapper, sharedContentRedisInterface, monitor);
 
@@ -94,7 +94,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             };
             var monitor = Mock.Of<IOptionsMonitor<contentModeOptions>>(x => x.CurrentValue == settings);
 
-            A.CallTo(() => sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored)).Returns((GetByPageApiResponse)null);
+            A.CallTo(() => sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored, A<double>.Ignored)).Returns((GetByPageApiResponse)null);
 
             using var controller = new ApiController(logger, fakeMapper, sharedContentRedisInterface, monitor);
 

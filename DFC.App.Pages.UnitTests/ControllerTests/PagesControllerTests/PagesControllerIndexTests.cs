@@ -1,4 +1,6 @@
+using DFC.App.Pages.ViewModels;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
+using DFC.Compui.Cosmos.Models;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
