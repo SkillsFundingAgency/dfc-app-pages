@@ -81,26 +81,27 @@ namespace DFC.App.Pages.Controllers
             logger.LogInformation($"{nameof(Document)} has been called");
 
             var contentPageModel = await sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>("PageApi" + "/" + id, status);
-            var contentPage = contentPageModel?.Page;
 
-            PageApi page = new PageApi()
+            if (contentPageModel != null)
             {
-                DisplayText = contentPage?.FirstOrDefault()?.DisplayText,
-                GraphSync = contentPage?.FirstOrDefault()?.GraphSync,
-                PageLocation = contentPage?.FirstOrDefault()?.PageLocation,
-            };
+                var contentPage = contentPageModel?.Page;
 
-            if (page != null)
-            {
+                PageApi page = new PageApi()
+                {
+                    DisplayText = contentPage?.FirstOrDefault()?.DisplayText,
+                    GraphSync = contentPage?.FirstOrDefault()?.GraphSync,
+                    PageLocation = contentPage?.FirstOrDefault()?.PageLocation,
+                };
+
                 var getIndexModel = mapper.Map<GetIndexModel>(page);
-
                 logger.LogInformation($"{nameof(Document)} has succeeded");
                 return Ok(getIndexModel);
             }
-
-            logger.LogWarning($"{nameof(Document)} has returned with no content");
-
-            return NoContent();
+            else
+            {
+                logger.LogWarning($"{nameof(Document)} has returned with no content");
+                return NoContent();
+            }
         }
     }
 }

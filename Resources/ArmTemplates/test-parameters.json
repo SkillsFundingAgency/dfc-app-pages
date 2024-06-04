@@ -8,12 +8,6 @@
         "appSharedStorageAccountName": {
             "value": "dfcdevappsharedstr"
         },
-        "cosmosDBName": {
-            "value": "dfc-dev-app-sharedresources-cdb"
-        },
-        "cosmosDbKey": {
-            "value": "not-a-real-key"
-        },
         "aspSize": {
             "value": "2"
         },
@@ -50,12 +44,6 @@
         "Environment": {
             "value": "FOO"
         },
-        "cosmosDbCollectionName": {
-            "value": "a-test-collection"
-        },
-        "CosmosDbResourceGroup": {
-            "value": "dfc-dev-app-sharedresources-rg"
-        },
         "pagesAppDatabaseNeedsCreation": {
             "value": true
         },
@@ -65,43 +53,7 @@
         "enableAlerts": {
             "value": false
         },
-        "SubscriptionSettingsEndpoint": {
-            "value": "http://www.food.co.uk"
-        },
-        "apimCompositeApiKey": {
-            "value": "fake-key-mate"
-        },
-        "EventGridAegSasKey": {
-            "value": "a key"
-        },
-        "EventGridTopicUrl": {
-            "value": "a url"
-        },
-        "EventGridPublishClientOptionsApiEndpoint": {
-            "value": "a url"
-        },
-        "SubscriptionSettingsFilterIncludeEventTypes3": {
-            "value": "value"
-        },
-        "SubscriptionSettingsFilterIncludeEventTypes4": {
-            "value": "anothervalue"
-        },
         "ApplicationName": {
-            "value": "anothervalue"
-        },
-        "EventGridSubjectPrefix": {
-            "value": "anothervalue"
-        },
-        "AppRegistryClientOptionsBaseAddress": {
-            "value": "anothervalue"
-        },
-        "SummaryEndpoint": {
-            "value": "anothervalue"
-        },
-        "contentUrl": {
-            "value": "anothervalue"
-        },
-        "subscriptionUrl": {
             "value": "anothervalue"
         },
         "ApimResourceGroup": {

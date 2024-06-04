@@ -174,7 +174,7 @@ namespace DFC.App.Pages.Controllers
             if (filterList.Count > 0)
             {
                 var pageLocation = $"{Request.GetBaseAddress()}".TrimEnd('/');
-                var redirectedUrl = $"{pageLocation}{filterList.FirstOrDefault().PageLocation.FullUrl}";
+                var redirectedUrl = $"{pageLocation}{filterList.FirstOrDefault()?.PageLocation?.FullUrl}";
 
                 logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
                 return RedirectPermanent(redirectedUrl);
@@ -260,7 +260,7 @@ namespace DFC.App.Pages.Controllers
             if (filterList.Count > 0)
             {
                 var pageLocation = $"{Request.GetBaseAddress()}".TrimEnd('/');
-                var redirectedUrl = $"{pageLocation}{filterList.FirstOrDefault().PageLocation.FullUrl}";
+                var redirectedUrl = $"{pageLocation}{filterList.FirstOrDefault()?.PageLocation?.FullUrl}";
 
                 logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
                 return RedirectPermanent(redirectedUrl);
@@ -311,7 +311,7 @@ namespace DFC.App.Pages.Controllers
             if (filterList.Count > 0)
             {
                 var pageLocation = $"{Request.GetBaseAddress()}".TrimEnd('/');
-                var redirectedUrl = $"{pageLocation}{filterList.FirstOrDefault().PageLocation.FullUrl}";
+                var redirectedUrl = $"{pageLocation}{filterList.FirstOrDefault()?.PageLocation?.FullUrl}";
 
                 logger.LogWarning($"{nameof(Document)} has been redirected for: /{location}/{article} to {redirectedUrl}");
                 return RedirectPermanent(redirectedUrl);
@@ -459,19 +459,19 @@ namespace DFC.App.Pages.Controllers
                 return null;
             }
 
-            string breadCrumbDisplayText = pageResponse.Breadcrumb.TermContentItems.FirstOrDefault().DisplayText;
+            string breadCrumbDisplayText = pageResponse?.Breadcrumb?.TermContentItems?.FirstOrDefault()?.DisplayText ?? string.Empty;
             var jdoc = JObject.Parse(breadcrumbResponse.Content);
             var root = jdoc.SelectToken("$.TaxonomyPart.Terms");
             var token = root.SelectTokens($"$..Terms[?(@.DisplayText == '{breadCrumbDisplayText}')]");
-            var path = token.FirstOrDefault().Path;
+            var path = token.FirstOrDefault()?.Path ?? string.Empty;
             var result = BuildBreadCrumb(path, jdoc);
 
             if (!(bool)pageResponse.PageLocation.DefaultPageForLocation && !string.IsNullOrWhiteSpace(pageResponse.DisplayText))
             {
                 var articlePathViewModel = new BreadcrumbItemViewModel
                 {
-                    Route = $"{pageResponse.Breadcrumb.TermContentItems.FirstOrDefault().DisplayText}",
-                    Title = pageResponse.DisplayText,
+                    Route = $"{pageResponse?.Breadcrumb?.TermContentItems?.FirstOrDefault()?.DisplayText ?? string.Empty}",
+                    Title = pageResponse?.DisplayText ?? string.Empty,
                     AddHyperlink = false,
                 };
                 result.Breadcrumbs.Add(articlePathViewModel);
