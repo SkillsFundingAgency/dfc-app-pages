@@ -19,10 +19,10 @@ namespace DFC.App.Pages.Controllers
         private readonly ILogger<ApiController> logger;
         private readonly IMapper mapper;
         private ISharedContentRedisInterface sharedContentRedisInterface;
-        private readonly IOptionsMonitor<contentModeOptions> options;
+        private readonly IOptionsMonitor<ContentModeOptions> options;
         private string status = string.Empty;
 
-        public ApiController(ILogger<ApiController> logger, IMapper mapper, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
+        public ApiController(ILogger<ApiController> logger, IMapper mapper, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<ContentModeOptions> options)
         {
             this.logger = logger;
             this.mapper = mapper;

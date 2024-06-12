@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models.ClientOptions;
 using DFC.App.Pages.Extensions;
@@ -151,6 +152,7 @@ namespace DFC.App.Pages
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<GetByPageApiResponse>, GetByIdPageApiStrategy>();
 
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
+            services.ConfigureOptions<ContentOptionsSetup>();
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();

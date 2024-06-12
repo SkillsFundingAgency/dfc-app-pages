@@ -24,12 +24,12 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
             var loggerMock = new Mock<ILogger<SitemapController>>();
             var requestMock = new Mock<HttpRequest>();
 
-            var settings = new contentModeOptions()
+            var settings = new ContentModeOptions()
             {
                 contentMode = "contentMode",
                 value = "PUBLISHED",
             };
-            var monitor = Mock.Of<IOptionsMonitor<contentModeOptions>>(x => x.CurrentValue == settings);
+            var monitor = Mock.Of<IOptionsMonitor<ContentModeOptions>>(x => x.CurrentValue == settings);
 
             requestMock.Setup(r => r.Scheme).Returns("https");
             requestMock.Setup(r => r.Host).Returns(new HostString("example.com"));
@@ -56,12 +56,12 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
             var httpContextMock = new Mock<HttpContext>();
             httpContextMock.Setup(c => c.Request).Returns(requestMock.Object);
 
-            var settings = new contentModeOptions()
+            var settings = new ContentModeOptions()
             {
                 contentMode = "contentMode",
                 value = "PUBLISHED",
             };
-            var monitor = Mock.Of<IOptionsMonitor<contentModeOptions>>(x => x.CurrentValue == settings);
+            var monitor = Mock.Of<IOptionsMonitor<ContentModeOptions>>(x => x.CurrentValue == settings);
 
             var sharedContentRedisMock = new Mock<ISharedContentRedisInterface>();
             var pageSitemapResponse = new SitemapResponse
