@@ -7,6 +7,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -24,6 +25,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
         private readonly ILogger<ApiController> logger;
         private readonly IMapper fakeMapper;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IConfiguration configuration;
 
         public ApiControllerApiTests()
         {
@@ -68,9 +70,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             };
             var monitor = Mock.Of<IOptionsMonitor<ContentModeOptions>>(x => x.CurrentValue == settings);
 
-            A.CallTo(() => sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored, A<double>.Ignored)).Returns(expectedContentPageModel);
+            A.CallTo(() => sharedContentRedisInterface.GetDataAsyncWithExpiry<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored, A<double>.Ignored)).Returns(expectedContentPageModel);
 
-            using var controller = new ApiController(logger, fakeMapper, sharedContentRedisInterface, monitor);
+            using var controller = new ApiController(configuration, logger, fakeMapper, sharedContentRedisInterface, monitor);
 
             // act
             var result = await controller.Document(id).ConfigureAwait(false);
@@ -94,9 +96,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             };
             var monitor = Mock.Of<IOptionsMonitor<ContentModeOptions>>(x => x.CurrentValue == settings);
 
-            A.CallTo(() => sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored, A<double>.Ignored)).Returns((GetByPageApiResponse)null);
+            A.CallTo(() => sharedContentRedisInterface.GetDataAsyncWithExpiry<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored, A<double>.Ignored)).Returns((GetByPageApiResponse)null);
 
-            using var controller = new ApiController(logger, fakeMapper, sharedContentRedisInterface, monitor);
+            using var controller = new ApiController(configuration, logger, fakeMapper, sharedContentRedisInterface, monitor);
 
             // act
             var result = await controller.Document(Guid.NewGuid()).ConfigureAwait(false);

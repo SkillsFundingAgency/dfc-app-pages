@@ -5,6 +5,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -16,18 +17,28 @@ namespace DFC.App.Pages.Controllers
 {
     public class ApiController : Controller
     {
+        private const string expiryAppSettings = "Cms:Expiry";
+        private readonly IConfiguration configuration;
         private readonly ILogger<ApiController> logger;
         private readonly IMapper mapper;
         private ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IOptionsMonitor<ContentModeOptions> options;
         private string status = string.Empty;
+        private double expiry = 4;
 
-        public ApiController(ILogger<ApiController> logger, IMapper mapper, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<ContentModeOptions> options)
+        public ApiController(IConfiguration configuration, ILogger<ApiController> logger, IMapper mapper, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
         {
+            this.configuration = configuration;
             this.logger = logger;
             this.mapper = mapper;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
             this.options = options;
+
+            if (this.configuration != null)
+            {
+                string expiryAppString = this.configuration.GetSection(expiryAppSettings).Get<string>();
+                this.expiry = double.Parse(string.IsNullOrEmpty(expiryAppString) ? "4" : expiryAppString);
+            }
         }
 
         [HttpGet]
@@ -47,7 +58,7 @@ namespace DFC.App.Pages.Controllers
 
             var pages = new Dictionary<Guid, GetIndexModel>();
 
-            var contentPageModels = await sharedContentRedisInterface.GetDataAsync<PageApiResponse>("PagesApi/All", status);
+            var contentPageModels = await sharedContentRedisInterface.GetDataAsyncWithExpiry<PageApiResponse>("PagesApi/All", status, expiry);
 
             var contentPageModelsList = contentPageModels?.Page.ToList();
 
@@ -80,7 +91,7 @@ namespace DFC.App.Pages.Controllers
 
             logger.LogInformation($"{nameof(Document)} has been called");
 
-            var contentPageModel = await sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>("PageApi" + "/" + id, status);
+            var contentPageModel = await sharedContentRedisInterface.GetDataAsyncWithExpiry<GetByPageApiResponse>("PageApi" + "/" + id, status, expiry);
 
             if (contentPageModel != null)
             {
