@@ -32,7 +32,7 @@ variables:
 - name: SummaryEndpoint
   value: /page
 - name: aspTier
-  value: Standard
+  value: PremiumV3
 - name: aspInstances
   value: 2
 - name: aspSize
