@@ -27,14 +27,14 @@ namespace DFC.App.Pages.Controllers
         private readonly ILogger<PagesController> logger;
         private readonly AutoMapper.IMapper mapper;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
-        private readonly IOptionsMonitor<contentModeOptions> options;
+        private readonly IOptionsMonitor<ContentModeOptions> options;
         private string status = string.Empty;
 
         public PagesController(
             ILogger<PagesController> logger,
             AutoMapper.IMapper mapper,
             ISharedContentRedisInterface sharedContentRedisInterface,
-            IOptionsMonitor<contentModeOptions> options)
+            IOptionsMonitor<ContentModeOptions> options)
         {
             this.logger = logger;
             this.mapper = mapper;

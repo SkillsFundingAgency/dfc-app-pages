@@ -15,13 +15,13 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
         {
             FakeLogger = A.Fake<ILogger<SitemapController>>();
             FakeSharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
-            FakeContentOptions = A.Fake<IOptionsMonitor<contentModeOptions>>();
+            FakeContentOptions = A.Fake<IOptionsMonitor<ContentModeOptions>>();
 
         }
 
         protected ILogger<SitemapController> FakeLogger { get; }
 
-        protected IOptionsMonitor<contentModeOptions> FakeContentOptions { get; }
+        protected IOptionsMonitor<ContentModeOptions> FakeContentOptions { get; }
 
 
         protected ISharedContentRedisInterface FakeSharedContentRedisInterface { get; }

@@ -19,10 +19,10 @@ namespace DFC.App.Pages.Controllers
 
         private readonly ILogger<SitemapController> logger;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
-        private IOptionsMonitor<contentModeOptions> _options;
+        private IOptionsMonitor<ContentModeOptions> _options;
         private string status;
 
-        public SitemapController(ILogger<SitemapController> logger, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
+        public SitemapController(ILogger<SitemapController> logger, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<ContentModeOptions> options)
         {
             this.logger = logger;
             this.sharedContentRedisInterface = sharedContentRedisInterface;

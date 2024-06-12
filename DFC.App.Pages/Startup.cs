@@ -149,7 +149,7 @@ namespace DFC.App.Pages
             services.AddSingleton<ISharedContentRedisInterfaceStrategy<GetByPageApiResponse>, GetByIdPageApiStrategy>();
 
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
-            services.ConfigureOptions<contentOptionsSetup>();
+            services.ConfigureOptions<ContentOptionsSetup>();
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
