@@ -43,3 +43,5 @@ variables:
   value: 75
 - name: CPUPercentageThreshold
   value: 75
+- name: Expiry
+  value: 4
