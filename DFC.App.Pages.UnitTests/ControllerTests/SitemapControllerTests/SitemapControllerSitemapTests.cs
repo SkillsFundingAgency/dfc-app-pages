@@ -72,7 +72,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
             mockIConfigurationSection.Setup(x => x.Key).Returns("Cms:Expiry");
             mockIConfigurationSection.Setup(x => x.Value).Returns("4");
             configurationMock.Setup(r => r.GetSection("Cms:Expiry")).Returns(mockIConfigurationSection.Object);
-            var settings = new contentModeOptions()
+            var settings = new ContentModeOptions()
             {
                 contentMode = "contentMode",
                 value = "PUBLISHED",

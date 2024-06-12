@@ -21,11 +21,11 @@ namespace DFC.App.Pages.Controllers
         private readonly IConfiguration configuration;
         private readonly ILogger<SitemapController> logger;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
-        private IOptionsMonitor<contentModeOptions> _options;
+        private IOptionsMonitor<ContentModeOptions> _options;
         private string status; 
         private double expiry = 4;
 
-        public SitemapController(IConfiguration configuration, ILogger<SitemapController> logger, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
+        public SitemapController(IConfiguration configuration, ILogger<SitemapController> logger, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<ContentModeOptions> options)
         {
             this.configuration = configuration;
             this.logger = logger;
