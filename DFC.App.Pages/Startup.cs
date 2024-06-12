@@ -7,6 +7,7 @@ using DFC.App.Pages.Services.AppRegistryService;
 using DFC.Common.SharedContent.Pkg.Netcore;
 using DFC.Common.SharedContent.Pkg.Netcore.Constant;
 using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.CacheRepository;
 using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
@@ -98,6 +99,8 @@ namespace DFC.App.Pages
                 Password = redisCacheConnectionString.Password,
             }));
             services.AddHealthChecks().AddCheck<HealthCheck>("GraphQlRedisConnectionCheck");
+            services.AddMemoryCache();
+            services.AddSingleton<ICacheRepository, CacheRepository>();
 
             services.AddSingleton<IGraphQLClient>(s =>
             {
