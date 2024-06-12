@@ -60,7 +60,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.SitemapControllerTests
             };
 
             this.factory.MockSharedContentRedis.Setup(
-                x => x.GetDataAsync<SitemapResponse>(
+                x => x.GetDataAsyncWithExpiry<SitemapResponse>(
                     It.IsAny<string>(), "PUBLISHED",4))
                 .ReturnsAsync(sitemapResponse);
 

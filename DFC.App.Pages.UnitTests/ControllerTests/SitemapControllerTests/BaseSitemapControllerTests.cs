@@ -4,6 +4,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -16,7 +17,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
             FakeLogger = A.Fake<ILogger<SitemapController>>();
             FakeSharedContentRedisInterface = A.Fake<ISharedContentRedisInterface>();
             FakeContentOptions = A.Fake<IOptionsMonitor<contentModeOptions>>();
-
+            FakeConfiguration = A.Fake<IConfiguration>();
         }
 
         protected ILogger<SitemapController> FakeLogger { get; }
@@ -26,10 +27,12 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
 
         protected ISharedContentRedisInterface FakeSharedContentRedisInterface { get; }
 
+        protected IConfiguration FakeConfiguration { get; }
+
 
         protected SitemapController BuildSitemapController()
         {
-            var controller = new SitemapController(FakeLogger, FakeSharedContentRedisInterface, FakeContentOptions)
+            var controller = new SitemapController(FakeConfiguration, FakeLogger, FakeSharedContentRedisInterface, FakeContentOptions)
             {
                 ControllerContext = new ControllerContext()
                 {

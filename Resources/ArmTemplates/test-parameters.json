@@ -91,6 +91,9 @@
         },
         "IocpThreads": {
             "value": "200"
+        },
+        "Expiry": {
+            "value": "4"
         }
     }
 }

@@ -4,6 +4,7 @@ using DFC.App.Pages.Models;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -16,17 +17,26 @@ namespace DFC.App.Pages.Controllers
     public class SitemapController : Controller
     {
         public const string SitemapViewCanonicalName = "sitemap";
-
+        private const string expiryAppSettings = "Cms:Expiry";
+        private readonly IConfiguration configuration;
         private readonly ILogger<SitemapController> logger;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private IOptionsMonitor<contentModeOptions> _options;
-        private string status;
+        private string status; 
+        private double expiry = 4;
 
-        public SitemapController(ILogger<SitemapController> logger, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
+        public SitemapController(IConfiguration configuration, ILogger<SitemapController> logger, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
         {
+            this.configuration = configuration;
             this.logger = logger;
             this.sharedContentRedisInterface = sharedContentRedisInterface;
             _options = options;
+
+            if (this.configuration != null)
+            {
+                string expiryAppString = this.configuration.GetSection(expiryAppSettings).Get<string>();
+                this.expiry = double.Parse(string.IsNullOrEmpty(expiryAppString) ? "4" : expiryAppString);
+            }
         }
 
         [HttpGet]
@@ -57,7 +67,7 @@ namespace DFC.App.Pages.Controllers
 
                 var sitemapUrlPrefix = $"{Request.GetBaseAddress()}".TrimEnd('/');
                 var sitemap = new Sitemap();
-                var contentPageModels = await sharedContentRedisInterface.GetDataAsync<SitemapResponse>("SitemapPages/ALL", status);
+                var contentPageModels = await sharedContentRedisInterface.GetDataAsyncWithExpiry<SitemapResponse>("SitemapPages/ALL", status, expiry);
 
                 if (contentPageModels != null)
                 {

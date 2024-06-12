@@ -111,7 +111,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
             };
 
-            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsync<Page>("PageTest", "PUBLISHED", 4)).Returns(expected);
+            A.CallTo(() => FakeSharedContentRedisInterface.GetDataAsyncWithExpiry<Page>("PageTest", "PUBLISHED", 4)).Returns(expected);
 
             // Act
             var result = await RunControllerAction(controller, pageRequestModel, actionMethod).ConfigureAwait(false);
@@ -169,7 +169,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             httpContext.Request.Path = route;
             httpContext.Request.Headers[HeaderNames.Accept] = MediaTypeNames.Application.Json;
 
-            return new PagesController(Logger, FakeMapper, FakeSharedContentRedisInterface, FakeContentOptions)
+            return new PagesController(FakeConfiguration, Logger, FakeMapper, FakeSharedContentRedisInterface, FakeContentOptions)
             {
                 ControllerContext = new ControllerContext
                 {

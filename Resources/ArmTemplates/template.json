@@ -102,6 +102,9 @@
         },
         "IocpThreads": {
             "type": "string"
+        },
+        "Expiry": {
+            "type": "string"
         }
     },
     "variables": {
@@ -232,80 +235,84 @@
                         "value": "[parameters('clientAffinity')]"
                     },
                     "appServiceAppSettings": {
-                        "value": [
-                            {
-                                "name": "MSDEPLOY_RENAME_LOCKED_FILES",
-                                "value": "1"
-                            },
-                            {
-                                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                "value": "[reference(variables('webAppInsightsName')).outputs.InstrumentationKey.value]"
-                            },
-                            {
-                                "name": "AzureWebJobsStorage",
-                                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('appSharedStorageAccountName'),';AccountKey=',listKeys(resourceId(parameters('appSharedResourceGroup'), 'Microsoft.Storage/storageAccounts', parameters('appSharedStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]"
-                            },
-                            {
-                                "name": "contentMode__contentMode",
-                                "value": "[parameters('contentMode')]"
-                            },
-                            {
-                                "name": "Cms__TokenEndPointURL",
-                                "value": "[parameters('TokenEndPointURL')]"
-                            },
-                            {
-                                "name": "Cms__GraphApiUrl",
-                                "value": "[parameters('GraphApiUrl')]"
-                            },
-                            {
-                                "name": "Cms__SqlApiUrl",
-                                "value": "[parameters('SqlApiUrl')]"
-                            },
-                            {
-                                "name": "Cms__ClientId",
-                                "value": "[parameters('ClientId')]"
-                            },
-                            {
-                                "name": "Cms__ClientSecret",
-                                "value": "[parameters('ClientSecret')]"
-                            },
-                            {
-                                "name": "Cms__RedisCacheConnectionString",
-                                "value": "[parameters('RedisCacheConnectionString')]"
-                            },
-                            {
-                                "name": "Logging__ApplicationInsights__LogLevel__Default",
-                                "value": "Information"
-                            },
-                            {
-                                "name": "Configuration__ApplicationName",
-                                "value": "[parameters('ApplicationName')]"
-                            },
-                            {
-                                "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                "value": "1"
-                            },
-                            {
-                                "name": "WEBSITE_ADD_SITENAME_BINDINGS_IN_APPHOST_CONFIG",
-                                "value": "1"
-                            },
-                            {
-                              "name": "DOTNET_ROLL_FORWARD",
-                              "value": "Minor"
-                            }, 
-                            {
-                              "name": "DOTNET_ROLL_FORWARD_ON_NO_CANDIDATE_FX",
-                              "value": "1"
-                            },
-                            {
-                              "name": "ThreadSettings__WorkerThreads",
-                              "value": "[parameters('WorkerThreads')]"
-                            },
-                            {
-                               "name": "ThreadSettings__IocpThreads",
-                               "value": "[parameters('IocpThreads')]"
-                            }
-                        ]
+                      "value": [
+                        {
+                          "name": "MSDEPLOY_RENAME_LOCKED_FILES",
+                          "value": "1"
+                        },
+                        {
+                          "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                          "value": "[reference(variables('webAppInsightsName')).outputs.InstrumentationKey.value]"
+                        },
+                        {
+                          "name": "AzureWebJobsStorage",
+                          "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('appSharedStorageAccountName'),';AccountKey=',listKeys(resourceId(parameters('appSharedResourceGroup'), 'Microsoft.Storage/storageAccounts', parameters('appSharedStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
+                          "name": "contentMode__contentMode",
+                          "value": "[parameters('contentMode')]"
+                        },
+                        {
+                          "name": "Cms__TokenEndPointURL",
+                          "value": "[parameters('TokenEndPointURL')]"
+                        },
+                        {
+                          "name": "Cms__GraphApiUrl",
+                          "value": "[parameters('GraphApiUrl')]"
+                        },
+                        {
+                          "name": "Cms__SqlApiUrl",
+                          "value": "[parameters('SqlApiUrl')]"
+                        },
+                        {
+                          "name": "Cms__ClientId",
+                          "value": "[parameters('ClientId')]"
+                        },
+                        {
+                          "name": "Cms__ClientSecret",
+                          "value": "[parameters('ClientSecret')]"
+                        },
+                        {
+                          "name": "Cms__RedisCacheConnectionString",
+                          "value": "[parameters('RedisCacheConnectionString')]"
+                        },
+                        {
+                          "name": "Cms__Expiry",
+                          "value": "[parameters('Expiry')]"
+                        },
+                        {
+                          "name": "Logging__ApplicationInsights__LogLevel__Default",
+                          "value": "Information"
+                        },
+                        {
+                          "name": "Configuration__ApplicationName",
+                          "value": "[parameters('ApplicationName')]"
+                        },
+                        {
+                          "name": "WEBSITE_RUN_FROM_PACKAGE",
+                          "value": "1"
+                        },
+                        {
+                          "name": "WEBSITE_ADD_SITENAME_BINDINGS_IN_APPHOST_CONFIG",
+                          "value": "1"
+                        },
+                        {
+                          "name": "DOTNET_ROLL_FORWARD",
+                          "value": "Minor"
+                        },
+                        {
+                          "name": "DOTNET_ROLL_FORWARD_ON_NO_CANDIDATE_FX",
+                          "value": "1"
+                        },
+                        {
+                          "name": "ThreadSettings__WorkerThreads",
+                          "value": "[parameters('WorkerThreads')]"
+                        },
+                        {
+                          "name": "ThreadSettings__IocpThreads",
+                          "value": "[parameters('IocpThreads')]"
+                        }
+                      ]
                     }
                 }
             },

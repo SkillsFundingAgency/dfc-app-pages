@@ -69,7 +69,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
                 Page = new List<PageUrl> { pageUrl },
             };
             this.factory.MockSharedContentRedis.Setup(
-                x => x.GetDataAsync<PageUrlResponse>(
+                x => x.GetDataAsyncWithExpiry<PageUrlResponse>(
                     It.IsAny<string>(), "PUBLISHED", 4))
             .ReturnsAsync(pageUrlResponse);
 
@@ -109,7 +109,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
                 Page = new List<PageUrl> { pageUrl },
             };
             this.factory.MockSharedContentRedis.Setup(
-                x => x.GetDataAsync<PageUrlResponse>(
+                x => x.GetDataAsyncWithExpiry<PageUrlResponse>(
                     It.IsAny<string>(), "PUBLISHED", 4))
             .ReturnsAsync(pageUrlResponse);
             var uri = new Uri(url, UriKind.Relative);
@@ -136,7 +136,7 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.PagesControllerTests
             var uri = new Uri(url, UriKind.Relative);
             httpClient.DefaultRequestHeaders.Accept.Clear();
             var RedisContentMock = new Mock<ISharedContentRedisInterface>();
-            RedisContentMock.Setup(m => m.GetDataAsync<PageUrlResponse>("PagesIntegration", "PUBKUSHED",4)).ReturnsAsync((PageUrlResponse)null);
+            RedisContentMock.Setup(m => m.GetDataAsyncWithExpiry<PageUrlResponse>("PagesIntegration", "PUBKUSHED",4)).ReturnsAsync((PageUrlResponse)null);
 
             // Act
             var response = await httpClient.GetAsync(uri);
