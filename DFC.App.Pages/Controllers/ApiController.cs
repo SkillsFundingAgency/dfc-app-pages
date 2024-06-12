@@ -22,12 +22,11 @@ namespace DFC.App.Pages.Controllers
         private readonly ILogger<ApiController> logger;
         private readonly IMapper mapper;
         private ISharedContentRedisInterface sharedContentRedisInterface;
-        private readonly IOptionsMonitor<contentModeOptions> options;
+        private readonly IOptionsMonitor<ContentModeOptions> options;
         private string status = string.Empty;
         private double expiry = 4;
 
-        public ApiController(
-            IConfiguration configuration, ILogger<ApiController> logger, IMapper mapper, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
+        public ApiController(IConfiguration configuration, ILogger<ApiController> logger, IMapper mapper, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
         {
             this.configuration = configuration;
             this.logger = logger;

@@ -30,12 +30,12 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
             ""Expiry"" : ""4""
             }}";
 
-            var settings = new contentModeOptions()
+            var settings = new ContentModeOptions()
             {
                 contentMode = "contentMode",
                 value = "PUBLISHED",
             };
-            var monitor = Mock.Of<IOptionsMonitor<contentModeOptions>>(x => x.CurrentValue == settings);
+            var monitor = Mock.Of<IOptionsMonitor<ContentModeOptions>>(x => x.CurrentValue == settings);
 
             requestMock.Setup(r => r.Scheme).Returns("https");
             requestMock.Setup(r => r.Host).Returns(new HostString("example.com"));
@@ -77,7 +77,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
                 contentMode = "contentMode",
                 value = "PUBLISHED",
             };
-            var monitor = Mock.Of<IOptionsMonitor<contentModeOptions>>(x => x.CurrentValue == settings);
+            var monitor = Mock.Of<IOptionsMonitor<ContentModeOptions>>(x => x.CurrentValue == settings);
 
             var sharedContentRedisMock = new Mock<ISharedContentRedisInterface>();
             var pageSitemapResponse = new SitemapResponse

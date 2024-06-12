@@ -48,7 +48,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
         protected ISharedContentRedisInterface FakeSharedContentRedisInterface { get; }
 
-        protected IOptionsMonitor<contentModeOptions> FakeContentOptions { get; }
+        protected IOptionsMonitor<ContentModeOptions> FakeContentOptions { get; }
 
         protected IConfiguration FakeConfiguration { get; }
 

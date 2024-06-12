@@ -22,7 +22,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.SitemapControllerTests
 
         protected ILogger<SitemapController> FakeLogger { get; }
 
-        protected IOptionsMonitor<contentModeOptions> FakeContentOptions { get; }
+        protected IOptionsMonitor<ContentModeOptions> FakeContentOptions { get; }
 
 
         protected ISharedContentRedisInterface FakeSharedContentRedisInterface { get; }

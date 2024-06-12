@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Data.Contracts;
 using DFC.App.Pages.Data.Models.ClientOptions;
 using DFC.App.Pages.Extensions;
@@ -7,6 +8,7 @@ using DFC.App.Pages.Services.AppRegistryService;
 using DFC.Common.SharedContent.Pkg.Netcore;
 using DFC.Common.SharedContent.Pkg.Netcore.Constant;
 using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.CacheRepository;
 using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
@@ -98,6 +100,8 @@ namespace DFC.App.Pages
                 Password = redisCacheConnectionString.Password,
             }));
             services.AddHealthChecks().AddCheck<HealthCheck>("GraphQlRedisConnectionCheck");
+            services.AddMemoryCache();
+            services.AddSingleton<ICacheRepository, CacheRepository>();
 
             services.AddSingleton<IGraphQLClient>(s =>
             {
@@ -148,6 +152,7 @@ namespace DFC.App.Pages
             services.AddSingleton<ISharedContentRedisInterfaceStrategyWithRedisExpiry<GetByPageApiResponse>, GetByIdPageApiStrategy>();
 
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
+            services.ConfigureOptions<ContentOptionsSetup>();
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
