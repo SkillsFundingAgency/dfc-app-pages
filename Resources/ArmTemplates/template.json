@@ -52,6 +52,9 @@
         "ClientSecret": {
             "type": "securestring"
         },
+        "CmsCacheKeyExpiry": {
+            "type": "string"
+        },
         "RedisCacheConnectionString": {
             "type": "securestring"
         },
@@ -363,6 +366,10 @@
                             {
                                 "name": "CmsApiClientOptions__SummaryEndpoint",
                                 "value": "[parameters('SummaryEndpoint')]"
+                            },
+                            {
+                                "name": "Cms_CacheKeyExpiry",
+                                "value": "[parameters('CmsCacheKeyExpiry')]"
                             },
                             {
                                 "name": "Configuration__ApplicationName",

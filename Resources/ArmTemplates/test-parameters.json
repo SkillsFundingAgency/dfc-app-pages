@@ -20,6 +20,9 @@
         "cosmosDbKey": {
             "value": "not-a-real-key"
         },
+        "CmsCacheKeyExpiry": {
+            "value": "some-value"
+        },
         "aspSize": {
             "value": "2"
         },
