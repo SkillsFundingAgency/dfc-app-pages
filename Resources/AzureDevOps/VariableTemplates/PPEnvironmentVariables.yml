@@ -2,7 +2,9 @@ variables:
 - name: ReleaseEnvironmentName
   value: PP
 - name: AppServiceName
-  value: $(WebAppPrefix)-as
+  value: $(WebAppPrefix)-as-ver2
+- name: AppServicePlanSuffix
+  value: -migrated
 - name: cosmosDbCollectionName
   value: $(apiName)
 - name: EnableAzureMonitorAlerting
@@ -28,7 +30,7 @@ variables:
 - name: SummaryEndpoint
   value: /page
 - name: aspTier
-  value: Standard
+  value: PremiumV3
 - name: aspInstances
   value: 2
 - name: aspSize
@@ -40,7 +42,7 @@ variables:
 - name: contentUrl
   value: $(ContentApiAddress)/api/execute
 - name: subscriptionUrl
-  value: https://dfc-pp-api-eventgridsubscriptions-fa.$(appServiceDomain)
+  value: https://dfc-pp-api-eventgridsubscriptions-fa-ver2.$(appServiceDomain)
 - name: apiName
   value: pages
 - name: apiId
