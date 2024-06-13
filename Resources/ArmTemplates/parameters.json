@@ -44,6 +44,9 @@
         "ClientSecret": {
             "value": "__StaxGraphqlClientSecret__"
         },
+        "CmsCacheKeyExpiry": {
+            "value": "__CmsCacheKeyExpiry__"
+        },
         "RedisCacheConnectionString": {
             "value": "__RedisConnectionString__"
         },
