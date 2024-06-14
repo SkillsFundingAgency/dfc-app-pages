@@ -14,26 +14,6 @@
         "appServicePlanSuffix": {
             "type": "string"
         },
-        "aseHostingEnvironmentName": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "aseResourceGroup": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "aspInstances": {
-            "type": "int"
-        },
-        "aspSize": {
-            "type": "string"
-        },
-        "aspTier": {
-            "type": "string"
-        },
-        "clientAffinity": {
-            "type": "bool"
-        },
         "contentMode": {
             "type": "string"
         },
@@ -180,38 +160,6 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[variables('appServicePlanName')]",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('buildingBlocksDfcBaseUrl'), 'app-service-plan.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "appServicePlanName": {
-                        "value": "[variables('appServicePlanName')]"
-                    },
-                    "aseHostingEnvironmentName": {
-                        "value": "[parameters('aseHostingEnvironmentName')]"
-                    },
-                    "aseResourceGroup": {
-                        "value": "[parameters('aseResourceGroup')]"
-                    },
-                    "aspSize": {
-                        "value": "[parameters('aspSize')]"
-                    },
-                    "aspInstances": {
-                        "value": "[parameters('aspInstances')]"
-                    },
-                    "nonASETier": {
-                        "value": "[parameters('aspTier')]"
-                    }
-                }
-            }
-        },
-        {
-            "apiVersion": "2017-05-10",
             "name": "[parameters('AppServiceName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
@@ -237,7 +185,7 @@
                         "value": true
                     },
                     "clientAffinity": {
-                        "value": "[parameters('clientAffinity')]"
+                        "value": false
                     },
                     "appServiceAppSettings": {
                       "value": [

@@ -14,18 +14,6 @@
         "appServicePlanSuffix": {
             "value": "__AppServicePlanSuffix__"
         },
-        "aseHostingEnvironmentName": {
-            "value": "__AseServiceName__"
-        },
-        "aseResourceGroup": {
-            "value": "__aseResourceGroup__"
-        },
-        "aspInstances": {
-            "value": __aspInstances__
-        },
-        "clientAffinity": {
-            "value": __clientAffinity__
-        },
         "contentMode": {
             "value": "__contentMode__"
         },
@@ -46,12 +34,6 @@
         },
         "RedisCacheConnectionString": {
             "value": "__RedisConnectionString__"
-        },
-        "aspTier": {
-            "value": "__aspTier__"
-        },
-        "aspSize": {
-            "value": "__aspSize__"
         },
         "environment": {
             "value": "__ReleaseEnvironmentName__",

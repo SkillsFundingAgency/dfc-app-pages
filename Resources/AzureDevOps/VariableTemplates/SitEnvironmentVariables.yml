@@ -17,14 +17,6 @@ variables:
   value: DFC-App-Pages
 - name: SummaryEndpoint
   value: /page
-- name: aspTier
-  value: PremiumV3
-- name: aspInstances
-  value: 2
-- name: aspSize
-  value: 2
-- name: clientAffinity
-  value: false
 - name: contentMode
   value: PUBLISHED
 - name: contentUrl
