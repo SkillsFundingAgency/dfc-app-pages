@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="appsettings-template.json" />
     <Content Remove="bundleconfig.json" />
   </ItemGroup>
 
@@ -24,12 +25,13 @@
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="appsettings-template.json" />
     <None Include="bundleconfig.json" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="DFC.Common.SharedContent.Pkg.Netcore" Version="0.1.66" />
+    <PackageReference Include="DFC.Common.SharedContent.Pkg.Netcore" Version="0.1.110" />
     <PackageReference Include="DFC.Compui.Subscriptions" Version="1.0.96" />
     <PackageReference Include="DFC.Compui.Telemetry" Version="1.0.31" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />

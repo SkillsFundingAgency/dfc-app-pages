@@ -3,17 +3,17 @@ using Microsoft.Extensions.Options;
 
 namespace DFC.App.Pages.Cms.Data.Content
 {
-    public class contentOptionsSetup : IConfigureOptions<contentModeOptions>
+    public class ContentOptionsSetup : IConfigureOptions<ContentModeOptions>
     {
         private const string SectionName = "contentMode";
         private readonly IConfiguration _configuration;
 
-        public contentOptionsSetup(IConfiguration configuration)
+        public ContentOptionsSetup(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        public void Configure(contentModeOptions options)
+        public void Configure(ContentModeOptions options)
         {
             _configuration
                 .GetSection(SectionName)

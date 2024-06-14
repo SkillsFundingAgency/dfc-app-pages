@@ -8,6 +8,7 @@ using DFC.App.Pages.Services.AppRegistryService;
 using DFC.Common.SharedContent.Pkg.Netcore;
 using DFC.Common.SharedContent.Pkg.Netcore.Constant;
 using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure;
+using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.CacheRepository;
 using DFC.Common.SharedContent.Pkg.Netcore.Infrastructure.Strategy;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
@@ -23,6 +24,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,17 +38,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading;
 
+
 namespace DFC.App.Pages
 {
     [ExcludeFromCodeCoverage]
     public class Startup
     {
         private const string RedisCacheConnectionStringAppSettings = "Cms:RedisCacheConnectionString";
-        private const string GraphApiUrlAppSettings = "Cms:GraphApiUrl";
         private const string WorkerThreadsConfigAppSettings = "ThreadSettings:WorkerThreads";
         private const string IocpThreadsConfigAppSettings = "ThreadSettings:IocpThreads";
-
-
         private readonly IConfiguration configuration;
         private readonly IWebHostEnvironment env;
         private readonly ILogger<Startup> logger;
@@ -100,6 +100,8 @@ namespace DFC.App.Pages
                 Password = redisCacheConnectionString.Password,
             }));
             services.AddHealthChecks().AddCheck<HealthCheck>("GraphQlRedisConnectionCheck");
+            services.AddMemoryCache();
+            services.AddSingleton<ICacheRepository, CacheRepository>();
 
             services.AddSingleton<IGraphQLClient>(s =>
             {
@@ -107,7 +109,11 @@ namespace DFC.App.Pages
                 {
                     EndPoint = new Uri(configuration[ConfigKeys.GraphApiUrl] ??
                 throw new ArgumentNullException($"{nameof(ConfigKeys.GraphApiUrl)} is missing or has an invalid value.")),
-                    HttpMessageHandler = new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
+                    HttpMessageHandler = new CmsRequestHandler(
+                        s.GetService<IHttpClientFactory>(),
+                        s.GetService<IConfiguration>(),
+                        s.GetService<IHttpContextAccessor>(),
+                        s.GetService<IMemoryCache>()),
                 };
                 var client = new GraphQLHttpClient(option, new NewtonsoftJsonSerializer());
                 return client;
@@ -118,7 +124,11 @@ namespace DFC.App.Pages
                 {
                     BaseUrl = new Uri(configuration[ConfigKeys.SqlApiUrl] ??
                 throw new ArgumentNullException($"{nameof(ConfigKeys.SqlApiUrl)} is missing or has an invalid value.")),
-                    ConfigureMessageHandler = handler => new CmsRequestHandler(s.GetService<IHttpClientFactory>(), s.GetService<IConfiguration>(), s.GetService<IHttpContextAccessor>()),
+                    ConfigureMessageHandler = handler =>  new CmsRequestHandler(
+                        s.GetService<IHttpClientFactory>(),
+                        s.GetService<IConfiguration>(),
+                        s.GetService<IHttpContextAccessor>(),
+                        s.GetService<IMemoryCache>()),
                 };
                 JsonSerializerSettings defaultSettings = new ()
                 {
@@ -133,16 +143,16 @@ namespace DFC.App.Pages
                 var client = new RestClient(option);
                 return client;
             });
-            services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageUrlResponse>, PageUrlQueryStrategy>();
-            services.AddSingleton<ISharedContentRedisInterfaceStrategy<Page>, PageQueryStrategy>();
-            services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageBreadcrumb>, PageBreadcrumbQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategyWithRedisExpiry<PageUrlResponse>, PageUrlQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategyWithRedisExpiry<Page>, PageQueryStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategyWithRedisExpiry<PageBreadcrumb>, PageBreadcrumbQueryStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyFactory, SharedContentRedisStrategyFactory>();
-            services.AddSingleton<ISharedContentRedisInterfaceStrategy<SitemapResponse>, PageSitemapStrategy>();
-            services.AddSingleton<ISharedContentRedisInterfaceStrategy<PageApiResponse>, PageApiStrategy>();
-            services.AddSingleton<ISharedContentRedisInterfaceStrategy<GetByPageApiResponse>, GetByIdPageApiStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategyWithRedisExpiry<SitemapResponse>, PageSitemapStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategyWithRedisExpiry<PageApiResponse>, PageApiStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategyWithRedisExpiry<GetByPageApiResponse>, GetByIdPageApiStrategy>();
 
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
-            services.ConfigureOptions<contentOptionsSetup>();
+            services.ConfigureOptions<ContentOptionsSetup>();
 
             services.AddApplicationInsightsTelemetry();
             services.AddHttpContextAccessor();
@@ -161,12 +171,11 @@ namespace DFC.App.Pages
                 .AddHttpClient<IAppRegistryApiService, AppRegistryApiService, AppRegistryClientOptions>(configuration, nameof(AppRegistryClientOptions), nameof(PolicyOptions.HttpRetry), nameof(PolicyOptions.HttpCircuitBreaker));
 
             services.AddMvc(config =>
-            {
-                config.RespectBrowserAcceptHeader = true;
-                config.ReturnHttpNotAcceptable = true;
-            })
-                .AddNewtonsoftJson()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                {
+                    config.RespectBrowserAcceptHeader = true;
+                    config.ReturnHttpNotAcceptable = true;
+                })
+                .AddNewtonsoftJson();
         }
 
         private void ConfigureMinimumThreads()

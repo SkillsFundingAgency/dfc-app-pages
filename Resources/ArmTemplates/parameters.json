@@ -53,23 +53,11 @@
         "aspSize": {
             "value": "__aspSize__"
         },
-        "cosmosDBName": {
-            "value": "__appSharedCosmosDBName__"
-        },
-        "cosmosDbKey": {
-            "value": "__appSharedCosmosPrimaryKey__"
-        },
-        "CosmosDbResourceGroup": {
-            "value": "__appSharedResourceGroup__"
-        },
         "environment": {
             "value": "__ReleaseEnvironmentName__",
             "metadata": {
                 "comment": "Bug in tokenisation task prevents referencing Release.EnvironmentName directly.  https://github.com/TotalALM/VSTS-Tasks/issues/29"
             }
-        },
-        "cosmosDbCollectionName": {
-            "value": "__cosmosDbCollectionName__"
         },
         "pagesAppDatabaseNeedsCreation": {
             "value": __CosmosDbDatabaseDoesntExist__
@@ -80,44 +68,8 @@
         "enableAlerts": {
             "value": __EnableAzureMonitorAlerting__
         },
-        "SubscriptionSettingsEndpoint": {
-            "value": "__SubscriptionSettingsEndpoint__"
-        },
-        "apimCompositeApiKey": {
-            "value": "__apimCompositeKey__"
-        },
-        "EventGridAegSasKey": {
-            "value": "__EventGridAegSasKey__"
-        },
-        "EventGridTopicUrl": {
-            "value": "__EventGridTopicUrl__"
-        },
-        "EventGridPublishClientOptionsApiEndpoint": {
-            "value": "__EventGridPublishClientOptionsApiEndpoint__"
-        },
-        "SubscriptionSettingsFilterIncludeEventTypes3": {
-            "value": "__SubscriptionSettingsFilterIncludeEventTypes3__"
-        },
-        "SubscriptionSettingsFilterIncludeEventTypes4": {
-            "value": "__SubscriptionSettingsFilterIncludeEventTypes4__"
-        },
         "ApplicationName": {
             "value": "__ApplicationName__"
-        },
-        "EventGridSubjectPrefix": {
-            "value": "__EventGridSubjectPrefix__"
-        },
-        "AppRegistryClientOptionsBaseAddress": {
-            "value": "__AppRegistryClientOptionsBaseAddress__"
-        },
-        "SummaryEndpoint": {
-            "value": "__SummaryEndpoint__"
-        },
-        "contentUrl": {
-            "value": "__contentUrl__"
-        },
-        "subscriptionUrl": {
-            "value": "__subscriptionUrl__"
         },
         "ApimResourceGroup": {
             "value": "__SharedResourceGroupName__"
@@ -154,6 +106,9 @@
         },
         "IocpThreads": {
             "value": "__IocpThreads__"
+        },
+        "Expiry": {
+          "value": "__Expiry__"
         }
     }
 }
