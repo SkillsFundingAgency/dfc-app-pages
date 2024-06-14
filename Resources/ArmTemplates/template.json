@@ -71,12 +71,6 @@
         "ExceptionCountThreshold": {
             "type": "string"
         },
-        "CPUPercentageThreshold": {
-            "type": "string"
-        },
-        "MemoryPercentageThreshold": {
-            "type": "string"
-        },
         "workspaceName": {
             "type": "string"
         },
