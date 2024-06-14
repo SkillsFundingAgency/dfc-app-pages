@@ -94,6 +94,12 @@
         },
         "Expiry": {
             "value": "4"
+        },
+        "appServiceName": {
+            "value": "some-web-app"
+        },
+        "appServicePlanSuffix": {
+            "value": ""
         }
     }
 }
