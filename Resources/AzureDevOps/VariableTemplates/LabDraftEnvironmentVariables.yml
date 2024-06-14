@@ -31,9 +31,5 @@ variables:
   value: dfc-lab-draft-app-pages
 - name: ExceptionCountThreshold
   value: 10
-- name: MemoryPercentageThreshold
-  value: 75
-- name: CPUPercentageThreshold
-  value: 75
 - name: Expiry
   value: 4
