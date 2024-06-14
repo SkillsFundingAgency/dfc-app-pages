@@ -8,6 +8,12 @@
         "appSharedStorageAccountName": {
             "type": "string"
         },
+        "appServiceName": {
+            "type": "string"
+        },
+        "appServicePlanSuffix": {
+            "type": "string"
+        },
         "aseHostingEnvironmentName": {
             "type": "string",
             "defaultValue": ""
@@ -109,11 +115,10 @@
     },
     "variables": {
         "ApiName": "[concat(parameters('ApimProductInstanceName'), '-', parameters('ApiName'))]",
-        "appServicePlanName": "[concat(variables('resourcePrefix'), '-asp')]",
+        "appServicePlanName": "[concat(variables('resourcePrefix'), parameters('appServicePlanSuffix'), '-asp')]",
         "appServicePlanResourceGroup": "[concat(variables('resourcePrefix'),'-rg')]",
         "buildingBlocksDfcBaseUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
         "resourcePrefix": "[tolower(concat('dfc-', parameters('Environment'), '-app-pages'))]",
-        "webAppName": "[concat(variables('ResourcePrefix'), '-as')]",
         "webAppInsightsName": "[concat(variables('resourcePrefix'), '-ai')]",
         "ActionGroupName": "[concat('dfc-', replace(tolower(parameters('Environment')), '-draft', ''), '-app-sharedresources-actgrp')]"
     },
@@ -207,7 +212,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[variables('WebAppName')]",
+            "name": "[parameters('AppServiceName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -217,7 +222,7 @@
                 },
                 "parameters": {
                     "appServiceName": {
-                        "value": "[variables('webAppName')]"
+                        "value": "[parameters('appServiceName')]"
                     },
                     "appServicePlanName": {
                         "value": "[variables('appServicePlanName')]"

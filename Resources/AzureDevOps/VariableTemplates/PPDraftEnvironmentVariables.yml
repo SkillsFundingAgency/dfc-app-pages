@@ -2,7 +2,9 @@ variables:
 - name: ReleaseEnvironmentName
   value: PP-DRAFT
 - name: AppServiceName
-  value: $(WebAppPrefix)-as
+  value: $(WebAppPrefix)-as-ver2
+- name: AppServicePlanSuffix
+  value: -migrated
 - name: EnableAzureMonitorAlerting
   value: true
 - name: pagesAppDatabaseThroughput
@@ -18,7 +20,7 @@ variables:
 - name: SummaryEndpoint
   value: /page
 - name: aspTier
-  value: Standard
+  value: PremiumV3
 - name: aspInstances
   value: 2
 - name: aspSize
