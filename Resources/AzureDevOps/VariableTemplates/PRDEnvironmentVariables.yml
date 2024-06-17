@@ -27,14 +27,6 @@ variables:
   value: $(ApimProxyAddress)/composite-ui-appRegistry/pages/
 - name: SummaryEndpoint
   value: /page
-- name: aspTier
-  value: PremiumV3
-- name: aspInstances
-  value: 2
-- name: aspSize
-  value: 2
-- name: clientAffinity
-  value: false
 - name: contentMode
   value: PUBLISHED
 - name: contentUrl
@@ -51,10 +43,6 @@ variables:
   value: dfc-prd-app-pages
 - name: ExceptionCountThreshold
   value: 10
-- name: MemoryPercentageThreshold
-  value: 75
-- name: CPUPercentageThreshold
-  value: 75
 - name: SubscriptionSettingsFilterIncludeEventTypes3
   value:
 - name: SubscriptionSettingsFilterIncludeEventTypes4
