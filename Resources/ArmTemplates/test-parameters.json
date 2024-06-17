@@ -20,18 +20,6 @@
         "cosmosDbKey": {
             "value": "not-a-real-key"
         },
-        "aspSize": {
-            "value": "2"
-        },
-        "aspTier": {
-            "value": "Standard"
-        },
-        "aspInstances": {
-            "value": 2
-        },
-        "clientAffinity": {
-            "value": false
-        },
         "contentMode": {
             "value": "PUBLISHED"
         },
@@ -126,12 +114,6 @@
             "value": "pages"
         },
         "ExceptionCountThreshold": {
-            "value": "0"
-        },
-        "MemoryPercentageThreshold": {
-            "value": "0"
-        },
-        "CPUPercentageThreshold": {
             "value": "0"
         },
         "workspaceName": {
