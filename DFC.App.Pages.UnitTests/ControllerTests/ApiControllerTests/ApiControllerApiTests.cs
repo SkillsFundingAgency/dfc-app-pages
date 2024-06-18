@@ -63,12 +63,12 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
 
             Guid id = Guid.Parse("6a2e6816-ee97-4b80-a6ef-c336cbb55adb");
 
-            var settings = new contentModeOptions()
+            var settings = new ContentModeOptions()
             {
                 contentMode = "contentMode",
                 value = "PUBLISHED",
             };
-            var monitor = Mock.Of<IOptionsMonitor<contentModeOptions>>(x => x.CurrentValue == settings);
+            var monitor = Mock.Of<IOptionsMonitor<ContentModeOptions>>(x => x.CurrentValue == settings);
 
             A.CallTo(() => sharedContentRedisInterface.GetDataAsyncWithExpiry<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored, A<double>.Ignored)).Returns(expectedContentPageModel);
 
@@ -89,12 +89,12 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             // arrange
             const HttpStatusCode expectedStatusCode = HttpStatusCode.NoContent;
 
-            var settings = new contentModeOptions()
+            var settings = new ContentModeOptions()
             {
                 contentMode = "contentMode",
                 value = "PUBLISHED",
             };
-            var monitor = Mock.Of<IOptionsMonitor<contentModeOptions>>(x => x.CurrentValue == settings);
+            var monitor = Mock.Of<IOptionsMonitor<ContentModeOptions>>(x => x.CurrentValue == settings);
 
             A.CallTo(() => sharedContentRedisInterface.GetDataAsyncWithExpiry<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored, A<double>.Ignored)).Returns((GetByPageApiResponse)null);
 

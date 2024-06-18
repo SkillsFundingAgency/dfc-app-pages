@@ -7,7 +7,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.GraphQL_Tests
 {
     public class QueryStatusTests
     {
-        private contentModeOptions _options;
+        private ContentModeOptions _options;
 
         private readonly ITestOutputHelper output;
 
@@ -19,14 +19,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.GraphQL_Tests
         [Fact]
         public void RetrieveStatusPublished()
         {
-            IOptions<contentModeOptions> sampleOptions = Options.Create<contentModeOptions>(new contentModeOptions());
+            IOptions<ContentModeOptions> sampleOptions = Options.Create<ContentModeOptions>(new ContentModeOptions());
             // Arrange
-            var settings = new contentModeOptions()
+            var settings = new ContentModeOptions()
             {
                 contentMode = "contentMode",
                 value = "PUBLISHED",
             };
-            IOptions<contentModeOptions> appSettingsMock = Options.Create(settings);
+            IOptions<ContentModeOptions> appSettingsMock = Options.Create(settings);
             string expectedValue = "PUBLISHED";
 
             // Act
@@ -45,14 +45,14 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.GraphQL_Tests
         [Fact]
         public void RetrieveStatusDraft()
         {
-            IOptions<contentModeOptions> sampleOptions = Options.Create<contentModeOptions>(new contentModeOptions());
+            IOptions<ContentModeOptions> sampleOptions = Options.Create<ContentModeOptions>(new ContentModeOptions());
             // Arrange
-            var settings = new contentModeOptions()
+            var settings = new ContentModeOptions()
             {
                 contentMode = "contentMode",
                 value = "DRAFT",
             };
-            IOptions<contentModeOptions> appSettingsMock = Options.Create(settings);
+            IOptions<ContentModeOptions> appSettingsMock = Options.Create(settings);
             string expectedValue = "DRAFT";
 
             // Act

@@ -1,6 +1,6 @@
 ﻿namespace DFC.App.Pages.Cms.Data.Content
 {
-    public class contentModeOptions
+    public class ContentModeOptions
     {
         public const string contentModeName = "contentMode";
 
