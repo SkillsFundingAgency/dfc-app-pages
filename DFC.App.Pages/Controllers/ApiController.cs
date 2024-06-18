@@ -26,7 +26,7 @@ namespace DFC.App.Pages.Controllers
         private string status = string.Empty;
         private double expiryInHours = 4;
 
-        public ApiController(IConfiguration configuration, ILogger<ApiController> logger, IMapper mapper, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<contentModeOptions> options)
+        public ApiController(IConfiguration configuration, ILogger<ApiController> logger, IMapper mapper, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<ContentModeOptions> options)
         {
             this.configuration = configuration;
             this.logger = logger;

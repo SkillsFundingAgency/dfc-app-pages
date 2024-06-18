@@ -22,7 +22,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             Logger = A.Fake<ILogger<PagesController>>();
             FakeMapper = A.Fake<IMapper>();
             FakeSharedContentRedisInterface =A.Fake<ISharedContentRedisInterface>();
-            FakeContentOptions = A.Fake<IOptionsMonitor<contentModeOptions>>();
+            FakeContentOptions = A.Fake<IOptionsMonitor<ContentModeOptions>>();
             FakeConfiguration = A.Fake<IConfiguration>();
         }
 
