@@ -203,7 +203,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
       UIFunctionalTestEnabled: false
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
@@ -262,7 +261,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
       UIFunctionalTestEnabled: false
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
@@ -322,7 +320,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
       UIFunctionalTestEnabled: false
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
@@ -381,7 +378,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
       UIFunctionalTestEnabled: true
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
@@ -441,7 +437,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
       UIFunctionalTestEnabled: true
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
@@ -500,7 +495,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
       UIFunctionalTestEnabled: true
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
@@ -560,7 +554,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
       UIFunctionalTestEnabled: true
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
@@ -618,7 +611,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
       UIFunctionalTestEnabled: true
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
@@ -678,7 +670,6 @@ stages:
       APIMPolicyPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.ApimPolicies/"
       ApimImportScript: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Scripts/Import-ApimOpenApiDefinitionFromFile.ps1"
       SpecificationPath: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.OpenApiDocs"
-      RunInfrastructureDeployment: ${{ parameters.RunInfrastructureDeployment }}
       UIFunctionalTestEnabled: true
       UIFunctionalTestPackage: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests.DeploymentPackages/DFC.App.Pages.zip"
       UIFunctionalTestProjectFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.UI.FunctionalTests"
