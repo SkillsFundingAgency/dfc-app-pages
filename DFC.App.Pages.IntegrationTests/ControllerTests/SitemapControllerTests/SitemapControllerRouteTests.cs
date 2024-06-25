@@ -60,8 +60,8 @@ namespace DFC.App.Pages.IntegrationTests.ControllerTests.SitemapControllerTests
             };
 
             this.factory.MockSharedContentRedis.Setup(
-                x => x.GetDataAsync<SitemapResponse>(
-                    It.IsAny<string>(), "PUBLISHED"))
+                x => x.GetDataAsyncWithExpiry<SitemapResponse>(
+                    It.IsAny<string>(), "PUBLISHED",4))
                 .ReturnsAsync(sitemapResponse);
 
             var uri = new Uri(url, UriKind.Relative);

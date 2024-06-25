@@ -7,6 +7,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -24,6 +25,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
         private readonly ILogger<ApiController> logger;
         private readonly IMapper fakeMapper;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
+        private readonly IConfiguration configuration;
 
         public ApiControllerApiTests()
         {
@@ -61,16 +63,16 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
 
             Guid id = Guid.Parse("6a2e6816-ee97-4b80-a6ef-c336cbb55adb");
 
-            var settings = new contentModeOptions()
+            var settings = new ContentModeOptions()
             {
                 contentMode = "contentMode",
                 value = "PUBLISHED",
             };
-            var monitor = Mock.Of<IOptionsMonitor<contentModeOptions>>(x => x.CurrentValue == settings);
+            var monitor = Mock.Of<IOptionsMonitor<ContentModeOptions>>(x => x.CurrentValue == settings);
 
-            A.CallTo(() => sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored)).Returns(expectedContentPageModel);
+            A.CallTo(() => sharedContentRedisInterface.GetDataAsyncWithExpiry<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored, A<double>.Ignored)).Returns(expectedContentPageModel);
 
-            using var controller = new ApiController(logger, fakeMapper, sharedContentRedisInterface, monitor);
+            using var controller = new ApiController(configuration, logger, fakeMapper, sharedContentRedisInterface, monitor);
 
             // act
             var result = await controller.Document(id).ConfigureAwait(false);
@@ -87,16 +89,16 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.ApiControllerTests
             // arrange
             const HttpStatusCode expectedStatusCode = HttpStatusCode.NoContent;
 
-            var settings = new contentModeOptions()
+            var settings = new ContentModeOptions()
             {
                 contentMode = "contentMode",
                 value = "PUBLISHED",
             };
-            var monitor = Mock.Of<IOptionsMonitor<contentModeOptions>>(x => x.CurrentValue == settings);
+            var monitor = Mock.Of<IOptionsMonitor<ContentModeOptions>>(x => x.CurrentValue == settings);
 
-            A.CallTo(() => sharedContentRedisInterface.GetDataAsync<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored)).Returns((GetByPageApiResponse)null);
+            A.CallTo(() => sharedContentRedisInterface.GetDataAsyncWithExpiry<GetByPageApiResponse>(A<string>.Ignored, A<string>.Ignored, A<double>.Ignored)).Returns((GetByPageApiResponse)null);
 
-            using var controller = new ApiController(logger, fakeMapper, sharedContentRedisInterface, monitor);
+            using var controller = new ApiController(configuration, logger, fakeMapper, sharedContentRedisInterface, monitor);
 
             // act
             var result = await controller.Document(Guid.NewGuid()).ConfigureAwait(false);

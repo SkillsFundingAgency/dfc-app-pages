@@ -6,6 +6,7 @@ using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
@@ -21,7 +22,8 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
             Logger = A.Fake<ILogger<PagesController>>();
             FakeMapper = A.Fake<IMapper>();
             FakeSharedContentRedisInterface =A.Fake<ISharedContentRedisInterface>();
-            FakeContentOptions = A.Fake<IOptionsMonitor<contentModeOptions>>();
+            FakeContentOptions = A.Fake<IOptionsMonitor<ContentModeOptions>>();
+            FakeConfiguration = A.Fake<IConfiguration>();
         }
 
         public static IEnumerable<object[]> HtmlMediaTypes => new List<object[]>
@@ -46,7 +48,9 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
         protected ISharedContentRedisInterface FakeSharedContentRedisInterface { get; }
 
-        protected IOptionsMonitor<contentModeOptions> FakeContentOptions { get; }
+        protected IOptionsMonitor<ContentModeOptions> FakeContentOptions { get; }
+
+        protected IConfiguration FakeConfiguration { get; }
 
         protected PagesController BuildPagesController(string mediaTypeName)
         {
@@ -54,7 +58,7 @@ namespace DFC.App.Pages.UnitTests.ControllerTests.PagesControllerTests
 
             httpContext.Request.Headers[HeaderNames.Accept] = mediaTypeName;
 
-            var controller = new PagesController(Logger, FakeMapper, FakeSharedContentRedisInterface, FakeContentOptions)
+            var controller = new PagesController(FakeConfiguration, Logger, FakeMapper, FakeSharedContentRedisInterface, FakeContentOptions)
             {
                 ControllerContext = new ControllerContext()
                 {
