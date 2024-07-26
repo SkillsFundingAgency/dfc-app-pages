@@ -2,7 +2,9 @@ variables:
 - name: ReleaseEnvironmentName
   value: PRD
 - name: AppServiceName
-  value: $(WebAppPrefix)-as
+  value: $(WebAppPrefix)-as-ver2
+- name: AppServicePlanSuffix
+  value: -migrated
 - name: EnableAzureMonitorAlerting
   value: true
 - name: pagesAppDatabaseThroughput
