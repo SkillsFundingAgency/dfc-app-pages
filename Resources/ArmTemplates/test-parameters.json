@@ -8,17 +8,11 @@
         "appSharedStorageAccountName": {
             "value": "dfcdevappsharedstr"
         },
-        "aspSize": {
-            "value": "2"
+        "appServiceName": {
+            "value": "dfc-foo-app-pages-as-ver"
         },
-        "aspTier": {
-            "value": "Standard"
-        },
-        "aspInstances": {
-            "value": 2
-        },
-        "clientAffinity": {
-            "value": false
+        "appServicePlanSuffix": {
+            "value": "-migrated"
         },
         "contentMode": {
             "value": "PUBLISHED"
@@ -72,12 +66,6 @@
             "value": "pages"
         },
         "ExceptionCountThreshold": {
-            "value": "0"
-        },
-        "MemoryPercentageThreshold": {
-            "value": "0"
-        },
-        "CPUPercentageThreshold": {
             "value": "0"
         },
         "workspaceName": {

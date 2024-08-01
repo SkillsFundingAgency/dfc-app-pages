@@ -2,7 +2,9 @@ variables:
 - name: ReleaseEnvironmentName
   value: PRD
 - name: AppServiceName
-  value: $(WebAppPrefix)-as
+  value: $(WebAppPrefix)-as-ver2
+- name: AppServicePlanSuffix
+  value: -migrated
 - name: EnableAzureMonitorAlerting
   value: true
 - name: pagesAppDatabaseThroughput
@@ -17,14 +19,6 @@ variables:
   value: DFC-App-Pages
 - name: SummaryEndpoint
   value: /page
-- name: aspTier
-  value: PremiumV3
-- name: aspInstances
-  value: 2
-- name: aspSize
-  value: 2
-- name: clientAffinity
-  value: false
 - name: contentMode
   value: PUBLISHED
 - name: contentUrl
@@ -39,9 +33,5 @@ variables:
   value: dfc-prd-app-pages
 - name: ExceptionCountThreshold
   value: 10
-- name: MemoryPercentageThreshold
-  value: 75
-- name: CPUPercentageThreshold
-  value: 75
 - name: Expiry
   value: 4

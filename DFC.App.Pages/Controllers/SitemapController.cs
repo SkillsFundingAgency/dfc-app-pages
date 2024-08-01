@@ -23,7 +23,7 @@ namespace DFC.App.Pages.Controllers
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private IOptionsMonitor<ContentModeOptions> _options;
         private string status; 
-        private double expiry = 4;
+        private double expiryInHours = 4;
 
         public SitemapController(IConfiguration configuration, ILogger<SitemapController> logger, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<ContentModeOptions> options)
         {
@@ -35,7 +35,10 @@ namespace DFC.App.Pages.Controllers
             if (this.configuration != null)
             {
                 string expiryAppString = this.configuration.GetSection(expiryAppSettings).Get<string>();
-                this.expiry = double.Parse(string.IsNullOrEmpty(expiryAppString) ? "4" : expiryAppString);
+                if (double.TryParse(expiryAppString, out var expiryAppStringParseResult))
+                {
+                    expiryInHours = expiryAppStringParseResult;
+                }
             }
         }
 
@@ -67,7 +70,7 @@ namespace DFC.App.Pages.Controllers
 
                 var sitemapUrlPrefix = $"{Request.GetBaseAddress()}".TrimEnd('/');
                 var sitemap = new Sitemap();
-                var contentPageModels = await sharedContentRedisInterface.GetDataAsyncWithExpiry<SitemapResponse>("SitemapPages/ALL", status, expiry);
+                var contentPageModels = await sharedContentRedisInterface.GetDataAsyncWithExpiry<SitemapResponse>("SitemapPages/ALL", status, expiryInHours);
 
                 if (contentPageModels != null)
                 {

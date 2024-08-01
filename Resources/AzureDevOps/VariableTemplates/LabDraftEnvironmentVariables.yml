@@ -17,14 +17,6 @@ variables:
   value: DFC-App-Pages-draft
 - name: SummaryEndpoint
   value: /page
-- name: aspTier
-  value: PremiumV3
-- name: aspInstances
-  value: 2
-- name: aspSize
-  value: 2
-- name: clientAffinity
-  value: false
 - name: contentMode
   value: DRAFT
 - name: contentUrl
@@ -39,9 +31,5 @@ variables:
   value: dfc-lab-draft-app-pages
 - name: ExceptionCountThreshold
   value: 10
-- name: MemoryPercentageThreshold
-  value: 75
-- name: CPUPercentageThreshold
-  value: 75
 - name: Expiry
   value: 4
