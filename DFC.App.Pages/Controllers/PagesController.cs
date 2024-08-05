@@ -24,14 +24,14 @@ namespace DFC.App.Pages.Controllers
     public class PagesController : Controller
     {
         private const string LocalPath = "pages";
-        private const string expiryAppSettings = "Cms:Expiry";
+        private const string ExpiryAppSettings = "Cms:Expiry";
         private readonly IConfiguration configuration;
         private readonly ILogger<PagesController> logger;
         private readonly AutoMapper.IMapper mapper;
         private readonly ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IOptionsMonitor<ContentModeOptions> options;
         private string status = string.Empty;
-        private double expiry = 4;
+        private double expiryInHours = 4;
 
         public PagesController(
             IConfiguration configuration,
@@ -47,8 +47,11 @@ namespace DFC.App.Pages.Controllers
             this.options = options;
             if (this.configuration != null)
             {
-                string expiryAppString = this.configuration.GetSection(expiryAppSettings).Get<string>();
-                this.expiry = double.Parse(string.IsNullOrEmpty(expiryAppString) ? "4" : expiryAppString);
+                string expiryAppString = this.configuration.GetSection(ExpiryAppSettings).Get<string>();
+                if (double.TryParse(expiryAppString, out var expiryAppStringParseResult))
+                {
+                    expiryInHours = expiryAppStringParseResult;
+                }
             }
         }
 
@@ -77,7 +80,7 @@ namespace DFC.App.Pages.Controllers
                     new IndexDocumentViewModel { CanonicalName = RobotController.RobotsViewCanonicalName },
                 },
             };
-            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PageUrlResponse>(Constants.PagesUrlSuffix, status, expiry);
+            var pageUrlResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PageUrlResponse>(Constants.PagesUrlSuffix, status, expiryInHours);
             if (pageUrlResponse.Page == null)
             {
                 return NoContent();
@@ -108,11 +111,11 @@ namespace DFC.App.Pages.Controllers
 
             var (location, article) = ExtractPageLocation(pageRequestModel);
             string pageUrl = GetPageUrl(location, article);
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<Page>(Constants.PageSuffix + pageUrl, status, expiry);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<Page>(Constants.PageSuffix + pageUrl, status, expiryInHours);
             if (pageResponse == null)
             {
                 pageUrl = pageUrl.Remove(pageUrl.LastIndexOf('/'));
-                pageResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<Page>(Constants.PageSuffix + pageUrl, status, expiry);
+                pageResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<Page>(Constants.PageSuffix + pageUrl, status, expiryInHours);
             }
 
             if (pageResponse != null)
@@ -178,7 +181,7 @@ namespace DFC.App.Pages.Controllers
 
             }
 
-            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PageUrlResponse>(Constants.PagesUrlSuffix, status, expiry);
+            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PageUrlResponse>(Constants.PagesUrlSuffix, status, expiryInHours);
             var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? string.Empty).Split("\r\n").Contains(pageUrl)).ToList();
 
             if (filterList.Count > 0)
@@ -264,7 +267,7 @@ namespace DFC.App.Pages.Controllers
                 return this.NegotiateContentResult(viewModel);
             }
 
-            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PageUrlResponse>(Constants.PagesUrlSuffix, status, expiry);
+            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PageUrlResponse>(Constants.PagesUrlSuffix, status, expiryInHours);
             var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
 
             if (filterList.Count > 0)
@@ -315,7 +318,7 @@ namespace DFC.App.Pages.Controllers
                 return this.NegotiateContentResult(viewModel);
             }
 
-            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PageUrlResponse>(Constants.PagesUrlSuffix, status, expiry);
+            var redirectedContentPageModel = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PageUrlResponse>(Constants.PagesUrlSuffix, status, expiryInHours);
             var filterList = redirectedContentPageModel.Page.Where(ctr => (ctr.PageLocation.RedirectLocations ?? "").Split("\r\n").Contains(pageUrl)).ToList();
 
             if (filterList.Count > 0)
@@ -407,13 +410,13 @@ namespace DFC.App.Pages.Controllers
         private async Task<T?> GetResponse<T>(string pageUrl)
             where T : new()
         {
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<Page>(Constants.PageSuffix + pageUrl, status, expiry);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<Page>(Constants.PageSuffix + pageUrl, status, expiryInHours);
             var viewModel = new T();
 
             if (pageResponse == null)
             {
                 pageUrl = pageUrl.Remove(pageUrl.LastIndexOf('/'));
-                pageResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<Page>(Constants.PageSuffix + pageUrl, status, expiry);
+                pageResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<Page>(Constants.PageSuffix + pageUrl, status, expiryInHours);
             }
 
             if (pageResponse != null)
@@ -436,7 +439,7 @@ namespace DFC.App.Pages.Controllers
 
                 if (pageUrl == pageLocationUrl)
                 {
-                    var pageResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<Page>(Constants.PageSuffix + fullUrl, status, expiry);
+                    var pageResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<Page>(Constants.PageSuffix + fullUrl, status, expiryInHours);
                     var viewModel = new T();
                     mapper.Map(pageResponse, viewModel);
                     return viewModel;
@@ -457,13 +460,13 @@ namespace DFC.App.Pages.Controllers
                 status = "PUBLISHED";
             }
 
-            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PageBreadcrumb>(Constants.PageLocationSuffix, status, expiry);
+            var breadcrumbResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<PageBreadcrumb>(Constants.PageLocationSuffix, status, expiryInHours);
             if (pageUrl == string.Empty)
             {
                 pageUrl = GetPageUrl(location, article);
             }
 
-            var pageResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<Page>(Constants.PageSuffix + pageUrl, status, expiry);
+            var pageResponse = await this.sharedContentRedisInterface.GetDataAsyncWithExpiry<Page>(Constants.PageSuffix + pageUrl, status, expiryInHours);
 
             if (pageResponse == null || !pageResponse.ShowBreadcrumb.GetValueOrDefault(false))
             {
