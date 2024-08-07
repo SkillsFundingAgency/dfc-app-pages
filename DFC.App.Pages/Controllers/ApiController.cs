@@ -114,5 +114,34 @@ namespace DFC.App.Pages.Controllers
                 return NoContent();
             }
         }
+
+        [HttpGet]
+        [Route("api/triageleveltwo")]
+        public async Task<IActionResult> TraigeLevelTwo()
+        {
+            if (options.CurrentValue.contentMode != null)
+            {
+                status = options.CurrentValue.contentMode;
+            }
+            else
+            {
+                status = "PUBLISHED";
+            }
+
+            logger.LogInformation($"{nameof(Document)} has been called");
+
+            var levelTwos = await sharedContentRedisInterface.GetDataAsyncWithExpiry<TraigeLevelTwoResponse>("Triage/LevelTwo", status, expiry);
+            if (levelTwos != null)
+            {
+                foreach (var levelTwo in levelTwos.TriageLevelTwo)
+                {
+                    levelTwo.LevelOne = levelTwo.LevelOne?.ContentItems?.FirstOrDefault();
+                }
+
+                levelTwos.TriageLevelTwo = levelTwos.TriageLevelTwo.OrderBy(x => x.Ordinal).ToList();
+            }
+
+            return Ok(levelTwos);
+        }
     }
 }
