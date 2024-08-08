@@ -150,6 +150,8 @@ namespace DFC.App.Pages
             services.AddSingleton<ISharedContentRedisInterfaceStrategyWithRedisExpiry<SitemapResponse>, PageSitemapStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyWithRedisExpiry<PageApiResponse>, PageApiStrategy>();
             services.AddSingleton<ISharedContentRedisInterfaceStrategyWithRedisExpiry<GetByPageApiResponse>, GetByIdPageApiStrategy>();
+            services.AddSingleton<ISharedContentRedisInterfaceStrategyWithRedisExpiry<TraigeLevelTwoResponse>, TriageLeveTwoQueryStrategy>();
+
 
             services.AddScoped<ISharedContentRedisInterface, SharedContentRedis>();
             services.ConfigureOptions<ContentOptionsSetup>();
