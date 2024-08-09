@@ -27,7 +27,6 @@ parameters:
   APIMPolicyPath: ''
   ApimImportScript: ''
   SpecificationPath: ''
-  RunInfrastructureDeployment: ''
   UIFunctionalTestEnabled: ''
   UIFunctionalTestPackage: ''
   UIFunctionalTestProjectFolder: ''
@@ -55,7 +54,6 @@ jobs:
             ArmTemplateFolder: '${{ parameters.ArmTemplateFolder }}'
             AppSharedResourceGroup: '${{ parameters.AppSharedResourceGroup }}'
             appSharedCosmosDBName: '${{ parameters.appSharedCosmosDBName }}'
-            RunInfrastructureDeployment: '${{ parameters.RunInfrastructureDeployment }}'
 
 - deployment: DeployApplication
   dependsOn: DeployTemplate
