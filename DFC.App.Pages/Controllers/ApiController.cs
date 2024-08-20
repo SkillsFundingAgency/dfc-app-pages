@@ -116,7 +116,7 @@ namespace DFC.App.Pages.Controllers
         }
 
         [HttpGet]
-        [Route("api/triageleveltwo")]
+        [Route("api/triageleveltwo/ajax")]
         public async Task<IActionResult> TraigeLevelTwo()
         {
             if (options.CurrentValue.contentMode != null)
@@ -130,18 +130,14 @@ namespace DFC.App.Pages.Controllers
 
             logger.LogInformation($"{nameof(Document)} has been called");
 
-            var levelTwos = await sharedContentRedisInterface.GetDataAsyncWithExpiry<TraigeLevelTwoResponse>("Triage/LevelTwo", status, expiry);
-            if (levelTwos != null)
-            {
-                foreach (var levelTwo in levelTwos.TriageLevelTwo)
-                {
-                    levelTwo.LevelOne = levelTwo.LevelOne?.ContentItems?.FirstOrDefault();
-                }
+            var lookupResponse = await sharedContentRedisInterface.GetDataAsyncWithExpiry<TriageLookupResponse>("Triage/lookup", status, expiry);
 
-                levelTwos.TriageLevelTwo = levelTwos.TriageLevelTwo.OrderBy(x => x.Ordinal).ToList();
+            if (lookupResponse != null)
+            {
+                lookupResponse.TriageLevelOne = lookupResponse.TriageLevelOne?.OrderBy(x => x.Ordinal).ToList();
             }
 
-            return Ok(levelTwos);
+            return Ok(lookupResponse);
         }
     }
 }
