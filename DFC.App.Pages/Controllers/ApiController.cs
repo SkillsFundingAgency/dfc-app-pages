@@ -2,6 +2,7 @@
 using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Models.Api;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
+using DFC.Common.SharedContent.Pkg.Netcore.Model.Common;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -130,14 +131,52 @@ namespace DFC.App.Pages.Controllers
 
             logger.LogInformation($"{nameof(Document)} has been called");
 
-            var lookupResponse = await sharedContentRedisInterface.GetDataAsyncWithExpiry<TriageLookupResponse>("Triage/lookup", status, expiry);
+            var lookupResponse = await sharedContentRedisInterface.GetDataAsyncWithExpiry<TriageLookupResponse>("Triage/lookup7", status, expiry);
 
             if (lookupResponse != null)
             {
+                if (lookupResponse.TriageLevelOne != null)
+                {
+                    foreach (var leveOne in lookupResponse.TriageLevelOne)
+                    {
+                        leveOne.Value = leveOne.Value ?? string.Empty;
+                        MatchLevelTwo(lookupResponse, leveOne);
+                    }
+                }
+
                 lookupResponse.TriageLevelOne = lookupResponse.TriageLevelOne?.OrderBy(x => x.Ordinal).ToList();
             }
 
             return Ok(lookupResponse);
+        }
+
+        private static void MatchFilterAdviceGroup(TriageLookupResponse? lookupResponse, TriageLevelTwo levelTwo)
+        {
+            if (lookupResponse?.FilterAdviceGroup != null && levelTwo.FilterAdviceGroup != null && levelTwo.FilterAdviceGroup.ContentItems != null)
+            {
+                foreach (var filterAdviceGroup in levelTwo.FilterAdviceGroup.ContentItems)
+                {
+                    var matchedFag = lookupResponse.FilterAdviceGroup.SingleOrDefault(x => x.ContentItemId == filterAdviceGroup.ContentItemId);
+                    filterAdviceGroup.Title = matchedFag?.Title;
+                    filterAdviceGroup.triageTileImage = matchedFag?.triageTileImage;
+                }
+            }
+        }
+
+        private static void MatchLevelTwo(TriageLookupResponse? lookupResponse, TriageLevelOne leveOne)
+        {
+            if (lookupResponse?.TriageLevelTwo != null && leveOne.LevelTwo != null && leveOne.LevelTwo.ContentItems != null)
+            {
+                foreach (var levelTwo in leveOne.LevelTwo.ContentItems)
+                {
+                    MatchFilterAdviceGroup(lookupResponse, levelTwo);
+
+                    var matchedLevelTwo = lookupResponse.TriageLevelTwo.SingleOrDefault(x => x.ContentItemId == levelTwo.ContentItemId);
+                    levelTwo.Value = matchedLevelTwo?.Value ?? string.Empty;
+                    levelTwo.Title = matchedLevelTwo?.Title;
+                    levelTwo.FilterAdviceGroup = matchedLevelTwo?.FilterAdviceGroup;
+                }
+            }
         }
     }
 }
