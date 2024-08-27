@@ -131,7 +131,7 @@ namespace DFC.App.Pages.Controllers
 
             logger.LogInformation($"{nameof(Document)} has been called");
 
-            var lookupResponse = await sharedContentRedisInterface.GetDataAsyncWithExpiry<TriageLookupResponse>("Triage/lookup7", status, expiry);
+            var lookupResponse = await sharedContentRedisInterface.GetDataAsyncWithExpiry<TriageLookupResponse>("Triage/lookup8", status, expiry);
 
             if (lookupResponse != null)
             {
