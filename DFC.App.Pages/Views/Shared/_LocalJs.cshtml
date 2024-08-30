@@ -1,10 +1,11 @@
 ﻿@{
-    var cdnLocation = "https://dev-cdn.nationalcareersservice.org.uk/nationalcareers_toolkit";
+    var cdnLocation = "http://127.0.0.1:8080/assets/dist";
     var queryStringVersion = @DateTime.Today.ToString("yyyy-mm-dd");
 }
 
 <script src="@cdnLocation/js/jquerybundle.min.js?@queryStringVersion"></script>
 <script src="@cdnLocation/js/all.min.js?@queryStringVersion"></script>
 <script src="@cdnLocation/js/dfcdigital.min.js?@queryStringVersion"></script>
+<script src="@cdnLocation/js/dfc-app-pages.min.js?@queryStringVersion"></script>
 
 <script>window.GOVUKFrontend.initAll()</script>
