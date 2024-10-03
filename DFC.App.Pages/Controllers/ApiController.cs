@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DFC.App.Pages.Cms.Data.Content;
 using DFC.App.Pages.Models.Api;
+using DFC.Common.SharedContent.Pkg.Netcore.Constant;
 using DFC.Common.SharedContent.Pkg.Netcore.Interfaces;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.Common;
 using DFC.Common.SharedContent.Pkg.Netcore.Model.ContentItems;
@@ -131,7 +132,7 @@ namespace DFC.App.Pages.Controllers
 
             logger.LogInformation($"{nameof(Document)} has been called");
 
-            var lookupResponse = await sharedContentRedisInterface.GetDataAsyncWithExpiry<TriageLookupResponse>("Triage/lookup9", status, expiry);
+            var lookupResponse = await sharedContentRedisInterface.GetDataAsyncWithExpiry<TriageLookupResponse>(ApplicationKeys.TriageToolLookup, status, expiry);
 
             if (lookupResponse != null)
             {
