@@ -49,6 +49,17 @@
         "IsHealthy": true
       }
     ],
+    "AjaxRequests": [
+      {
+        "Name": "Ajax",
+        "IsHealthy": true,
+        "AjaxEndpoint": "https://__AppServiceName__.__appServiceDomain__/api/triageleveltwo/ajax",
+        "HealthCheckRequired": true,
+        "OfflineHtml": "<div class=\"govuk-width-container\"><H3>Service Unavailable</H3></div>",
+        "DateOfRegistration": "2021-05-18T07:18:48.5926665Z",
+        "LastModifiedDate": "2024-08-26T19:25:42.6373366Z"
+      }
+    ],
     "JavaScriptNames": {
       "/js/dfc-app-pages.min.js": null
     }
