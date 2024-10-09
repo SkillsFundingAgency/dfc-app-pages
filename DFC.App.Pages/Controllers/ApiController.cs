@@ -26,7 +26,7 @@ namespace DFC.App.Pages.Controllers
         private ISharedContentRedisInterface sharedContentRedisInterface;
         private readonly IOptionsMonitor<ContentModeOptions> options;
         private string status = string.Empty;
-        private double expiry = 4;
+        private double expiryInHours = 4;
 
         public ApiController(IConfiguration configuration, ILogger<ApiController> logger, IMapper mapper, ISharedContentRedisInterface sharedContentRedisInterface, IOptionsMonitor<ContentModeOptions> options)
         {
@@ -39,7 +39,10 @@ namespace DFC.App.Pages.Controllers
             if (this.configuration != null)
             {
                 string expiryAppString = this.configuration.GetSection(expiryAppSettings).Get<string>();
-                this.expiry = double.Parse(string.IsNullOrEmpty(expiryAppString) ? "4" : expiryAppString);
+                if (double.TryParse(expiryAppString, out var expiryAppStringParseResult))
+                {
+                    expiryInHours = expiryAppStringParseResult;
+                }
             }
         }
 
@@ -60,7 +63,7 @@ namespace DFC.App.Pages.Controllers
 
             var pages = new Dictionary<Guid, GetIndexModel>();
 
-            var contentPageModels = await sharedContentRedisInterface.GetDataAsyncWithExpiry<PageApiResponse>("PagesApi/All", status, expiry);
+            var contentPageModels = await sharedContentRedisInterface.GetDataAsyncWithExpiry<PageApiResponse>("PagesApi/All", status, expiryInHours);
 
             var contentPageModelsList = contentPageModels?.Page.ToList();
 
@@ -93,7 +96,7 @@ namespace DFC.App.Pages.Controllers
 
             logger.LogInformation($"{nameof(Document)} has been called");
 
-            var contentPageModel = await sharedContentRedisInterface.GetDataAsyncWithExpiry<GetByPageApiResponse>("PageApi" + "/" + id, status, expiry);
+            var contentPageModel = await sharedContentRedisInterface.GetDataAsyncWithExpiry<GetByPageApiResponse>("PageApi" + "/" + id, status, expiryInHours);
 
             if (contentPageModel != null)
             {
